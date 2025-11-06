@@ -451,7 +451,7 @@
     <Content Include="Views\Login\XacThucEmail.cshtml" />
     <Content Include="Views\Login\DangNhap.cshtml" />
     <Content Include="Views\Login\DatLaiMatKhau.cshtml" />
-    <Content Include="Views\Index\cc.cshtml" />
+    <Content Include="Views\Index\index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
