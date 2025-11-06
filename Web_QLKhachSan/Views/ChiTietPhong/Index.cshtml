@@ -1,0 +1,281 @@
+﻿@{
+    ViewBag.Title = "Chi Tiết Phòng";
+}
+<link rel="stylesheet" href="~/assets/css/chi-tiet-phong.css" />
+
+<!-- Page Header -->
+<section class="page-header">
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="@Url.Action("Index", "PhongNghi")">Phòng nghỉ</a>
+            <i class="fas fa-chevron-right"></i>
+            <span>Chi tiết phòng</span>
+        </div>
+        <h1 data-aos="fade-up">Deluxe Ocean View</h1>
+        <div class="room-badges" data-aos="fade-up" data-aos-delay="100">
+            <span class="badge premium">Premium</span>
+            <span class="badge view">View Biển</span>
+            <span class="badge rating">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                5.0
+            </span>
+        </div>
+    </div>
+</section>
+
+<!-- Main Content -->
+<main class="main-content">
+    <div class="container">
+        <div class="room-layout">
+            <!-- Image Gallery -->
+            <div class="gallery-section" data-aos="fade-right">
+                <div class="main-gallery">
+                    <div class="gallery-main">
+                        <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=1740&q=80"
+                             alt="Deluxe Ocean View - Main"
+                             id="main-image" />
+                        <div class="gallery-controls">
+                            <button class="gallery-btn prev" id="prev-btn">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button class="gallery-btn next" id="next-btn">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                        <div class="gallery-indicators" id="gallery-indicators"></div>
+                    </div>
+                    
+                    <div class="gallery-thumbnails" id="gallery-thumbnails">
+                        <div class="thumbnail active" data-src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=1740&q=80">
+                            <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=300&q=80" alt="View 1" />
+                        </div>
+                        <div class="thumbnail" data-src="https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?auto=format&fit=crop&w=1740&q=80">
+                            <img src="https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?auto=format&fit=crop&w=300&q=80" alt="View 2" />
+                        </div>
+                        <div class="thumbnail" data-src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=1740&q=80">
+                            <img src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=300&q=80" alt="View 3" />
+                        </div>
+                        <div class="thumbnail" data-src="https://images.unsplash.com/photo-1598605272254-16f0c0ecdfa5?auto=format&fit=crop&w=1740&q=80">
+                            <img src="https://images.unsplash.com/photo-1598605272254-16f0c0ecdfa5?auto=format&fit=crop&w=300&q=80" alt="View 4" />
+                        </div>
+                        <div class="thumbnail" data-src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1740&q=80">
+                            <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=300&q=80" alt="View 5" />
+                        </div>
+                        <div class="thumbnail" data-src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=1740&q=80">
+                            <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=300&q=80" alt="View 6" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Room Information -->
+            <div class="room-info-section" data-aos="fade-up">
+                <div class="room-info-content">
+                    <div class="room-header">
+                        <div class="room-title">
+                            <h2>Deluxe Ocean View</h2>
+                            <p class="room-subtitle">Không gian sang trọng với tầm nhìn tuyệt đẹp</p>
+                        </div>
+                        <div class="room-price">
+                            <span class="price-amount">$150</span>
+                            <span class="price-unit">/ đêm</span>
+                        </div>
+                    </div>
+
+                    <div class="room-features">
+                        <div class="feature-item">
+                            <i class="fas fa-ruler-combined"></i>
+                            <span>35m²</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-bed"></i>
+                            <span>Giường King</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-users"></i>
+                            <span>2 Khách</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-water"></i>
+                            <span>View Biển</span>
+                        </div>
+                    </div>
+
+                    <div class="room-description">
+                        <p>
+                            Tận hưởng không gian nghỉ dưỡng tuyệt vời với ban công riêng nhìn thẳng ra đại dương xanh biếc. 
+                            Căn phòng được thiết kế tinh tế với nội thất cao cấp, giường cỡ King êm ái và phòng tắm 
+                            lát đá cẩm thạch sang trọng.
+                        </p>
+                        <p>
+                            Đây là sự lựa chọn hoàn hảo cho các cặp đôi hoặc những ai tìm kiếm sự thư thái, 
+                            lãng mạn và trải nghiệm nghỉ dưỡng đẳng cấp.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Booking Widget -->
+                <div class="booking-widget">
+                    <div class="booking-form">
+                        <div class="date-inputs">
+                            <div class="input-group">
+                                <label>Ngày nhận phòng</label>
+                                <input type="date" id="checkin-date" class="date-input">
+                            </div>
+                            <div class="input-group">
+                                <label>Ngày trả phòng</label>
+                                <input type="date" id="checkout-date" class="date-input">
+                            </div>
+                        </div>
+                        <div class="guest-selector">
+                            <label>Số khách</label>
+                            <div class="guest-input">
+                                <button type="button" class="guest-btn minus">-</button>
+                                <span class="guest-count">2</span>
+                                <button type="button" class="guest-btn plus">+</button>
+                            </div>
+                        </div>
+                        <div class="booking-summary">
+                            <div class="summary-row">
+                                <span>Giá phòng (1 đêm)</span>
+                                <span>$150</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Phí dịch vụ</span>
+                                <span>$15</span>
+                            </div>
+                            <div class="summary-row total">
+                                <span>Tổng cộng</span>
+                                <span>$165</span>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-book-now">
+                            <i class="fas fa-calendar-check"></i>
+                            Đặt Phòng Ngay
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Amenities Section -->
+        <div class="amenities-section" data-aos="fade-up">
+            <h3 class="section-title">Tiện nghi phòng</h3>
+            <div class="amenities-grid">
+                <div class="amenity-category">
+                    <h4><i class="fas fa-bed"></i> Phòng ngủ</h4>
+                    <ul>
+                        <li>Giường King size cao cấp</li>
+                        <li>Ga giường cotton Ai Cập</li>
+                        <li>Gối memory foam</li>
+                        <li>Rèm cửa blackout</li>
+                    </ul>
+                </div>
+                <div class="amenity-category">
+                    <h4><i class="fas fa-bath"></i> Phòng tắm</h4>
+                    <ul>
+                        <li>Bồn tắm đá cẩm thạch</li>
+                        <li>Vòi sen rainfall</li>
+                        <li>Khăn tắm cao cấp</li>
+                        <li>Amenities hữu cơ</li>
+                    </ul>
+                </div>
+                <div class="amenity-category">
+                    <h4><i class="fas fa-tv"></i> Giải trí</h4>
+                    <ul>
+                        <li>Smart TV 55 inch</li>
+                        <li>Netflix & streaming</li>
+                        <li>Loa Bluetooth</li>
+                        <li>Wifi tốc độ cao</li>
+                    </ul>
+                </div>
+                <div class="amenity-category">
+                    <h4><i class="fas fa-coffee"></i> Tiện ích</h4>
+                    <ul>
+                        <li>Minibar đầy đủ</li>
+                        <li>Máy pha coffee</li>
+                        <li>Két an toàn điện tử</li>
+                        <li>Dịch vụ phòng 24/7</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Similar Rooms -->
+        <div class="similar-rooms-section" data-aos="fade-up">
+            <h3 class="section-title">Phòng tương tự</h3>
+            <div class="rooms-carousel">
+                <div class="room-card">
+                    <div class="room-image">
+                        <img src="https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=800&q=80" alt="Executive Suite" />
+                        <div class="room-tag">Cao cấp</div>
+                    </div>
+                    <div class="room-info">
+                        <h4>Executive Suite</h4>
+                        <p class="room-price">$250 <span>/ đêm</span></p>
+                        <div class="room-features">
+                            <span><i class="fas fa-ruler-combined"></i> 60m²</span>
+                            <span><i class="fas fa-users"></i> 4 khách</span>
+                        </div>
+                        <a href="#" class="btn-view-room">Xem chi tiết</a>
+                    </div>
+                </div>
+
+                <div class="room-card">
+                    <div class="room-image">
+                        <img src="https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=800&q=80" alt="Executive Suite" />
+                        <div class="room-tag">Cao cấp</div>
+                    </div>
+                    <div class="room-info">
+                        <h4>Executive Suite</h4>
+                        <p class="room-price">$250 <span>/ đêm</span></p>
+                        <div class="room-features">
+                            <span><i class="fas fa-ruler-combined"></i> 60m²</span>
+                            <span><i class="fas fa-users"></i> 4 khách</span>
+                        </div>
+                        <a href="#" class="btn-view-room">Xem chi tiết</a>
+                    </div>
+                </div>
+                
+                <div class="room-card">
+                    <div class="room-image">
+                        <img src="https://images.unsplash.com/photo-1591088398332-8a7791972843?auto=format&fit=crop&w=800&q=80" alt="Family Suite" />
+                        <div class="room-tag">Gia đình</div>
+                    </div>
+                    <div class="room-info">
+                        <h4>Family Suite</h4>
+                        <p class="room-price">$300 <span>/ đêm</span></p>
+                        <div class="room-features">
+                            <span><i class="fas fa-ruler-combined"></i> 80m²</span>
+                            <span><i class="fas fa-users"></i> 6 khách</span>
+                        </div>
+                        <a href="#" class="btn-view-room">Xem chi tiết</a>
+                    </div>
+                </div>
+                
+                <div class="room-card">
+                    <div class="room-image">
+                        <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80" alt="Superior Garden" />
+                        <div class="room-tag">View vườn</div>
+                    </div>
+                    <div class="room-info">
+                        <h4>Superior Garden View</h4>
+                        <p class="room-price">$120 <span>/ đêm</span></p>
+                        <div class="room-features">
+                            <span><i class="fas fa-ruler-combined"></i> 30m²</span>
+                            <span><i class="fas fa-users"></i> 2 khách</span>
+                        </div>
+                        <a href="#" class="btn-view-room">Xem chi tiết</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="~/assets/js/chi-tiet-phong.js"></script>
+

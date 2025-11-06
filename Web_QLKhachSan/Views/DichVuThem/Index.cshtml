@@ -1,0 +1,182 @@
+﻿@{
+    ViewBag.Title = "Dịch Vụ Thêm";
+}
+<link rel="stylesheet" href="~/assets/css/dat-phong.css" />
+
+<section class="page-header">
+    <div class="container">
+        <h1 data-aos="fade-right">Hoàn Tất Đặt Chỗ</h1>
+        <p data-aos="fade-left">Quá trình thanh toán của bạn được bảo mật tuyệt đối</p>
+    </div>
+</section>
+<main class="main-content-area">
+    <div class="container checkout-layout">
+        <div class="checkout-form-area">
+            <div class="checkout-steps">
+                <div class="step" onclick="location.href='@Url.Action("Index", "ThongTin")'">1. Thông tin</div>
+                <div class="step active">2. Dịch Vụ</div>
+                <div class="step" onclick="location.href='@Url.Action("Index", "ThanhToan")'">3. Thanh toán</div>
+                <div class="step" onclick="location.href='@Url.Action("Index", "XacNhan")'">4. Xác nhận</div>
+            </div>
+            <h2 class="form-section-title">Dịch Vụ Thêm</h2>
+            <div class="services-selection">
+                <div class="service-category">
+                    <h3 class="category-title">
+                        <i class="fas fa-spa"></i> Dịch Vụ Spa
+                        <button type="button" class="toggle-service" data-target="spa-services">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </h3>
+                    <div class="service-options" id="spa-services">
+                        <label class="service-option">
+                            <input type="checkbox" name="services" value="massage-relax" data-price="1200000">
+                            <div class="service-details">
+                                <div class="service-info">
+                                    <span class="service-name">Massage Toàn Thân Thư Giãn</span>
+                                    <span class="service-description">Liệu pháp massage truyền thống với tinh dầu thiên nhiên (90 phút)</span>
+                                    <div class="service-features">
+                                        <span class="feature"><i class="fas fa-clock"></i> 90 phút</span>
+                                        <span class="feature"><i class="fas fa-leaf"></i> Tinh dầu thiên nhiên</span>
+                                    </div>
+                                </div>
+                                <span class="service-price">1,200,000đ</span>
+                            </div>
+                        </label>
+                        <label class="service-option">
+                            <input type="checkbox" name="services" value="massage-stone" data-price="1500000">
+                            <div class="service-details">
+                                <div class="service-info">
+                                    <span class="service-name">Massage Trị Liệu Đá Nóng</span>
+                                    <span class="service-description">Liệu pháp đá nóng kết hợp massage sâu (120 phút)</span>
+                                    <div class="service-features">
+                                        <span class="feature"><i class="fas fa-clock"></i> 120 phút</span>
+                                        <span class="feature"><i class="fas fa-fire"></i> Đá nóng trị liệu</span>
+                                    </div>
+                                </div>
+                                <span class="service-price">1,500,000đ</span>
+                            </div>
+                        </label>
+                        <label class="service-option">
+                            <input type="checkbox" name="services" value="facial" data-price="800000">
+                            <div class="service-details">
+                                <div class="service-info">
+                                    <span class="service-name">Chăm Sóc Da Mặt Chuyên Sâu</span>
+                                    <span class="service-description">Làm sạch sâu và dưỡng ẩm chuyên nghiệp (75 phút)</span>
+                                    <div class="service-features">
+                                        <span class="feature"><i class="fas fa-clock"></i> 75 phút</span>
+                                        <span class="feature"><i class="fas fa-gem"></i> Sản phẩm cao cấp</span>
+                                    </div>
+                                </div>
+                                <span class="service-price">800,000đ</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="service-category">
+                    <h3 class="category-title">
+                        <i class="fas fa-utensils"></i> Ẩm Thực
+                        <button type="button" class="toggle-service" data-target="dining-services">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </h3>
+                    <div class="service-options" id="dining-services">
+                        <label class="service-option">
+                            <input type="checkbox" name="services" value="breakfast-buffet" data-price="350000">
+                            <div class="service-details">
+                                <div class="service-info">
+                                    <span class="service-name">Buffet Sáng</span>
+                                    <span class="service-description">Hơn 50 món ăn quốc tế và địa phương tại The Horizon Restaurant</span>
+                                    <div class="service-features">
+                                        <span class="feature"><i class="fas fa-clock"></i> 6:00 - 10:00</span>
+                                        <span class="feature"><i class="fas fa-globe"></i> Món quốc tế</span>
+                                    </div>
+                                </div>
+                                <span class="service-price">350,000đ/người</span>
+                            </div>
+                        </label>
+                        <label class="service-option">
+                            <input type="checkbox" name="services" value="dinner-package" data-price="850000">
+                            <div class="service-details">
+                                <div class="service-info">
+                                    <span class="service-name">Set Dinner tại Nhà Hàng The Horizon</span>
+                                    <span class="service-description">Menu 5 món do bếp trưởng thiết kế với view biển lãng mạn</span>
+                                    <div class="service-features">
+                                        <span class="feature"><i class="fas fa-utensils"></i> 5 món</span>
+                                        <span class="feature"><i class="fas fa-wine-glass"></i> Kèm rượu vang</span>
+                                    </div>
+                                </div>
+                                <span class="service-price">850,000đ/người</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="service-category">
+                    <h3 class="category-title">
+                        <i class="fas fa-dumbbell"></i> Thể Thao & Giải Trí
+                        <button type="button" class="toggle-service" data-target="sports-services">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </h3>
+                    <div class="service-options" id="sports-services">
+                        <label class="service-option">
+                            <input type="checkbox" name="services" value="gym-access" data-price="150000">
+                            <div class="service-details">
+                                <div class="service-info">
+                                    <span class="service-name">Truy cập phòng Gym</span>
+                                    <span class="service-description">Phòng gym hiện đại với thiết bị Technogym cao cấp</span>
+                                    <div class="service-features">
+                                        <span class="feature"><i class="fas fa-clock"></i> 5:00 - 23:00</span>
+                                        <span class="feature"><i class="fas fa-dumbbell"></i> Thiết bị hiện đại</span>
+                                    </div>
+                                </div>
+                                <span class="service-price">150,000đ/ngày</span>
+                            </div>
+                        </label>
+                        <label class="service-option">
+                            <input type="checkbox" name="services" value="yoga-class" data-price="250000">
+                            <div class="service-details">
+                                <div class="service-info">
+                                    <span class="service-name">Lớp Yoga (60 phút)</span>
+                                    <span class="service-description">Yoga ngoài trời với view biển cùng HLV chuyên nghiệp</span>
+                                    <div class="service-features">
+                                        <span class="feature"><i class="fas fa-clock"></i> 60 phút</span>
+                                        <span class="feature"><i class="fas fa-user-graduate"></i> HLV riêng</span>
+                                    </div>
+                                </div>
+                                <span class="service-price">250,000đ/buổi</span>
+                            </div>
+                        </label>
+                        <label class="service-option">
+                            <input type="checkbox" name="services" value="tennis" data-price="400000">
+                            <div class="service-details">
+                                <div class="service-info">
+                                    <span class="service-name">Sân Tennis (90 phút)</span>
+                                    <span class="service-description">Sân tennis chuẩn quốc tế với ánh sáng đầy đủ</span>
+                                    <div class="service-features">
+                                        <span class="feature"><i class="fas fa-clock"></i> 90 phút</span>
+                                        <span class="feature"><i class="fas fa-trophy"></i> Chuẩn quốc tế</span>
+                                    </div>
+                                </div>
+                                <span class="service-price">400,000đ</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <a href="@Url.Action("Index", "ThongTin")" class="cta-button">
+                    <i class="fas fa-arrow-left"></i> Quay Lại
+                </a>
+                <a href="@Url.Action("Index", "ThanhToan")" class="cta-button">
+                    Tiếp Tục
+                </a>
+            </div>
+        </div>
+        @Html.Partial("_OrderSummary")
+    </div>
+</main>
+
+<script src="~/assets/js/dat-phong.js"></script>

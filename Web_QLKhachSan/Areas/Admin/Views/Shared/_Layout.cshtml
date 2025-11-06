@@ -1,0 +1,97 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link rel="shortcut icon" href="~/assets/imgs/logo.png" type="image/x-icon" />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    @Styles.Render("~/Content/css")
+    <link rel="stylesheet" href='@Url.Content("~/Areas/NhanVien/assets/css/shared.css")' />
+    @Scripts.Render("~/bundles/modernizr")
+    @RenderSection("styles", required: false)
+</head>
+<body class="dashboard-body">
+    @{
+        string currentController = ViewContext.RouteData.Values["controller"].ToString();
+        string currentAction = ViewContext.RouteData.Values["action"].ToString();
+    }
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-wrapper">
+                <img src='@Url.Content("~/assets/imgs/logo.png")' alt="Logo" class="sidebar-logo" />
+                <div class="hotel-info">
+                    <h3>Serene Horizon</h3>
+                    <p>Staff Dashboard</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="user-profile">
+            <div class="user-avatar">
+                <img src="https://i.pravatar.cc/150?img=32" alt="User Avatar">
+            </div>
+            <div class="user-info">
+                <h4>Nguyễn Thị An</h4>
+                <p>Tổng Quản Lý</p>
+                <span class="shift-status">Online</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <ul>
+                <li class="nav-item @(currentController == "DashboardAdmin" ? "active" : "")">
+                    <a href="@Url.Action("Index", "DashboardAdmin")" class="nav-link @(currentController == "DashboardAdmin" ? "active-link" : "")">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Bảng Điều Khiển</span>
+                    </a>
+                </li>
+                <li class="nav-item @(currentController == "QuanLyNhanVien" ? "active" : "")">
+                    <a href="@Url.Action("Index", "QuanLyNhanVien")" class="nav-link @(currentController == "QuanLyNhanVien" ? "active-link" : "")">
+                        <i class="fas fa-user-cog"></i>
+                        <span>Quản Lý Nhân Viên</span>
+                    </a>
+                </li>
+                <li class="nav-item @(currentController == "BaoCaoTaiChinh" ? "active" : "")">
+                    <a href="@Url.Action("Index", "BaoCaoTaiChinh")" class="nav-link @(currentController == "BaoCaoTaiChinh" ? "active-link" : "")">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        <span>Tài Chính & Hóa Đơn</span>
+                    </a>
+                </li>
+                <li class="nav-item @(currentController == "BaoCaoThongKe" ? "active" : "")">
+                    <a href="@Url.Action("Index", "BaoCaoThongKe")" class="nav-link @(currentController == "BaoCaoThongKe" ? "active-link" : "")">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Báo Cáo Thống Kê</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="sidebar-footer">
+            <button class="logout-btn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i>
+                Đăng xuất
+            </button>
+        </div>
+    </div>
+    @RenderBody()
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src='@Url.Content("~/Areas/Admin/assets/js/shared.js")'></script>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            once: true,
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,178 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+<link rel='stylesheet' href='@Url.Content("~/Areas/Admin/assets/css/baocao-thongke.css")'/>
+<script src='@Url.Content("~/Areas/Admin/assets/js/baocao-thongke.js")'></script>
+<div class="main-content">
+    <!-- Dashboard Header -->
+    <header class="dashboard-header">
+        <div class="header-left">
+            <button class="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="page-title">
+                <h1>Báo Cáo Nâng Cao</h1>
+                <p id="current-date">Thứ Tư, ngày 1 tháng 10, 2025</p>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="quick-actions">
+                <button class="action-btn" title="Thông báo">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge">3</span>
+                </button>
+                <button class="action-btn" title="Tin nhắn">
+                    <i class="fas fa-envelope"></i>
+                    <span class="badge">5</span>
+                </button>
+            </div>
+            <div class="current-time">
+                <i class="fas fa-clock"></i>
+                <span id="current-time">10:30:00</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content for Advanced Reporting -->
+    <main class="dashboard-main">
+        <!-- Bộ lọc báo cáo -->
+        <div class="report-filters">
+            <div class="filter-group">
+                <label>Loại báo cáo:</label>
+                <select id="reportType" class="filter-select">
+                    <option value="revenue">Doanh thu</option>
+                    <option value="booking">Đặt phòng</option>
+                    <option value="customer">Khách hàng</option>
+                    <option value="employee">Nhân viên</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Khoảng thời gian:</label>
+                <select id="timePeriod" class="filter-select">
+                    <option value="today">Hôm nay</option>
+                    <option value="week">Tuần này</option>
+                    <option value="month">Tháng này</option>
+                    <option value="quarter">Quý này</option>
+                    <option value="year">Năm này</option>
+                    <option value="custom">Tùy chỉnh</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <button class="btn btn-primary" id="exportBtn">
+                    <i class="fas fa-download"></i>
+                    Xuất báo cáo
+                </button>
+            </div>
+        </div>
+
+        <!-- Thống kê tổng quan -->
+        <div class="stats-overview">
+            <div class="stat-box revenue">
+                <div class="stat-icon">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <div class="stat-content">
+                    <h4>Tổng doanh thu</h4>
+                    <p class="stat-value" id="totalRevenue">850M ₫</p>
+                    <span class="stat-trend positive"><i class="fas fa-arrow-up"></i> 15.3%</span>
+                </div>
+            </div>
+            <div class="stat-box bookings">
+                <div class="stat-icon">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <div class="stat-content">
+                    <h4>Số lượt đặt phòng</h4>
+                    <p class="stat-value">1,248</p>
+                    <span class="stat-trend positive"><i class="fas fa-arrow-up"></i> 8.2%</span>
+                </div>
+            </div>
+            <div class="stat-box customers">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-content">
+                    <h4>Khách hàng mới</h4>
+                    <p class="stat-value">342</p>
+                    <span class="stat-trend positive"><i class="fas fa-arrow-up"></i> 12.1%</span>
+                </div>
+            </div>
+            <div class="stat-box occupancy">
+                <div class="stat-icon">
+                    <i class="fas fa-percentage"></i>
+                </div>
+                <div class="stat-content">
+                    <h4>Tỷ lệ lấp đầy</h4>
+                    <p class="stat-value">87.5%</p>
+                    <span class="stat-trend negative"><i class="fas fa-arrow-down"></i> 2.3%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Biểu đồ -->
+        <div class="charts-section">
+            <div class="chart-card">
+                <div class="card-header">
+                    <h3>Doanh thu theo tháng</h3>
+                </div>
+                <div class="card-body">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-card">
+                <div class="card-header">
+                    <h3>Tỷ lệ loại phòng</h3>
+                </div>
+                <div class="card-body">
+                    <canvas id="roomTypeChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bảng chi tiết -->
+        <div class="custom-card">
+            <div class="card-header">
+                <h3>Chi tiết báo cáo</h3>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Tháng</th>
+                                <th>Doanh thu</th>
+                                <th>Số đơn</th>
+                                <th>Trung bình/đơn</th>
+                                <th>Tăng trưởng</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reportTableBody">
+                            <tr>
+                                <td>Tháng 10/2025</td>
+                                <td>285.000.000 ₫</td>
+                                <td>426</td>
+                                <td>668.779 ₫</td>
+                                <td><span class="trend-badge positive">+15.3%</span></td>
+                            </tr>
+                            <tr>
+                                <td>Tháng 9/2025</td>
+                                <td>247.000.000 ₫</td>
+                                <td>398</td>
+                                <td>620.603 ₫</td>
+                                <td><span class="trend-badge positive">+8.7%</span></td>
+                            </tr>
+                            <tr>
+                                <td>Tháng 8/2025</td>
+                                <td>318.000.000 ₫</td>
+                                <td>424</td>
+                                <td>750.000 ₫</td>
+                                <td><span class="trend-badge negative">-5.2%</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>

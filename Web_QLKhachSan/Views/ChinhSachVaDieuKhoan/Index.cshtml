@@ -1,0 +1,300 @@
+﻿
+@{
+    ViewBag.Title = ViewBag.Title ?? "Điều Khoản Sử Dụng và Chính Sách Bảo Mật";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string activeTab = ViewBag.ActiveTab ?? "terms";
+}
+
+<div class="terms-privacy-page">
+    <div class="container">
+        <div class="page-header">
+            <h1><i class="fas fa-shield-alt"></i> Điều Khoản và Chính Sách</h1>
+            <p class="page-subtitle">Thông tin quan trọng về việc sử dụng dịch vụ và bảo mật thông tin tại The Serene Horizon</p>
+        </div>
+
+        <!-- Toggle Buttons -->
+        <div class="content-toggle">
+            <button class="toggle-btn @(activeTab == "terms" ? "active" : "")" id="termsBtn" data-target="terms-content">
+                <i class="fas fa-file-contract"></i>
+                <span>Điều Khoản Sử Dụng</span>
+            </button>
+            <button class="toggle-btn @(activeTab == "privacy" ? "active" : "")" id="privacyBtn" data-target="privacy-content">
+                <i class="fas fa-shield-alt"></i>
+                <span>Chính Sách Bảo Mật</span>
+            </button>
+        </div>
+
+        <!-- Terms of Service Content -->
+        <div class="content-section @(activeTab == "terms" ? "active" : "")" id="terms-content">
+            <div class="content-header">
+                <h2><i class="fas fa-file-contract"></i> Điều Khoản Sử Dụng</h2>
+                <p class="last-updated">Cập nhật lần cuối: 22/10/2025</p>
+            </div>
+
+            <div class="content-body">
+                <div class="policy-section">
+                    <h3>1. Chấp Nhận Điều Khoản</h3>
+                    <p>
+                        Khi truy cập và sử dụng dịch vụ của The Serene Horizon Hotel, bạn đồng ý tuân thủ và bị ràng buộc bởi các điều khoản và điều kiện được quy định dưới đây. Nếu bạn không đồng ý với bất kỳ phần nào của các điều khoản này, vui lòng không sử dụng dịch vụ của chúng tôi.
+                    </p>
+                </div>
+
+                <div class="policy-section">
+                    <h3>2. Đặt Phòng và Thanh Toán</h3>
+                    <ul>
+                        <li>Mọi đặt phòng phải được xác nhận qua email hoặc số điện thoại đăng ký.</li>
+                        <li>Thanh toán có thể thực hiện qua các phương thức: tiền mặt, thẻ tín dụng, chuyển khoản ngân hàng.</li>
+                        <li>Giá phòng có thể thay đổi tùy theo mùa và chương trình khuyến mãi.</li>
+                        <li>Khách hàng cần thanh toán đầy đủ hoặc đặt cọc theo yêu cầu khi đặt phòng.</li>
+                    </ul>
+                </div>
+
+                <div class="policy-section">
+                    <h3>3. Chính Sách Hủy Phòng</h3>
+                    <ul>
+                        <li><strong>Hủy phòng trước 24 giờ:</strong> Miễn phí hoàn toàn.</li>
+                        <li><strong>Hủy phòng trong vòng 24 giờ:</strong> Phí hủy phòng 50% tổng giá trị.</li>
+                        <li><strong>Không đến nhận phòng (No-show):</strong> Không hoàn tiền.</li>
+                        <li>Đối với các gói đặc biệt, chính sách hủy phòng có thể khác biệt.</li>
+                    </ul>
+                </div>
+
+                <div class="policy-section">
+                    <h3>4. Check-in và Check-out</h3>
+                    <div class="highlight-box">
+                        <div class="time-info">
+                            <div class="time-item">
+                                <i class="fas fa-clock"></i>
+                                <strong>Giờ nhận phòng:</strong> 14:00
+                            </div>
+                            <div class="time-item">
+                                <i class="fas fa-clock"></i>
+                                <strong>Giờ trả phòng:</strong> 12:00
+                            </div>
+                        </div>
+                    </div>
+                    <ul>
+                        <li>Nhận/trả phòng sớm/muộn có thể được sắp xếp tùy tình trạng phòng trống (có thể phát sinh phí).</li>
+                        <li>Khách hàng cần xuất trình CMND/CCCD hoặc hộ chiếu khi làm thủ tục nhận phòng.</li>
+                    </ul>
+                </div>
+
+                <div class="policy-section">
+                    <h3>5. Quy Định Sử Dụng Dịch Vụ</h3>
+                    <ul>
+                        <li>Không hút thuốc trong phòng (phí vệ sinh đặc biệt sẽ được áp dụng nếu vi phạm).</li>
+                        <li>Không mang vũ khí, chất cháy nổ, ma túy vào khách sạn.</li>
+                        <li>Giữ gìn trật tự, không gây ồn ào ảnh hưởng đến khách khác.</li>
+                        <li>Bồi thường thiệt hại nếu làm hư hỏng tài sản của khách sạn.</li>
+                        <li>Chịu trách nhiệm với tài sản cá nhân, khách sạn không chịu trách nhiệm về mất mát.</li>
+                    </ul>
+                </div>
+
+                <div class="policy-section">
+                    <h3>6. Trách Nhiệm của Khách Sạn</h3>
+                    <p>
+                        The Serene Horizon Hotel cam kết cung cấp dịch vụ chất lượng cao và đảm bảo an toàn cho khách hàng. Tuy nhiên, chúng tôi không chịu trách nhiệm đối với những thiệt hại do thiên tai, sự cố bất khả kháng, hoặc hành vi của bên thứ ba gây ra.
+                    </p>
+                </div>
+
+                <div class="policy-section">
+                    <h3>7. Thay Đổi Điều Khoản</h3>
+                    <p>
+                        Khách sạn có quyền thay đổi, cập nhật các điều khoản sử dụng bất kỳ lúc nào mà không cần thông báo trước. Việc tiếp tục sử dụng dịch vụ sau khi có thay đổi đồng nghĩa với việc bạn chấp nhận các điều khoản mới.
+                    </p>
+                </div>
+
+                <div class="policy-section contact-section">
+                    <h3>8. Liên Hệ</h3>
+                    <p>Nếu bạn có bất kỳ câu hỏi nào về Điều khoản sử dụng, vui lòng liên hệ:</p>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <strong>Email:</strong> support@serenehorizon.com
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <strong>Hotline:</strong> (+84)123456789
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <strong>Địa chỉ:</strong> 123 Đường Bờ Biển, TP Paradise
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Privacy Policy Content -->
+        <div class="content-section @(activeTab == "privacy" ? "active" : "")" id="privacy-content">
+            <div class="content-header">
+                <h2><i class="fas fa-shield-alt"></i> Chính Sách Bảo Mật</h2>
+                <p class="last-updated">Cập nhật lần cuối: 22/10/2025</p>
+            </div>
+
+            <div class="content-body">
+                <div class="policy-section">
+                    <h3>1. Thu Thập Thông Tin</h3>
+                    <p>
+                        The Serene Horizon Hotel thu thập các thông tin cá nhân của bạn khi bạn:
+                    </p>
+                    <ul>
+                        <li>Đăng ký tài khoản trên website</li>
+                        <li>Đặt phòng hoặc sử dụng dịch vụ</li>
+                        <li>Liên hệ với bộ phận hỗ trợ khách hàng</li>
+                        <li>Tham gia các chương trình khuyến mãi hoặc khảo sát</li>
+                    </ul>
+                    <p>
+                        <strong>Thông tin có thể bao gồm:</strong> họ tên, email, số điện thoại, địa chỉ, ngày sinh, thông tin thanh toán, và lịch sử đặt phòng.
+                    </p>
+                </div>
+
+                <div class="policy-section">
+                    <h3>2. Mục Đích Sử Dụng Thông Tin</h3>
+                    <p>Chúng tôi sử dụng thông tin cá nhân của bạn để:</p>
+                    <ul>
+                        <li>Xử lý đặt phòng và cung cấp dịch vụ</li>
+                        <li>Xác nhận đặt phòng và gửi thông tin liên quan</li>
+                        <li>Cải thiện chất lượng dịch vụ và trải nghiệm khách hàng</li>
+                        <li>Gửi thông tin khuyến mãi, ưu đãi đặc biệt (nếu bạn đồng ý)</li>
+                        <li>Phân tích dữ liệu để cải thiện website và dịch vụ</li>
+                        <li>Tuân thủ các yêu cầu pháp lý và giải quyết tranh chấp</li>
+                    </ul>
+                </div>
+
+                <div class="policy-section">
+                    <h3>3. Bảo Vệ Thông Tin</h3>
+                    <p>
+                        Chúng tôi cam kết bảo vệ thông tin cá nhân của bạn bằng các biện pháp an ninh kỹ thuật và tổ chức phù hợp:
+                    </p>
+                    <div class="security-features">
+                        <div class="security-item">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Mã hóa dữ liệu nhạy cảm (SSL/TLS)</span>
+                        </div>
+                        <div class="security-item">
+                            <i class="fas fa-fire-alt"></i>
+                            <span>Hệ thống tường lửa và phần mềm bảo mật</span>
+                        </div>
+                        <div class="security-item">
+                            <i class="fas fa-user-shield"></i>
+                            <span>Kiểm soát truy cập nghiêm ngặt đối với nhân viên</span>
+                        </div>
+                        <div class="security-item">
+                            <i class="fas fa-database"></i>
+                            <span>Sao lưu dữ liệu định kỳ</span>
+                        </div>
+                        <div class="security-item">
+                            <i class="fas fa-graduation-cap"></i>
+                            <span>Đào tạo nhân viên về bảo mật thông tin</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="policy-section">
+                    <h3>4. Chia Sẻ Thông Tin</h3>
+                    <div class="warning-box">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p><strong>Chúng tôi KHÔNG bán, trao đổi hoặc cho thuê thông tin cá nhân của bạn cho bên thứ ba.</strong></p>
+                    </div>
+                    <p>Thông tin chỉ được chia sẻ trong các trường hợp:</p>
+                    <ul>
+                        <li>Với các đối tác cung cấp dịch vụ (thanh toán, vận chuyển) để hoàn tất giao dịch</li>
+                        <li>Theo yêu cầu của pháp luật hoặc cơ quan có thẩm quyền</li>
+                        <li>Để bảo vệ quyền lợi và an toàn của khách sạn và khách hàng</li>
+                        <li>Khi được sự đồng ý rõ ràng của bạn</li>
+                    </ul>
+                </div>
+
+                <div class="policy-section">
+                    <h3>5. Cookie và Công Nghệ Theo Dõi</h3>
+                    <p>Website của chúng tôi sử dụng cookie và các công nghệ tương tự để:</p>
+                    <ul>
+                        <li>Ghi nhớ thông tin đăng nhập và tùy chọn của bạn</li>
+                        <li>Phân tích lưu lượng truy cập và hành vi người dùng</li>
+                        <li>Cá nhân hóa nội dung và quảng cáo</li>
+                        <li>Cải thiện hiệu suất và bảo mật website</li>
+                    </ul>
+                    <p><em>Bạn có thể quản lý cookie thông qua cài đặt trình duyệt của mình.</em></p>
+                </div>
+
+                <div class="policy-section">
+                    <h3>6. Quyền Của Bạn</h3>
+                    <p>Bạn có các quyền sau đối với thông tin cá nhân:</p>
+                    <div class="rights-grid">
+                        <div class="right-item">
+                            <i class="fas fa-eye"></i>
+                            <span>Truy cập và xem thông tin cá nhân</span>
+                        </div>
+                        <div class="right-item">
+                            <i class="fas fa-edit"></i>
+                            <span>Yêu cầu sửa đổi thông tin không chính xác</span>
+                        </div>
+                        <div class="right-item">
+                            <i class="fas fa-trash"></i>
+                            <span>Yêu cầu xóa thông tin cá nhân</span>
+                        </div>
+                        <div class="right-item">
+                            <i class="fas fa-envelope-open-text"></i>
+                            <span>Từ chối nhận email marketing</span>
+                        </div>
+                        <div class="right-item">
+                            <i class="fas fa-undo"></i>
+                            <span>Rút lại sự đồng ý đã cung cấp</span>
+                        </div>
+                    </div>
+                    <p>
+                        <strong>Để thực hiện các quyền này, vui lòng liên hệ:</strong> privacy@serenehorizon.com
+                    </p>
+                </div>
+
+                <div class="policy-section">
+                    <h3>7. Lưu Trữ Thông Tin</h3>
+                    <p>
+                        Chúng tôi chỉ lưu trữ thông tin cá nhân của bạn trong thời gian cần thiết để phục vụ các mục đích đã nêu, hoặc theo yêu cầu của pháp luật. Sau đó, thông tin sẽ được xóa hoặc ẩn danh hóa một cách an toàn.
+                    </p>
+                </div>
+
+                <div class="policy-section">
+                    <h3>8. Thay Đổi Chính Sách</h3>
+                    <p>
+                        Chính sách bảo mật này có thể được cập nhật định kỳ. Chúng tôi sẽ thông báo về các thay đổi quan trọng qua email hoặc thông báo trên website. Ngày cập nhật cuối cùng sẽ được ghi rõ ở đầu chính sách.
+                    </p>
+                </div>
+
+                <div class="policy-section contact-section">
+                    <h3>9. Liên Hệ</h3>
+                    <p>Nếu bạn có bất kỳ câu hỏi nào về Chính sách bảo mật, vui lòng liên hệ:</p>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <strong>Email:</strong> privacy@serenehorizon.com
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <strong>Hotline:</strong> (+84)123456789
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <strong>Địa chỉ:</strong> 123 Đường Bờ Biển, TP Paradise
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <button class="btn-primary" id="acceptBtn">
+                <i class="fas fa-check"></i>
+                Tôi Đã Đọc và Đồng Ý
+            </button>
+            <a href="@Url.Action("Index", "Home")" class="btn-secondary">
+                <i class="fas fa-arrow-left"></i>
+                Quay Về Trang Chủ
+            </a>
+        </div>
+    </div>
+</div>
+<link rel="stylesheet" href="~/assets/css/chinhsach-dieukhoan.css" />
+<script src="~/assets/js/chinhsach-dieukhoan.js"></script>

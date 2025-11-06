@@ -1,0 +1,199 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+<link rel='stylesheet' href='@Url.Content("~/Areas/Admin/assets/css/quanly-nhanvien.css")'/>
+<script src='@Url.Content("~/Areas/Admin/assets/js/quanly-nhanvien.js")'></script>
+<div class="main-content">
+    <!-- Dashboard Header -->
+    <header class="dashboard-header">
+        <div class="header-left">
+            <button class="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="page-title">
+                <h1>Quản Lý Nhân Viên</h1>
+                <p id="current-date">Thứ Tư, ngày 2 tháng 10, 2025</p>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="quick-actions">
+                <button class="action-btn" title="Thông báo">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge">3</span>
+                </button>
+                <button class="action-btn" title="Tin nhắn">
+                    <i class="fas fa-envelope"></i>
+                    <span class="badge">5</span>
+                </button>
+            </div>
+            <div class="current-time">
+                <i class="fas fa-clock"></i>
+                <span id="current-time">10:30:00</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content for Employee Management -->
+    <main class="dashboard-main">
+        <div class="custom-card">
+            <div class="card-header">
+                <h3><i class="fas fa-users"></i> Danh sách nhân viên</h3>
+                <button class="btn btn-primary" id="addEmployeeBtn">
+                    <i class="fas fa-plus"></i>
+                    Thêm nhân viên mới
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Tên Nhân Viên</th>
+                                <th>Chức Vụ</th>
+                                <th>Email</th>
+                                <th>Số Điện Thoại</th>
+                                <th>Trạng Thái</th>
+                                <th>Hành Động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Dữ liệu mẫu -->
+                            <tr>
+                                <td>NV001</td>
+                                <td>Nguyễn Văn An</td>
+                                <td>Quản lý</td>
+                                <td>an.nguyen@paradise.vn</td>
+                                <td>0901234567</td>
+                                <td><span class="status-active"><i class="fas fa-check-circle"></i> Hoạt động</span></td>
+                                <td>
+                                    <div class="actions-cell">
+                                        <button class="action-icon view" title="Xem"><i class="fas fa-eye"></i></button>
+                                        <button class="action-icon edit" title="Sửa"><i class="fas fa-edit"></i></button>
+                                        <button class="action-icon delete" title="Xóa"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>NV002</td>
+                                <td>Trần Thị Bình</td>
+                                <td>Lễ tân</td>
+                                <td>binh.tran@paradise.vn</td>
+                                <td>0912345678</td>
+                                <td><span class="status-active"><i class="fas fa-check-circle"></i> Hoạt động</span></td>
+                                <td>
+                                    <div class="actions-cell">
+                                        <button class="action-icon view" title="Xem"><i class="fas fa-eye"></i></button>
+                                        <button class="action-icon edit" title="Sửa"><i class="fas fa-edit"></i></button>
+                                        <button class="action-icon delete" title="Xóa"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>NV003</td>
+                                <td>Lê Văn Cường</td>
+                                <td>Phục vụ</td>
+                                <td>cuong.le@paradise.vn</td>
+                                <td>0923456789</td>
+                                <td><span class="status-inactive"><i class="fas fa-clock"></i> Nghỉ phép</span></td>
+                                <td>
+                                    <div class="actions-cell">
+                                        <button class="action-icon view" title="Xem"><i class="fas fa-eye"></i></button>
+                                        <button class="action-icon edit" title="Sửa"><i class="fas fa-edit"></i></button>
+                                        <button class="action-icon delete" title="Xóa"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>NV004</td>
+                                <td>Phạm Thị Dung</td>
+                                <td>Kế toán</td>
+                                <td>dung.pham@paradise.vn</td>
+                                <td>0934567890</td>
+                                <td><span class="status-active"><i class="fas fa-check-circle"></i> Hoạt động</span></td>
+                                <td>
+                                    <div class="actions-cell">
+                                        <button class="action-icon view" title="Xem"><i class="fas fa-eye"></i></button>
+                                        <button class="action-icon edit" title="Sửa"><i class="fas fa-edit"></i></button>
+                                        <button class="action-icon delete" title="Xóa"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>NV005</td>
+                                <td>Hoàng Văn Em</td>
+                                <td>Bảo vệ</td>
+                                <td>em.hoang@paradise.vn</td>
+                                <td>0945678901</td>
+                                <td><span class="status-active"><i class="fas fa-check-circle"></i> Hoạt động</span></td>
+                                <td>
+                                    <div class="actions-cell">
+                                        <button class="action-icon view" title="Xem"><i class="fas fa-eye"></i></button>
+                                        <button class="action-icon edit" title="Sửa"><i class="fas fa-edit"></i></button>
+                                        <button class="action-icon delete" title="Xóa"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+<!-- ======== MODAL THÊM/SỬA NHÂN VIÊN ======== -->
+<div class="employee-modal" id="employeeModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="employeeForm">
+                <div class="modal-header">
+                    <h3 id="modalTitle">Thêm Nhân Viên Mới</h3>
+                    <button type="button" class="close-btn" id="closeModalBtn">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="employeeName">Tên Nhân Viên</label>
+                            <input type="text" class="form-control" id="employeeName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="employeeRole">Chức Vụ</label>
+                            <select class="form-control" id="employeeRole" required>
+                                <option value="">Chọn chức vụ</option>
+                                <option value="quản lý">Quản lý</option>
+                                <option value="lễ tân">Lễ tân</option>
+                                <option value="phục vụ">Phục vụ</option>
+                                <option value="kế toán">Kế toán</option>
+                                <option value="bảo vệ">Bảo vệ</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="employeeEmail">Email</label>
+                            <input type="email" class="form-control" id="employeeEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="employeePhone">Số Điện Thoại</label>
+                            <input type="tel" class="form-control" id="employeePhone" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="employeeStatus">Trạng Thái</label>
+                            <select class="form-control" id="employeeStatus" required>
+                                <option value="active">Hoạt động</option>
+                                <option value="inactive">Nghỉ phép</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" id="cancelBtn">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Lưu Nhân Viên</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,267 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+<link rel="stylesheet" href="~/assets/css/dashboard-khachhang.css" />
+
+<section class="dashboard-hero">
+    <div class="container">
+        <div class="welcome-card">
+            <div class="welcome-content">
+                <h1>Xin Chào, <span id="welcomeName">@(Session["HoVaTen"])</span>! 👋</h1>
+                <p>Chào mừng trở lại với The Serene Horizon Hotel</p>
+            </div>
+            <div class="welcome-actions">
+                <a href="@Url.Action("Index", "PhongNghi")" class="btn-primary">
+                    <i class="fas fa-plus"></i> Đặt Phòng Mới
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="dashboard-main">
+    <div class="container">
+        <div class="dashboard-layout">
+
+            <div class="dashboard-content">
+
+                <section id="profile" class="content-section">
+                    <h2 class="section-title">Thông Tin Tài Khoản</h2>
+
+                    <div class="profile-layout">
+                        <div class="profile-card">
+                            <div class="profile-header">
+                                <div class="profile-avatar">
+                                    <i class="fas fa-user-circle"></i>
+                                </div>
+                                <div class="profile-info">
+                                    <h3 id="profileName">@(Session["HoVaTen"])</h3>
+                                    <p id="profileEmail">@(Session["Email"])</p>
+                                    <span class="member-badge">
+                                        <i class="fas fa-crown"></i> Thành Viên VIP
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="profile-stats">
+                                <div class="profile-stat">
+                                    <i class="fas fa-calendar"></i>
+                                    <div>
+                                        <strong>Ngày Tạo</strong>
+                                        <p>@(Session["NgayTao"] != null ? ((DateTime)Session["NgayTao"]).ToString("dd/MM/yyyy") : "N/A")</p>
+                                    </div>
+                                </div>
+                                <div class="profile-stat">
+                                    <i class="fas fa-bed"></i>
+                                    <div>
+                                        <strong>Tổng đặt phòng</strong>
+                                        <p>15 lần</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="profile-form-card">
+                            <h3>Cập Nhật Thông Tin</h3>
+
+                            <!-- Form Họ và Tên -->
+                            <div class="form-section">
+                                <div class="form-group-inline">
+                                    <label for="fullName">Họ và Tên</label>
+                                    <div class="input-with-button">
+                                        <input type="text" id="fullName" value="@(Session["HoVaTen"])" readonly />
+                                        <button type="button" class="btn-edit" onclick="editField('fullName')">
+                                            <i class="fas fa-edit"></i> Đổi Tên
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Form Email -->
+                            <div class="form-section">
+                                <div class="form-group-inline">
+                                    <label for="email">Email</label>
+                                    <div class="input-with-button">
+                                        <input type="email" id="email" value="@(Session["Email"])" readonly />
+                                        <button type="button" class="btn-edit" onclick="editField('email')">
+                                            <i class="fas fa-envelope"></i> Đổi Email
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Form Số Điện Thoại -->
+                            <div class="form-section">
+                                <div class="form-group-inline">
+                                    <label for="phone">Số Điện Thoại</label>
+                                    <div class="input-with-button">
+                                        <input type="tel" id="phone" value="" placeholder="Chưa có số điện thoại" readonly />
+                                        <button type="button" class="btn-edit" onclick="editField('phone')">
+                                            <i class="fas fa-phone"></i> Thêm SĐT
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Form Ngày Sinh -->
+                            <div class="form-section">
+                                <div class="form-group-inline">
+                                    <label for="birthdate">Ngày Sinh</label>
+                                    <div class="input-with-button">
+                                        <input type="date"
+                                               id="birthdate"
+                                               value="@(Session["NgaySinh"] != null ? ((DateTime)Session["NgaySinh"]).ToString("yyyy-MM-dd") : "")"
+                                               readonly />
+                                        <button type="button" class="btn-edit" onclick="editField('birthdate')">
+                                            <i class="fas fa-calendar"></i> Đổi Ngày Sinh
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Form Địa Chỉ -->
+                            <div class="form-section">
+                                <div class="form-group-inline">
+                                    <label for="address">Địa Chỉ</label>
+                                    <div class="input-with-button">
+                                        <textarea id="address" rows="3" placeholder="Chưa có địa chỉ" readonly></textarea>
+                                        <button type="button" class="btn-edit" onclick="editField('address')">
+                                            <i class="fas fa-map-marker-alt"></i> Thêm Địa Chỉ
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Nút Lưu Thay Đổi (Chung) -->
+                            <div class="form-section">
+                                <button type="button" class="btn-primary btn-save-all" onclick="saveAllChanges()">
+                                    <i class="fas fa-save"></i> Lưu Thay Đổi
+                                </button>
+                            </div>
+                        </div>
+
+                </section>
+
+                <!-- Overview, Bookings and Services sections removed per request -->
+
+                <section id="history" class="content-section">
+                    <h2 class="section-title">Lịch Sử Giao Dịch</h2>
+
+                    <div class="history-table-container">
+                        <table class="history-table">
+                            <thead>
+                                <tr>
+                        <th>Mã Đơn</th>
+                        <th>Ngày Đặt</th>
+                        <th>Loại Phòng</th>
+                        <th>Dịch Vụ</th>
+                        <th>Thời Gian</th>
+                        <th>Tổng Tiền</th>
+                        <th>Trạng Thái</th>
+                        <th>Hành Động</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historyTableBody">
+                                <tr>
+                                    <td class="booking-id">#BK20250309001</td>
+                                    <td>01/09/2025</td>
+                                    <td>Deluxe Room</td>
+                                    <td class="service-cell">
+                                        <div class="service-summary">
+                                            <span class="service-label">Spa & Massage</span>
+                                            <button class="service-toggle" aria-expanded="false" title="Xem dịch vụ khác">+1</button>
+                                            <ul class="service-list" hidden>
+                                                <li>Spa & Massage</li>
+                                                <li>Bữa sáng buffet</li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                    <td>10/09/2025 - 15/09/2025</td>
+                                    <td class="price">6.000.000 VNĐ</td>
+                                    <td><span class="status-badge completed">Hoàn Thành</span></td>
+                                    <td>
+                                        <button class="btn-sm btn-primary" onclick="viewBookingDetails('BK20250309001')">Chi Tiết</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="booking-id">#BK20250308001</td>
+                                    <td>10/08/2025</td>
+                                    <td>Family Suite</td>
+                                    <td class="service-cell">
+                                        <div class="service-summary">
+                                            <span class="service-label">Đưa đón sân bay</span>
+                                        </div>
+                                    </td>
+                                    <td>20/08/2025 - 25/08/2025</td>
+                                    <td class="price">12.000.000 VNĐ</td>
+                                    <td><span class="status-badge completed">Hoàn Thành</span></td>
+                                    <td>
+                                        <button class="btn-sm btn-primary" onclick="viewBookingDetails('BK20250308001')">Chi Tiết</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="booking-id">#BK20250307001</td>
+                                    <td>25/06/2025</td>
+                                    <td>Ocean View Room</td>
+                                    <td class="service-cell">
+                                        <div class="service-summary">
+                                            <span class="service-label">-</span>
+                                        </div>
+                                    </td>
+                                    <td>05/07/2025 - 10/07/2025</td>
+                                    <td class="price">8.000.000 VNĐ</td>
+                                    <td><span class="status-badge cancelled">Đã Hủy</span></td>
+                                    <td>
+                                        <button class="btn-sm btn-secondary" onclick="viewBookingDetails('BK20250307001')">Chi Tiết</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="booking-id">#BK20250306001</td>
+                                    <td>15/05/2025</td>
+                                    <td>Standard Room</td>
+                                    <td class="service-cell">
+                                        <div class="service-summary">
+                                            <span class="service-label">Bữa sáng buffet</span>
+                                        </div>
+                                    </td>
+                                    <td>01/06/2025 - 03/06/2025</td>
+                                    <td class="price">4.000.000 VNĐ</td>
+                                    <td><span class="status-badge completed">Hoàn Thành</span></td>
+                                    <td>
+                                        <button class="btn-sm btn-primary" onclick="viewBookingDetails('BK20250306001')">Chi Tiết</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="booking-id">#BK20250305001</td>
+                                    <td>20/04/2025</td>
+                                    <td>Deluxe Ocean View</td>
+                                    <td class="service-cell">
+                                        <div class="service-summary">
+                                            <span class="service-label">Hồ bơi</span>
+                                            <button class="service-toggle" aria-expanded="false" title="Xem dịch vụ khác">+2</button>
+                                            <ul class="service-list" hidden>
+                                                <li>Hồ bơi</li>
+                                                <li>Gym & Fitness</li>
+                                                <li>Spa & Massage</li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                    <td>15/05/2025 - 18/05/2025</td>
+                                    <td class="price">9.000.000 VNĐ</td>
+                                    <td><span class="status-badge completed">Hoàn Thành</span></td>
+                                    <td>
+                                        <button class="btn-sm btn-primary" onclick="viewBookingDetails('BK20250305001')">Chi Tiết</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+
+
+            </div>
+        </div>
+    </div>
+</section>
+<script src="~/assets/js/dashboard-khachhang.js"></script>

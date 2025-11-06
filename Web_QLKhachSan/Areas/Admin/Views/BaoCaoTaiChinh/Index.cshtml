@@ -1,0 +1,195 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+<link rel='stylesheet' href='@Url.Content("~/Areas/Admin/assets/css/quanly-taichinh.css")' />
+<script src='@Url.Content("~/Areas/Admin/assets/js/quanly-taichinh.js")'></script>
+<div class="main-content">
+    <!-- Dashboard Header -->
+    <header class="dashboard-header">
+        <div class="header-left">
+            <button class="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="page-title">
+                <h1>Tài Chính & Hóa Đơn</h1>
+                <p id="current-date">Thứ Tư, ngày 1 tháng 10, 2025</p>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="quick-actions">
+                <button class="action-btn" title="Thông báo">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge">3</span>
+                </button>
+                <button class="action-btn" title="Tin nhắn">
+                    <i class="fas fa-envelope"></i>
+                    <span class="badge">5</span>
+                </button>
+            </div>
+            <div class="current-time">
+                <i class="fas fa-clock"></i>
+                <span id="current-time">10:30:00</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content for Finance Management -->
+    <main class="dashboard-main">
+        <!-- Bộ lọc và Xuất báo cáo -->
+        <div class="filter-section">
+            <div class="filters-container">
+                <div class="filter-group">
+                    <label><i class="fas fa-calendar"></i> Từ ngày:</label>
+                    <input type="date" id="filterFromDate" class="filter-input">
+                </div>
+                <div class="filter-group">
+                    <label><i class="fas fa-calendar"></i> Đến ngày:</label>
+                    <input type="date" id="filterToDate" class="filter-input">
+                </div>
+                <div class="filter-group">
+                    <label><i class="fas fa-flag"></i> Trạng thái:</label>
+                    <select id="filterStatus" class="filter-input">
+                        <option value="all">Tất cả</option>
+                        <option value="paid">Đã thanh toán</option>
+                        <option value="pending">Chờ thanh toán</option>
+                        <option value="cancelled">Đã hủy</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label><i class="fas fa-search"></i> Tìm kiếm:</label>
+                    <input type="text" id="filterSearch" class="filter-input" placeholder="Tên khách hàng hoặc mã HĐ...">
+                </div>
+                
+                <div class="filter-actions">
+                    <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                        <button class="btn btn-secondary" id="applyFiltersBtn">
+                            <i class="fas fa-filter"></i> Áp dụng lọc
+                        </button>
+                        <button class="btn btn-info" id="resetFiltersBtn">
+                            <i class="fas fa-redo"></i> Reset
+                        </button>
+                    </div>
+                    <div class="export-container">
+                        <button class="btn btn-success" id="exportExcelBtn">
+                            <i class="fas fa-file-excel"></i> Xuất Excel
+                        </button>
+                        <button class="btn btn-danger" id="exportPdfBtn">
+                            <i class="fas fa-file-pdf"></i> Xuất PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="custom-card">
+            <div class="card-header">
+                <h3><i class="fas fa-file-invoice"></i> Danh sách hóa đơn</h3>
+                <button class="btn btn-primary">
+                    <i class="fas fa-plus"></i>
+                    Tạo hóa đơn mới
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>ID Hóa Đơn</th>
+                                <th>Tên Khách Hàng</th>
+                                <th>Ngày Tạo</th>
+                                <th>Tổng Tiền</th>
+                                <th>Trạng Thái</th>
+                                <th>Hành Động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Dữ liệu mẫu -->
+                            <tr>
+                                <td>HD001</td>
+                                <td>Nguyễn Văn A</td>
+                                <td>01/10/2025</td>
+                                <td>6.000.000 ₫</td>
+                                <td><span class="status-paid">Đã thanh toán</span></td>
+                                <td>
+                                    <div class="actions-cell">
+                                        <button class="action-icon view" title="Xem"><i class="fas fa-eye"></i></button>
+                                        <button class="action-icon print" title="In"><i class="fas fa-print"></i></button>
+                                        <button class="action-icon delete" title="Xóa"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>HD002</td>
+                                <td>Trần Thị B</td>
+                                <td>30/09/2025</td>
+                                <td>3.500.000 ₫</td>
+                                <td><span class="status-pending"><i class="fas fa-clock"></i> Chờ thanh toán</span></td>
+                                <td>
+                                    <div class="actions-cell">
+                                        <button class="action-icon view" title="Xem"><i class="fas fa-eye"></i></button>
+                                        <button class="action-icon print" title="In"><i class="fas fa-print"></i></button>
+                                        <button class="action-icon delete" title="Xóa"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>HD003</td>
+                                <td>Lê Văn C</td>
+                                <td>29/09/2025</td>
+                                <td>11.500.000 ₫</td>
+                                <td><span class="status-cancelled"><i class="fas fa-times-circle"></i> Đã hủy</span></td>
+                                <td>
+                                    <div class="actions-cell">
+                                        <button class="action-icon view" title="Xem"><i class="fas fa-eye"></i></button>
+                                        <button class="action-icon print" title="In"><i class="fas fa-print"></i></button>
+                                        <button class="action-icon delete" title="Xóa"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- ======== MODAL TẠO HÓA ĐƠN ======== -->
+<div class="invoice-modal" id="invoiceModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="invoiceForm">
+                <div class="modal-header">
+                    <h3>Tạo Hóa Đơn Mới</h3>
+                    <button type="button" class="close-btn" id="closeModalBtn">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="customerName">Tên Khách Hàng</label>
+                        <input type="text" class="form-control" id="customerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="invoiceDate">Ngày Tạo</label>
+                        <input type="date" class="form-control" id="invoiceDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="invoiceAmount">Tổng Tiền (VND)</label>
+                        <input type="number" class="form-control" id="invoiceAmount" placeholder="ví dụ: 5000000" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="invoiceStatus">Trạng Thái</label>
+                        <select class="form-control" id="invoiceStatus">
+                            <option value="pending">Chờ thanh toán</option>
+                            <option value="paid">Đã thanh toán</option>
+                            <option value="cancelled">Đã hủy</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" id="cancelBtn">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Lưu Hóa Đơn</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

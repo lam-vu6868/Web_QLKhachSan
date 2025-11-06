@@ -1,0 +1,664 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+<link rel='stylesheet' href='@Url.Content("~/Areas/NhanVien/assets/css/thanhtoan-hoadon.css")' />
+<script src='@Url.Content("~/Areas/NhanVien/assets/js/thanhtoan-hoadon.js")'></script>
+
+<div class="main-content">
+    <!-- Top Header -->
+    <header class="dashboard-header">
+        <div class="header-left">
+            <button class="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="page-title">
+                <h1>Thanh Toán & Hóa Đơn</h1>
+                <p>Quản lý thanh toán, hóa đơn và giao dịch tài chính</p>
+            </div>
+        </div>
+        <div class="header-right">
+            <button class="btn btn-primary" id="new-invoice-btn">
+                <i class="fas fa-plus"></i>
+                Tạo hóa đơn mới
+            </button>
+        </div>
+    </header>
+
+    <!-- Payment Content -->
+    <main class="dashboard-main">
+        <!-- Payment Stats -->
+        <section class="payment-stats-section">
+            <div class="row">
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-card revenue-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value">$145,230</div>
+                            <div class="stat-label">Doanh thu hôm nay</div>
+                            <div class="stat-change positive">
+                                <i class="fas fa-arrow-up"></i> +12.5%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-card payment-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-credit-card"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value">89</div>
+                            <div class="stat-label">Giao dịch thành công</div>
+                            <div class="stat-change positive">
+                                <i class="fas fa-arrow-up"></i> +8.2%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-card pending-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value">12</div>
+                            <div class="stat-label">Thanh toán chờ xử lý</div>
+                            <div class="stat-change negative">
+                                <i class="fas fa-arrow-down"></i> -3.1%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-card invoice-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-file-invoice"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value">156</div>
+                            <div class="stat-label">Hóa đơn đã xuất</div>
+                            <div class="stat-change positive">
+                                <i class="fas fa-arrow-up"></i> +15.3%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Actions -->
+        <section class="quick-actions-section">
+            <div class="actions-card">
+                <h3>Thao tác nhanh</h3>
+                <div class="actions-grid">
+                    <button class="action-btn" id="checkout-payment-btn">
+                        <div class="action-icon">
+                            <i class="fas fa-cash-register"></i>
+                        </div>
+                        <div class="action-content">
+                            <h4>Thanh toán Check-out</h4>
+                            <p>Xử lý thanh toán khi khách rời khỏi</p>
+                        </div>
+                    </button>
+                    <button class="action-btn" id="room-charge-btn">
+                        <div class="action-icon">
+                            <i class="fas fa-bed"></i>
+                        </div>
+                        <div class="action-content">
+                            <h4>Tính phí phòng</h4>
+                            <p>Thêm phí phòng vào hóa đơn</p>
+                        </div>
+                    </button>
+                    <button class="action-btn" id="service-charge-btn">
+                        <div class="action-icon">
+                            <i class="fas fa-concierge-bell"></i>
+                        </div>
+                        <div class="action-content">
+                            <h4>Tính phí dịch vụ</h4>
+                            <p>Thêm phí dịch vụ bổ sung</p>
+                        </div>
+                    </button>
+                    <button class="action-btn" id="refund-btn">
+                        <div class="action-icon">
+                            <i class="fas fa-undo"></i>
+                        </div>
+                        <div class="action-content">
+                            <h4>Xử lý hoàn tiền</h4>
+                            <p>Hoàn tiền cho khách hàng</p>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Payment Methods -->
+        <section class="payment-methods-section">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="payments-card">
+                        <div class="payments-header">
+                            <h3>Danh sách thanh toán gần đây</h3>
+                            <div class="payment-filters">
+                                <select class="form-select form-select-sm" id="payment-status-filter">
+                                    <option value="">Tất cả trạng thái</option>
+                                    <option value="completed">Hoàn thành</option>
+                                    <option value="pending">Chờ xử lý</option>
+                                    <option value="failed">Thất bại</option>
+                                </select>
+                                <select class="form-select form-select-sm" id="payment-method-filter">
+                                    <option value="">Tất cả phương thức</option>
+                                    <option value="cash">Tiền mặt</option>
+                                    <option value="card">Thẻ tín dụng</option>
+                                    <option value="transfer">Chuyển khoản</option>
+                                    <option value="ewallet">Ví điện tử</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="payments-table">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Mã GD</th>
+                                            <th>Khách hàng</th>
+                                            <th>Phòng</th>
+                                            <th>Số tiền</th>
+                                            <th>Phương thức</th>
+                                            <th>Trạng thái</th>
+                                            <th>Thời gian</th>
+                                            <th>Thao tác</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>#TXN001</strong></td>
+                                            <td>
+                                                <div class="customer-info">
+                                                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Customer" class="customer-avatar">
+                                                    <div>
+                                                        <strong>Trần Văn An</strong>
+                                                        <small>VIP Guest</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td><span class="room-number">Suite 301</span></td>
+                                            <td><span class="amount-highlight">$1,250.00</span></td>
+                                            <td>
+                                                <span class="payment-method card">
+                                                    <i class="fas fa-credit-card"></i> Thẻ tín dụng
+                                                </span>
+                                            </td>
+                                            <td><span class="status-badge completed">Hoàn thành</span></td>
+                                            <td>10:45 AM</td>
+                                            <td>
+                                                <div class="action-buttons">
+                                                    <button class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-outline-success" title="In hóa đơn">
+                                                        <i class="fas fa-print"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>#TXN002</strong></td>
+                                            <td>
+                                                <div class="customer-info">
+                                                    <img src="https://randomuser.me/api/portraits/women/25.jpg" alt="Customer" class="customer-avatar">
+                                                    <div>
+                                                        <strong>Nguyễn Thị Hoa</strong>
+                                                        <small>Regular</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td><span class="room-number">Deluxe 205</span></td>
+                                            <td><span class="amount-highlight">$890.00</span></td>
+                                            <td>
+                                                <span class="payment-method cash">
+                                                    <i class="fas fa-money-bill"></i> Tiền mặt
+                                                </span>
+                                            </td>
+                                            <td><span class="status-badge pending">Chờ xử lý</span></td>
+                                            <td>09:30 AM</td>
+                                            <td>
+                                                <div class="action-buttons">
+                                                    <button class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-outline-warning" title="Xử lý">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>#TXN003</strong></td>
+                                            <td>
+                                                <div class="customer-info">
+                                                    <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Customer" class="customer-avatar">
+                                                    <div>
+                                                        <strong>Lê Minh Đức</strong>
+                                                        <small>Business</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td><span class="room-number">Standard 102</span></td>
+                                            <td><span class="amount-highlight">$650.00</span></td>
+                                            <td>
+                                                <span class="payment-method transfer">
+                                                    <i class="fas fa-university"></i> Chuyển khoản
+                                                </span>
+                                            </td>
+                                            <td><span class="status-badge completed">Hoàn thành</span></td>
+                                            <td>08:15 AM</td>
+                                            <td>
+                                                <div class="action-buttons">
+                                                    <button class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-outline-success" title="In hóa đơn">
+                                                        <i class="fas fa-print"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>#TXN004</strong></td>
+                                            <td>
+                                                <div class="customer-info">
+                                                    <img src="https://randomuser.me/api/portraits/women/38.jpg" alt="Customer" class="customer-avatar">
+                                                    <div>
+                                                        <strong>Phạm Thị Lan</strong>
+                                                        <small>VIP Guest</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td><span class="room-number">Suite 401</span></td>
+                                            <td><span class="amount-highlight">$2,100.00</span></td>
+                                            <td>
+                                                <span class="payment-method ewallet">
+                                                    <i class="fas fa-mobile-alt"></i> Ví điện tử
+                                                </span>
+                                            </td>
+                                            <td><span class="status-badge failed">Thất bại</span></td>
+                                            <td>07:50 AM</td>
+                                            <td>
+                                                <div class="action-buttons">
+                                                    <button class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-outline-danger" title="Thử lại">
+                                                        <i class="fas fa-redo"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="payment-summary-card">
+                        <h4>Tổng quan thanh toán hôm nay</h4>
+                        <div class="summary-stats">
+                            <div class="summary-item">
+                                <div class="summary-icon success">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="summary-content">
+                                    <div class="summary-value">$89,450</div>
+                                    <div class="summary-label">Đã thanh toán</div>
+                                </div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-icon warning">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div class="summary-content">
+                                    <div class="summary-value">$15,680</div>
+                                    <div class="summary-label">Chờ xử lý</div>
+                                </div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-icon danger">
+                                    <i class="fas fa-times-circle"></i>
+                                </div>
+                                <div class="summary-content">
+                                    <div class="summary-value">$3,200</div>
+                                    <div class="summary-label">Thất bại</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="payment-chart">
+                            <h5>Phương thức thanh toán</h5>
+                            <div class="chart-container">
+                                <div class="payment-method-item">
+                                    <div class="method-label">
+                                        <i class="fas fa-credit-card"></i>
+                                        <span>Thẻ tín dụng</span>
+                                    </div>
+                                    <div class="method-bar">
+                                        <div class="method-progress" style="width: 65%"></div>
+                                    </div>
+                                    <div class="method-percentage">65%</div>
+                                </div>
+                                <div class="payment-method-item">
+                                    <div class="method-label">
+                                        <i class="fas fa-money-bill"></i>
+                                        <span>Tiền mặt</span>
+                                    </div>
+                                    <div class="method-bar">
+                                        <div class="method-progress cash" style="width: 25%"></div>
+                                    </div>
+                                    <div class="method-percentage">25%</div>
+                                </div>
+                                <div class="payment-method-item">
+                                    <div class="method-label">
+                                        <i class="fas fa-university"></i>
+                                        <span>Chuyển khoản</span>
+                                    </div>
+                                    <div class="method-bar">
+                                        <div class="method-progress transfer" style="width: 8%"></div>
+                                    </div>
+                                    <div class="method-percentage">8%</div>
+                                </div>
+                                <div class="payment-method-item">
+                                    <div class="method-label">
+                                        <i class="fas fa-mobile-alt"></i>
+                                        <span>Ví điện tử</span>
+                                    </div>
+                                    <div class="method-bar">
+                                        <div class="method-progress ewallet" style="width: 2%"></div>
+                                    </div>
+                                    <div class="method-percentage">2%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Invoice Management -->
+        <section class="invoice-management-section">
+            <div class="invoice-card">
+                <div class="invoice-header">
+                    <h3>Quản lý hóa đơn</h3>
+                    <div class="invoice-actions">
+                        <button class="btn btn-outline-primary btn-sm" id="export-invoices-btn">
+                            <i class="fas fa-download"></i> Xuất Excel
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm" id="print-all-invoices-btn">
+                            <i class="fas fa-print"></i> In tất cả
+                        </button>
+                    </div>
+                </div>
+
+                <div class="invoice-filters">
+                    <div class="row align-items-end">
+                        <div class="col-md-2">
+                            <label class="form-label">Từ ngày</label>
+                            <input type="date" class="form-control form-control-sm" id="invoice-date-from">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Đến ngày</label>
+                            <input type="date" class="form-control form-control-sm" id="invoice-date-to">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Trạng thái</label>
+                            <select class="form-select form-select-sm" id="invoice-status-filter">
+                                <option value="">Tất cả</option>
+                                <option value="paid">Đã thanh toán</option>
+                                <option value="unpaid">Chưa thanh toán</option>
+                                <option value="partial">Thanh toán một phần</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Khách hàng</label>
+                            <input type="text" class="form-control form-control-sm" placeholder="Tìm theo tên khách..." id="customer-search">
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-primary btn-sm w-100" id="filter-invoices-btn">
+                                <i class="fas fa-search"></i> Tìm kiếm
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="invoice-list">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-6">
+                            <div class="invoice-item">
+                                <div class="invoice-header-info">
+                                    <div class="invoice-number">#INV-2025-001</div>
+                                    <div class="invoice-date">27/09/2025</div>
+                                </div>
+                                <div class="invoice-customer">
+                                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Customer" class="customer-avatar-small">
+                                    <div>
+                                        <strong>Trần Văn An</strong>
+                                        <small>Suite 301</small>
+                                    </div>
+                                </div>
+                                <div class="invoice-amount">
+                                    <span class="amount">$1,250.00</span>
+                                    <span class="status-badge paid">Đã thanh toán</span>
+                                </div>
+                                <div class="invoice-actions">
+                                    <button class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-success" title="In hóa đơn">
+                                        <i class="fas fa-print"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-secondary" title="Gửi email">
+                                        <i class="fas fa-envelope"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="invoice-item">
+                                <div class="invoice-header-info">
+                                    <div class="invoice-number">#INV-2025-002</div>
+                                    <div class="invoice-date">27/09/2025</div>
+                                </div>
+                                <div class="invoice-customer">
+                                    <img src="https://randomuser.me/api/portraits/women/25.jpg" alt="Customer" class="customer-avatar-small">
+                                    <div>
+                                        <strong>Nguyễn Thị Hoa</strong>
+                                        <small>Deluxe 205</small>
+                                    </div>
+                                </div>
+                                <div class="invoice-amount">
+                                    <span class="amount">$890.00</span>
+                                    <span class="status-badge unpaid">Chưa thanh toán</span>
+                                </div>
+                                <div class="invoice-actions">
+                                    <button class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-warning" title="Nhắc nhở">
+                                        <i class="fas fa-bell"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-secondary" title="Gửi email">
+                                        <i class="fas fa-envelope"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="invoice-item">
+                                <div class="invoice-header-info">
+                                    <div class="invoice-number">#INV-2025-003</div>
+                                    <div class="invoice-date">26/09/2025</div>
+                                </div>
+                                <div class="invoice-customer">
+                                    <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Customer" class="customer-avatar-small">
+                                    <div>
+                                        <strong>Lê Minh Đức</strong>
+                                        <small>Standard 102</small>
+                                    </div>
+                                </div>
+                                <div class="invoice-amount">
+                                    <span class="amount">$650.00</span>
+                                    <span class="status-badge paid">Đã thanh toán</span>
+                                </div>
+                                <div class="invoice-actions">
+                                    <button class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-success" title="In hóa đơn">
+                                        <i class="fas fa-print"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-secondary" title="Gửi email">
+                                        <i class="fas fa-envelope"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<!-- New Invoice Modal -->
+<div class="modal fade" id="newInvoiceModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Tạo hóa đơn mới</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="new-invoice-form">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Thông tin khách hàng</h6>
+                            <div class="mb-3">
+                                <label class="form-label">Khách hàng *</label>
+                                <select class="form-select" name="customer" required>
+                                    <option value="">Chọn khách hàng</option>
+                                    <option value="tran-van-an">Trần Văn An - Suite 301</option>
+                                    <option value="nguyen-thi-hoa">Nguyễn Thị Hoa - Deluxe 205</option>
+                                    <option value="le-minh-duc">Lê Minh Đức - Standard 102</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Ngày tạo hóa đơn *</label>
+                                <input type="date" class="form-control" name="invoice_date" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Hạn thanh toán</label>
+                                <input type="date" class="form-control" name="due_date">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Chi tiết hóa đơn</h6>
+                            <div class="invoice-items">
+                                <div class="invoice-item-row">
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <label class="form-label">Dịch vụ</label>
+                                            <select class="form-select" name="service[]">
+                                                <option value="room">Phí phòng</option>
+                                                <option value="breakfast">Ăn sáng</option>
+                                                <option value="spa">Dịch vụ Spa</option>
+                                                <option value="laundry">Giặt ủi</option>
+                                                <option value="minibar">Minibar</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label class="form-label">Số lượng</label>
+                                            <input type="number" class="form-control" name="quantity[]" value="1" min="1">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Đơn giá ($)</label>
+                                            <input type="number" class="form-control" name="price[]" step="0.01" min="0">
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label class="form-label">Thao tác</label>
+                                            <button type="button" class="btn btn-outline-danger btn-sm remove-item">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-outline-primary btn-sm mt-2" id="add-invoice-item">
+                                <i class="fas fa-plus"></i> Thêm dịch vụ
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-md-8">
+                            <div class="mb-3">
+                                <label class="form-label">Ghi chú</label>
+                                <textarea class="form-control" name="notes" rows="3"
+                                          placeholder="Ghi chú bổ sung cho hóa đơn..."></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="invoice-summary">
+                                <h6>Tổng kết</h6>
+                                <div class="summary-row">
+                                    <span>Tạm tính:</span>
+                                    <span id="subtotal">$0.00</span>
+                                </div>
+                                <div class="summary-row">
+                                    <span>Thuế (10%):</span>
+                                    <span id="tax">$0.00</span>
+                                </div>
+                                <div class="summary-row">
+                                    <span>Phí dịch vụ (5%):</span>
+                                    <span id="service-fee">$0.00</span>
+                                </div>
+                                <hr>
+                                <div class="summary-row total">
+                                    <strong>
+                                        <span>Tổng cộng:</span>
+                                        <span id="total">$0.00</span>
+                                    </strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-success" id="save-draft-btn">
+                    <i class="fas fa-save"></i> Lưu nháp
+                </button>
+                <button type="button" class="btn btn-primary" id="create-invoice-btn">
+                    <i class="fas fa-file-invoice"></i> Tạo hóa đơn
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Payment Detail Modal -->
+<div class="modal fade" id="paymentDetailModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Chi tiết thanh toán</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="paymentDetailContent">
+                <!-- Content will be loaded dynamically -->
+            </div>
+        </div>
+    </div>
+</div>

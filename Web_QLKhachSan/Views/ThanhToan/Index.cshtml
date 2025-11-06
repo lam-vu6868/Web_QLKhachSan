@@ -1,0 +1,165 @@
+﻿@{
+    ViewBag.Title = "Thanh Toán";
+}
+<link rel="stylesheet" href="~/assets/css/dat-phong.css" />
+<section class="page-header">
+    <div class="container">
+        <h1 data-aos="fade-right">Hoàn Tất Đặt Chỗ</h1>
+        <p data-aos="fade-left">
+            Quá trình thanh toán của bạn được bảo mật tuyệt đối
+        </p>
+    </div>
+</section>
+<main class="main-content-area">
+    <div class="container checkout-layout">
+        <div class="checkout-form-area">
+            <div class="checkout-steps">
+                <div class="step" onclick="location.href='@Url.Action("Index", "ThongTin")'">
+                    1. Thông tin
+                </div>
+                <div class="step" onclick="location.href='@Url.Action("Index", "DichVuThem")'">
+                    2. Dịch Vụ
+                </div>
+                <div class="step active">3. Thanh toán</div>
+                <div class="step" onclick="location.href='@Url.Action("Index", "XacNhan")'">
+                    4. Xác nhận
+                </div>
+            </div>
+
+            <form class="checkout-form">
+                <h2 class="form-section-title">Phương Thức Thanh Toán</h2>
+                <div class="payment-methods">
+                    <div class="payment-option">
+                        <input type="radio"
+                               id="credit-card"
+                               name="payment"
+                               value="credit-card" />
+                        <label for="credit-card">
+                            <div class="payment-icon">
+                                <i class="fas fa-credit-card"></i>
+                            </div>
+                            <div class="payment-info">
+                                <h4>Thẻ Tín Dụng / Ghi Nợ</h4>
+                                <p>Visa, Mastercard, JCB, American Express</p>
+                                <div class="card-logos">
+                                    <i class="fab fa-cc-visa"></i>
+                                    <i class="fab fa-cc-mastercard"></i>
+                                    <i class="fab fa-cc-amex"></i>
+                                    <i class="fab fa-cc-jcb"></i>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                    <div class="payment-option">
+                        <input type="radio"
+                               id="bank-transfer"
+                               name="payment"
+                               value="bank-transfer" />
+                        <label for="bank-transfer">
+                            <div class="payment-icon">
+                                <i class="fas fa-university"></i>
+                            </div>
+                            <div class="payment-info">
+                                <h4>Chuyển Khoản Ngân Hàng</h4>
+                                <p>Chuyển khoản qua Vietcombank</p>
+                                <div class="bank-logo">
+                                    <i class="fas fa-building"></i>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Hidden fields để lưu dữ liệu từ trang khách hàng -->
+                <input type="hidden" id="first-name" />
+                <input type="hidden" id="last-name" />
+                <input type="hidden" id="email" />
+                <input type="hidden" id="phone" />
+                <input type="hidden" id="checkin-date" />
+                <input type="hidden" id="checkout-date" />
+                <input type="hidden" id="guests" />
+
+                <div class="card-details" id="card-details">
+                    <div class="form-row">
+                        <div class="form-group half-width">
+                            <label for="card-number">Số thẻ</label>
+                            <input type="text"
+                                   id="card-number"
+                                   placeholder="1234 5678 9101 1121"
+                                   maxlength="19" />
+                        </div>
+                        <div class="form-group half-width">
+                            <label for="cardholder">Tên chủ thẻ</label>
+                            <input type="text"
+                                   id="cardholder"
+                                   placeholder="NGUYEN VAN A"
+                                   maxlength="40" />
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group half-width">
+                            <label for="expiry-date">Ngày hết hạn</label>
+                            <input type="text"
+                                   id="expiry-date"
+                                   placeholder="MM / YY"
+                                   maxlength="7" />
+                        </div>
+                        <div class="form-group half-width">
+                            <label for="cvv">CVV</label>
+                            <input type="text" id="cvv" placeholder="123" maxlength="4" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bank-details" id="bank-details" style="display: none">
+                    <div class="bank-info">
+                        <h3>Thông tin chuyển khoản</h3>
+                        <div class="bank-selection">
+                            <label for="bank-select">Chọn ngân hàng:</label>
+                            <select id="bank-select">
+                                <option value="vietcombank">Vietcombank</option>
+                                <option value="bidv">BIDV</option>
+                                <option value="agribank">Agribank</option>
+                                <option value="techcombank">Techcombank</option>
+                                <option value="mbbank">MB Bank</option>
+                                <option value="vietinbank">VietinBank</option>
+                            </select>
+                        </div>
+                        <div class="bank-account">
+                            <p>
+                                <strong>Ngân hàng:</strong>
+                                <span id="selected-bank">Vietcombank</span>
+                            </p>
+                            <p>
+                                <strong>Số tài khoản:</strong>
+                                <span id="account-number">1234567890</span>
+                            </p>
+                            <p>
+                                <strong>Chủ tài khoản:</strong> THE SERENE HORIZON HOTEL
+                            </p>
+                            <p>
+                                <strong>Nội dung:</strong>
+                                <span id="transfer-content">Dat phong - [Mã đặt phòng]</span>
+                            </p>
+                        </div>
+                        <div class="upload-receipt">
+                            <label for="receipt-upload">Tải lên ảnh chụp biên lai chuyển khoản:</label>
+                            <input type="file" id="receipt-upload" accept="image/*" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <a href="@Url.Action("Index", "DichVuThem")" class="cta-button">
+                        <i class="fas fa-arrow-left"></i> Quay Lại
+                    </a>
+                    <a href="@Url.Action("Index", "XacNhan")" class="cta-button"> Thanh Toán </a>
+                </div>
+            </form>
+        </div>
+        @Html.Partial("_OrderSummary")
+    </div>
+</main>
+
+<script src="~/assets/js/dat-phong.js"></script>
+

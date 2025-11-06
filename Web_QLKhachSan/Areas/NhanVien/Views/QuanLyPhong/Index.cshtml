@@ -1,0 +1,443 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+<link rel='stylesheet' href='@Url.Content("~/Areas/NhanVien/assets/css/quanly-phong.css")' />
+<script src='@Url.Content("~/Areas/NhanVien/assets/js/quanly-phong.js")'></script>
+<div class="main-content">
+    <!-- Top Header -->
+    <header class="dashboard-header">
+        <div class="header-left">
+            <button class="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="page-title">
+                <h1>Quản Lý Phòng</h1>
+                <p>Cập nhật tình trạng phòng và quản lý housekeeping</p>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="room-stats">
+                <div class="stat-badge available">
+                    <span class="count">13</span>
+                    <span class="label">Trống</span>
+                </div>
+                <div class="stat-badge occupied">
+                    <span class="count">67</span>
+                    <span class="label">Đang ở</span>
+                </div>
+                <div class="stat-badge cleaning">
+                    <span class="count">8</span>
+                    <span class="label">Dọn phòng</span>
+                </div>
+                <div class="stat-badge maintenance">
+                    <span class="count">2</span>
+                    <span class="label">Bảo trì</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Room Management Content -->
+    <main class="dashboard-main">
+        <!-- Filter and Search Section -->
+        <section class="filter-section">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="search-box">
+                        <input type="text" placeholder="Tìm kiếm theo số phòng..." id="room-search">
+                        <i class="fas fa-search"></i>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="filter-controls">
+                        <select id="floor-filter" class="form-select">
+                            <option value="">Tất cả tầng</option>
+                            <option value="1">Tầng 1</option>
+                            <option value="2">Tầng 2</option>
+                            <option value="3">Tầng 3</option>
+                            <option value="4">Tầng 4</option>
+                            <option value="5">Tầng 5</option>
+                        </select>
+                        <select id="status-filter" class="form-select">
+                            <option value="">Tất cả trạng thái</option>
+                            <option value="available">Trống</option>
+                            <option value="occupied">Đang ở</option>
+                            <option value="cleaning">Đang dọn</option>
+                            <option value="maintenance">Bảo trì</option>
+                        </select>
+                        <select id="type-filter" class="form-select">
+                            <option value="">Tất cả loại phòng</option>
+                            <option value="deluxe">Deluxe Ocean View</option>
+                            <option value="executive">Executive Suite</option>
+                            <option value="family">Family Bungalow</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Room Grid Section -->
+        <section class="room-management-section">
+            <div class="room-management-header">
+                <h2>Sơ đồ phòng</h2>
+                <div class="bulk-actions">
+                    <button class="btn btn-outline-primary" id="bulk-cleaning">
+                        <i class="fas fa-broom"></i> Đánh dấu cần dọn
+                    </button>
+                    <button class="btn btn-outline-success" id="bulk-available">
+                        <i class="fas fa-check"></i> Đánh dấu sẵn sàng
+                    </button>
+                    <button class="btn btn-outline-warning" id="bulk-maintenance">
+                        <i class="fas fa-tools"></i> Đánh dấu bảo trì
+                    </button>
+                </div>
+            </div>
+
+            <!-- Floor by Floor Room Display -->
+            <div class="floors-container">
+                <!-- Floor 5 -->
+                <div class="floor-section" data-floor="5">
+                    <div class="floor-header">
+                        <h3>Tầng 5 - Executive & Family Suites</h3>
+                        <div class="floor-stats">
+                            <span class="available">2 trống</span>
+                            <span class="occupied">14 đang ở</span>
+                            <span class="cleaning">0 dọn</span>
+                            <span class="maintenance">0 bảo trì</span>
+                        </div>
+                    </div>
+                    <div class="room-grid">
+                        <div class="room-card executive occupied" data-room="501" data-type="executive">
+                            <div class="room-number">501</div>
+                            <div class="room-type">Executive Suite</div>
+                            <div class="room-guest">Trần Minh Hoàng</div>
+                            <div class="room-checkin">Check-in: 14:00</div>
+                            <div class="room-actions">
+                                <button class="status-btn cleaning" title="Đánh dấu cần dọn">
+                                    <i class="fas fa-broom"></i>
+                                </button>
+                                <button class="status-btn maintenance" title="Báo cáo sự cố">
+                                    <i class="fas fa-tools"></i>
+                                </button>
+                                <button class="info-btn" title="Chi tiết">
+                                    <i class="fas fa-info"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="room-card executive occupied" data-room="502" data-type="executive">
+                            <div class="room-number">502</div>
+                            <div class="room-type">Executive Suite</div>
+                            <div class="room-guest">Nguyễn Thị Lan</div>
+                            <div class="room-checkin">Check-in: 15:30</div>
+                            <div class="room-actions">
+                                <button class="status-btn cleaning" title="Đánh dấu cần dọn">
+                                    <i class="fas fa-broom"></i>
+                                </button>
+                                <button class="status-btn maintenance" title="Báo cáo sự cố">
+                                    <i class="fas fa-tools"></i>
+                                </button>
+                                <button class="info-btn" title="Chi tiết">
+                                    <i class="fas fa-info"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="room-card family available" data-room="503" data-type="family">
+                            <div class="room-number">503</div>
+                            <div class="room-type">Family Bungalow</div>
+                            <div class="room-status">Sẵn sàng nhận khách</div>
+                            <div class="room-cleaned">Dọn xong: 11:30</div>
+                            <div class="room-actions">
+                                <button class="status-btn occupied" title="Đánh dấu có khách">
+                                    <i class="fas fa-user"></i>
+                                </button>
+                                <button class="status-btn maintenance" title="Báo cáo sự cố">
+                                    <i class="fas fa-tools"></i>
+                                </button>
+                                <button class="info-btn" title="Chi tiết">
+                                    <i class="fas fa-info"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="room-card family occupied" data-room="504" data-type="family">
+                            <div class="room-number">504</div>
+                            <div class="room-type">Family Bungalow</div>
+                            <div class="room-guest">Gia đình Lê Văn Nam</div>
+                            <div class="room-checkin">Check-in: 16:00</div>
+                            <div class="room-actions">
+                                <button class="status-btn cleaning" title="Đánh dấu cần dọn">
+                                    <i class="fas fa-broom"></i>
+                                </button>
+                                <button class="status-btn maintenance" title="Báo cáo sự cố">
+                                    <i class="fas fa-tools"></i>
+                                </button>
+                                <button class="info-btn" title="Chi tiết">
+                                    <i class="fas fa-info"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Floor 4 -->
+                <div class="floor-section" data-floor="4">
+                    <div class="floor-header">
+                        <h3>Tầng 4 - Executive Suites</h3>
+                        <div class="floor-stats">
+                            <span class="available">3 trống</span>
+                            <span class="occupied">13 đang ở</span>
+                            <span class="cleaning">0 dọn</span>
+                            <span class="maintenance">0 bảo trì</span>
+                        </div>
+                    </div>
+                    <div class="room-grid">
+                        <div class="room-card executive available" data-room="401" data-type="executive">
+                            <div class="room-number">401</div>
+                            <div class="room-type">Executive Suite</div>
+                            <div class="room-status">Sẵn sàng nhận khách</div>
+                            <div class="room-cleaned">Dọn xong: 10:45</div>
+                            <div class="room-actions">
+                                <button class="status-btn occupied" title="Đánh dấu có khách">
+                                    <i class="fas fa-user"></i>
+                                </button>
+                                <button class="status-btn maintenance" title="Báo cáo sự cố">
+                                    <i class="fas fa-tools"></i>
+                                </button>
+                                <button class="info-btn" title="Chi tiết">
+                                    <i class="fas fa-info"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="room-card executive occupied" data-room="402" data-type="executive">
+                            <div class="room-number">402</div>
+                            <div class="room-type">Executive Suite</div>
+                            <div class="room-guest">Phạm Văn Đức</div>
+                            <div class="room-checkin">Check-in: 14:30</div>
+                            <div class="room-actions">
+                                <button class="status-btn cleaning" title="Đánh dấu cần dọn">
+                                    <i class="fas fa-broom"></i>
+                                </button>
+                                <button class="status-btn maintenance" title="Báo cáo sự cố">
+                                    <i class="fas fa-tools"></i>
+                                </button>
+                                <button class="info-btn" title="Chi tiết">
+                                    <i class="fas fa-info"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="room-card executive cleaning" data-room="403" data-type="executive">
+                            <div class="room-number">403</div>
+                            <div class="room-type">Executive Suite</div>
+                            <div class="room-status">Đang dọn phòng</div>
+                            <div class="room-housekeeper">Nhân viên: Mai Thị Hoa</div>
+                            <div class="room-actions">
+                                <button class="status-btn available" title="Hoàn thành dọn phòng">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                <button class="status-btn maintenance" title="Báo cáo sự cố">
+                                    <i class="fas fa-tools"></i>
+                                </button>
+                                <button class="info-btn" title="Chi tiết">
+                                    <i class="fas fa-info"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="room-card executive occupied" data-room="404" data-type="executive">
+                            <div class="room-number">404</div>
+                            <div class="room-type">Executive Suite</div>
+                            <div class="room-guest">Võ Thanh Tùng</div>
+                            <div class="room-checkin">Check-in: 15:00</div>
+                            <div class="room-actions">
+                                <button class="status-btn cleaning" title="Đánh dấu cần dọn">
+                                    <i class="fas fa-broom"></i>
+                                </button>
+                                <button class="status-btn maintenance" title="Báo cáo sự cố">
+                                    <i class="fas fa-tools"></i>
+                                </button>
+                                <button class="info-btn" title="Chi tiết">
+                                    <i class="fas fa-info"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Floor 3 -->
+                <div class="floor-section" data-floor="3">
+                    <div class="floor-header">
+                        <h3>Tầng 3 - Deluxe Ocean View</h3>
+                        <div class="floor-stats">
+                            <span class="available">4 trống</span>
+                            <span class="occupied">18 đang ở</span>
+                            <span class="cleaning">2 dọn</span>
+                            <span class="maintenance">0 bảo trì</span>
+                        </div>
+                    </div>
+                    <div class="room-grid">
+                        <div class="room-card deluxe available" data-room="301" data-type="deluxe">
+                            <div class="room-number">301</div>
+                            <div class="room-type">Deluxe Ocean View</div>
+                            <div class="room-status">Sẵn sàng nhận khách</div>
+                            <div class="room-cleaned">Dọn xong: 12:00</div>
+                            <div class="room-actions">
+                                <button class="status-btn occupied" title="Đánh dấu có khách">
+                                    <i class="fas fa-user"></i>
+                                </button>
+                                <button class="status-btn maintenance" title="Báo cáo sự cố">
+                                    <i class="fas fa-tools"></i>
+                                </button>
+                                <button class="info-btn" title="Chi tiết">
+                                    <i class="fas fa-info"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="room-card deluxe occupied" data-room="302" data-type="deluxe">
+                            <div class="room-number">302</div>
+                            <div class="room-type">Deluxe Ocean View</div>
+                            <div class="room-guest">Nguyễn Văn Hòa</div>
+                            <div class="room-checkin">Check-in: 14:00</div>
+                            <div class="room-actions">
+                                <button class="status-btn cleaning" title="Đánh dấu cần dọn">
+                                    <i class="fas fa-broom"></i>
+                                </button>
+                                <button class="status-btn maintenance" title="Báo cáo sự cố">
+                                    <i class="fas fa-tools"></i>
+                                </button>
+                                <button class="info-btn" title="Chi tiết">
+                                    <i class="fas fa-info"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="room-card deluxe cleaning" data-room="303" data-type="deluxe">
+                            <div class="room-number">303</div>
+                            <div class="room-type">Deluxe Ocean View</div>
+                            <div class="room-status">Đang dọn phòng</div>
+                            <div class="room-housekeeper">Nhân viên: Lê Thị Lan</div>
+                            <div class="room-actions">
+                                <button class="status-btn available" title="Hoàn thành dọn phòng">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                <button class="status-btn maintenance" title="Báo cáo sự cố">
+                                    <i class="fas fa-tools"></i>
+                                </button>
+                                <button class="info-btn" title="Chi tiết">
+                                    <i class="fas fa-info"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="room-card deluxe maintenance" data-room="304" data-type="deluxe">
+                            <div class="room-number">304</div>
+                            <div class="room-type">Deluxe Ocean View</div>
+                            <div class="room-status">Đang bảo trì</div>
+                            <div class="room-issue">Sự cố: Điều hòa hỏng</div>
+                            <div class="room-actions">
+                                <button class="status-btn available" title="Hoàn thành bảo trì">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                <button class="status-btn cleaning" title="Cần dọn sau bảo trì">
+                                    <i class="fas fa-broom"></i>
+                                </button>
+                                <button class="info-btn" title="Chi tiết">
+                                    <i class="fas fa-info"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Housekeeping Tasks Section -->
+        <section class="housekeeping-section">
+            <h2 class="section-title">
+                <i class="fas fa-tasks"></i>
+                Nhiệm vụ dọn phòng
+            </h2>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="task-card">
+                        <div class="task-header">
+                            <h3>Cần dọn phòng</h3>
+                            <span class="task-count">8</span>
+                        </div>
+                        <div class="task-list">
+                            <div class="task-item urgent">
+                                <div class="task-room">Phòng 201</div>
+                                <div class="task-info">
+                                    <span class="checkout-time">Check-out: 11:00</span>
+                                    <span class="wait-time">Chờ 2 giờ</span>
+                                </div>
+                                <button class="assign-btn">Giao việc</button>
+                            </div>
+                            <div class="task-item">
+                                <div class="task-room">Phòng 305</div>
+                                <div class="task-info">
+                                    <span class="checkout-time">Check-out: 12:30</span>
+                                    <span class="wait-time">Chờ 30 phút</span>
+                                </div>
+                                <button class="assign-btn">Giao việc</button>
+                            </div>
+                            <div class="task-item">
+                                <div class="task-room">Phòng 108</div>
+                                <div class="task-info">
+                                    <span class="checkout-time">Check-out: 13:00</span>
+                                    <span class="wait-time">Vừa trống</span>
+                                </div>
+                                <button class="assign-btn">Giao việc</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="task-card">
+                        <div class="task-header">
+                            <h3>Đang thực hiện</h3>
+                            <span class="task-count">5</span>
+                        </div>
+                        <div class="task-list">
+                            <div class="task-item in-progress">
+                                <div class="task-room">Phòng 403</div>
+                                <div class="task-info">
+                                    <span class="housekeeper">Mai Thị Hoa</span>
+                                    <span class="progress-time">Bắt đầu: 12:15</span>
+                                </div>
+                                <button class="complete-btn">Hoàn thành</button>
+                            </div>
+                            <div class="task-item in-progress">
+                                <div class="task-room">Phòng 303</div>
+                                <div class="task-info">
+                                    <span class="housekeeper">Lê Thị Lan</span>
+                                    <span class="progress-time">Bắt đầu: 11:45</span>
+                                </div>
+                                <button class="complete-btn">Hoàn thành</button>
+                            </div>
+                            <div class="task-item in-progress">
+                                <div class="task-room">Phòng 207</div>
+                                <div class="task-info">
+                                    <span class="housekeeper">Trần Thị Mai</span>
+                                    <span class="progress-time">Bắt đầu: 13:00</span>
+                                </div>
+                                <button class="complete-btn">Hoàn thành</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<!-- Room Detail Modal -->
+<div class="modal fade" id="roomDetailModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Chi tiết phòng</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="roomDetailContent">
+                <!-- Content will be loaded dynamically -->
+            </div>
+        </div>
+    </div>
+</div>

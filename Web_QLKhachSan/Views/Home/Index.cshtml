@@ -1,0 +1,670 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+<link rel="stylesheet" href="~/assets/css/index.css" />
+<section class="hero-section">
+    <!-- Floating Shapes Background -->
+    <div class="hero-floating-shapes">
+        <div class="hero-shape hero-shape-1"></div>
+        <div class="hero-shape hero-shape-2"></div>
+        <div class="hero-shape hero-shape-3"></div>
+    </div>
+
+    <!-- Simple Background Slideshow -->
+    <div class="hero-slideshow">
+        <div class="slide active"></div>
+        <div class="slide"></div>
+        <div class="slide"></div>
+        <div class="slide"></div>
+    </div>
+
+    <!-- Simple Controls -->
+    <div class="slideshow-nav">
+        <span class="dot active" data-slide="0"></span>
+        <span class="dot" data-slide="1"></span>
+        <span class="dot" data-slide="2"></span>
+        <span class="dot" data-slide="3"></span>
+    </div>
+
+    <div class="hero-content">
+        <div class="hero-badge" data-aos="zoom-in" data-aos-delay="100">
+            <i class="fas fa-award"></i>
+            <span>Resort 5 Sao Hàng Đầu</span>
+        </div>
+        <h1 data-aos="fade-left">Nơi Sự An Yên Chạm Đến Chân Trời</h1>
+        <p data-aos="fade-right">
+            Trải nghiệm sự sang trọng tinh tế và dịch vụ đẳng cấp tại The Serene
+            Horizon.
+        </p>
+
+        <!-- Hero Stats -->
+        <div class="hero-stats" data-aos="fade-up" data-aos-delay="600">
+            <div class="hero-stat-item">
+                <i class="fas fa-hotel"></i>
+                <div class="hero-stat-content">
+                    <span class="hero-stat-number">150+</span>
+                    <span class="hero-stat-label">Phòng Luxury</span>
+                </div>
+            </div>
+            <div class="hero-stat-item">
+                <i class="fas fa-star"></i>
+                <div class="hero-stat-content">
+                    <span class="hero-stat-number">4.9</span>
+                    <span class="hero-stat-label">Đánh Giá</span>
+                </div>
+            </div>
+            <div class="hero-stat-item">
+                <i class="fas fa-users"></i>
+                <div class="hero-stat-content">
+                    <span class="hero-stat-number">10K+</span>
+                    <span class="hero-stat-label">Khách Hài Lòng</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hero CTA Buttons -->
+        <div class="hero-cta-buttons" data-aos="fade-up" data-aos-delay="800">
+            <a href="@Url.Action("Index", "PhongNghi")" class="hero-btn hero-btn-primary">
+                <i class="fas fa-calendar-check"></i>
+                Đặt Phòng Ngay
+            </a>
+            <a href="@Url.Action("Index", "GioiThieu")" class="hero-btn hero-btn-secondary">
+                <i class="fas fa-play-circle"></i>
+                Khám Phá Thêm
+            </a>
+        </div>
+    </div>
+
+    <!-- Scroll Indicator -->
+    <div class="scroll-indicator" data-aos="fade-up" data-aos-delay="1000">
+        <div class="scroll-mouse">
+            <div class="scroll-wheel"></div>
+        </div>
+        <span>Cuộn xuống để khám phá</span>
+    </div>
+</section>
+
+<section class="intro-section">
+    <div class="container intro-layout">
+        <div class="intro-images" data-aos="fade-right">
+            <div class="intro-image-wrapper intro-image-main">
+                <img src="https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1738&q=80"
+                     alt="Sảnh khách sạn"
+                     class="intro-img-1 w-100" />
+                <div class="intro-image-badge">
+                    <i class="fas fa-certificate"></i>
+                    <span>Thiết Kế Đẳng Cấp</span>
+                </div>
+            </div>
+            <div class="intro-decoration-shape"></div>
+        </div>
+        <div class="intro-text" data-aos="fade-left">
+            <div class="intro-label">
+                <i class="fas fa-crown"></i>
+                <span>VỀ CHÚNG TÔI</span>
+            </div>
+            <h2 class="section-heading">Triết Lý Của Sự Tận Tâm</h2>
+            <p>
+                Tại The Serene Horizon, chúng tôi tin rằng sự sang trọng không chỉ
+                đến từ những tiện nghi xa hoa, mà còn từ sự quan tâm chân thành
+                đến từng chi tiết trong trải nghiệm của bạn. Mỗi không gian đều
+                được thiết kế để mang lại cảm giác thư thái và bình yên tuyệt đối.
+            </p>
+            <div class="intro-features">
+                <div class="intro-feature-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Dịch vụ 24/7</span>
+                </div>
+                <div class="intro-feature-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Thiết kế sang trọng</span>
+                </div>
+                <div class="intro-feature-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Đội ngũ chuyên nghiệp</span>
+                </div>
+            </div>
+            <a href="@Url.Action("Index", "TimHieuThem")" class="cta-button-modern mt-4">
+                <span>Tìm Hiểu Thêm</span>
+                <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="rooms-section">
+    <div class="container">
+        <div class="section-header" data-aos="fade-up">
+            <span class="section-label">
+                <i class="fas fa-bed"></i>
+                PHÒNG NGHỈ
+            </span>
+            <h2 class="section-heading text-center">Các Loại Phòng Nổi Bật</h2>
+            <p class="section-subtitle">Lựa chọn hoàn hảo cho mọi nhu cầu của bạn</p>
+        </div>
+        <div class="rooms-grid">
+            <div class="room-card-modern" data-aos="fade-up" data-aos-delay="100">
+                <div class="room-card-image">
+                    <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80"
+                         alt="Deluxe Ocean View" />
+                    <div class="room-overlay"></div>
+                    <div class="room-badge room-badge-popular">
+                        <i class="fas fa-fire"></i>
+                        <span>Phổ Biến</span>
+                    </div>
+                    <div class="room-quick-view">
+                        <i class="fas fa-eye"></i>
+                        <span>Xem nhanh</span>
+                    </div>
+                </div>
+                <div class="room-card-content">
+                    <div class="room-header">
+                        <h3>Deluxe Ocean View</h3>
+                        <div class="room-rating">
+                            <i class="fas fa-star"></i>
+                            <span>4.9</span>
+                        </div>
+                    </div>
+                    <div class="amenities">
+                        <span><i class="fas fa-wifi"></i> Wifi</span>
+                        <span><i class="fas fa-water"></i> View biển</span>
+                        <span><i class="fas fa-bath"></i> Bồn tắm</span>
+                    </div>
+                    <p class="room-description">Phòng sang trọng với tầm nhìn tuyệt đẹp ra biển xanh</p>
+                    <div class="room-footer">
+                        <p class="price">Từ <strong>$150</strong> <span>/đêm</span></p>
+                        <a href="@Url.Action("Index", "ChiTietPhong")" class="room-btn-explore">
+                            <span>Khám Phá</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="room-card-modern" data-aos="fade-up" data-aos-delay="200">
+                <div class="room-card-image">
+                    <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80"
+                         alt="Premium Suite" />
+                    <div class="room-overlay"></div>
+                    <div class="room-badge room-badge-luxury">
+                        <i class="fas fa-gem"></i>
+                        <span>Cao Cấp</span>
+                    </div>
+                    <div class="room-quick-view">
+                        <i class="fas fa-eye"></i>
+                        <span>Xem nhanh</span>
+                    </div>
+                </div>
+                <div class="room-card-content">
+                    <div class="room-header">
+                        <h3>Premium Suite</h3>
+                        <div class="room-rating">
+                            <i class="fas fa-star"></i>
+                            <span>5.0</span>
+                        </div>
+                    </div>
+                    <div class="amenities">
+                        <span><i class="fas fa-wifi"></i> Wifi</span>
+                        <span><i class="fas fa-hot-tub"></i> Jacuzzi</span>
+                        <span><i class="fas fa-concierge-bell"></i> Butler</span>
+                    </div>
+                    <p class="room-description">Suite hạng sang với dịch vụ butler riêng biệt</p>
+                    <div class="room-footer">
+                        <p class="price">Từ <strong>$200</strong> <span>/đêm</span></p>
+                        <a href="@Url.Action("Index", "ChiTietPhong")" class="room-btn-explore">
+                            <span>Khám Phá</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="room-card-modern" data-aos="fade-up" data-aos-delay="300">
+                <div class="room-card-image">
+                    <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80"
+                         alt="Executive Suite" />
+                    <div class="room-overlay"></div>
+                    <div class="room-badge room-badge-new">
+                        <i class="fas fa-certificate"></i>
+                        <span>Mới</span>
+                    </div>
+                    <div class="room-quick-view">
+                        <i class="fas fa-eye"></i>
+                        <span>Xem nhanh</span>
+                    </div>
+                </div>
+                <div class="room-card-content">
+                    <div class="room-header">
+                        <h3>Executive Suite</h3>
+                        <div class="room-rating">
+                            <i class="fas fa-star"></i>
+                            <span>4.8</span>
+                        </div>
+                    </div>
+                    <div class="amenities">
+                        <span><i class="fas fa-wifi"></i> Wifi</span>
+                        <span><i class="fas fa-mountain"></i> View núi</span>
+                        <span><i class="fas fa-couch"></i> Phòng khách</span>
+                    </div>
+                    <p class="room-description">Suite rộng rãi với phòng khách và view núi</p>
+                    <div class="room-footer">
+                        <p class="price">Từ <strong>$250</strong> <span>/đêm</span></p>
+                        <a href="@Url.Action("Index", "ChiTietPhong")" class="room-btn-explore">
+                            <span>Khám Phá</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="room-card-modern" data-aos="fade-up" data-aos-delay="400">
+                <div class="room-card-image">
+                    <img src="https://images.unsplash.com/photo-1590490359853-392194450893?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80"
+                         alt="Family Bungalow" />
+                    <div class="room-overlay"></div>
+                    <div class="room-badge room-badge-family">
+                        <i class="fas fa-home"></i>
+                        <span>Gia Đình</span>
+                    </div>
+                    <div class="room-quick-view">
+                        <i class="fas fa-eye"></i>
+                        <span>Xem nhanh</span>
+                    </div>
+                </div>
+                <div class="room-card-content">
+                    <div class="room-header">
+                        <h3>Family Bungalow</h3>
+                        <div class="room-rating">
+                            <i class="fas fa-star"></i>
+                            <span>4.7</span>
+                        </div>
+                    </div>
+                    <div class="amenities">
+                        <span><i class="fas fa-wifi"></i> Wifi</span>
+                        <span><i class="fas fa-tree"></i> Gần gũi</span>
+                        <span><i class="fas fa-utensils"></i> Bếp nhỏ</span>
+                    </div>
+                    <p class="room-description">Bungalow ấm cúng hoàn hảo cho gia đình</p>
+                    <div class="room-footer">
+                        <p class="price">Từ <strong>$320</strong> <span>/đêm</span></p>
+                        <a href="@Url.Action("Index", "ChiTietPhong")" class="room-btn-explore">
+                            <span>Khám Phá</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section-cta" data-aos="fade-up" data-aos-delay="500">
+            <a href="@Url.Action("Index", "PhongNghi")" class="view-all-btn">
+                <span>Xem Tất Cả Phòng</span>
+                <i class="fas fa-long-arrow-alt-right"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="services-section-modern">
+    <div class="container">
+        <div class="section-header" data-aos="fade-up">
+            <span class="section-label">
+                <i class="fas fa-concierge-bell"></i>
+                DỊCH VỤ & TIỆN ÍCH
+            </span>
+            <h2 class="section-heading text-center">Dịch Vụ & Tiện Ích</h2>
+            <p class="section-subtitle">Trải nghiệm đẳng cấp 5 sao với đa dạng tiện ích</p>
+        </div>
+        <div class="services-grid-modern">
+            <div class="service-item-modern" data-aos="fade-up" data-aos-delay="100">
+                <div class="service-bg"
+                     style="
+                  background-image: url('https://images.unsplash.com/photo-1544148103-0773bf10d330?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80');
+                "></div>
+                <div class="service-gradient"></div>
+                <div class="service-icon">
+                    <i class="fas fa-utensils"></i>
+                </div>
+                <div class="service-content">
+                    <h3>Nhà Hàng</h3>
+                    <p>Khám phá ẩm thực tinh hoa</p>
+                    <ul class="service-features">
+                        <li><i class="fas fa-check"></i> Ẩm thực 5 sao</li>
+                        <li><i class="fas fa-check"></i> Đầu bếp chuyên nghiệp</li>
+                        <li><i class="fas fa-check"></i> Phục vụ 24/7</li>
+                    </ul>
+                    <a href="@Url.Action("Index", "DichVu")" class="service-link">
+                        <span>Khám Phá</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="service-item-modern" data-aos="fade-up" data-aos-delay="200">
+                <div class="service-bg"
+                     style="
+                  background-image: url('https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80');
+                "></div>
+                <div class="service-gradient"></div>
+                <div class="service-icon">
+                    <i class="fas fa-spa"></i>
+                </div>
+                <div class="service-content">
+                    <h3>Spa & Wellness</h3>
+                    <p>Tái tạo và thư giãn</p>
+                    <ul class="service-features">
+                        <li><i class="fas fa-check"></i> Massage cao cấp</li>
+                        <li><i class="fas fa-check"></i> Liệu pháp thư giãn</li>
+                        <li><i class="fas fa-check"></i> Chăm sóc toàn diện</li>
+                    </ul>
+                    <a href="@Url.Action("Index", "DichVu")" class="service-link">
+                        <span>Khám Phá</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="service-item-modern" data-aos="fade-up" data-aos-delay="300">
+                <div class="service-bg"
+                     style="
+                  background-image: url('https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1648&q=80');
+                "></div>
+                <div class="service-gradient"></div>
+                <div class="service-icon">
+                    <i class="fas fa-swimming-pool"></i>
+                </div>
+                <div class="service-content">
+                    <h3>Hồ Bơi Vô Cực</h3>
+                    <p>Hòa mình vào vực sâu</p>
+                    <ul class="service-features">
+                        <li><i class="fas fa-check"></i> View tuyệt đẹp</li>
+                        <li><i class="fas fa-check"></i> Nước sạch tiêu chuẩn</li>
+                        <li><i class="fas fa-check"></i> Bar bên hồ bơi</li>
+                    </ul>
+                    <a href="@Url.Action("Index", "DichVu")" class="service-link">
+                        <span>Khám Phá</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="service-item-modern" data-aos="fade-up" data-aos-delay="400">
+                <div class="service-bg"
+                     style="
+                  background-image: url('https://images.unsplash.com/photo-1477332552946-cfb384aeaf1c?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+                "></div>
+                <div class="service-gradient"></div>
+                <div class="service-icon">
+                    <i class="fas fa-tree"></i>
+                </div>
+                <div class="service-content">
+                    <h3>Hòa Vào Thiên Nhiên</h3>
+                    <p>Kết nối cùng thiên nhiên</p>
+                    <ul class="service-features">
+                        <li><i class="fas fa-check"></i> Vườn xanh yên bình</li>
+                        <li><i class="fas fa-check"></i> Tour du lịch sinh thái</li>
+                        <li><i class="fas fa-check"></i> Hoạt động ngoài trời</li>
+                    </ul>
+                    <a href="@Url.Action("Index", "DichVu")" class="service-link">
+                        <span>Khám Phá</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="hotel-intro-section">
+    <div class="container">
+        <h2 class="section-heading text-center">
+            Giới Thiệu Về Khách Sạn The Serene Horizon
+        </h2>
+        <div class="gallery-container">
+            <div class="main-image">
+                <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+                     alt="Khách sạn The Serene Horizon"
+                     decoding="async" />
+            </div>
+            <div class="gallery-grid">
+                <img src="~/assets/imgs/gt1.jpg"
+                     alt="Phòng tập"
+                     decoding="async" />
+                <img src="~/assets/imgs/gt2.jpg"
+                     alt="Đội ngũ nhân viên"
+                     decoding="async" />
+                <img src="~/assets/imgs/gt3.jpg"
+                     alt="Thiết bị hiện đại"
+                     decoding="async" />
+                <img src="~/assets/imgs/gt4.jpg"
+                     alt="Không gian phòng tập"
+                     decoding="async" />
+                <img src="~/assets/imgs/gt5.jpg"
+                     alt="Hoạt động tập luyện"
+                     decoding="async" />
+                <img src="~/assets/imgs/gt6.jpg"
+                     alt="Phòng nghỉ"
+                     decoding="async" />
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="brand-partners">
+    <div class="container">
+        <h2 class="section-heading text-center">HỢP TÁC THƯƠNG HIỆU</h2>
+        <div class="partners-grid">
+            <div class="partner-item">
+                <img src="https://1000logos.net/wp-content/uploads/2021/11/Nike-Logo-tumb.jpg"
+                     alt="Nike Logo" />
+                <div class="partner-overlay">
+                    <h3>Nike</h3>
+                    <p>Đối tác cung cấp trang thiết bị thể thao</p>
+                </div>
+            </div>
+            <div class="partner-item">
+                <img src="https://1000logos.net/wp-content/uploads/2016/10/Adidas-Logo-768x432.png"
+                     alt="Adidas Logo" />
+                <div class="partner-overlay">
+                    <h3>Adidas</h3>
+                    <p>Đối tác về trang phục và dụng cụ tập luyện</p>
+                </div>
+            </div>
+            <div class="partner-item">
+                <img src="https://1000logos.net/wp-content/uploads/2017/05/Reebok-logo.png"
+                     alt="Reebok Logo" />
+                <div class="partner-overlay">
+                    <h3>Reebok</h3>
+                    <p>Cung cấp giày và phụ kiện thể thao</p>
+                </div>
+            </div>
+            <div class="partner-item">
+                <img src="https://1000logos.net/wp-content/uploads/2021/04/Under-Armour-logo-768x484.png"
+                     alt="Under Armour Logo" />
+                <div class="partner-overlay">
+                    <h3>Under Armour</h3>
+                    <p>Đối tác về công nghệ trang phục thể thao</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="reviews-section">
+    <div class="container">
+        <h2 class="section-heading text-center">ĐÁNH GIÁ VÀ NHẬN XÉT</h2>
+        <div class="reviews-container">
+            <button class="nav-btn prev-btn">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+
+            <div class="reviews-slider">
+                <div class="review-card">
+                    <div class="review-badge">Verified Member</div>
+                    <div class="review-header">
+                        <div class="reviewer-info">
+                            <img src="https://randomuser.me/api/portraits/women/44.jpg"
+                                 alt="Reviewer"
+                                 class="reviewer-avatar" />
+                            <div class="reviewer-details">
+                                <h3>Nguyễn Thị Mai</h3>
+                                <div class="rating">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <span class="review-date">20/09/2025</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="review-text">
+                        "Tôi rất hài lòng với chất lượng dịch vụ tại đây. Nhân viên
+                        nhiệt tình, cơ sở vật chất hiện đại và không gian thoáng mát!"
+                    </p>
+                    <div class="review-photos">
+                        <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48"
+                             alt="Review photo" />
+                        <img src="https://images.unsplash.com/photo-1576678927484-cc907957088c"
+                             alt="Review photo" />
+                    </div>
+                </div>
+
+                <div class="review-card">
+                    <div class="review-badge">Top Reviewer</div>
+                    <div class="review-header">
+                        <div class="reviewer-info">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg"
+                                 alt="Reviewer"
+                                 class="reviewer-avatar" />
+                            <div class="reviewer-details">
+                                <h3>Trần Văn Hùng</h3>
+                                <div class="rating">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                </div>
+                                <span class="review-date">15/09/2025</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="review-text">
+                        "HLV rất chuyên nghiệp và tận tình. Môi trường tập luyện tuyệt
+                        vời! Đặc biệt ấn tượng với các lớp Yoga và Zumba."
+                    </p>
+                    <div class="review-stats">
+                        <span><i class="fas fa-dumbbell"></i> 50+ buổi tập</span>
+                        <span><i class="fas fa-medal"></i> Thành viên VIP</span>
+                    </div>
+                </div>
+
+                <div class="review-card">
+                    <div class="review-badge">New Member</div>
+                    <div class="review-header">
+                        <div class="reviewer-info">
+                            <img src="https://randomuser.me/api/portraits/women/28.jpg"
+                                 alt="Reviewer"
+                                 class="reviewer-avatar" />
+                            <div class="reviewer-details">
+                                <h3>Lê Thu Hà</h3>
+                                <div class="rating">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <span class="review-date">10/09/2025</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="review-text">
+                        "Dịch vụ spa tuyệt vời, giúp tôi thư giãn sau những giờ tập
+                        luyện. Không gian yên tĩnh và thư thái!"
+                    </p>
+                    <div class="review-highlight">
+                        <i class="fas fa-spa"></i>
+                        <span>Đã trải nghiệm Gói Premium Spa</span>
+                    </div>
+                </div>
+
+                <div class="review-card">
+                    <div class="review-badge">Fitness Expert</div>
+                    <div class="review-header">
+                        <div class="reviewer-info">
+                            <img src="https://randomuser.me/api/portraits/men/45.jpg"
+                                 alt="Reviewer"
+                                 class="reviewer-avatar" />
+                            <div class="reviewer-details">
+                                <h3>Phạm Minh Đức</h3>
+                                <div class="rating">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <span class="review-date">05/09/2025</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="review-text">
+                        "Thiết bị hiện đại, đa dạng và được bảo trì thường xuyên.
+                        Không gian tập rộng rãi, thoáng mát."
+                    </p>
+                    <div class="review-achievement">
+                        <i class="fas fa-trophy"></i>
+                        <span>Huấn luyện viên của năm 2024</span>
+                    </div>
+                </div>
+
+                <div class="review-card">
+                    <div class="review-badge">Premium Member</div>
+                    <div class="review-header">
+                        <div class="reviewer-info">
+                            <img src="https://randomuser.me/api/portraits/women/62.jpg"
+                                 alt="Reviewer"
+                                 class="reviewer-avatar" />
+                            <div class="reviewer-details">
+                                <h3>Trần Thanh Thảo</h3>
+                                <div class="rating">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <span class="review-date">01/09/2025</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="review-text">
+                        "Chương trình tập theo nhóm rất hiệu quả. HLV nhiệt tình, động
+                        viên và có chuyên môn cao!"
+                    </p>
+                    <div class="review-milestone">
+                        <i class="fas fa-clock"></i>
+                        <span>Thành viên 2+ năm</span>
+                    </div>
+                </div>
+            </div>
+
+            <button class="nav-btn next-btn">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+        <div class="slider-dots"></div>
+    </div>
+</section>
+
+<section class="cta-section">
+    <div class="cta-overlay">
+        <div class="container text-center">
+            <h2>Trải Nghiệm Kỳ Nghỉ Trong Mơ Của Bạn</h2>
+            <p>Những khoảnh khắc đang chờ đón. Hãy đặt phòng ngay hôm nay.</p>
+            <a href="@Url.Action("Index", "PhongNghi")" class="cta-button-large">Đặt Phòng Ngay</a>
+        </div>
+    </div>
+</section>

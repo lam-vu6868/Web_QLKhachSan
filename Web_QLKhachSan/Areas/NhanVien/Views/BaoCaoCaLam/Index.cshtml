@@ -1,0 +1,585 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+<link rel='stylesheet' href='@Url.Content("~/Areas/NhanVien/assets/css/baocao-calam.css")' />
+<div class="main-content">
+    <!-- Top Header -->
+    <header class="dashboard-header">
+        <div class="header-left">
+            <button class="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="page-title">
+                <h1>Báo Cáo Ca Làm</h1>
+                <p>Theo dõi và tổng hợp báo cáo hoạt động ca làm việc</p>
+            </div>
+        </div>
+        <div class="header-right">
+            <button class="btn btn-primary" id="new-report-btn">
+                <i class="fas fa-plus"></i>
+                Tạo báo cáo mới
+            </button>
+        </div>
+    </header>
+    <!-- Report Content -->
+    <main class="dashboard-main">
+        <!-- Current Shift Info -->
+        <section class="current-shift-section">
+            <div class="shift-card active-shift">
+                <div class="shift-header">
+                    <div class="shift-info">
+                        <h3>Ca Làm Hiện Tại</h3>
+                        <div class="shift-details">
+                            <span class="shift-time">
+                                <i class="fas fa-clock"></i>
+                                06:00 - 14:00 (Ca sáng)
+                            </span>
+                            <span class="shift-date">
+                                <i class="fas fa-calendar"></i>
+                                Thứ 6, 27/09/2025
+                            </span>
+                        </div>
+                    </div>
+                    <div class="shift-timer">
+                        <div class="timer-display" id="shift-timer">07:23:45</div>
+                        <p>Thời gian làm việc</p>
+                    </div>
+                </div>
+                <div class="shift-stats">
+                    <div class="stat-item">
+                        <div class="stat-number">24</div>
+                        <div class="stat-label">Check-in xử lý</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">18</div>
+                        <div class="stat-label">Check-out xử lý</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">15</div>
+                        <div class="stat-label">Yêu cầu dịch vụ</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">$12,450</div>
+                        <div class="stat-label">Doanh thu thu về</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Report Filters -->
+        <section class="report-filters-section">
+            <div class="filters-card">
+                <div class="row align-items-end">
+                    <div class="col-md-2">
+                        <label class="form-label">Từ ngày</label>
+                        <input type="date" class="form-control" id="date-from" value="2025-09-20">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Đến ngày</label>
+                        <input type="date" class="form-control" id="date-to" value="2025-09-27">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Ca làm</label>
+                        <select class="form-select" id="shift-filter">
+                            <option value="">Tất cả ca</option>
+                            <option value="morning">Ca sáng (06:00-14:00)</option>
+                            <option value="afternoon">Ca chiều (14:00-22:00)</option>
+                            <option value="night">Ca đêm (22:00-06:00)</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Nhân viên</label>
+                        <select class="form-select" id="staff-filter">
+                            <option value="">Tất cả nhân viên</option>
+                            <option value="mai">Nguyễn Thị Mai</option>
+                            <option value="duc">Trần Văn Đức</option>
+                            <option value="lan">Lê Thị Lan</option>
+                            <option value="nam">Phạm Văn Nam</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Bộ phận</label>
+                        <select class="form-select" id="department-filter">
+                            <option value="">Tất cả bộ phận</option>
+                            <option value="reception">Lễ tân</option>
+                            <option value="housekeeping">Buồng phòng</option>
+                            <option value="restaurant">Nhà hàng</option>
+                            <option value="spa">Spa & Massage</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-primary w-100" id="apply-filters-btn">
+                            <i class="fas fa-search"></i> Lọc dữ liệu
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Report Analytics -->
+        <section class="analytics-section">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="analytics-card">
+                        <div class="card-header">
+                            <h4>Biểu đồ hiệu suất 7 ngày qua</h4>
+                            <div class="chart-legend">
+                                <span class="legend-item checkin"><span class="color-box"></span>Check-in</span>
+                                <span class="legend-item checkout"><span class="color-box"></span>Check-out</span>
+                                <span class="legend-item service"><span class="color-box"></span>Dịch vụ</span>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <div class="chart-grid" id="performance-chart">
+                                <!-- Chart will be generated by JavaScript -->
+                                <div class="chart-day">
+                                    <div class="day-label">T2</div>
+                                    <div class="chart-bars">
+                                        <div class="bar checkin" style="height: 60%"></div>
+                                        <div class="bar checkout" style="height: 45%"></div>
+                                        <div class="bar service" style="height: 30%"></div>
+                                    </div>
+                                    <div class="day-total">85</div>
+                                </div>
+                                <div class="chart-day">
+                                    <div class="day-label">T3</div>
+                                    <div class="chart-bars">
+                                        <div class="bar checkin" style="height: 75%"></div>
+                                        <div class="bar checkout" style="height: 65%"></div>
+                                        <div class="bar service" style="height: 40%"></div>
+                                    </div>
+                                    <div class="day-total">95</div>
+                                </div>
+                                <div class="chart-day">
+                                    <div class="day-label">T4</div>
+                                    <div class="chart-bars">
+                                        <div class="bar checkin" style="height: 55%"></div>
+                                        <div class="bar checkout" style="height: 50%"></div>
+                                        <div class="bar service" style="height: 35%"></div>
+                                    </div>
+                                    <div class="day-total">78</div>
+                                </div>
+                                <div class="chart-day">
+                                    <div class="day-label">T5</div>
+                                    <div class="chart-bars">
+                                        <div class="bar checkin" style="height: 85%"></div>
+                                        <div class="bar checkout" style="height: 80%"></div>
+                                        <div class="bar service" style="height: 55%"></div>
+                                    </div>
+                                    <div class="day-total">112</div>
+                                </div>
+                                <div class="chart-day">
+                                    <div class="day-label">T6</div>
+                                    <div class="chart-bars">
+                                        <div class="bar checkin" style="height: 90%"></div>
+                                        <div class="bar checkout" style="height: 85%"></div>
+                                        <div class="bar service" style="height: 60%"></div>
+                                    </div>
+                                    <div class="day-total">125</div>
+                                </div>
+                                <div class="chart-day">
+                                    <div class="day-label">T7</div>
+                                    <div class="chart-bars">
+                                        <div class="bar checkin" style="height: 95%"></div>
+                                        <div class="bar checkout" style="height: 90%"></div>
+                                        <div class="bar service" style="height: 70%"></div>
+                                    </div>
+                                    <div class="day-total">142</div>
+                                </div>
+                                <div class="chart-day">
+                                    <div class="day-label">CN</div>
+                                    <div class="chart-bars">
+                                        <div class="bar checkin" style="height: 100%"></div>
+                                        <div class="bar checkout" style="height: 95%"></div>
+                                        <div class="bar service" style="height: 80%"></div>
+                                    </div>
+                                    <div class="day-total">158</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="analytics-card">
+                        <div class="card-header">
+                            <h4>Top nhân viên tuần</h4>
+                        </div>
+                        <div class="top-staff-list">
+                            <div class="staff-item rank-1">
+                                <div class="rank-badge">1</div>
+                                <div class="staff-avatar">
+                                    <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Staff">
+                                </div>
+                                <div class="staff-info">
+                                    <h5>Nguyễn Thị Mai</h5>
+                                    <p>Lễ tân - Ca sáng</p>
+                                    <div class="staff-score">
+                                        <span class="score">98.5</span>
+                                        <span class="score-label">điểm</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="staff-item rank-2">
+                                <div class="rank-badge">2</div>
+                                <div class="staff-avatar">
+                                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Staff">
+                                </div>
+                                <div class="staff-info">
+                                    <h5>Trần Văn Đức</h5>
+                                    <p>Lễ tân - Ca chiều</p>
+                                    <div class="staff-score">
+                                        <span class="score">96.2</span>
+                                        <span class="score-label">điểm</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="staff-item rank-3">
+                                <div class="rank-badge">3</div>
+                                <div class="staff-avatar">
+                                    <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Staff">
+                                </div>
+                                <div class="staff-info">
+                                    <h5>Lê Thị Lan</h5>
+                                    <p>Buồng phòng - Ca sáng</p>
+                                    <div class="staff-score">
+                                        <span class="score">94.8</span>
+                                        <span class="score-label">điểm</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Shift Reports List -->
+        <section class="reports-list-section">
+            <div class="reports-card">
+                <div class="reports-header">
+                    <h3>Danh sách báo cáo ca làm</h3>
+                    <div class="reports-actions">
+                        <button class="btn btn-outline-primary btn-sm" id="export-reports-btn">
+                            <i class="fas fa-download"></i> Xuất Excel
+                        </button>
+                        <button class="btn btn-outline-success btn-sm" id="print-reports-btn">
+                            <i class="fas fa-print"></i> In báo cáo
+                        </button>
+                    </div>
+                </div>
+
+                <div class="reports-table">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Ngày</th>
+                                    <th>Ca làm</th>
+                                    <th>Nhân viên</th>
+                                    <th>Check-in</th>
+                                    <th>Check-out</th>
+                                    <th>Dịch vụ</th>
+                                    <th>Doanh thu</th>
+                                    <th>Đánh giá</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>27/09/2025</td>
+                                    <td>
+                                        <span class="shift-badge morning">Ca sáng</span>
+                                    </td>
+                                    <td>
+                                        <div class="staff-info-compact">
+                                            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Staff" class="staff-avatar-small">
+                                            <div>
+                                                <strong>Nguyễn Thị Mai</strong>
+                                                <small>Lễ tân</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="number-highlight">24</span></td>
+                                    <td><span class="number-highlight">18</span></td>
+                                    <td><span class="number-highlight">15</span></td>
+                                    <td><span class="revenue-highlight">$12,450</span></td>
+                                    <td>
+                                        <div class="rating">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <span class="rating-text">Xuất sắc</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-warning" title="Chỉnh sửa">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-success" title="Duyệt">
+                                                <i class="fas fa-check"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>26/09/2025</td>
+                                    <td>
+                                        <span class="shift-badge afternoon">Ca chiều</span>
+                                    </td>
+                                    <td>
+                                        <div class="staff-info-compact">
+                                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Staff" class="staff-avatar-small">
+                                            <div>
+                                                <strong>Trần Văn Đức</strong>
+                                                <small>Lễ tân</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="number-highlight">22</span></td>
+                                    <td><span class="number-highlight">25</span></td>
+                                    <td><span class="number-highlight">18</span></td>
+                                    <td><span class="revenue-highlight">$15,680</span></td>
+                                    <td>
+                                        <div class="rating">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="far fa-star"></i>
+                                            <span class="rating-text">Tốt</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-secondary" title="Đã duyệt">
+                                                <i class="fas fa-check-circle"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>26/09/2025</td>
+                                    <td>
+                                        <span class="shift-badge morning">Ca sáng</span>
+                                    </td>
+                                    <td>
+                                        <div class="staff-info-compact">
+                                            <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Staff" class="staff-avatar-small">
+                                            <div>
+                                                <strong>Lê Thị Lan</strong>
+                                                <small>Buồng phòng</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="number-highlight">-</span></td>
+                                    <td><span class="number-highlight">-</span></td>
+                                    <td><span class="number-highlight">32</span></td>
+                                    <td><span class="revenue-highlight">$8,920</span></td>
+                                    <td>
+                                        <div class="rating">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <span class="rating-text">Xuất sắc</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-secondary" title="Đã duyệt">
+                                                <i class="fas fa-check-circle"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>25/09/2025</td>
+                                    <td>
+                                        <span class="shift-badge night">Ca đêm</span>
+                                    </td>
+                                    <td>
+                                        <div class="staff-info-compact">
+                                            <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Staff" class="staff-avatar-small">
+                                            <div>
+                                                <strong>Phạm Văn Nam</strong>
+                                                <small>Lễ tân</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="number-highlight">8</span></td>
+                                    <td><span class="number-highlight">5</span></td>
+                                    <td><span class="number-highlight">12</span></td>
+                                    <td><span class="revenue-highlight">$6,350</span></td>
+                                    <td>
+                                        <div class="rating">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="far fa-star"></i>
+                                            <span class="rating-text">Tốt</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-secondary" title="Đã duyệt">
+                                                <i class="fas fa-check-circle"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <div class="reports-pagination">
+                    <div class="pagination-info">
+                        Hiển thị 1-4 của 28 báo cáo
+                    </div>
+                    <nav>
+                        <ul class="pagination pagination-sm">
+                            <li class="page-item disabled">
+                                <span class="page-link">Trước</span>
+                            </li>
+                            <li class="page-item active">
+                                <span class="page-link">1</span>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">2</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">3</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">Sau</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<!-- New Report Modal -->
+<div class="modal fade" id="newReportModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Tạo báo cáo ca làm mới</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="new-report-form">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Ngày làm việc *</label>
+                                <input type="date" class="form-control" name="work_date" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Ca làm việc *</label>
+                                <select class="form-select" name="shift" required>
+                                    <option value="">Chọn ca làm</option>
+                                    <option value="morning">Ca sáng (06:00-14:00)</option>
+                                    <option value="afternoon">Ca chiều (14:00-22:00)</option>
+                                    <option value="night">Ca đêm (22:00-06:00)</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Nhân viên *</label>
+                                <select class="form-select" name="staff" required>
+                                    <option value="">Chọn nhân viên</option>
+                                    <option value="mai">Nguyễn Thị Mai</option>
+                                    <option value="duc">Trần Văn Đức</option>
+                                    <option value="lan">Lê Thị Lan</option>
+                                    <option value="nam">Phạm Văn Nam</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Số lượng Check-in</label>
+                                <input type="number" class="form-control" name="checkin_count" min="0">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Số lượng Check-out</label>
+                                <input type="number" class="form-control" name="checkout_count" min="0">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Yêu cầu dịch vụ xử lý</label>
+                                <input type="number" class="form-control" name="service_count" min="0">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Doanh thu thu về ($)</label>
+                                <input type="number" class="form-control" name="revenue" min="0" step="0.01">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Đánh giá ca làm</label>
+                                <select class="form-select" name="rating">
+                                    <option value="5">Xuất sắc (5 sao)</option>
+                                    <option value="4">Tốt (4 sao)</option>
+                                    <option value="3">Trung bình (3 sao)</option>
+                                    <option value="2">Kém (2 sao)</option>
+                                    <option value="1">Rất kém (1 sao)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Ghi chú về ca làm</label>
+                        <textarea class="form-control" name="notes" rows="4"
+                                  placeholder="Mô tả chi tiết về các hoạt động, sự cố, và đánh giá tổng quan ca làm..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-primary" id="create-report-btn">Tạo báo cáo</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Report Detail Modal -->
+<div class="modal fade" id="reportDetailModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Chi tiết báo cáo ca làm</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="reportDetailContent">
+                <!-- Content will be loaded dynamically -->
+            </div>
+        </div>
+    </div>
+</div>
+<script src='@Url.Content("~/Areas/NhanVien/assets/js/baocao-calam.js")'></script>
+
+

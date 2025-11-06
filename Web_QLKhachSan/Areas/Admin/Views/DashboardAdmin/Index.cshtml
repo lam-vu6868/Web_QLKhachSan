@@ -1,0 +1,172 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+<link rel='stylesheet' href='@Url.Content("~/Areas/Admin/assets/css/dashboard.css")'/>
+<script src='@Url.Content("~/Areas/Admin/assets/js/dashboard-charts.js")'></script>
+<div class="main-content">
+    <!-- Dashboard Header -->
+    <header class="dashboard-header">
+        <div class="header-left">
+            <button class="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="page-title">
+                <h1>Bảng Điều Khiển</h1>
+                <p id="current-date">Thứ Ba, ngày 30 tháng 9, 2025</p>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="quick-actions">
+                <button class="action-btn" title="Thông báo">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge">3</span>
+                </button>
+                <button class="action-btn" title="Tin nhắn">
+                    <i class="fas fa-envelope"></i>
+                    <span class="badge">5</span>
+                </button>
+            </div>
+            <div class="current-time">
+                <i class="fas fa-clock"></i>
+                <span id="current-time">10:30:00</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Dashboard Main Content -->
+    <main class="dashboard-main">
+        <!-- Stats Section -->
+        <section class="stats-section">
+            <div class="stat-card booking-card">
+                <div class="stat-icon"><i class="fas fa-dollar-sign"></i></div>
+                <div class="stat-info">
+                    <h3>$1,250</h3>
+                    <p>Doanh thu hôm nay</p>
+                    <span class="stat-change positive"><i class="fas fa-arrow-up"></i> 15% so với hôm qua</span>
+                </div>
+            </div>
+            <div class="stat-card occupancy-card">
+                <div class="stat-icon"><i class="fas fa-chart-pie"></i></div>
+                <div class="stat-info">
+                    <h3>85%</h3>
+                    <p>Tỷ lệ lấp đầy</p>
+                    <span class="stat-change positive"><i class="fas fa-arrow-up"></i> 5%</span>
+                </div>
+            </div>
+            <div class="stat-card checkin-card">
+                <div class="stat-icon"><i class="fas fa-users"></i></div>
+                <div class="stat-info">
+                    <h3>45</h3>
+                    <p>Lượt khách trong ngày</p>
+                    <span class="stat-change">28 <span class="text-success">vào</span> / 17 <span class="text-danger">ra</span></span>
+                </div>
+            </div>
+            <div class="stat-card checkout-card">
+                <div class="stat-icon"><i class="fas fa-wallet"></i></div>
+                <div class="stat-info">
+                    <h3>$35,800</h3>
+                    <p>Doanh thu tháng</p>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 71.6%;"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Charts Section -->
+        <section class="charts-section mb-4">
+            <div class="row">
+                <div class="col-lg-6 mb-4">
+                    <div class="custom-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-chart-bar"></i> Báo cáo doanh thu (6 tháng gần nhất)</h3>
+                        </div>
+                        <div class="card-body chart-container">
+                            <canvas id="revenueChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 mb-4">
+                    <div class="custom-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-chart-pie"></i> Tỷ trọng dịch vụ</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="doughnut-chart-container-large">
+                                <canvas id="servicesChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="row">
+            <!-- Staff Performance Section -->
+            <div class="col-lg-6 mb-4">
+                <section class="staff-performance-section">
+                    <h2 class="section-title"><i class="fas fa-user-chart"></i>Hiệu Suất Nhân Viên</h2>
+                    <div class="custom-card">
+                        <div class="card-body chart-container">
+                            <canvas id="staffPerformanceChart"></canvas>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Top Services Section -->
+            <div class="col-lg-6 mb-4">
+                <section class="top-services-section">
+                    <h2 class="section-title"><i class="fas fa-concierge-bell"></i>Dịch Vụ Sử Dụng Nhiều</h2>
+                    <div class="custom-card">
+                        <div class="card-body">
+                            <ul class="service-progress-list">
+                                <li>
+                                    <div class="service-name">
+                                        <i class="fas fa-utensils"></i>
+                                        <span>Ăn uống tại phòng</span>
+                                    </div>
+                                    <div class="service-bar">
+                                        <div class="bar-fill" style="width: 85%;"></div>
+                                    </div>
+                                    <span class="service-count">120</span>
+                                </li>
+                                <li>
+                                    <div class="service-name">
+                                        <i class="fas fa-tshirt"></i>
+                                        <span>Giặt ủi</span>
+                                    </div>
+                                    <div class="service-bar">
+                                        <div class="bar-fill" style="width: 60%;"></div>
+                                    </div>
+                                    <span class="service-count">85</span>
+                                </li>
+                                <li>
+                                    <div class="service-name">
+                                        <i class="fas fa-spa"></i>
+                                        <span>Spa & Massage</span>
+                                    </div>
+                                    <div class="service-bar">
+                                        <div class="bar-fill" style="width: 45%;"></div>
+                                    </div>
+                                    <span class="service-count">60</span>
+                                </li>
+                                <li>
+                                    <div class="service-name">
+                                        <i class="fas fa-car"></i>
+                                        <span>Thuê xe</span>
+                                    </div>
+                                    <div class="service-bar">
+                                        <div class="bar-fill" style="width: 30%;"></div>
+                                    </div>
+                                    <span class="service-count">45</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+</div>

@@ -1,0 +1,99 @@
+﻿@{
+    ViewBag.Title = "Thông Tin Đặt Phòng";
+}
+<link rel="stylesheet" href="~/assets/css/dat-phong.css" />
+
+<section class="page-header">
+    <div class="container">
+        <h1 data-aos="fade-right">Hoàn Tất Đặt Chỗ</h1>
+        <p data-aos="fade-left">
+            Quá trình thanh toán của bạn được bảo mật tuyệt đối
+        </p>
+    </div>
+</section>
+<main class="main-content-area">
+    <div class="container checkout-layout">
+        <div class="checkout-form-area">
+            <div class="checkout-steps">
+                <div class="step active">1. Thông tin</div>
+                <div class="step" onclick="location.href='@Url.Action("Index", "DichVuThem")'">
+                    2. Dịch Vụ
+                </div>
+                <div class="step" onclick="location.href='@Url.Action("Index", "ThanhToan")'">
+                    3. Thanh toán
+                </div>
+                <div class="step" onclick="location.href='@Url.Action("Index", "XacNhan")'">
+                    4. Xác nhận
+                </div>
+            </div>
+
+            <form class="checkout-form">
+                <h2 class="form-section-title">Thông Tin Liên Hệ</h2>
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label for="full-name">Họ và Tên</label>
+                        <input type="text" id="full-name" placeholder="Nguyễn Văn A" />
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group half-width">
+                        <label for="checkin-date">Ngày nhận phòng</label>
+                        <input type="date" id="checkin-date" name="checkin-date" />
+                    </div>
+                    <div class="form-group half-width">
+                        <label for="checkout-date">Ngày trả phòng</label>
+                        <input type="text"
+                               id="checkout-date"
+                               name="checkout-date"
+                               placeholder="Nhập ngày trả phòng" />
+                    </div>
+                    <div class="form-group half-width">
+                        <label for="guests">Số người</label>
+                        <input type="number"
+                               id="guests"
+                               name="guests"
+                               min="1"
+                               max="4"
+                               value="1" />
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group third-width">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" placeholder="email@example.com" />
+                    </div>
+                    <div class="form-group third-width">
+                        <label for="phone">Số điện thoại</label>
+                        <div class="phone-input-container">
+                            <div class="phone-input-wrapper">
+                                <div class="country-flag">
+                                    <span class="flag">🇻🇳</span>
+                                    <span class="country-code">+84</span>
+                                </div>
+                                <input type="tel"
+                                       id="phone"
+                                       placeholder="0901234567"
+                                       maxlength="11" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group third-width">
+                        <label for="promo-code">Mã khuyến mãi</label>
+                        <input type="text" 
+                               id="promo-code" 
+                               name="promo-code"
+                               placeholder="Nhập mã giảm giá" />
+                    </div>
+                </div>
+
+                <a href="@Url.Action("Index", "DichVuThem")" class="cta-button">Tiếp Tục</a>
+            </form>
+        </div>
+        @Html.Partial("_OrderSummary")
+    </div>
+</main>
+
+<script src="~/assets/js/dat-phong.js"></script>
+

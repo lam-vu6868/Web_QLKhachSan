@@ -1,0 +1,308 @@
+﻿@{
+    ViewBag.Title = "Đánh Giá Khách Hàng";
+}
+<link rel="stylesheet" href="~/assets/css/danh-gia.css" />
+
+<main>
+    <section class="hero-section">
+        <div class="hero-content">
+            <div class="container">
+                <div class="hero-text" data-aos="fade-up">
+                    <h1>Trải Nghiệm Đẳng Cấp</h1>
+                    <p>Khám phá những câu chuyện và cảm nhận chân thực từ các vị khách đã trải nghiệm dịch vụ tại The Serene Horizon</p>
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <span class="stat-number" data-count="1248">0</span>
+                            <span class="stat-label">Đánh giá</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" data-count="4.7">0</span>
+                            <span class="stat-label">Điểm trung bình</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" data-count="96">0</span>
+                            <span class="stat-label">% Hài lòng</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="hero-decoration">
+            <div class="floating-card" data-aos="fade-right" data-aos-delay="200">
+                <i class="fas fa-star"></i>
+                <span>Dịch vụ xuất sắc</span>
+            </div>
+            <div class="floating-card" data-aos="fade-left" data-aos-delay="400">
+                <i class="fas fa-heart"></i>
+                <span>Trải nghiệm tuyệt vời</span>
+            </div>
+            <div class="floating-card" data-aos="fade-up" data-aos-delay="600">
+                <i class="fas fa-crown"></i>
+                <span>Đẳng cấp 5 sao</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="rating-summary">
+        <div class="summary-grid">
+            <div class="overall-card" data-aos="fade-right">
+                <div class="overall-score">
+                    <div class="score-badge" style="--score: 94">
+                        <span>4.7</span>
+                    </div>
+                    <div>
+                        <h2 class="section-heading" style="margin: 0 0 6px 0">
+                            Tổng Điểm Hài Lòng
+                        </h2>
+                        <div class="star-row">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <div class="score-note">
+                            Dựa trên 1.248 đánh giá đã xác minh
+                        </div>
+                    </div>
+                </div>
+
+                <div class="criteria-list">
+                    <div class="criteria-item">
+                        <div>Dịch vụ</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" data-value="92"></div>
+                        </div>
+                        <div>4.6</div>
+                    </div>
+                    <div class="criteria-item">
+                        <div>Vệ sinh</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" data-value="96"></div>
+                        </div>
+                        <div>4.8</div>
+                    </div>
+                    <div class="criteria-item">
+                        <div>Tiện nghi</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" data-value="90"></div>
+                        </div>
+                        <div>4.5</div>
+                    </div>
+                    <div class="criteria-item">
+                        <div>Vị trí</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" data-value="88"></div>
+                        </div>
+                        <div>4.4</div>
+                    </div>
+                </div>
+            </div>
+
+            <aside class="aside-card" data-aos="fade-left">
+                <div class="card-icon">
+                    <i class="fas fa-crown"></i>
+                </div>
+                <h3>Trải nghiệm kỳ nghỉ trong mơ</h3>
+                <div class="feature-highlights">
+                    <div class="highlight-item">
+                        <i class="fas fa-star"></i>
+                        <span>Dịch vụ 5 sao</span>
+                    </div>
+                    <div class="highlight-item">
+                        <i class="fas fa-gift"></i>
+                        <span>Ưu đãi đặc biệt</span>
+                    </div>
+                    <div class="highlight-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Phục vụ 24/7</span>
+                    </div>
+                </div>
+                <p>
+                    Tận hưởng không gian đẳng cấp, dịch vụ tận tâm và những khoảnh
+                    khắc trọn vẹn. Đặt phòng ngay hôm nay để không bỏ lỡ ưu đãi đặc
+                    biệt.
+                </p>
+                <a class="cta-inline" href="@Url.Action("Index", "PhongNghi")">
+                    <span>Khám phá phòng</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </aside>
+        </div>
+    </section>
+
+    <section class="reviews-section" data-current-user-email="@(Session["Email"] ?? String.Empty)" data-current-user-name="@(Session["HoVaTen"] ?? String.Empty)">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <h2>Khách Hàng Nói Gì Về Chúng Tôi</h2>
+                <p>Những câu chuyện và trải nghiệm chân thực từ các vị khách đã tin tương và lựa chọn The Serene Horizon</p>
+            </div>
+
+            <div class="reviews-controls" data-aos="fade-up" data-aos-delay="150">
+                <div class="reviews-filter">
+                    <button id="filterAll" class="filter-btn active" data-filter="all">Tất cả</button>
+                    <button id="filterMine" class="filter-btn" data-filter="mine">Của tôi</button>
+                </div>
+            </div>
+
+            <div class="reviews-grid" data-aos="fade-up" data-aos-delay="200">
+                <!-- Review cards sẽ được tạo bởi JavaScript -->
+            </div>
+
+            <button class="load-more-btn" id="loadMoreReviews">
+                <span class="btn-text">Xem thêm đánh giá</span>
+                <i class="fas fa-chevron-down btn-icon"></i>
+            </button>
+        </div>
+    </section>
+
+    <section class="write-review-section">
+        <div class="container">
+            <div class="review-form-wrapper" data-aos="fade-up">
+                <div class="form-header">
+                    <h3>Chia Sẻ Trải Nghiệm Của Bạn</h3>
+                    <p>Đánh giá của bạn sẽ giúp chúng tôi cải thiện dịch vụ và hỗ trợ khách hàng khác đưa ra quyết định tốt hơn</p>
+                </div>
+
+                <form class="modern-review-form" id="reviewForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="reviewerName">
+                                <i class="fas fa-user"></i>
+                                Họ và tên
+                            </label>
+                            <input type="text" id="reviewerName" required placeholder="Nhập họ và tên của bạn">
+                        </div>
+                        <div class="form-group">
+                            <label for="reviewerEmail">
+                                <i class="fas fa-envelope"></i>
+                                Email (không bắt buộc)
+                            </label>
+                            <input type="email" id="reviewerEmail" placeholder="email@example.com">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="serviceType">
+                                <i class="fas fa-bed"></i>
+                                Loại dịch vụ đã sử dụng
+                            </label>
+                            <select id="serviceType" required>
+                                <option value="">Chọn dịch vụ</option>
+                                <option value="deluxe">Phòng Deluxe</option>
+                                <option value="suite">Phòng Suite</option>
+                                <option value="presidential">Phòng Presidential</option>
+                                <option value="spa">Dịch vụ Spa</option>
+                                <option value="restaurant">Nhà hàng</option>
+                                <option value="events">Tổ chức sự kiện</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="visitDate">
+                                <i class="fas fa-calendar"></i>
+                                Ngày sử dụng dịch vụ
+                            </label>
+                            <input type="date" id="visitDate" required>
+                        </div>
+                    </div>
+
+                    <div class="rating-section">
+                        <h4>Đánh giá chi tiết</h4>
+                        <div class="rating-grid">
+                            <div class="rating-item">
+                                <label>Chất lượng dịch vụ</label>
+                                <div class="star-rating" data-category="service">
+                                    <i class="fas fa-star" data-value="1"></i>
+                                    <i class="fas fa-star" data-value="2"></i>
+                                    <i class="fas fa-star" data-value="3"></i>
+                                    <i class="fas fa-star" data-value="4"></i>
+                                    <i class="fas fa-star" data-value="5"></i>
+                                </div>
+                                <span class="rating-text">Chọn số sao</span>
+                            </div>
+                            <div class="rating-item">
+                                <label>Độ sạch sẽ</label>
+                                <div class="star-rating" data-category="cleanliness">
+                                    <i class="fas fa-star" data-value="1"></i>
+                                    <i class="fas fa-star" data-value="2"></i>
+                                    <i class="fas fa-star" data-value="3"></i>
+                                    <i class="fas fa-star" data-value="4"></i>
+                                    <i class="fas fa-star" data-value="5"></i>
+                                </div>
+                                <span class="rating-text">Chọn số sao</span>
+                            </div>
+                            <div class="rating-item">
+                                <label>Tiện nghi & Cơ sở vật chất</label>
+                                <div class="star-rating" data-category="amenities">
+                                    <i class="fas fa-star" data-value="1"></i>
+                                    <i class="fas fa-star" data-value="2"></i>
+                                    <i class="fas fa-star" data-value="3"></i>
+                                    <i class="fas fa-star" data-value="4"></i>
+                                    <i class="fas fa-star" data-value="5"></i>
+                                </div>
+                                <span class="rating-text">Chọn số sao</span>
+                            </div>
+                            <div class="rating-item">
+                                <label>Vị trí & Giao thông</label>
+                                <div class="star-rating" data-category="location">
+                                    <i class="fas fa-star" data-value="1"></i>
+                                    <i class="fas fa-star" data-value="2"></i>
+                                    <i class="fas fa-star" data-value="3"></i>
+                                    <i class="fas fa-star" data-value="4"></i>
+                                    <i class="fas fa-star" data-value="5"></i>
+                                </div>
+                                <span class="rating-text">Chọn số sao</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reviewContent">
+                            <i class="fas fa-edit"></i>
+                            Chia sẻ trải nghiệm của bạn
+                        </label>
+                        <textarea id="reviewContent" rows="6" required 
+                                  placeholder="Hãy chia sẻ chi tiết về trải nghiệm của bạn tại The Serene Horizon. Điều gì khiến bạn ấn tượng nhất? Bạn có muốn giới thiệu cho bạn bè không?"></textarea>
+                        <div class="char-counter">
+                            <span id="charCount">0</span>/500 ký tự
+                        </div>
+                    </div>
+
+                    <div class="form-group photo-upload">
+                        <label>
+                            <i class="fas fa-camera"></i>
+                            Thêm hình ảnh (tùy chọn)
+                        </label>
+                        <div class="upload-area" id="uploadArea">
+                            <div class="upload-placeholder">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>Kéo thả hình ảnh vào đây hoặc <span class="upload-link">chọn file</span></p>
+                                <small>Tối đa 5 hình, mỗi hình không quá 5MB</small>
+                            </div>
+                            <input type="file" id="photoInput" multiple accept="image/*" hidden>
+                        </div>
+                        <div class="photo-preview" id="photoPreview"></div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" id="resetForm">
+                            <i class="fas fa-undo"></i>
+                            Đặt lại
+                        </button>
+                        <button type="submit" class="btn-primary" id="submitReview">
+                            <i class="fas fa-paper-plane"></i>
+                            Gửi đánh giá
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Toast notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+</main>
+
+<script src="~/assets/js/danh-gia.js"></script>
+

@@ -1,0 +1,252 @@
+﻿@{
+    ViewBag.Title = "Tìm Hiểu Thêm";
+}
+<link rel="stylesheet" href="~/assets/css/tim-hieu-them.css" />
+
+<main>
+    <!-- Hero Section với Parallax Effect -->
+    <section class="hero-section">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="container">
+                <span class="hero-badge" data-aos="fade-down">
+                    <i class="fas fa-crown"></i> Luxury Experience
+                </span>
+                <h1 data-aos="fade-up" data-aos-delay="100">
+                    Khám Phá The Serene Horizon
+                </h1>
+                <p class="hero-subtitle" data-aos="fade-up" data-aos-delay="200">
+                    Nâng tầm trải nghiệm nghỉ dưỡng với không gian sang trọng, dịch vụ tận tâm<br>
+                    và thiên nhiên tuyệt đẹp bên bờ biển xanh trong lành
+                </p>
+                <div class="hero-buttons" data-aos="fade-up" data-aos-delay="300">
+                    <a href="@Url.Action("Index", "PhongNghi")" class="btn-hero primary">
+                        <i class="fas fa-bed"></i> Đặt Phòng Ngay
+                    </a>
+                    <a href="#values" class="btn-hero secondary">
+                        <i class="fas fa-arrow-down"></i> Khám Phá
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="hero-scroll-indicator">
+            <span></span>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item" data-aos="fade-up" data-aos-delay="0">
+                    <div class="stat-icon">
+                        <i class="fas fa-medal"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-number" data-target="15">0</h3>
+                        <p class="stat-label">Năm Kinh Nghiệm</p>
+                    </div>
+                </div>
+                <div class="stat-item" data-aos="fade-up" data-aos-delay="100">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-number" data-target="50000">0</h3>
+                        <p class="stat-label">Khách Hàng Hài Lòng</p>
+                    </div>
+                </div>
+                <div class="stat-item" data-aos="fade-up" data-aos-delay="200">
+                    <div class="stat-icon">
+                        <i class="fas fa-door-open"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-number" data-target="120">0</h3>
+                        <p class="stat-label">Phòng Cao Cấp</p>
+                    </div>
+                </div>
+                <div class="stat-item" data-aos="fade-up" data-aos-delay="300">
+                    <div class="stat-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-number" data-target="98">0</h3>
+                        <p class="stat-label">% Đánh Giá 5 Sao</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Values Section với Cards hiện đại -->
+    <section id="values" class="values-section">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <span class="section-badge">
+                    <i class="fas fa-gem"></i> Dịch Vụ Đẳng Cấp
+                </span>
+                <h2 class="section-title">Giá Trị & Dịch Vụ Nổi Bật</h2>
+                <p class="section-subtitle">
+                    Trải nghiệm những dịch vụ tiêu chuẩn 5 sao với sự chăm sóc tận tâm từ đội ngũ chuyên nghiệp
+                </p>
+            </div>
+
+            <div class="values-grid">
+                <div class="value-card" data-aos="zoom-in" data-aos-delay="0">
+                    <div class="value-card-inner">
+                        <div class="value-icon">
+                            <i class="fas fa-hotel"></i>
+                        </div>
+                        <h3 class="value-title">Sang Trọng & Đẳng Cấp</h3>
+                        <p class="value-description">
+                            Không gian thiết kế tinh tế, nội thất cao cấp, mang lại cảm giác
+                            sang trọng và riêng tư tuyệt đối cho mọi khoảnh khắc nghỉ ngơi.
+                        </p>
+                        <div class="value-overlay"></div>
+                    </div>
+                </div>
+
+                <div class="value-card" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="value-card-inner">
+                        <div class="value-icon">
+                            <i class="fas fa-spa"></i>
+                        </div>
+                        <h3 class="value-title">Spa & Thư Giãn</h3>
+                        <p class="value-description">
+                            Hồ bơi vô cực, spa cao cấp, phòng gym hiện đại, giúp bạn tái tạo
+                            năng lượng và tận hưởng từng khoảnh khắc thư giãn tuyệt vời.
+                        </p>
+                        <div class="value-overlay"></div>
+                    </div>
+                </div>
+
+                <div class="value-card" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="value-card-inner">
+                        <div class="value-icon">
+                            <i class="fas fa-utensils"></i>
+                        </div>
+                        <h3 class="value-title">Ẩm Thực Đa Dạng</h3>
+                        <p class="value-description">
+                            Nhà hàng với thực đơn phong phú, kết hợp tinh hoa ẩm thực Việt
+                            Nam và quốc tế do đội ngũ đầu bếp tài năng chế biến.
+                        </p>
+                        <div class="value-overlay"></div>
+                    </div>
+                </div>
+
+                <div class="value-card" data-aos="zoom-in" data-aos-delay="300">
+                    <div class="value-card-inner">
+                        <div class="value-icon">
+                            <i class="fas fa-concierge-bell"></i>
+                        </div>
+                        <h3 class="value-title">Dịch Vụ 24/7</h3>
+                        <p class="value-description">
+                            Đội ngũ nhân viên chuyên nghiệp, thân thiện, luôn sẵn sàng hỗ trợ
+                            và mang lại trải nghiệm cá nhân hóa cho từng khách hàng.
+                        </p>
+                        <div class="value-overlay"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section hiện đại -->
+    <section class="gallery-section">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <span class="section-badge">
+                    <i class="fas fa-images"></i> Gallery
+                </span>
+                <h2 class="section-title">Thư Viện Hình Ảnh</h2>
+                <p class="section-subtitle">
+                    Khám phá vẻ đẹp tuyệt vời của không gian nghỉ dưỡng cao cấp
+                </p>
+            </div>
+
+            <div class="gallery-grid">
+                <div class="gallery-item gallery-large" data-aos="fade-up" data-aos-delay="0">
+                    <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80"
+                         alt="Cảnh rừng bình minh" />
+                    <div class="gallery-overlay">
+                        <div class="gallery-content">
+                            <h4>Thiên Nhiên Tươi Đẹp</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="100">
+                    <img src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=600&q=80"
+                         alt="Quầy bar sang trọng" />
+                    <div class="gallery-overlay">
+                        <div class="gallery-content">
+                            <h4>Bar & Lounge</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="200">
+                    <img src="https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=600&q=80"
+                         alt="Khuôn viên ngoài trời" />
+                    <div class="gallery-overlay">
+                        <div class="gallery-content">
+                            <h4>Khuôn Viên Xanh</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="300">
+                    <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=600&q=80"
+                         alt="Ban công view biển" />
+                    <div class="gallery-overlay">
+                        <div class="gallery-content">
+                            <h4>View Biển Tuyệt Đẹp</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="400">
+                    <img src="https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?auto=format&fit=crop&w=600&q=80"
+                         alt="Bữa sáng tại khách sạn" />
+                    <div class="gallery-overlay">
+                        <div class="gallery-content">
+                            <h4>Ẩm Thực Tinh Tế</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gallery-item gallery-tall" data-aos="fade-up" data-aos-delay="500">
+                    <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80"
+                         alt="Sảnh khách sạn" />
+                    <div class="gallery-overlay">
+                        <div class="gallery-content">
+                            <h4>Sảnh Sang Trọng</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="gallery-cta" data-aos="fade-up">
+                <a href="@Url.Action("Index", "ThuVienAnh")" class="btn-cta">
+                    <i class="fas fa-images"></i> Xem Toàn Bộ Thư Viện
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Final Section -->
+    <section class="cta-final-section">
+        <div class="cta-overlay"></div>
+        <div class="container">
+            <div class="cta-content" data-aos="zoom-in">
+                <h2>Sẵn Sàng Cho Kỳ Nghỉ Của Bạn?</h2>
+                <p>Đặt phòng ngay hôm nay và trải nghiệm sự sang trọng đẳng cấp 5 sao</p>
+                <a href="@Url.Action("Index", "PhongNghi")" class="btn-cta-large">
+                    <i class="fas fa-calendar-check"></i> Đặt Phòng Ngay
+                </a>
+            </div>
+        </div>
+    </section>
+</main>
+
+<script src="~/assets/js/tim-hieu-them.js"></script>

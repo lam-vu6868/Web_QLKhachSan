@@ -1,0 +1,252 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+<link rel="stylesheet" href="~/assets/css/thuvien-anh.css" />
+
+<!-- Hero Section -->
+<section class="gallery-hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <h1 data-aos="fade-up">Thư Viện Ảnh</h1>
+        <p data-aos="fade-up" data-aos-delay="100">
+            Khám phá không gian sang trọng và đẳng cấp của The Serene Horizon Hotel
+        </p>
+    </div>
+</section>
+
+<!-- Filter Section -->
+<section class="filter-section">
+    <div class="container">
+        <div class="filter-buttons" data-aos="fade-up">
+            <button class="filter-btn active" data-filter="all">
+                <i class="fas fa-th"></i> Tất Cả
+            </button>
+            <button class="filter-btn" data-filter="phong">
+                <i class="fas fa-bed"></i> Phòng Nghỉ
+            </button>
+            <button class="filter-btn" data-filter="dichvu">
+                <i class="fas fa-concierge-bell"></i> Dịch Vụ
+            </button>
+            <button class="filter-btn" data-filter="khonggian">
+                <i class="fas fa-building"></i> Không Gian
+            </button>
+            <button class="filter-btn" data-filter="sukien">
+                <i class="fas fa-calendar-alt"></i> Sự Kiện
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- Gallery Section -->
+<section class="gallery-section">
+    <div class="container">
+        <div class="gallery-grid">
+            <!-- Phòng Nghỉ -->
+            <div class="gallery-item" data-index="0" data-category="phong" data-aos="zoom-in" data-aos-delay="0">
+                <div class="gallery-card">
+                    <img src="assets/imgs/gt1.jpg" alt="Phòng Deluxe" />
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <span class="gallery-category">
+                                <i class="fas fa-bed"></i> Phòng Nghỉ
+                            </span>
+                        </div>
+                        <button class="view-btn" onclick="openLightbox(0)">
+                            <i class="fas fa-search-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="gallery-item" data-index="1" data-category="phong" data-aos="zoom-in" data-aos-delay="100">
+                <div class="gallery-card">
+                    <img src="assets/imgs/gt2.jpg" alt="Suite Room" />
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <span class="gallery-category">
+                                <i class="fas fa-bed"></i> Phòng Nghỉ
+                            </span>
+                        </div>
+                        <button class="view-btn" onclick="openLightbox(1)">
+                            <i class="fas fa-search-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dịch Vụ -->
+            <div class="gallery-item" data-index="2" data-category="dichvu" data-aos="zoom-in" data-aos-delay="200">
+                <div class="gallery-card">
+                    <img src="assets/imgs/gt3.jpg" alt="Spa & Massage" />
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <span class="gallery-category">
+                                <i class="fas fa-concierge-bell"></i> Dịch Vụ
+                            </span>
+                        </div>
+                        <button class="view-btn" onclick="openLightbox(2)">
+                            <i class="fas fa-search-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="gallery-item" data-index="3" data-category="dichvu" data-aos="zoom-in" data-aos-delay="300">
+                <div class="gallery-card">
+                    <img src="assets/imgs/gt4.jpg" alt="Nhà Hàng" />
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <span class="gallery-category">
+                                <i class="fas fa-concierge-bell"></i> Dịch Vụ
+                            </span>
+                        </div>
+                        <button class="view-btn" onclick="openLightbox(3)">
+                            <i class="fas fa-search-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Không Gian -->
+            <div class="gallery-item" data-index="4" data-category="khonggian" data-aos="zoom-in" data-aos-delay="400">
+                <div class="gallery-card">
+                    <img src="assets/imgs/gt5.jpg" alt="Lobby" />
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <span class="gallery-category">
+                                <i class="fas fa-building"></i> Không Gian
+                            </span>
+                        </div>
+                        <button class="view-btn" onclick="openLightbox(4)">
+                            <i class="fas fa-search-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="gallery-item" data-index="5" data-category="khonggian" data-aos="zoom-in" data-aos-delay="500">
+                <div class="gallery-card">
+                    <img src="assets/imgs/gt6.jpg" alt="Hồ Bơi" />
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <span class="gallery-category">
+                                <i class="fas fa-building"></i> Không Gian
+                            </span>
+                        </div>
+                        <button class="view-btn" onclick="openLightbox(5)">
+                            <i class="fas fa-search-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sự Kiện -->
+            <div class="gallery-item" data-index="6" data-category="sukien" data-aos="zoom-in" data-aos-delay="600">
+                <div class="gallery-card">
+                    <img src="assets/imgs/gt7.jpg" alt="Hội Nghị" />
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <span class="gallery-category">
+                                <i class="fas fa-calendar-alt"></i> Sự Kiện
+                            </span>
+                        </div>
+                        <button class="view-btn" onclick="openLightbox(6)">
+                            <i class="fas fa-search-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="gallery-item" data-index="7" data-category="khonggian" data-aos="zoom-in" data-aos-delay="700">
+                <div class="gallery-card">
+                    <img src="assets/imgs/gt.jpg" alt="View Tổng Thể" />
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <span class="gallery-category">
+                                <i class="fas fa-building"></i> Không Gian
+                            </span>
+                        </div>
+                        <button class="view-btn" onclick="openLightbox(7)">
+                            <i class="fas fa-search-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Lightbox Modal -->
+<div class="lightbox" id="lightbox">
+    
+    <button class="lightbox-prev" onclick="changeSlide(-1)">
+        <i class="fas fa-chevron-left"></i>
+    </button>
+    <button class="lightbox-next" onclick="changeSlide(1)">
+        <i class="fas fa-chevron-right"></i>
+    </button>
+    <div class="lightbox-content">
+        <img id="lightbox-img" src="" alt="" />
+        
+    </div>
+    <div class="lightbox-counter">
+        <span id="lightbox-current">1</span> / <span id="lightbox-total">8</span>
+    </div>
+</div>
+
+<!-- Stats Section -->
+<section class="stats-section">
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-item" data-aos="fade-up" data-aos-delay="0">
+                <div class="stat-icon">
+                    <i class="fas fa-camera"></i>
+                </div>
+                <h3 class="stat-number">500+</h3>
+                <p>Hình Ảnh</p>
+            </div>
+            <div class="stat-item" data-aos="fade-up" data-aos-delay="100">
+                <div class="stat-icon">
+                    <i class="fas fa-bed"></i>
+                </div>
+                <h3 class="stat-number">150+</h3>
+                <p>Phòng Nghỉ</p>
+            </div>
+            <div class="stat-item" data-aos="fade-up" data-aos-delay="200">
+                <div class="stat-icon">
+                    <i class="fas fa-concierge-bell"></i>
+                </div>
+                <h3 class="stat-number">50+</h3>
+                <p>Dịch Vụ</p>
+            </div>
+            <div class="stat-item" data-aos="fade-up" data-aos-delay="300">
+                <div class="stat-icon">
+                    <i class="fas fa-award"></i>
+                </div>
+                <h3 class="stat-number">5</h3>
+                <p>Sao Quốc Tế</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="container">
+        <div class="cta-content" data-aos="fade-up">
+            <h2>Đặt Phòng Ngay Hôm Nay</h2>
+            <p>
+                Trải nghiệm đẳng cấp 5 sao với không gian sang trọng, dịch vụ chuyên nghiệp
+                và những tiện ích hiện đại. Chúng tôi cam kết mang đến cho bạn kỳ nghỉ đáng nhớ nhất.
+            </p>
+            <a href="@Url.Action("Index", "DatPhong")" class="cta-button">
+                <i class="fas fa-calendar-plus"></i>
+                <span>Đặt Phòng Ngay</span>
+            </a>
+        </div>
+    </div>
+</section>
+
+<script src="~/assets/js/thuvien-anh.js"></script>
+

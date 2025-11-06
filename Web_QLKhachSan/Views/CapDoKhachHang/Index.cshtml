@@ -1,0 +1,492 @@
+﻿
+@{
+    ViewBag.Title = "Cấp Độ Khách Hàng";
+}
+<link rel="stylesheet" href="~/assets/css/cap-do-khach-hang.css" />
+
+<!-- Hero Section -->
+<section class="tier-hero">
+    <div class="hero-content">
+        <div class="hero-text">
+            <h1 class="hero-title">Hệ Thống <span class="highlight">Cấp Độ</span> Thành Viên</h1>
+            <p class="hero-subtitle">Trải nghiệm hành trình thăng hạng đầy thú vị với 8 cấp độ thành viên độc đáo, mỗi cấp độ mang đến những đặc quyền và ưu đãi riêng biệt</p>
+            
+            <div class="tier-badges-preview">
+                <div class="badge-preview">
+                    <i class="fas fa-medal"></i>
+                </div>
+                <div class="badge-preview">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <div class="badge-preview">
+                    <i class="fas fa-crown"></i>
+                </div>
+                <div class="badge-preview">
+                    <i class="fas fa-chess-king"></i>
+                </div>
+                <div class="badge-preview">
+                    <i class="fas fa-leaf"></i>
+                </div>
+                <div class="badge-preview">
+                    <i class="fas fa-diamond"></i>
+                </div>
+                <div class="badge-preview">
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="badge-preview">
+                    <i class="fas fa-gem"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Current Tier Status -->
+<section class="current-tier-section">
+    <div class="container">
+        <div class="tier-navigation-wrapper">
+            <button class="tier-nav-button prev" id="prevTierBtn">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="tier-nav-button next" id="nextTierBtn">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+            
+            <div class="current-tier-card" id="currentTierCard">
+                <div class="tier-header">
+                    <div class="tier-badge bronze">
+                        <div class="tier-icon">
+                            <i class="fas fa-medal"></i>
+                        </div>
+                        <div class="tier-info">
+                            <h2>Hạng Đồng</h2>
+                            <p>Thành viên mới</p>
+                        </div>
+                    </div>
+                    <div class="member-since">
+                        <span>Thành viên từ</span>
+                        <strong>01/2024</strong>
+                    </div>
+                </div>
+                
+                <div class="progress-section">
+                    <div class="progress-info">
+                        <span class="current-bookings">2 đặt phòng</span>
+                        <span class="target-bookings">/ 5 để lên Hạng Bạc</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" data-progress="40"></div>
+                    </div>
+                    <p class="progress-text">Còn 3 đặt phòng nữa để lên cấp độ tiếp theo</p>
+                </div>
+
+                <div class="current-benefits">
+                    <h3>Quyền lợi hiện tại của bạn</h3>
+                    <div class="benefits-grid">
+                        <div class="benefit-item active">
+                            <i class="fas fa-percentage"></i>
+                            <span>Giảm 5% mọi đặt phòng</span>
+                        </div>
+                        <div class="benefit-item active">
+                            <i class="fas fa-wifi"></i>
+                            <span>WiFi miễn phí</span>
+                        </div>
+                        <div class="benefit-item active">
+                            <i class="fas fa-headset"></i>
+                            <span>Hỗ trợ khách hàng 24/7</span>
+                        </div>
+                        <div class="benefit-item active">
+                            <i class="fas fa-star"></i>
+                            <span>Tích lũy điểm thưởng</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- All Tiers Overview -->
+<section class="all-tiers-section">
+    <div class="container">
+        <h2 class="section-title">Tất Cả Cấp Độ Thành Viên</h2>
+        <p class="section-subtitle">Càng đặt phòng nhiều, càng nhận được nhiều ưu đãi hấp dẫn</p>
+        
+        <div class="tiers-grid">
+            <!-- Bronze Tier -->
+            <div class="tier-card bronze">
+                <div class="tier-header">
+                    <div class="tier-icon">
+                        <i class="fas fa-medal"></i>
+                    </div>
+                    <div class="tier-text">
+                        <h3>Đồng</h3>
+                        <p class="tier-requirement">0-4 đặt phòng</p>
+                    </div>
+                </div>
+                <div class="tier-benefits">
+                    <h4>Quyền lợi:</h4>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Tích lũy điểm thưởng</li>
+                        <li><i class="fas fa-check"></i> Hỗ trợ khách hàng 24/7</li>
+                        <li><i class="fas fa-check"></i> WiFi miễn phí</li>
+                    </ul>
+                </div>
+                <div class="tier-discount">
+                    <span class="discount-badge">5% OFF</span>
+                </div>
+            </div>
+
+            <!-- Silver Tier -->
+            <div class="tier-card silver">
+                <div class="tier-header">
+                    <div class="tier-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="tier-text">
+                        <h3>Bạc</h3>
+                        <p class="tier-requirement">5-9 đặt phòng</p>
+                    </div>
+                </div>
+                <div class="tier-benefits">
+                    <h4>Quyền lợi:</h4>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Tất cả quyền lợi Hạng Đồng</li>
+                        <li><i class="fas fa-check"></i> Late checkout miễn phí</li>
+                        <li><i class="fas fa-check"></i> Nâng cấp phòng (tùy tình hình)</li>
+                        <li><i class="fas fa-check"></i> Welcome drink</li>
+                    </ul>
+                </div>
+                <div class="tier-discount">
+                    <span class="discount-badge">10% OFF</span>
+                </div>
+            </div>
+
+            <!-- Gold Tier -->
+            <div class="tier-card gold">
+                <div class="tier-header">
+                    <div class="tier-icon">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <div class="tier-text">
+                        <h3>Vàng</h3>
+                        <p class="tier-requirement">10-19 đặt phòng</p>
+                    </div>
+                </div>
+                <div class="tier-benefits">
+                    <h4>Quyền lợi:</h4>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Tất cả quyền lợi Hạng Bạc</li>
+                        <li><i class="fas fa-check"></i> Đưa đón sân bay miễn phí</li>
+                        <li><i class="fas fa-check"></i> Spa giảm 20%</li>
+                        <li><i class="fas fa-check"></i> Dịch vụ phòng 24/7</li>
+                        <li><i class="fas fa-check"></i> WiFi Premium</li>
+                    </ul>
+                </div>
+                <div class="tier-discount">
+                    <span class="discount-badge">15% OFF</span>
+                </div>
+            </div>
+
+            <!-- Platinum Tier -->
+            <div class="tier-card platinum">
+                <div class="tier-header">
+                    <div class="tier-icon">
+                        <i class="fas fa-chess-king"></i>
+                    </div>
+                    <div class="tier-text">
+                        <h3>Bạch Kim</h3>
+                        <p class="tier-requirement">20-29 đặt phòng</p>
+                    </div>
+                </div>
+                <div class="tier-benefits">
+                    <h4>Quyền lợi:</h4>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Tất cả quyền lợi Hạng Vàng</li>
+                        <li><i class="fas fa-check"></i> Butler service cá nhân</li>
+                        <li><i class="fas fa-check"></i> Complimentary breakfast</li>
+                        <li><i class="fas fa-check"></i> VIP lounge access</li>
+                        <li><i class="fas fa-check"></i> Guaranteed room upgrade</li>
+                    </ul>
+                </div>
+                <div class="tier-discount">
+                    <span class="discount-badge">20% OFF</span>
+                </div>
+            </div>
+
+            <!-- Emerald Tier -->
+            <div class="tier-card emerald">
+                <div class="tier-header">
+                    <div class="tier-icon">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <div class="tier-text">
+                        <h3>Lục Bảo</h3>
+                        <p class="tier-requirement">30-34 đặt phòng</p>
+                    </div>
+                </div>
+                <div class="tier-benefits">
+                    <h4>Quyền lợi:</h4>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Tất cả quyền lợi Hạng Bạch Kim</li>
+                        <li><i class="fas fa-check"></i> Wellness & Spa unlimited</li>
+                        <li><i class="fas fa-check"></i> Private dining experience</li>
+                        <li><i class="fas fa-check"></i> Exclusive nature tours</li>
+                        <li><i class="fas fa-check"></i> Eco-luxury amenities</li>
+                    </ul>
+                </div>
+                <div class="tier-discount">
+                    <span class="discount-badge">22% OFF</span>
+                </div>
+            </div>
+
+            <!-- Diamond Tier -->
+            <div class="tier-card diamond">
+                <div class="tier-header">
+                    <div class="tier-icon">
+                        <i class="fas fa-diamond"></i>
+                    </div>
+                    <div class="tier-text">
+                        <h3>Kim Cương</h3>
+                        <p class="tier-requirement">35-44 đặt phòng</p>
+                    </div>
+                </div>
+                <div class="tier-benefits">
+                    <h4>Quyền lợi:</h4>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Tất cả quyền lợi Hạng Lục Bảo</li>
+                        <li><i class="fas fa-check"></i> Private jet transfer</li>
+                        <li><i class="fas fa-check"></i> Michelin dining experience</li>
+                        <li><i class="fas fa-check"></i> Exclusive suite access</li>
+                        <li><i class="fas fa-check"></i> Personal concierge 24/7</li>
+                    </ul>
+                </div>
+                <div class="tier-discount">
+                    <span class="discount-badge">25% OFF</span>
+                </div>
+            </div>
+
+            <!-- Elite Tier -->
+            <div class="tier-card elite">
+                <div class="tier-header">
+                    <div class="tier-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="tier-text">
+                        <h3>Tinh Anh</h3>
+                        <p class="tier-requirement">45-54 đặt phòng</p>
+                    </div>
+                </div>
+                <div class="tier-benefits">
+                    <h4>Quyền lợi:</h4>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Tất cả quyền lợi Hạng Kim Cương</li>
+                        <li><i class="fas fa-check"></i> Helicopter transfer</li>
+                        <li><i class="fas fa-check"></i> Private chef service</li>
+                        <li><i class="fas fa-check"></i> Exclusive penthouse access</li>
+                        <li><i class="fas fa-check"></i> VIP event invitations</li>
+                    </ul>
+                </div>
+                <div class="tier-discount">
+                    <span class="discount-badge">30% OFF</span>
+                </div>
+            </div>
+
+            <!-- Ruby Tier -->
+            <div class="tier-card ruby">
+                <div class="tier-header">
+                    <div class="tier-icon">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <div class="tier-text">
+                        <h3>Hồng Ngọc</h3>
+                        <p class="tier-requirement">55+ đặt phòng</p>
+                    </div>
+                </div>
+                <div class="tier-benefits">
+                    <h4>Quyền lợi:</h4>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Tất cả quyền lợi Hạng Tinh Anh</li>
+                        <li><i class="fas fa-check"></i> Exclusive ruby experience</li>
+                        <li><i class="fas fa-check"></i> Royal treatment package</li>
+                        <li><i class="fas fa-check"></i> Private island resort access</li>
+                        <li><i class="fas fa-check"></i> Personal ruby concierge</li>
+                    </ul>
+                </div>
+                <div class="tier-discount">
+                    <span class="discount-badge">35% OFF</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Tier Benefits Comparison -->
+<section class="benefits-comparison">
+    <div class="container">
+        <h2 class="section-title">So Sánh Quyền Lợi</h2>
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Quyền lợi</th>
+                        <th class="tier-column bronze">
+                            <i class="fas fa-medal"></i>
+                            <span>Đồng</span>
+                        </th>
+                        <th class="tier-column silver">
+                            <i class="fas fa-trophy"></i>
+                            <span>Bạc</span>
+                        </th>
+                        <th class="tier-column gold">
+                            <i class="fas fa-crown"></i>
+                            <span>Vàng</span>
+                        </th>
+                        <th class="tier-column platinum">
+                            <i class="fas fa-chess-king"></i>
+                            <span>Bạch Kim</span>
+                        </th>
+                        <th class="tier-column emerald">
+                            <i class="fas fa-leaf"></i>
+                            <span>Lục Bảo</span>
+                        </th>
+                        <th class="tier-column diamond">
+                            <i class="fas fa-diamond"></i>
+                            <span>Kim Cương</span>
+                        </th>
+                        <th class="tier-column elite">
+                            <i class="fas fa-star"></i>
+                            <span>Tinh Anh</span>
+                        </th>
+                        <th class="tier-column legendary">
+                            <i class="fas fa-gem"></i>
+                            <span>Hồng Ngọc</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Giảm giá đặt phòng</td>
+                        <td>5%</td>
+                        <td>10%</td>
+                        <td>15%</td>
+                        <td>20%</td>
+                        <td>22%</td>
+                        <td>25%</td>
+                        <td>30%</td>
+                        <td>35%</td>
+                    </tr>
+                    <tr>
+                        <td>WiFi miễn phí</td>
+                        <td><i class="fas fa-check text-success"></i></td>
+                        <td><i class="fas fa-check text-success"></i></td>
+                        <td><i class="fas fa-check text-success"></i></td>
+                        <td><i class="fas fa-check text-success"></i></td>
+                        <td><i class="fas fa-check text-success"></i></td>
+                        <td><i class="fas fa-check text-success"></i></td>
+                        <td><i class="fas fa-check text-success"></i></td>
+                        <td><i class="fas fa-check text-success"></i></td>
+                    </tr>
+                    <tr>
+                        <td>Late checkout</td>
+                        <td><i class="fas fa-times text-danger"></i></td>
+                        <td><i class="fas fa-check text-success"></i></td>
+                        <td><i class="fas fa-check text-success"></i></td>
+                        <td><i class="fas fa-check text-success"></i></td>
+                        <td><i class="fas fa-check text-success"></i></td>
+                        <td><i class="fas fa-check text-success"></i></td>
+                        <td><i class="fas fa-check text-success"></i></td>
+                        <td><i class="fas fa-check text-success"></i></td>
+                    </tr>
+                    <tr>
+                        <td>Nâng cấp phòng</td>
+                        <td><i class="fas fa-times text-danger"></i></td>
+                        <td>Tùy tình hình</td>
+                        <td>Tùy tình hình</td>
+                        <td>Premium Room</td>
+                        <td>Eco Suite</td>
+                        <td>Luxury Suite</td>
+                        <td>Royal Suite</td>
+                        <td>Ruby Villa</td>
+                    </tr>
+                    <tr>
+                        <td>Đưa đón sân bay</td>
+                        <td><i class="fas fa-times text-danger"></i></td>
+                        <td><i class="fas fa-times text-danger"></i></td>
+                        <td>Standard Car</td>
+                        <td>Luxury Car</td>
+                        <td>Eco-Tesla</td>
+                        <td>Limousine</td>
+                        <td>Helicopter</td>
+                        <td>Private Jet</td>
+                    </tr>
+                    <tr>
+                        <td>Butler service</td>
+                        <td><i class="fas fa-times text-danger"></i></td>
+                        <td><i class="fas fa-times text-danger"></i></td>
+                        <td><i class="fas fa-times text-danger"></i></td>
+                        <td>Personal Assistant</td>
+                        <td>Eco Concierge</td>
+                        <td>Premium Butler</td>
+                        <td>24/7 Dedicated</td>
+                        <td>Ruby Concierge</td>
+                    </tr>
+                    <tr>
+                        <td>VIP Lounge</td>
+                        <td><i class="fas fa-times text-danger"></i></td>
+                        <td><i class="fas fa-times text-danger"></i></td>
+                        <td><i class="fas fa-times text-danger"></i></td>
+                        <td>Platinum Lounge</td>
+                        <td>Green Sanctuary</td>
+                        <td>Diamond Club</td>
+                        <td>Elite Penthouse</td>
+                        <td>Ruby Palace</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- Tips Section -->
+<section class="tips-section">
+    <div class="container">
+        <h2 class="section-title">Mẹo Để Nâng Cấp Nhanh</h2>
+        <div class="tips-grid">
+            <div class="tip-card">
+                <div class="tip-icon">
+                    <i class="fas fa-calendar-plus"></i>
+                </div>
+                <h3>Đặt phòng thường xuyên</h3>
+                <p>Mỗi lần đặt phòng đều được tính vào cấp độ thành viên. Hãy lựa chọn chúng tôi cho mọi chuyến đi!</p>
+            </div>
+            
+            <div class="tip-card">
+                <div class="tip-icon">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <h3>Trở thành thành viên trung thành</h3>
+                <p>Thành viên trung thành sẽ nhận được bonus điểm và cơ hội nâng cấp nhanh hơn.</p>
+            </div>
+            
+            <div class="tip-card">
+                <div class="tip-icon">
+                    <i class="fas fa-share"></i>
+                </div>
+                <h3>Giới thiệu bạn bè</h3>
+                <p>Mỗi lần giới thiệu thành công sẽ nhận thêm 1 điểm đặt phòng cho hệ thống cấp độ.</p>
+            </div>
+            
+            <div class="tip-card">
+                <div class="tip-icon">
+                    <i class="fas fa-star"></i>
+                </div>
+                <h3>Đánh giá và review</h3>
+                <p>Để lại đánh giá 5 sao sẽ giúp bạn nhận được bonus điểm và ưu đãi đặc biệt.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="~/assets/js/cap-do-khach-hang.js"></script>
+

@@ -1,0 +1,119 @@
+﻿@model Web_QLKhachSan.Models.DangNhap
+
+@{
+    ViewBag.Title = "Đăng nhập";
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+
+<h2 class="title">
+    <i class="fas fa-sign-in-alt" style="color: #d4af37;"></i> Đăng nhập
+</h2>
+
+@using (Html.BeginForm("DangNhap", "Login", FormMethod.Post, new { id = "loginForm", @class = "auth-form" }))
+{
+    @Html.AntiForgeryToken()
+
+    @* Chỉ hiển thị lỗi từ server (ViewBag.ErrorMessage) *@
+    if (ViewBag.ErrorMessage != null)
+    {
+        <div class="alert alert-danger">
+            <i class="fas fa-exclamation-circle"></i> @ViewBag.ErrorMessage
+        </div>
+    }
+
+    <div style="margin-bottom: 5px;" class="form-group">
+        @Html.TextBoxFor(m => m.TenDangNhapHoacEmail, new
+        { 
+      
+            @class = "form-control",
+            placeholder = "Tên đăng nhập hoặc Email",
+            autocomplete = "username"
+        })
+        @Html.ValidationMessageFor(m => m.TenDangNhapHoacEmail, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        <div class="password-wrapper">
+            @Html.PasswordFor(m => m.MatKhau, new
+            {
+                @class = "form-control",
+                placeholder = "Mật khẩu",
+                autocomplete = "current-password",
+                id = "passwordInput"
+            })
+            <button type="button" class="toggle-password" onclick="togglePassword()" tabindex="-1">
+                <i class="fas fa-eye" id="toggleIcon"></i>
+            </button>
+        </div>
+        @Html.ValidationMessageFor(m => m.MatKhau, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="remember-me mt-1">
+        @Html.CheckBoxFor(m => m.GhiNhoDangNhap, new { id = "rememberMe" })
+        <label for="rememberMe">Ghi nhớ đăng nhập</label>
+    </div>
+
+    <button type="submit" class="btn primary">
+        Đăng nhập
+    </button>
+
+    <p class="text-center small" style="margin: 15px 0;">
+        <a href="@Url.Action("QuenMatKhau", "Login")" class="muted">
+            Quên mật khẩu?
+        </a>
+    </p>
+
+    <button type="button" id="googleBtn" class="btn ghost" style="border: 2px solid #d4af37; color: #333;">
+        <i class="fab fa-google" style="color: #DB4437;"></i> Đăng nhập với Google
+    </button>
+
+    <a href="@Url.Action("Index", "Home")" class="btn ghost" style="border: 2px solid #d4af37;">
+        Quay Lại Trang Chủ
+    </a>
+
+    <p class="toggle text-center">
+        Chưa có tài khoản? <a href="@Url.Action("DangKy", "Login")" style="color: #d4af37; font-weight: 600;">Tạo tài khoản</a>
+    </p>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        // Toggle hiển thị/ẩn mật khẩu
+        function togglePassword() {
+            const passwordInput = document.getElementById('passwordInput');
+            const toggleIcon = document.getElementById('toggleIcon');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+
+        // Xử lý Google Login (placeholder)
+        document.getElementById('googleBtn').addEventListener('click', function (e) {
+            e.preventDefault();
+            showToastNotification('info', 'Thông báo', 'Chức năng đăng nhập Google đang được phát triển!');
+        });
+
+        // Auto focus vào input đầu tiên
+        $(document).ready(function () {
+            $('input[name="TenDangNhapHoacEmail"]').focus();
+        });
+
+        // Hàm hiển thị toast (fallback nếu chưa có)
+        function showToastNotification(type, title, message) {
+            if (typeof showToast === 'function') {
+                showToast(type, title, message, 4000);
+            } else {
+                alert(message);
+            }
+        }
+    </script>
+}

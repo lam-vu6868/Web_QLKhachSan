@@ -1,0 +1,385 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link rel="shortcut icon" href="~/assets/imgs/logo.png" type="image/x-icon" />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="stylesheet" href="~/assets/css/dashboard-khachhang.css" />
+    <link rel="stylesheet" href="~/assets/css/thongbao.css" />
+
+    <link rel="stylesheet" href="~/assets/css/header-footer.css" />
+    <link rel="stylesheet" href="~/assets/css/index.css" />
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    @{
+        string currentController = ViewContext.RouteData.Values["controller"].ToString();
+        string currentAction = ViewContext.RouteData.Values["action"].ToString();
+    }
+    <header class="main-header">
+        <div class="navbar-container">
+            <a href="@Url.Action("Index", "Home")"
+               class="navbar-logo"
+               style="display: flex; align-items: center; gap: 10px">
+                <img src="~/assets/imgs/logo.png"
+                     alt="Logo"
+                     style="height: 38px; width: auto" />
+                <span>Serene Horizon</span>
+            </a>
+
+            <nav class="navbar-links">
+                <li>@Html.ActionLink("Trang Chủ", "Index", "Home", new { area = "" }, new { @class = currentController == "Home" ? "nav active-link" : "nav" })</li>
+                <li>@Html.ActionLink("Phòng Nghỉ", "Index", "PhongNghi", new { area = "" }, new { @class = currentController == "PhongNghi" ? "nav active-link" : "nav" })</li>
+                <li>@Html.ActionLink("Dịch Vụ ", "Index", "DichVu", new { area = "" }, new { @class = currentController == "DichVu" ? "nav active-link" : "nav" })</li>
+                <li>@Html.ActionLink("Giới Thiệu", "Index", "GioiThieu", new { area = "" }, new { @class = currentController == "GioiThieu" ? "nav active-link" : "nav" })</li>
+                <li>@Html.ActionLink("Đánh Giá", "Index", "DanhGia", new { area = "" }, new { @class = currentController == "DanhGia" ? "nav active-link" : "nav" })</li>
+                <li>@Html.ActionLink("Cấp Độ", "Index", "CapDoKhachHang", new { area = "" }, new { @class = currentController == "CapDoKhachHang" ? "nav active-link" : "nav" })</li>
+            </nav>
+
+            <div class="navbar-right">
+                @if (Session["HoVaTen"] != null && User.Identity.IsAuthenticated)
+                {
+                    <div class="user-menu-container">
+                        <button class="user-menu-toggle">
+                            <i class="fas fa-user-circle"></i>
+                            <span id="userName">@Session["HoVaTen"]</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="user-dropdown">
+                            <a href="@Url.Action("Index", "DashboardKhachHang")#profile" class="dropdown-item" data-section="profile">
+                                <i class="fas fa-user"></i> Tài Khoản
+                            </a>
+                            <a href="@Url.Action("Index", "DashboardKhachHang")#history" class="dropdown-item" data-section="history">
+                                <i class="fas fa-history"></i> Lịch Sử
+                            </a>
+                            <a href="@Url.Action("DangXuat", "Login")" class="dropdown-item">
+                                <i class="fas fa-sign-out-alt"></i> Đăng Xuất
+                            </a>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    @Html.ActionLink("Đăng Nhập", "DangNhap", "Login", new { area = "" }, new { @class = "cta-button" })
+                }
+                <button class="navbar-toggler" aria-label="Toggle navigation">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+        <div class="menu-backdrop"></div>
+        <div class="mobile-menu-overlay">
+            <div class="mobile-menu-header">
+                <div class="mobile-logo">
+                    <img src="~/assets/imgs/logo.png" alt="Logo" />
+                    <span>Serene Horizon</span>
+                </div>
+                <button class="close-menu-btn" aria-label="Close menu">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="mobile-menu-content">
+                @if (Session["MaKhachHang"] != null && User.Identity.IsAuthenticated)
+                {
+                    <div class="mobile-user-section">
+                        <div class="mobile-user-info">
+                            <div class="user-avatar">
+                                <i class="fas fa-user-circle"></i>
+                            </div>
+                            <div class="user-details">
+                                <h4>@(Session["HoVaTen"])</h4>
+                                <span class="user-status">Thành viên VIP</span>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                <nav class="mobile-main-nav">
+                    <h3>Menu Chính</h3>
+                    <ul class="mobile-nav-list">
+                        <li>
+                            <a href="@Url.Action("Index", "Home")" class="@(currentController == "Home" ? "active-link" : "")">
+                                <i class="fas fa-home"></i>
+                                <span>Trang Chủ</span>
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Index", "PhongNghi")" class="@(currentController == "PhongNghi" ? "active-link" : "")">
+                                <i class="fas fa-bed"></i>
+                                <span>Phòng Nghỉ</span>
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Index", "DichVu")" class="@(currentController == "DichVu" ? "active-link" : "")">
+                                <i class="fas fa-concierge-bell"></i>
+                                <span>Dịch Vụ</span>
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Index", "GioiThieu")" class="@(currentController == "GioiThieu" ? "active-link" : "")">
+                                <i class="fas fa-info-circle"></i>
+                                <span>Giới Thiệu</span>
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Index", "DanhGia")" class="@(currentController == "DanhGia" ? "active-link" : "")">
+                                <i class="fas fa-star"></i>
+                                <span>Đánh Giá</span>
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Index", "CapDoKhachHang")" class="@(currentController == "CapDoKhachHang" ? "active-link" : "")">
+                                <i class="fas fa-medal"></i>
+                                <span>Cấp Độ</span>
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+
+                @if (Session["MaKhachHang"] != null)
+                {
+                    <nav class="mobile-account-nav">
+                        <h3>Tài Khoản</h3>
+                        <ul class="mobile-nav-list">
+                            <li>
+                                <a href="@Url.Action("Index", "DashboardKhachHang")#profile" data-section="profile">
+                                    <i class="fas fa-user"></i>
+                                    <span>Thông Tin Cá Nhân</span>
+                                    <i class="fas fa-chevron-right"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index", "DashboardKhachHang")#history" data-section="history">
+                                    <i class="fas fa-history"></i>
+                                    <span>Lịch Sử</span>
+                                    <i class="fas fa-chevron-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                }
+
+                <nav class="mobile-quick-links">
+                    <h3>Liên Kết Nhanh</h3>
+                    <ul class="mobile-nav-list">
+                        <li>
+                            <a href="@Url.Action("Index", "ThuVienAnh")">
+                                <i class="fas fa-images"></i>
+                                <span>Thư Viện Ảnh</span>
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Index", "HoTroKhachHang")">
+                                <i class="fas fa-headset"></i>
+                                <span>Hỗ Trợ Khách Hàng</span>
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="tel:+84123456789">
+                                <i class="fas fa-phone"></i>
+                                <span>Hotline: (+84) 123 456 789</span>
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+
+                @if (Session["MaKhachHang"] != null)
+                {
+                    <div class="mobile-logout-section">
+                        <a href="@Url.Action("DangXuat", "Login")" class="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Đăng Xuất</span>
+                        </a>
+                    </div>
+                }
+                else
+                {
+                    <div class="mobile-auth-section">
+                        <a href="@Url.Action("DangNhap", "Login")" class="login-btn">
+                            <i class="fas fa-sign-in-alt"></i>
+                            <span>Đăng Nhập</span>
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </header>
+
+    @RenderBody()
+
+    <footer class="main-footer">
+        <div class="footer-waves">
+            <div class="wave wave1"></div>
+            <div class="wave wave2"></div>
+        </div>
+        <div class="container footer-layout">
+            <div class="footer-col brand-col">
+                <div class="brand-content">
+                    <img src="~/assets/imgs/logo.png" alt="Logo" class="footer-logo">
+                    <h4>The Serene Horizon</h4>
+                </div>
+                <p>
+                    Nơi sự sang trọng và bình yên hòa quyện, mang đến những trải nghiệm
+                    nghỉ dưỡng đích thực cho tâm hồn.
+                </p>
+                <div class="quality-badges">
+                    <span class="badge"><i class="fas fa-star"></i> 5 Sao</span>
+                    <span class="badge"><i class="fas fa-award"></i> Luxury</span>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4><i class="fas fa-link"></i> Liên kết nhanh</h4>
+                <ul>
+                    <li><a href="@Url.Action("Index", "GioiThieu")"><i class="fas fa-chevron-right"></i> Về chúng tôi</a></li>
+                    <li><a href="@Url.Action("Index", "PhongNghi")"><i class="fas fa-chevron-right"></i> Các loại phòng</a></li>
+                    <li><a href="@Url.Action("Index", "ThuVienAnh")"><i class="fas fa-chevron-right"></i> Thư viện ảnh</a></li>
+                    <li><a href="@Url.Action("Index", "DichVu")"><i class="fas fa-chevron-right"></i> Dịch vụ</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4><i class="fas fa-map-marker-alt"></i> Thông tin liên hệ</h4>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>123 Đường Bờ Biển, Thành Phố Paradise</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <span>(+84) 123 456 789</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>contact@serenehorizon.com</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-clock"></i>
+                        <span>24/7 Phục vụ</span>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4><i class="fab fa-connectdevelop"></i> Kết nối với chúng tôi</h4>
+                <div class="social-icons">
+                    <a href="#" class="social-icon facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-icon instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-icon youtube"><i class="fab fa-youtube"></i></a>
+                    <a href="#" class="social-icon tiktok"><i class="fab fa-tiktok"></i></a>
+                </div>
+                <div class="social-stats">
+                    <span>10K+ Followers</span>
+                </div>
+            </div>
+            <div class="footer-col newsletter-col">
+                <h4><i class="fas fa-bell"></i> Đăng ký nhận tin</h4>
+                <p>Nhận thông tin mới nhất về khuyến mãi đặc biệt và dịch vụ cao cấp.</p>
+                <form class="newsletter-form">
+                    <div class="input-group">
+                        <input type="email" placeholder="Nhập email của bạn..." required>
+                        <button type="submit">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </form>
+                <div class="newsletter-benefits">
+                    <small><i class="fas fa-check"></i> Ưu đãi độc quyền</small>
+                    <small><i class="fas fa-check"></i> Thông tin sự kiện</small>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="footer-bottom-content">
+                <div class="marquee-container">
+                    <div class="marquee-text">
+                        &copy; 2025 The Serene Horizon. All Rights Reserved. ✨ Trải nghiệm sang trọng bậc nhất ✨ Dịch vụ 5 sao đẳng cấp quốc tế ✨
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <a href="#">Chính sách bảo mật</a>
+                    <a href="#">Điều khoản sử dụng</a>
+                    <a href="@Url.Action("Index", "HoTroKhachHang")">Hỗ Trợ</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="~/assets/js/index.js"></script>
+    <script src="~/assets/js/dashboard-khachhang.js"></script>
+    <script src="~/assets/js/slideshow.js"></script>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            once: true,
+        });
+
+        // ✅ Hàm showToast
+        function showToast(type, title, message, duration = 6000) {
+            let container = document.querySelector('.toast-container');
+            if (!container) {
+                container = document.createElement('div');
+                container.className = 'toast-container';
+                document.body.appendChild(container);
+            }
+
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            const iconClass = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+
+            toast.innerHTML = `
+                <div class="toast-icon"><i class="fas ${iconClass}"></i></div>
+                <div class="toast-content">
+                    <div class="toast-title">${title}</div>
+                    <div class="toast-message">${message}</div>
+                </div>
+                <button class="toast-close" onclick="this.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </button>`;
+
+            container.appendChild(toast);
+            setTimeout(() => {
+                if (toast.parentElement) toast.remove();
+            }, duration);
+        }
+
+        // ✅ Xử lý TempData
+        $(document).ready(function() {
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <text>
+                    showToast('success', 'Thành công!', '@Html.Raw(TempData["SuccessMessage"])', 6000);
+                </text>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <text>
+                    showToast('error', 'Lỗi!', '@Html.Raw(TempData["ErrorMessage"])', 6000);
+                </text>
+            }
+        });
+    </script>
+</body>
+</html>

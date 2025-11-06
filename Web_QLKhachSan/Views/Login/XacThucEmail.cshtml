@@ -1,0 +1,284 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+    ViewBag.Title = ViewBag.PageTitle ?? "Xác Thực Mã OTP";
+}
+
+<style>
+    :root {
+        /* Giả sử bạn có biến CSS --gold */
+        --gold: #d4af37;
+    }
+
+    .otp-container {
+  display: flex;
+    justify-content: center;
+      gap: 10px;
+      margin: 30px 0;
+    }
+
+    .otp-input {
+        width: 50px;
+    height: 50px;
+        text-align: center;
+        font-size: 24px;
+        font-weight: bold;
+   border: 2px solid #e0e0e0;
+        border-radius: 8px;
+   transition: all 0.3s ease;
+    }
+
+        .otp-input:focus {
+            border-color: var(--gold);
+     outline: none;
+     box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+ }
+
+  .otp-input:valid {
+     border-color: #28a745;
+   }
+
+   .resend-btn {
+ color: var(--gold);
+        text-decoration: none;
+        cursor: pointer;
+    background: none; /* Đảm bảo không có background mặc định của button */
+  border: none;
+        padding: 0;
+   font-size: 1em;
+    }
+
+        .resend-btn:hover {
+    text-decoration: underline;
+}
+
+   .resend-btn:disabled {
+          color: #999;
+  cursor: not-allowed;
+      text-decoration: none;
+   }
+
+    /* Thêm style cho thẻ div bao quanh để căn giữa text-align: center */
+    .auth-card {
+        /* Giả sử bạn có class auth-card đã định nghĩa style */
+ }
+
+    /* Giả định style cho alert, title, toggle, và btn primary đã được định nghĩa ở chỗ khác */
+</style>
+
+<h2 class="title"><i class="fas fa-shield-alt"></i> @(ViewBag.PageTitle ?? "Xác Thực Tài Khoản")</h2>
+
+<div class="auth-card">
+    <p class="text-center" style="color: #666; margin-bottom: 20px;">
+        Mã OTP đã được gửi đến email: <strong>@ViewBag.Email</strong>
+        <br />Vui lòng nhập mã gồm 6 chữ số dưới đây:
+    </p>
+
+    @if (TempData["EmailSuccess"] != null)
+    {
+        <div class="alert alert-success">@TempData["EmailSuccess"]</div>
+    }
+    @if (TempData["EmailError"] != null)
+    {
+        <div class="alert alert-danger">@TempData["EmailError"]</div>
+    }
+    @if (ViewBag.ErrorMessage != null)
+    {
+        <div class="alert alert-danger text-danger">@ViewBag.ErrorMessage</div>
+    }
+
+    <form id="verifyForm" method="post" action="@Url.Action(ViewBag.Action ?? "XacThucEmailDangKy", "Login")">
+        @Html.AntiForgeryToken()
+
+        @* Input ẩn để gửi toàn bộ mã OTP lên server *@
+        <input type="hidden" id="otpCode" name="OTPCode" value="" />
+<input type="hidden" name="Email" value="@ViewBag.Email" />
+
+        <div class="otp-container">
+            @* 6 ô input riêng biệt cho hiệu ứng nhập *@
+        @for (int i = 0; i < 6; i++)
+            {
+      <input type="text"
+              class="otp-input"
+    maxlength="1"
+  pattern="[0-9]"
+           inputmode="numeric"
+     data-index="@i"
+              required />
+            }
+        </div>
+
+        <div class="text-danger text-center" id="error-message" style="display:none;"></div>
+
+        <div style="text-align: center; margin: 20px 0;">
+     <button type="button" id="resendBtn" class="resend-btn" disabled>
+    Gửi lại mã <span id="countdown">(60s)</span>
+         </button>
+        </div>
+
+        <button type="submit" class="btn primary" id="verifyBtn">
+            <i class="fas fa-check-circle"></i> Xác Thực
+        </button>
+
+  <p class="toggle">
+            <a href="@Url.Action(ViewBag.BackAction ?? "DangKy", "Login")">Quay lại @(ViewBag.BackText ?? "đăng ký")</a>
+        </p>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+    const otpInputs = $('.otp-input');
+    const otpCodeHidden = $('#otpCode');
+            const resendBtn = $('#resendBtn');
+         let countdown = 60;
+   let countdownInterval;
+
+            // --- Khởi tạo và Logic Ban đầu ---
+
+            // Auto focus vào ô đầu tiên
+    otpInputs.first().focus();
+
+  // Bắt đầu đếm ngược
+        startCountdown();
+
+            // --- Hàm Cập nhật Giá trị OTP ---
+
+    // Cập nhật giá trị OTP vào input ẩn (otpCodeHidden)
+            function updateOTPValue() {
+       let otp = '';
+      otpInputs.each(function () {
+         otp += $(this).val();
+       });
+      otpCodeHidden.val(otp);
+         }
+
+      // --- Xử lý Nhập OTP ---
+
+      otpInputs.on('input', function () {
+      const $this = $(this);
+ const index = $this.data('index');
+
+    // 1. Chỉ cho phép nhập số
+    $this.val($this.val().replace(/[^0-9]/g, ''));
+
+      // 2. Tự động chuyển sang ô tiếp theo
+              if ($this.val().length === 1 && index < 5) {
+            otpInputs.eq(index + 1).focus();
+   }
+
+      // 3. Cập nhật giá trị OTP
+        updateOTPValue();
+            });
+
+         // Xử lý phím Backspace
+            otpInputs.on('keydown', function (e) {
+     const $this = $(this);
+      const index = $this.data('index');
+
+                if (e.key === 'Backspace' && $this.val() === '' && index > 0) {
+  // Chuyển về ô trước đó
+            otpInputs.eq(index - 1).focus();
+   }
+});
+
+            // Xử lý Paste
+        otpInputs.on('paste', function (e) {
+         e.preventDefault();
+      const pastedData = e.originalEvent.clipboardData.getData('text').trim();
+
+     // Kiểm tra xem dữ liệu dán có phải là 6 chữ số không
+     if (/^\d{6}$/.test(pastedData)) {
+             for (let i = 0; i < 6; i++) {
+        otpInputs.eq(i).val(pastedData[i]);
+       }
+   updateOTPValue();
+        // Focus vào ô cuối cùng
+    otpInputs.eq(5).focus();
+        }
+});
+
+      // --- Logic Gửi Lại Mã (Resend) ---
+
+     function startCountdown() {
+        countdown = 60;
+ resendBtn.prop('disabled', true);
+        
+ // Reset text về dạng countdown (dừng spinner nếu đang chạy)
+   resendBtn.html('Gửi lại mã <span id="countdown">(60s)</span>');
+
+   countdownInterval = setInterval(function () {
+     countdown--;
+    $('#countdown').text(`(${countdown}s)`);
+
+          if (countdown <= 0) {
+      clearInterval(countdownInterval);
+          resendBtn.prop('disabled', false).html('Gửi lại mã');
+}
+      }, 1000);
+   }
+
+            // Xử lý gửi lại OTP
+        resendBtn.on('click', function () {
+      if (!$(this).prop('disabled')) {
+        // Lấy email từ ViewBag
+ const email = '@ViewBag.Email';
+   const resendAction = '@(ViewBag.ResendAction ?? "ResendOTP")';
+ 
+  if (!email) {
+    showToastNotification('error', 'Lỗi!', 'Không tìm thấy thông tin email. Vui lòng đăng ký lại.');
+   return;
+    }
+
+  // Hiển thị loading với spinner xoay
+     resendBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Đang gửi...');
+  
+ // Gọi AJAX
+     $.ajax({
+  url: '@Url.Action("", "Login")' + '/' + resendAction,
+     type: 'POST',
+        data: { email: email },
+    success: function (result) {
+ if (result.success) {
+ // Thành công - hiển thị toast
+   showToastNotification('success', 'Thành công!', result.message);
+    
+    // Reset countdown (sẽ tự động đổi text về "Gửi lại mã (60s)")
+      startCountdown();
+      
+    // Xóa các ô OTP để người dùng nhập lại
+      otpInputs.each(function () {
+      $(this).val('');
+       });
+        updateOTPValue();
+       otpInputs.first().focus();
+    } else {
+     // Thất bại - hiển thị toast lỗi
+   showToastNotification('error', 'Lỗi!', result.message);
+       // Dừng spinner và reset button
+   resendBtn.prop('disabled', false).html('Gửi lại mã');
+     }
+   },
+  error: function (xhr, status, error) {
+   showToastNotification('error', 'Lỗi!', 'Không thể gửi lại mã OTP. Vui lòng thử lại sau.');
+console.error('Error:', error);
+     // Dừng spinner và reset button
+         resendBtn.prop('disabled', false).html('Gửi lại mã');
+ }
+      });
+    }
+      });
+
+       // Hàm hiển thị toast notification (dùng chung với layout)
+ function showToastNotification(type, title, message) {
+          // Kiểm tra nếu showToast từ layout đã có
+           if (typeof showToast === 'function') {
+      showToast(type, title, message, 6000);
+       } else {
+        // Fallback nếu chưa có function showToast
+           alert(message);
+         }
+ }
+        });
+    </script>
+}

@@ -1,0 +1,131 @@
+﻿@model Web_QLKhachSan.Models.DangKy
+@{
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+    ViewBag.Title = "Đăng ký";
+}
+<style>
+    /* ======== GENDER SELECT DROPDOWN ======== */
+    .gender-select {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 16px;
+    }
+
+        .gender-select select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: var(--font-primary);
+            color: var(--charcoal-grey);
+            background: var(--white);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+        padding-right: 2.5rem;
+        }
+
+   .gender-select select:hover {
+ border-color: var(--gold);
+       background-color: rgba(212, 175, 55, 0.05);
+  }
+
+    .gender-select select:focus {
+             outline: none;
+         border-color: var(--gold);
+        box-shadow: 0 2px 8px rgba(212, 175, 55, 0.15);
+                background-color: var(--white);
+            }
+
+ .gender-select select option {
+         padding: 12px;
+font-size: 1rem;
+           color: var(--charcoal-grey);
+          background: var(--white);
+}
+
+ .gender-select select option:first-child {
+         color: #999;
+    font-style: italic;
+            }
+    
+    /* Form input wrapper để đồng bộ khoảng cách */
+    .form-input-wrapper {
+     margin-bottom: 10px;
+    }
+</style>
+<h2 class="title"><i class="fas fa-user-plus"></i> Đăng ký</h2>
+
+@using (Html.BeginForm("DangKy", "Login", FormMethod.Post, new { id = "registerForm", @class = "auth-form" }))
+{
+  @Html.AntiForgeryToken()
+
+    <div class="form-input-wrapper">
+   @Html.TextBoxFor(m => m.HoVaTen, new { @class = "form-control", placeholder = "Họ và tên" })
+     @Html.ValidationMessageFor(m => m.HoVaTen, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-input-wrapper">
+        @Html.TextBoxFor(m => m.TenDangNhap, new { @class = "form-control", placeholder = "Tên đăng nhập" })
+      @Html.ValidationMessageFor(m => m.TenDangNhap, "", new { @class = "text-danger" })
+ </div>
+
+    <div class="form-input-wrapper">
+        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Email", type = "email" })
+        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+ </div>
+
+    <div class="date-input">
+        @Html.TextBoxFor(m => m.NgaySinh, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", max = "2007-12-31", placeholder = "Ngày sinh" })
+        @Html.ValidationMessageFor(m => m.NgaySinh, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="gender-select">
+        @Html.DropDownListFor(m => m.GioiTinh, new List<SelectListItem>
+      {
+     new SelectListItem { Text = "-- Chọn giới tính --", Value = "" },
+ new SelectListItem { Text = "Nam", Value = "1" },
+   new SelectListItem { Text = "Nữ", Value = "0" },
+       new SelectListItem { Text = "Khác", Value = "2" }
+        }, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.GioiTinh, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="password-wrapper">
+        @Html.PasswordFor(m => m.MatKhau, new { @class = "form-control", placeholder = "Mật khẩu" })
+     @Html.ValidationMessageFor(m => m.MatKhau, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="password-wrapper">
+        @Html.PasswordFor(m => m.XacNhanMatKhau, new { @class = "form-control", placeholder = "Xác nhận mật khẩu" })
+        @Html.ValidationMessageFor(m => m.XacNhanMatKhau, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="terms-checkbox">
+        @Html.CheckBoxFor(m => m.DaDongYDieuKhoan, new { id = "agreeTerms" })
+ <label for="agreeTerms">
+         Tôi đồng ý với <a href="@Url.Action("Index", "DieuKhoanSuDung")" id="showTermsLink">Điều khoản</a> &nbsp;&amp;&nbsp;
+       <a href="@Url.Action("Index", "ChinhSachBaoMat")" id="showPolicyLink">Chính sách</a>
+      </label>
+    </div>
+    @Html.ValidationMessageFor(m => m.DaDongYDieuKhoan, "", new { @class = "text-danger" })
+
+    <button type="submit" class="btn primary" id="createAccountBtn">
+        Tạo tài khoản
+    </button>
+
+    <p class="toggle">
+        Đã có tài khoản? <a href="@Url.Action("DangNhap", "Login")">Đăng nhập</a>
+    </p>
+
+    <div id="reg-msg" class="text-danger">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+</div>
+}
+

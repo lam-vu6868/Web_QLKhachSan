@@ -1,0 +1,79 @@
+﻿@model Web_QLKhachSan.Models.DatLaiMatKhau
+
+@{
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+  ViewBag.Title = "Đặt Lại Mật Khẩu";
+}
+
+<h2 class="title"><i class="fas fa-lock"></i> Đặt Lại Mật Khẩu</h2>
+
+<div class="auth-card">
+    <p class="text-center" style="color: #666; margin-bottom: 20px;">
+   Nhập mật khẩu mới cho tài khoản: <strong>@ViewBag.Email</strong>
+    </p>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+    @if (ViewBag.ErrorMessage != null)
+    {
+   <div class="alert alert-danger">@ViewBag.ErrorMessage</div>
+    }
+
+    @using (Html.BeginForm("DatLaiMatKhau", "Login", FormMethod.Post, new { id = "resetPasswordForm", @class = "auth-form" }))
+    {
+        @Html.AntiForgeryToken()
+   @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @* ✅ THÊM HIDDEN FIELD CHO EMAIL *@
+        @Html.HiddenFor(m => m.Email, new { @Value = ViewBag.Email })
+
+<div class="input-group">
+  <span><i class="fas fa-lock"></i></span>
+        @Html.PasswordFor(m => m.MatKhauMoi, new { @class = "form-control", placeholder = "Mật khẩu mới (tối thiểu 6 ký tự)", id = "MatKhauMoi" })
+            <button type="button" class="toggle-password" onclick="togglePassword('MatKhauMoi', 'toggleIcon1')" tabindex="-1">
+        <i class="fas fa-eye" id="toggleIcon1"></i>
+            </button>
+ </div>
+    @Html.ValidationMessageFor(m => m.MatKhauMoi, "", new { @class = "text-danger" })
+
+   <div class="input-group">
+   <span><i class="fas fa-lock"></i></span>
+    @Html.PasswordFor(m => m.XacNhanMatKhauMoi, new { @class = "form-control", placeholder = "Xác nhận mật khẩu mới", id = "XacNhanMatKhauMoi" })
+      <button type="button" class="toggle-password" onclick="togglePassword('XacNhanMatKhauMoi', 'toggleIcon2')" tabindex="-1">
+    <i class="fas fa-eye" id="toggleIcon2"></i>
+          </button>
+   </div>
+@Html.ValidationMessageFor(m => m.XacNhanMatKhauMoi, "", new { @class = "text-danger" })
+
+        <button type="submit" class="btn primary">
+    <i class="fas fa-check"></i> Đặt Lại Mật Khẩu
+  </button>
+
+  <p class="toggle">
+      <a href="@Url.Action("DangNhap", "Login")">Quay lại đăng nhập</a>
+   </p>
+    }
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    
+    <script>
+        function togglePassword(inputId, iconId) {
+       const passwordInput = document.getElementById(inputId);
+       const toggleIcon = document.getElementById(iconId);
+
+            if (passwordInput.type === 'password') {
+  passwordInput.type = 'text';
+  toggleIcon.classList.remove('fa-eye');
+       toggleIcon.classList.add('fa-eye-slash');
+            } else {
+       passwordInput.type = 'password';
+     toggleIcon.classList.remove('fa-eye-slash');
+       toggleIcon.classList.add('fa-eye');
+       }
+        }
+    </script>
+}

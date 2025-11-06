@@ -1,0 +1,483 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<link rel='stylesheet' href='@Url.Content("~/Areas/NhanVien/assets/css/quanly-datphong.css")' />
+<script src='@Url.Content("~/Areas/NhanVien/assets/js/quanly-datphong.js")'></script>
+
+<div class="main-content">
+    <!-- Top Header -->
+    <header class="dashboard-header">
+        <div class="header-left">
+            <button class="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="page-title">
+                <h1>Quản Lý Đặt Phòng</h1>
+                <p>Tra cứu, tạo mới và quản lý các đặt phòng</p>
+            </div>
+        </div>
+        <div class="header-right">
+            <button class="btn btn-primary" id="new-booking-btn">
+                <i class="fas fa-plus"></i>
+                Đặt phòng mới
+            </button>
+        </div>
+    </header>
+
+    <!-- Booking Management Content -->
+    <main class="dashboard-main">
+        <!-- Quick Stats -->
+        <section class="booking-stats-section">
+            <div class="row">
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="stat-card today-bookings">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-plus"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>24</h3>
+                            <p>Đặt phòng hôm nay</p>
+                            <span class="stat-change positive">+15% so với hôm qua</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="stat-card pending-checkin">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>8</h3>
+                            <p>Chờ check-in</p>
+                            <span class="stat-change">Trong 2 giờ tới</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="stat-card upcoming-checkout">
+                        <div class="stat-icon">
+                            <i class="fas fa-door-open"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>12</h3>
+                            <p>Sắp check-out</p>
+                            <span class="stat-change">Trong ngày mai</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="stat-card cancelled-bookings">
+                        <div class="stat-icon">
+                            <i class="fas fa-times-circle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>3</h3>
+                            <p>Đã hủy hôm nay</p>
+                            <span class="stat-change negative">-2 so với hôm qua</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Search and Filter -->
+        <section class="search-filter-section">
+            <div class="search-filter-card">
+                <div class="row align-items-end">
+                    <div class="col-md-3">
+                        <label class="form-label">Tìm kiếm</label>
+                        <div class="search-box">
+                            <input type="text" class="form-control" id="booking-search"
+                                   placeholder="Mã đặt phòng, tên khách...">
+                            <i class="fas fa-search"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Trạng thái</label>
+                        <select class="form-select" id="status-filter">
+                            <option value="">Tất cả</option>
+                            <option value="confirmed">Đã xác nhận</option>
+                            <option value="checked-in">Đã check-in</option>
+                            <option value="checked-out">Đã check-out</option>
+                            <option value="cancelled">Đã hủy</option>
+                            <option value="no-show">Không đến</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Từ ngày</label>
+                        <input type="date" class="form-control" id="date-from">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Đến ngày</label>
+                        <input type="date" class="form-control" id="date-to">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Loại phòng</label>
+                        <select class="form-select" id="room-type-filter">
+                            <option value="">Tất cả</option>
+                            <option value="deluxe">Deluxe Ocean View</option>
+                            <option value="executive">Executive Suite</option>
+                            <option value="family">Family Bungalow</option>
+                        </select>
+                    </div>
+                    <div class="col-md-1">
+                        <button class="btn btn-outline-secondary" id="clear-filters">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bookings Table -->
+        <section class="bookings-table-section">
+            <div class="table-card">
+                <div class="table-header">
+                    <h3>Danh sách đặt phòng</h3>
+                    <div class="table-actions">
+                        <button class="btn btn-outline-primary btn-sm" id="export-btn">
+                            <i class="fas fa-download"></i> Xuất Excel
+                        </button>
+                        <button class="btn btn-outline-success btn-sm" id="refresh-btn">
+                            <i class="fas fa-sync"></i> Làm mới
+                        </button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover" id="bookings-table">
+                        <thead>
+                            <tr>
+                                <th>Mã đặt phòng</th>
+                                <th>Khách hàng</th>
+                                <th>Phòng</th>
+                                <th>Ngày nhận</th>
+                                <th>Ngày trả</th>
+                                <th>Số đêm</th>
+                                <th>Tổng tiền</th>
+                                <th>Trạng thái</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Booking rows will be loaded here -->
+                            <tr>
+                                <td><span class="booking-code">#SH2024001</span></td>
+                                <td>
+                                    <div class="guest-info">
+                                        <strong>Trần Văn Hùng</strong>
+                                        <small>0901234567</small>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="room-info">
+                                        <strong>203</strong>
+                                        <small>Deluxe Ocean View</small>
+                                    </div>
+                                </td>
+                                <td>27/09/2025</td>
+                                <td>29/09/2025</td>
+                                <td>2</td>
+                                <td><strong>$300</strong></td>
+                                <td><span class="status-badge confirmed">Đã xác nhận</span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-warning" title="Chỉnh sửa">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-success" title="Check-in">
+                                            <i class="fas fa-sign-in-alt"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="booking-code">#SH2024002</span></td>
+                                <td>
+                                    <div class="guest-info">
+                                        <strong>Nguyễn Thị Lan</strong>
+                                        <small>0907654321</small>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="room-info">
+                                        <strong>405</strong>
+                                        <small>Executive Suite</small>
+                                    </div>
+                                </td>
+                                <td>27/09/2025</td>
+                                <td>30/09/2025</td>
+                                <td>3</td>
+                                <td><strong>$750</strong></td>
+                                <td><span class="status-badge checked-in">Đã check-in</span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-info" title="Dịch vụ">
+                                            <i class="fas fa-concierge-bell"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger" title="Check-out">
+                                            <i class="fas fa-sign-out-alt"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="booking-code">#SH2024003</span></td>
+                                <td>
+                                    <div class="guest-info">
+                                        <strong>Lê Minh Đức</strong>
+                                        <small>0912345678</small>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="room-info">
+                                        <strong>108</strong>
+                                        <small>Family Bungalow</small>
+                                    </div>
+                                </td>
+                                <td>28/09/2025</td>
+                                <td>01/10/2025</td>
+                                <td>3</td>
+                                <td><strong>$960</strong></td>
+                                <td><span class="status-badge confirmed">Chờ check-in</span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-warning" title="Chỉnh sửa">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-success" title="Check-in">
+                                            <i class="fas fa-sign-in-alt"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="booking-code">#SH2024004</span></td>
+                                <td>
+                                    <div class="guest-info">
+                                        <strong>Phạm Thị Hoa</strong>
+                                        <small>0908765432</small>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="room-info">
+                                        <strong>302</strong>
+                                        <small>Deluxe Ocean View</small>
+                                    </div>
+                                </td>
+                                <td>25/09/2025</td>
+                                <td>27/09/2025</td>
+                                <td>2</td>
+                                <td><strong>$300</strong></td>
+                                <td><span class="status-badge checked-out">Đã check-out</span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-secondary" title="Hóa đơn">
+                                            <i class="fas fa-receipt"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-info" title="Đánh giá">
+                                            <i class="fas fa-star"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="booking-code">#SH2024005</span></td>
+                                <td>
+                                    <div class="guest-info">
+                                        <strong>Võ Thanh Nam</strong>
+                                        <small>0903456789</small>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="room-info">
+                                        <strong>507</strong>
+                                        <small>Executive Suite</small>
+                                    </div>
+                                </td>
+                                <td>29/09/2025</td>
+                                <td>02/10/2025</td>
+                                <td>3</td>
+                                <td><strong>$750</strong></td>
+                                <td><span class="status-badge cancelled">Đã hủy</span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-secondary" title="Lý do hủy">
+                                            <i class="fas fa-info-circle"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-success" title="Khôi phục">
+                                            <i class="fas fa-undo"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div class="table-pagination">
+                    <div class="pagination-info">
+                        Hiển thị 1-5 của 127 kết quả
+                    </div>
+                    <nav>
+                        <ul class="pagination pagination-sm">
+                            <li class="page-item disabled">
+                                <span class="page-link">Trước</span>
+                            </li>
+                            <li class="page-item active">
+                                <span class="page-link">1</span>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">2</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">3</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">Sau</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </section>
+
+        <!-- Calendar View Section -->
+        <section class="calendar-section">
+            <div class="calendar-card">
+                <div class="calendar-header">
+                    <h3>Lịch đặt phòng</h3>
+                    <div class="calendar-nav">
+                        <button class="btn btn-outline-primary btn-sm" id="prev-month">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <span class="current-month" id="current-month">Tháng 9, 2025</span>
+                        <button class="btn btn-outline-primary btn-sm" id="next-month">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="calendar-grid" id="calendar-grid">
+                    <!-- Calendar will be generated by JavaScript -->
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<!-- New Booking Modal -->
+<div class="modal fade" id="newBookingModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Đặt phòng mới</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="new-booking-form">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="form-section-title">Thông tin khách hàng</h6>
+                            <div class="mb-3">
+                                <label class="form-label">Họ và tên *</label>
+                                <input type="text" class="form-control" name="guest_name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Số điện thoại *</label>
+                                <input type="tel" class="form-control" name="guest_phone" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" name="guest_email">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">CMND/CCCD</label>
+                                <input type="text" class="form-control" name="guest_id">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="form-section-title">Thông tin đặt phòng</h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Ngày nhận phòng *</label>
+                                        <input type="date" class="form-control" name="checkin_date" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Ngày trả phòng *</label>
+                                        <input type="date" class="form-control" name="checkout_date" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Loại phòng *</label>
+                                <select class="form-select" name="room_type" required>
+                                    <option value="">Chọn loại phòng</option>
+                                    <option value="deluxe">Deluxe Ocean View - $150/đêm</option>
+                                    <option value="executive">Executive Suite - $250/đêm</option>
+                                    <option value="family">Family Bungalow - $320/đêm</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Số khách</label>
+                                <select class="form-select" name="guests">
+                                    <option value="1">1 người</option>
+                                    <option value="2" selected>2 người</option>
+                                    <option value="3">3 người</option>
+                                    <option value="4">4 người</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Ghi chú</label>
+                                <textarea class="form-control" name="notes" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="booking-summary">
+                    <span class="total-amount">Tổng tiền: <strong id="total-amount">$0</strong></span>
+                </div>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-primary" id="create-booking-btn">Tạo đặt phòng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Booking Detail Modal -->
+<div class="modal fade" id="bookingDetailModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Chi tiết đặt phòng</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="bookingDetailContent">
+                <!-- Content will be loaded dynamically -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
