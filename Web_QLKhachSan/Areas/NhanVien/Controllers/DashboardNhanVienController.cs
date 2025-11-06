@@ -14,5 +14,6 @@ namespace Web_QLKhachSan.Areas.NhanVien.Controllers
             ViewBag.Title = "Dashboard Nhân Viên";
             return View();
         }
+        sssss
     }
 }
