@@ -69,11 +69,11 @@ namespace Web_QLKhachSan.Controllers
                                 // kiểm tra người dùng có phải là admin không nếu phải thì chuyển hướng đến trang admin
                                 if (tendn.LoaiTaiKhoan == 1)
                                 {
-                                    return RedirectToAction("Index", "Admin/Dashboard");
+                                    return RedirectToAction("Index", "DashboardAdmin");
                                 }
                                 else if (tendn.LoaiTaiKhoan == 2)
                                 {
-                                    return RedirectToAction("Index", "NhanVien/Dashboard");
+                                    return RedirectToAction("Index", "DashboardNhanVien");
                                 }
                             }
                             else

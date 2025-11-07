@@ -103,12 +103,12 @@ namespace Web_QLKhachSan.Controllers
                 if (taiKhoan.LoaiTaiKhoan == 1)
                 {
                     // chuyển đến đến trang admin
-                    return RedirectToAction("Index", "AdminHome", new { area = "Admin" });
+                    return RedirectToAction("Index", "DashboardAdmin", new { area = "Admin" });
                 }
                 else if (taiKhoan.LoaiTaiKhoan == 2)
                 {
                     // chuyển đến đến trang nhân viên
-                    return RedirectToAction("Index", "NhanVienHome", new { area = "NhanVien" });
+                    return RedirectToAction("Index", "DashboardNhanVien", new { area = "NhanVien" });
                 }
              
 

@@ -235,6 +235,9 @@
       <DependentUpon>Contect.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DichVuToken.cs" />
+    <Compile Include="Models\DMKHOA.cs">
+      <DependentUpon>Contect.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\GiaTheoNgay.cs">
       <DependentUpon>Contect.tt</DependentUpon>
     </Compile>
