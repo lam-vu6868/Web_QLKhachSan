@@ -12,11 +12,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize accept button functionality
     initializeAcceptButton();
     
-    // Handle URL hash changes
+    // Handle URL hash changes (only if there's a hash)
     handleUrlHash();
     
     // Add smooth scrolling for internal links
     initializeSmoothScrolling();
+    
+    // Check if content is properly displayed on load
+    setTimeout(validateContentDisplay, 100); // Small delay to ensure DOM is fully rendered
 });
 
 /**
@@ -32,6 +35,12 @@ function initializeToggle() {
     }
     
     console.log(`📋 Found ${toggleButtons.length} toggle buttons and ${contentSections.length} content sections`);
+    
+    // Log initial state from server
+    const initialActiveButton = document.querySelector('.toggle-btn.active');
+    const initialActiveSection = document.querySelector('.content-section.active');
+    console.log('🏁 Initial state - Active button:', initialActiveButton?.getAttribute('data-target'));
+    console.log('🏁 Initial state - Active section:', initialActiveSection?.id);
     
     toggleButtons.forEach(button => {
         button.addEventListener('click', function(e) {
@@ -58,12 +67,20 @@ function initializeToggle() {
             contentSections.forEach(section => {
                 section.classList.remove('active');
                 section.setAttribute('aria-hidden', 'true');
+                // Force hide
+                section.style.display = 'none';
+                section.style.opacity = '0';
+                section.style.visibility = 'hidden';
             });
             
             const targetSection = document.getElementById(targetId);
             if (targetSection) {
                 targetSection.classList.add('active');
                 targetSection.setAttribute('aria-hidden', 'false');
+                // Force show
+                targetSection.style.display = 'block';
+                targetSection.style.opacity = '1';
+                targetSection.style.visibility = 'visible';
                 
                 // Update page title based on active section
                 updatePageTitle(targetId);
@@ -152,17 +169,14 @@ function handleUrlHash() {
             if (targetButton) {
                 targetButton.click();
             }
-        } else if (hash === '') {
-            // Default to terms if no hash
-            const termsButton = document.querySelector('[data-target="terms-content"]');
-            if (termsButton && !termsButton.classList.contains('active')) {
-                termsButton.click();
-            }
         }
+        // Remove the else if that was interfering with server-side activeTab setting
     }
     
-    // Process hash on page load
-    processHash();
+    // Only process hash if there is actually a hash in the URL
+    if (window.location.hash) {
+        processHash();
+    }
     
     // Listen for hash changes
     window.addEventListener('hashchange', processHash);
@@ -371,6 +385,71 @@ function getCurrentSection() {
 }
 
 /**
+ * Validate that content is properly displayed on page load
+ */
+function validateContentDisplay() {
+    const activeButton = document.querySelector('.toggle-btn.active');
+    const activeSection = document.querySelector('.content-section.active');
+    
+    console.log('🔍 Validating content display...');
+    console.log('Active button:', activeButton?.getAttribute('data-target'));
+    console.log('Active section:', activeSection?.id);
+    
+    // Ensure ARIA attributes are set correctly for existing active elements
+    if (activeButton) {
+        activeButton.setAttribute('aria-pressed', 'true');
+        console.log('✅ Set aria-pressed=true for active button');
+    }
+    
+    if (activeSection) {
+        activeSection.setAttribute('aria-hidden', 'false');
+        // Force display for active section (in case CSS is not applying)
+        activeSection.style.display = 'block';
+        activeSection.style.opacity = '1';
+        activeSection.style.visibility = 'visible';
+        console.log('✅ Ensured active section is visible');
+    }
+    
+    // If we have an active button but no active section, or vice versa
+    if (activeButton && !activeSection) {
+        console.warn('⚠️ Active button found but no active section, fixing...');
+        const targetId = activeButton.getAttribute('data-target');
+        const targetSection = document.getElementById(targetId);
+        if (targetSection) {
+            targetSection.classList.add('active');
+            targetSection.setAttribute('aria-hidden', 'false');
+            targetSection.style.display = 'block';
+            targetSection.style.opacity = '1';
+            targetSection.style.visibility = 'visible';
+        }
+    } else if (!activeButton && activeSection) {
+        console.warn('⚠️ Active section found but no active button, fixing...');
+        const sectionId = activeSection.id;
+        const correspondingButton = document.querySelector(`[data-target="${sectionId}"]`);
+        if (correspondingButton) {
+            correspondingButton.classList.add('active');
+            correspondingButton.setAttribute('aria-pressed', 'true');
+        }
+    } else if (!activeButton && !activeSection) {
+        console.warn('⚠️ No active elements found, setting default...');
+        // Default to terms section
+        const termsButton = document.querySelector('[data-target="terms-content"]');
+        const termsSection = document.getElementById('terms-content');
+        if (termsButton && termsSection) {
+            termsButton.classList.add('active');
+            termsButton.setAttribute('aria-pressed', 'true');
+            termsSection.classList.add('active');
+            termsSection.setAttribute('aria-hidden', 'false');
+            termsSection.style.display = 'block';
+            termsSection.style.opacity = '1';
+            termsSection.style.visibility = 'visible';
+        }
+    }
+    
+    console.log('✅ Content display validation completed');
+}
+
+/**
  * Utility function for debugging
  */
 window.debugTermsPrivacy = function() {
@@ -381,6 +460,76 @@ window.debugTermsPrivacy = function() {
     console.log('Previous acceptance:', localStorage.getItem('terms_privacy_acceptance'));
     console.log('Toggle buttons:', document.querySelectorAll('.toggle-btn').length);
     console.log('Content sections:', document.querySelectorAll('.content-section').length);
+    console.log('Active button:', document.querySelector('.toggle-btn.active')?.getAttribute('data-target'));
+    console.log('Active section:', document.querySelector('.content-section.active')?.id);
+};
+
+/**
+ * Force show privacy policy content (for debugging)
+ */
+window.forceShowPrivacy = function() {
+    console.log('🔧 Forcing privacy policy display...');
+    
+    // Remove active from all buttons and sections
+    document.querySelectorAll('.toggle-btn').forEach(btn => {
+        btn.classList.remove('active');
+        btn.setAttribute('aria-pressed', 'false');
+    });
+    
+    document.querySelectorAll('.content-section').forEach(section => {
+        section.classList.remove('active');
+        section.setAttribute('aria-hidden', 'true');
+    });
+    
+    // Activate privacy button and section
+    const privacyBtn = document.querySelector('[data-target="privacy-content"]');
+    const privacySection = document.getElementById('privacy-content');
+    
+    if (privacyBtn && privacySection) {
+        privacyBtn.classList.add('active');
+        privacyBtn.setAttribute('aria-pressed', 'true');
+        
+        privacySection.classList.add('active');
+        privacySection.setAttribute('aria-hidden', 'false');
+        
+        console.log('✅ Privacy policy forced to display');
+    } else {
+        console.error('❌ Privacy elements not found');
+    }
+};
+
+/**
+ * Force show terms content (for debugging)
+ */
+window.forceShowTerms = function() {
+    console.log('🔧 Forcing terms display...');
+    
+    // Remove active from all buttons and sections
+    document.querySelectorAll('.toggle-btn').forEach(btn => {
+        btn.classList.remove('active');
+        btn.setAttribute('aria-pressed', 'false');
+    });
+    
+    document.querySelectorAll('.content-section').forEach(section => {
+        section.classList.remove('active');
+        section.setAttribute('aria-hidden', 'true');
+    });
+    
+    // Activate terms button and section
+    const termsBtn = document.querySelector('[data-target="terms-content"]');
+    const termsSection = document.getElementById('terms-content');
+    
+    if (termsBtn && termsSection) {
+        termsBtn.classList.add('active');
+        termsBtn.setAttribute('aria-pressed', 'true');
+        
+        termsSection.classList.add('active');
+        termsSection.setAttribute('aria-hidden', 'false');
+        
+        console.log('✅ Terms forced to display');
+    } else {
+        console.error('❌ Terms elements not found');
+    }
 };
 
 // Export functions for potential external use
@@ -388,5 +537,7 @@ window.TermsPrivacyPage = {
     getCurrentSection,
     checkPreviousAcceptance,
     updatePageTitle,
-    showAcceptanceMessage
+    showAcceptanceMessage,
+    forceShowPrivacy: window.forceShowPrivacy,
+    forceShowTerms: window.forceShowTerms
 };

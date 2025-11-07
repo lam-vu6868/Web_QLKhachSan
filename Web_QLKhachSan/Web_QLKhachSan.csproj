@@ -313,6 +313,7 @@
     <Content Include="Areas\NhanVien\assets\js\shared.js" />
     <Content Include="Areas\NhanVien\assets\js\thanhtoan-hoadon.js" />
     <Content Include="assets\css\chi-tiet-phong.css" />
+    <Content Include="assets\css\chinhsach-dieukhoan.css" />
     <Content Include="assets\css\dang-nhap.css" />
     <Content Include="assets\css\danh-gia.css" />
     <Content Include="assets\css\dashboard-khachhang.css" />
@@ -462,7 +463,6 @@
     <Folder Include="Areas\NhanVien\assets\imgs\" />
     <Folder Include="Areas\NhanVien\Data\" />
     <Folder Include="Attributes\" />
-    <Folder Include="Database\" />
     <Folder Include="Views\CookieTest\" />
   </ItemGroup>
   <ItemGroup>
