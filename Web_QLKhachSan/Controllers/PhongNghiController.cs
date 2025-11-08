@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Data.Entity;
 using Web_QLKhachSan.Models;
 
 namespace Web_QLKhachSan.Controllers
@@ -15,21 +16,24 @@ namespace Web_QLKhachSan.Controllers
         public ActionResult Index()
         {
             // Lấy danh sách loại phòng từ database
-            var loaiPhongs = db.LoaiPhongs.Where(lp => lp.NgayTao != null).ToList();
+            var loaiPhongs = db.LoaiPhongs.ToList();
             ViewBag.LoaiPhongs = loaiPhongs;
 
             // Lấy danh sách tiện ích từ database
-            var tienIches = db.TienIches.Where(ti => ti.NgayTao != null).ToList();
+            var tienIches = db.TienIches.ToList();
             ViewBag.TienIches = tienIches;
 
             // Lấy danh sách phòng với thông tin liên quan
             var phongs = db.Phongs.Include("LoaiPhong")
+                                  .Include("LoaiPhong.TienIches")
                                   .Include("PhongAnhs")
                                   .Where(p => p.DaHoatDong == true)
                                   .ToList();
             
             return View(phongs);
         }
+
+
 
         protected override void Dispose(bool disposing)
         {

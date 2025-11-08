@@ -178,6 +178,7 @@
     <Compile Include="Controllers\ChiTietPhongController.cs" />
     <Compile Include="Controllers\DanhGiaController.cs" />
     <Compile Include="Controllers\DashboardKhachHangController.cs" />
+    <Compile Include="Controllers\DatDichVuController.cs" />
     <Compile Include="Controllers\DichVuController.cs" />
     <Compile Include="Controllers\DichVuThemController.cs" />
     <Compile Include="Controllers\GioiThieuController.cs" />
@@ -192,6 +193,7 @@
     <Compile Include="Areas\NhanVien\Controllers\ThanhToanHoaDonController.cs" />
     <Compile Include="Controllers\IndexController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\NhanVienDangNhapController.cs" />
     <Compile Include="Controllers\PhongNghiController.cs" />
     <Compile Include="Controllers\ThanhToanController.cs" />
     <Compile Include="Controllers\ThongTinController.cs" />
@@ -224,6 +226,7 @@
     </Compile>
     <Compile Include="Models\DangNhap.cs" />
     <Compile Include="Models\DangKy.cs" />
+    <Compile Include="Models\DangNhapNhanVien.cs" />
     <Compile Include="Models\DanhGia.cs">
       <DependentUpon>Contect.tt</DependentUpon>
     </Compile>
@@ -235,9 +238,6 @@
       <DependentUpon>Contect.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DichVuToken.cs" />
-    <Compile Include="Models\DMKHOA.cs">
-      <DependentUpon>Contect.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\GiaTheoNgay.cs">
       <DependentUpon>Contect.tt</DependentUpon>
     </Compile>
@@ -259,6 +259,9 @@
     <Compile Include="Models\LoaiTienIch.cs">
       <DependentUpon>Contect.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\LoaiTienNghi.cs">
+      <DependentUpon>Contect.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\MailKitEmailService.cs" />
     <Compile Include="Models\NhanVien.cs">
       <DependentUpon>Contect.tt</DependentUpon>
@@ -270,6 +273,7 @@
       <DependentUpon>Contect.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\QuenMatKhau.cs" />
+    <Compile Include="Models\QuenMatKhauNhanVien.cs" />
     <Compile Include="Models\TaiKhoan.cs">
       <DependentUpon>Contect.tt</DependentUpon>
     </Compile>
@@ -277,6 +281,9 @@
       <DependentUpon>Contect.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\TienIch.cs">
+      <DependentUpon>Contect.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TienNghi.cs">
       <DependentUpon>Contect.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\TokenLogin.cs">
@@ -317,12 +324,14 @@
     <Content Include="assets\css\dang-nhap.css" />
     <Content Include="assets\css\danh-gia.css" />
     <Content Include="assets\css\dashboard-khachhang.css" />
+    <Content Include="assets\css\dat-dich-vu.css" />
     <Content Include="assets\css\dat-phong.css" />
     <Content Include="assets\css\dich-vu.css" />
     <Content Include="assets\css\gioi-thieu.css" />
     <Content Include="assets\css\header-footer.css" />
     <Content Include="assets\css\ho-tro-khach-hang.css" />
     <Content Include="assets\css\index.css" />
+    <Content Include="assets\css\nhanvien-dangnhap.css" />
     <Content Include="assets\css\phong-nghi.css" />
     <Content Include="assets\css\thongbao.css" />
     <Content Include="assets\css\thuvien-anh.css" />
@@ -341,6 +350,7 @@
     <Content Include="assets\js\cap-do-khach-hang.js" />
     <Content Include="assets\js\dang-nhap.js" />
     <Content Include="assets\js\dashboard-khachhang.js" />
+    <Content Include="assets\js\dat-dich-vu.js" />
     <Content Include="assets\js\dat-phong.js" />
     <Content Include="assets\js\dich-vu.js" />
     <Content Include="assets\js\ho-tro-khach-hang.js" />
@@ -455,6 +465,9 @@
     <Content Include="Views\Login\XacThucEmail.cshtml" />
     <Content Include="Views\Login\DangNhap.cshtml" />
     <Content Include="Views\Login\DatLaiMatKhau.cshtml" />
+    <Content Include="Views\DatDichVu\Index.cshtml" />
+    <Content Include="Views\NhanVienDangNhap\DangNhap.cshtml" />
+    <Content Include="Views\NhanVienDangNhap\QuenMatKhau.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -462,7 +475,6 @@
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\NhanVien\assets\imgs\" />
     <Folder Include="Areas\NhanVien\Data\" />
-    <Folder Include="Views\CookieTest\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

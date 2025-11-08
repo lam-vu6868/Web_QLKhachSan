@@ -12,28 +12,24 @@ namespace Web_QLKhachSan.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class DichVu
+    public partial class TienNghi
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public DichVu()
+        public TienNghi()
         {
-            this.ChiTietDatDichVus = new HashSet<ChiTietDatDichVu>();
+            this.LoaiPhongs = new HashSet<LoaiPhong>();
         }
     
-        public int DichVuId { get; set; }
-        public string MaDichVu { get; set; }
-        public string TenDichVu { get; set; }
+        public int TienNghiId { get; set; }
+        public string TenTienNghi { get; set; }
         public string MoTa { get; set; }
-        public Nullable<decimal> Gia { get; set; }
-        public Nullable<decimal> GiaUuDai { get; set; }
-        public bool DaHoatDong { get; set; }
+        public string Icon { get; set; }
+        public Nullable<int> LoaiTienNghiId { get; set; }
         public System.DateTime NgayTao { get; set; }
         public Nullable<System.DateTime> NgayCapNhat { get; set; }
-        public Nullable<int> LoaiDichVuId { get; set; }
-        public string Icon { get; set; }
     
+        public virtual LoaiTienNghi LoaiTienNghi { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ChiTietDatDichVu> ChiTietDatDichVus { get; set; }
-        public virtual LoaiDichVu LoaiDichVu { get; set; }
+        public virtual ICollection<LoaiPhong> LoaiPhongs { get; set; }
     }
 }

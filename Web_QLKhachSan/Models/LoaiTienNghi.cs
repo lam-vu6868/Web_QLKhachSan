@@ -12,33 +12,21 @@ namespace Web_QLKhachSan.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class LoaiPhong
+    public partial class LoaiTienNghi
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public LoaiPhong()
+        public LoaiTienNghi()
         {
-            this.ChiTietDatPhongs = new HashSet<ChiTietDatPhong>();
-            this.Phongs = new HashSet<Phong>();
-            this.TienIches = new HashSet<TienIch>();
             this.TienNghis = new HashSet<TienNghi>();
         }
     
-        public int LoaiPhongId { get; set; }
+        public int LoaiTienNghiId { get; set; }
         public string MaLoai { get; set; }
         public string TenLoai { get; set; }
         public string MoTa { get; set; }
-        public Nullable<int> SoNguoiToiDa { get; set; }
-        public Nullable<decimal> DienTich { get; set; }
-        public Nullable<decimal> GiaCoBan { get; set; }
         public System.DateTime NgayTao { get; set; }
         public Nullable<System.DateTime> NgayCapNhat { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ChiTietDatPhong> ChiTietDatPhongs { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Phong> Phongs { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<TienIch> TienIches { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TienNghi> TienNghis { get; set; }
     }

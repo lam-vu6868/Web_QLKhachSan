@@ -30,7 +30,6 @@ namespace Web_QLKhachSan.Models
         public virtual DbSet<DanhGia> DanhGias { get; set; }
         public virtual DbSet<DatPhong> DatPhongs { get; set; }
         public virtual DbSet<DichVu> DichVus { get; set; }
-        public virtual DbSet<DMKHOA> DMKHOAs { get; set; }
         public virtual DbSet<GiaTheoNgay> GiaTheoNgays { get; set; }
         public virtual DbSet<HoaDon> HoaDons { get; set; }
         public virtual DbSet<KhachHang> KhachHangs { get; set; }
@@ -38,12 +37,14 @@ namespace Web_QLKhachSan.Models
         public virtual DbSet<LoaiDichVu> LoaiDichVus { get; set; }
         public virtual DbSet<LoaiPhong> LoaiPhongs { get; set; }
         public virtual DbSet<LoaiTienIch> LoaiTienIches { get; set; }
+        public virtual DbSet<LoaiTienNghi> LoaiTienNghis { get; set; }
         public virtual DbSet<NhanVien> NhanViens { get; set; }
         public virtual DbSet<Phong> Phongs { get; set; }
         public virtual DbSet<PhongAnh> PhongAnhs { get; set; }
         public virtual DbSet<TaiKhoan> TaiKhoans { get; set; }
         public virtual DbSet<ThanhToan> ThanhToans { get; set; }
         public virtual DbSet<TienIch> TienIches { get; set; }
+        public virtual DbSet<TienNghi> TienNghis { get; set; }
         public virtual DbSet<TokenLogin> TokenLogins { get; set; }
     }
 }

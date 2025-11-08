@@ -1,4 +1,6 @@
-﻿@{
+﻿@model IEnumerable<Web_QLKhachSan.Models.LoaiDichVu>
+
+@{
     ViewBag.Title = "Dịch Vụ";
 }
 <link rel="stylesheet" href="~/assets/css/dich-vu.css" />
@@ -49,626 +51,93 @@
       <!-- Services Grid Overview -->
       <section class="services-grid-section">
         <div class="container">
-          <div class="section-intro" data-aos="fade-up">
-            <h2 class="section-heading">Khám Phá Các Dịch Vụ Của Chúng Tôi</h2>
-            <p class="section-subtitle">
-              Từ spa thư giãn đến ẩm thực tinh tế, mỗi dịch vụ đều được thiết kế để mang đến trải nghiệm tuyệt vời nhất
-            </p>
-          </div>
-
-          <div class="services-grid">
-            <div class="service-card" data-aos="fade-up" data-aos-delay="100">
-              <div class="service-card-image">
-                <img src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800&q=80" alt="Spa & Wellness">
-                <div class="service-overlay">
-                  <div class="overlay-icon">
-                    <i class="fas fa-spa"></i>
-                  </div>
+          <div class="services-accordion">
+            @if (Model != null && Model.Any())
+            {
+                foreach (var loaiDichVu in Model)
+                {
+                    var categoryId = "category-" + loaiDichVu.LoaiDichVuId;
+                    var dichVus = loaiDichVu.DichVus.Where(d => d.DaHoatDong).ToList();
+                    
+                    if (dichVus.Any())
+                    {
+                        <div class="service-category" data-category="@loaiDichVu.MaLoai">
+                          <div class="category-header" onclick="toggleServiceCategory('@categoryId')">
+                            <div class="category-image">
+                              @{
+                                  var iconLoai = !string.IsNullOrEmpty(loaiDichVu.Icon) ? loaiDichVu.Icon : "fas fa-concierge-bell";
+                                  var hinhAnh = loaiDichVu.HinhAnh;
+                                  var imgSrc = !string.IsNullOrEmpty(hinhAnh) ? hinhAnh : "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80";
+                              }
+                              <img src="@imgSrc" alt="@loaiDichVu.TenLoai" onerror="this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80'">
+                              <div class="category-overlay">
+                                <i class="@iconLoai"></i>
+                              </div>
+                            </div>
+                            <div class="category-info">
+                              <div class="category-badge">Đặc biệt</div>
+                              <h3>@loaiDichVu.TenLoai</h3>
+                              <p>@(loaiDichVu.MoTa ?? "Dịch vụ chất lượng cao")</p>
+                              @{
+                                  var minPrice = dichVus.Where(d => d.Gia.HasValue).Min(d => d.Gia);
+                                  if (minPrice.HasValue)
+                                  {
+                                      <div class="category-price">
+                                        <span class="price-from">Từ</span>
+                                        <span class="price-amount">@minPrice.Value.ToString("N0")₫</span>
+                                      </div>
+                                  }
+                              }
+                            </div>
+                            <div class="expand-icon">
+                              <i class="fas fa-chevron-down"></i>
+                            </div>
+                          </div>
+                          <div class="category-content" id="@categoryId">
+                            <div class="service-items">
+                              @foreach (var dichVu in dichVus)
+                              {
+                                  <div class="service-item">
+                                    <div class="item-icon">
+                                      @{
+                                          var iconClass = !string.IsNullOrEmpty(dichVu.Icon) ? dichVu.Icon : "fas fa-star";
+                                      }
+                                      <i class="@iconClass"></i>
+                                    </div>
+                                    <div class="item-details">
+                                      <h4>@dichVu.TenDichVu</h4>
+                                      <p>@(dichVu.MoTa ?? "Dịch vụ chất lượng cao")</p>
+                                      @if (dichVu.Gia.HasValue)
+                                      {
+                                          if (dichVu.GiaUuDai.HasValue && dichVu.GiaUuDai < dichVu.Gia)
+                                          {
+                                              <div class="item-price">
+                                                <span class="old-price">@dichVu.Gia.Value.ToString("N0")₫</span>
+                                                <span class="sale-price">@dichVu.GiaUuDai.Value.ToString("N0")₫</span>
+                                              </div>
+                                          }
+                                          else
+                                          {
+                                              <div class="item-price">@dichVu.Gia.Value.ToString("N0")₫</div>
+                                          }
+                                      }
+                                    </div>
+                                    <a href="@Url.Action("Index", "DatDichVu")" class="order-btn">Đặt ngay</a>
+                                  </div>
+                              }
+                            </div>
+                          </div>
+                        </div>
+                    }
+                }
+            }
+            else
+            {
+                <div class="no-services">
+                    <i class="fas fa-inbox"></i>
+                    <p>Hiện tại chưa có dịch vụ nào</p>
                 </div>
-                <div class="service-badge">Nổi bật</div>
-              </div>
-              <div class="service-card-content">
-                <h3>The Serene Spa</h3>
-                <p>Xoa dịu tâm hồn với các liệu pháp trị liệu độc đáo</p>
-                <ul class="service-highlights">
-                  <li><i class="fas fa-check-circle"></i> Massage trị liệu</li>
-                  <li><i class="fas fa-check-circle"></i> Chăm sóc da cao cấp</li>
-                  <li><i class="fas fa-check-circle"></i> Xông hơi & Jacuzzi</li>
-                </ul>
-                <a href="#spa-section" class="service-link">
-                  Khám phá thêm <i class="fas fa-arrow-right"></i>
-                </a>
-              </div>
-            </div>
-
-            <div class="service-card" data-aos="fade-up" data-aos-delay="200">
-              <div class="service-card-image">
-                <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80" alt="Restaurant">
-                <div class="service-overlay">
-                  <div class="overlay-icon">
-                    <i class="fas fa-utensils"></i>
-                  </div>
-                </div>
-                <div class="service-badge badge-success">Đặc biệt</div>
-              </div>
-              <div class="service-card-content">
-                <h3>The Horizon Restaurant</h3>
-                <p>Ẩm thực tinh tế từ bếp trưởng hàng đầu</p>
-                <ul class="service-highlights">
-                  <li><i class="fas fa-check-circle"></i> Ẩm thực quốc tế</li>
-                  <li><i class="fas fa-check-circle"></i> View biển đẹp</li>
-                  <li><i class="fas fa-check-circle"></i> Không gian lãng mạn</li>
-                </ul>
-                <a href="#restaurant-section" class="service-link">
-                  Khám phá thêm <i class="fas fa-arrow-right"></i>
-                </a>
-              </div>
-            </div>
-
-            <div class="service-card" data-aos="fade-up" data-aos-delay="300">
-              <div class="service-card-image">
-                <img src="https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?w=800&q=80" alt="Pool">
-                <div class="service-overlay">
-                  <div class="overlay-icon">
-                    <i class="fas fa-swimming-pool"></i>
-                  </div>
-                </div>
-              </div>
-              <div class="service-card-content">
-                <h3>Hồ Bơi Vô Cực</h3>
-                <p>Thư giãn trong làn nước trong xanh</p>
-                <ul class="service-highlights">
-                  <li><i class="fas fa-check-circle"></i> View đại dương</li>
-                  <li><i class="fas fa-check-circle"></i> Bar bên hồ bơi</li>
-                  <li><i class="fas fa-check-circle"></i> Ghế tắm nắng</li>
-                </ul>
-                <a href="#pool-section" class="service-link">
-                  Khám phá thêm <i class="fas fa-arrow-right"></i>
-                </a>
-              </div>
-            </div>
-
-            <div class="service-card" data-aos="fade-up" data-aos-delay="400">
-              <div class="service-card-image">
-                <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&q=80" alt="Fitness">
-                <div class="service-overlay">
-                  <div class="overlay-icon">
-                    <i class="fas fa-dumbbell"></i>
-                  </div>
-                </div>
-              </div>
-              <div class="service-card-content">
-                <h3>Fitness & Yoga</h3>
-                <p>Rèn luyện sức khỏe giữa thiên nhiên</p>
-                <ul class="service-highlights">
-                  <li><i class="fas fa-check-circle"></i> Phòng gym hiện đại</li>
-                  <li><i class="fas fa-check-circle"></i> Yoga ngoài trời</li>
-                  <li><i class="fas fa-check-circle"></i> PT chuyên nghiệp</li>
-                </ul>
-                <a href="#fitness-section" class="service-link">
-                  Khám phá thêm <i class="fas fa-arrow-right"></i>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Detailed Service Section - Spa -->
-      <section class="service-detail-section" id="spa-section">
-        <div class="detail-bg-decoration"></div>
-        <div class="container">
-          <div class="service-detail-wrapper" data-aos="fade-up">
-            <div class="detail-image-gallery">
-              <div class="main-image">
-                <img src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=800&q=80" alt="Spa & Wellness">
-                <div class="image-badge">
-                  <i class="fas fa-spa"></i>
-                  <span>The Serene Spa</span>
-                </div>
-              </div>
-              <div class="image-grid">
-                <img src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=400&q=80" alt="Spa Treatment">
-                <img src="https://images.unsplash.com/photo-1600334129128-685c5582fd35?w=400&q=80" alt="Spa Room">
-              </div>
-            </div>
-            
-            <div class="detail-content">
-              <div class="content-header">
-                <span class="pre-title">
-                  <i class="fas fa-leaf"></i> TÁI TẠO NĂNG LƯỢNG
-                </span>
-                <h2 class="section-heading">The Serene Spa</h2>
-                <div class="rating-stars">
-                  <i class="fas fa-star"></i>
-                  <i class="fas fa-star"></i>
-                  <i class="fas fa-star"></i>
-                  <i class="fas fa-star"></i>
-                  <i class="fas fa-star"></i>
-                  <span class="rating-text">(4.9/5 - 250+ đánh giá)</span>
-                </div>
-              </div>
-
-              <p class="detail-description">
-                Hãy để tâm hồn và cơ thể bạn được xoa dịu tại The Serene Spa. Với các liệu pháp 
-                trị liệu độc đáo kết hợp giữa truyền thống và hiện đại, các chuyên gia của chúng tôi 
-                sẽ giúp bạn tái tạo năng lượng, xua tan mọi căng thẳng và tìm lại sự cân bằng từ sâu bên trong.
-              </p>
-
-              <div class="feature-grid">
-                <div class="feature-item">
-                  <div class="feature-icon">
-                    <i class="fas fa-hands"></i>
-                  </div>
-                  <h4>Massage Trị Liệu</h4>
-                  <p>Toàn thân với tinh dầu thiên nhiên</p>
-                </div>
-                <div class="feature-item">
-                  <div class="feature-icon">
-                    <i class="fas fa-face-smile"></i>
-                  </div>
-                  <h4>Chăm Sóc Da</h4>
-                  <p>Liệu trình chuyên sâu cao cấp</p>
-                </div>
-                <div class="feature-item">
-                  <div class="feature-icon">
-                    <i class="fas fa-hot-tub"></i>
-                  </div>
-                  <h4>Xông Hơi & Jacuzzi</h4>
-                  <p>Thải độc và thư giãn tuyệt đối</p>
-                </div>
-              </div>
-
-              <div class="service-info-box">
-                <div class="info-item">
-                  <i class="fas fa-clock"></i>
-                  <div>
-                    <strong>Giờ mở cửa</strong>
-                    <span>8:00 AM - 10:00 PM</span>
-                  </div>
-                </div>
-                <div class="info-item">
-                  <i class="fas fa-dollar-sign"></i>
-                  <div>
-                    <strong>Giá từ</strong>
-                    <span>$50 - $200</span>
-                  </div>
-                </div>
-                <div class="info-item">
-                  <i class="fas fa-phone-alt"></i>
-                  <div>
-                    <strong>Đặt lịch</strong>
-                    <span>(+84) 123 456 789</span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="action-buttons">
-                <button class="cta-button" id="toggle-spa-menu">
-                  <i class="fas fa-list"></i> Xem Menu Spa
-                </button>
-                <button class="cta-button btn-secondary">
-                  <i class="fas fa-calendar-check"></i> Đặt Lịch Ngay
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Spa Menu Accordion -->
-        <div class="spa-menu-container" id="spa-menu-content" style="display: none">
-          <div class="container">
-            <div class="menu-header">
-              <h3><i class="fas fa-spa"></i> Menu Dịch Vụ Spa</h3>
-              <p>Khám phá các liệu pháp chăm sóc toàn diện</p>
-            </div>
-
-            <div class="menu-category">
-              <div class="category-header">
-                <i class="fas fa-hands-wash"></i>
-                <h4>Các Liệu Pháp Massage</h4>
-              </div>
-              <div class="menu-items">
-                <div class="menu-item">
-                  <div class="item-info">
-                    <h5>Massage Toàn Thân Thư Giãn</h5>
-                    <p>Sử dụng tinh dầu thơm và các động tác massage nhẹ nhàng, giúp xoa dịu căng thẳng, cải thiện tuần hoàn máu và mang lại cảm giác thư thái toàn diện.</p>
-                    <div class="item-meta">
-                      <span><i class="fas fa-clock"></i> 60-90 phút</span>
-                      <span><i class="fas fa-tag"></i> $80-$120</span>
-                    </div>
-                  </div>
-                  <button class="book-btn">Đặt ngay</button>
-                </div>
-
-                <div class="menu-item">
-                  <div class="item-info">
-                    <h5>Massage Trị Liệu Đá Nóng</h5>
-                    <p>Kết hợp sức nóng của đá núi lửa cùng kỹ thuật massage chuyên sâu, giúp giải tỏa các bó cơ căng cứng và giảm đau nhức hiệu quả.</p>
-                    <div class="item-meta">
-                      <span><i class="fas fa-clock"></i> 90 phút</span>
-                      <span><i class="fas fa-tag"></i> $150</span>
-                    </div>
-                  </div>
-                  <button class="book-btn">Đặt ngay</button>
-                </div>
-
-                <div class="menu-item">
-                  <div class="item-info">
-                    <h5>Massage Truyền Thống</h5>
-                    <p>Áp dụng các phương pháp massage cổ truyền của Việt Nam hoặc Thái Lan, tác động sâu vào các huyệt đạo để khôi phục sự cân bằng năng lượng cho cơ thể.</p>
-                    <div class="item-meta">
-                      <span><i class="fas fa-clock"></i> 75 phút</span>
-                      <span><i class="fas fa-tag"></i> $100</span>
-                    </div>
-                  </div>
-                  <button class="book-btn">Đặt ngay</button>
-                </div>
-              </div>
-            </div>
-
-            <div class="menu-category">
-              <div class="category-header">
-                <i class="fas fa-face-smile-beam"></i>
-                <h4>Các Dịch Vụ Chăm Sóc Sắc Đẹp</h4>
-              </div>
-              <div class="menu-items">
-                <div class="menu-item">
-                  <div class="item-info">
-                    <h5>Chăm Sóc Da Mặt Chuyên Sâu</h5>
-                    <p>Bao gồm các bước làm sạch, tẩy tế bào chết, massage, đắp mặt nạ và dưỡng ẩm, giúp làn da trở nên căng mịn, rạng rỡ.</p>
-                    <div class="item-meta">
-                      <span><i class="fas fa-clock"></i> 60 phút</span>
-                      <span><i class="fas fa-tag"></i> $90</span>
-                    </div>
-                  </div>
-                  <button class="book-btn">Đặt ngay</button>
-                </div>
-
-                <div class="menu-item">
-                  <div class="item-info">
-                    <h5>Chăm Sóc Toàn Thân</h5>
-                    <p>Tẩy tế bào chết bằng các nguyên liệu tự nhiên như cà phê, muối biển, sau đó ủ dưỡng với mặt nạ hoặc tinh chất đặc biệt.</p>
-                    <div class="item-meta">
-                      <span><i class="fas fa-clock"></i> 90 phút</span>
-                      <span><i class="fas fa-tag"></i> $120</span>
-                    </div>
-                  </div>
-                  <button class="book-btn">Đặt ngay</button>
-                </div>
-              </div>
-            </div>
-
-            <div class="menu-category">
-              <div class="category-header">
-                <i class="fas fa-hot-tub"></i>
-                <h4>Các Tiện Ích Độc Đáo</h4>
-              </div>
-              <div class="menu-items">
-                <div class="menu-item">
-                  <div class="item-info">
-                    <h5>Phòng Xông Hơi Thảo Dược</h5>
-                    <p>Hơi nóng và hương thơm từ thảo mộc giúp thải độc cơ thể, làm sạch sâu lỗ chân lông và mang lại cảm giác thư giãn tuyệt vời.</p>
-                    <div class="item-meta">
-                      <span><i class="fas fa-clock"></i> 30 phút</span>
-                      <span><i class="fas fa-tag"></i> $50</span>
-                    </div>
-                  </div>
-                  <button class="book-btn">Đặt ngay</button>
-                </div>
-
-                <div class="menu-item">
-                  <div class="item-info">
-                    <h5>Bể Sục Jacuzzi</h5>
-                    <p>Tận hưởng làn nước ấm và các tia nước massage mạnh mẽ, giúp giảm căng thẳng cơ bắp, hỗ trợ lưu thông máu.</p>
-                    <div class="item-meta">
-                      <span><i class="fas fa-clock"></i> 45 phút</span>
-                      <span><i class="fas fa-tag"></i> $60</span>
-                    </div>
-                  </div>
-                  <button class="book-btn">Đặt ngay</button>
-                </div>
-
-                <div class="menu-item">
-                  <div class="item-info">
-                    <h5>Liệu Pháp Cân Bằng Năng Lượng</h5>
-                    <p>Một liệu trình đặc biệt bao gồm thiền và liệu pháp âm thanh, giúp khôi phục sự hài hòa giữa tâm trí và cơ thể.</p>
-                    <div class="item-meta">
-                      <span><i class="fas fa-clock"></i> 75 phút</span>
-                      <span><i class="fas fa-tag"></i> $110</span>
-                    </div>
-                  </div>
-                  <button class="book-btn">Đặt ngay</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Restaurant Section -->
-      <section class="service-detail-section alt-bg" id="restaurant-section">
-        <div class="container">
-          <div class="service-detail-wrapper reverse" data-aos="fade-up">
-            <div class="detail-content">
-              <div class="content-header">
-                <span class="pre-title">
-                  <i class="fas fa-utensils"></i> ẨM THỰC TINH TẾ
-                </span>
-                <h2 class="section-heading">Nhà Hàng The Horizon</h2>
-                <div class="rating-stars">
-                  <i class="fas fa-star"></i>
-                  <i class="fas fa-star"></i>
-                  <i class="fas fa-star"></i>
-                  <i class="fas fa-star"></i>
-                  <i class="fas fa-star-half-alt"></i>
-                  <span class="rating-text">(4.8/5 - 180+ đánh giá)</span>
-                </div>
-              </div>
-
-              <p class="detail-description">
-                Khám phá một hành trình ẩm thực đầy tinh tế tại The Horizon. Bếp trưởng của chúng tôi 
-                đã khéo léo tạo ra một thực đơn đa dạng từ những nguyên liệu tươi ngon nhất, kết hợp 
-                giữa hương vị địa phương và tinh hoa ẩm thực quốc tế.
-              </p>
-
-              <div class="feature-grid">
-                <div class="feature-item">
-                  <div class="feature-icon">
-                    <i class="fas fa-globe-asia"></i>
-                  </div>
-                  <h4>Ẩm Thực Quốc Tế</h4>
-                  <p>Hơn 100 món từ khắp thế giới</p>
-                </div>
-                <div class="feature-item">
-                  <div class="feature-icon">
-                    <i class="fas fa-wine-glass-alt"></i>
-                  </div>
-                  <h4>Bộ Sưu Tập Rượu</h4>
-                  <p>Rượu vang cao cấp từ nhiều vùng</p>
-                </div>
-                <div class="feature-item">
-                  <div class="feature-icon">
-                    <i class="fas fa-heart"></i>
-                  </div>
-                  <h4>Không Gian Lãng Mạn</h4>
-                  <p>View biển tuyệt đẹp, ánh nến lung linh</p>
-                </div>
-              </div>
-
-              <div class="service-info-box">
-                <div class="info-item">
-                  <i class="fas fa-clock"></i>
-                  <div>
-                    <strong>Giờ phục vụ</strong>
-                    <span>6:00 AM - 11:00 PM</span>
-                  </div>
-                </div>
-                <div class="info-item">
-                  <i class="fas fa-utensils"></i>
-                  <div>
-                    <strong>Loại hình</strong>
-                    <span>Fine Dining, Buffet</span>
-                  </div>
-                </div>
-                <div class="info-item">
-                  <i class="fas fa-user-tie"></i>
-                  <div>
-                    <strong>Dress code</strong>
-                    <span>Smart Casual</span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="action-buttons">
-                <button class="cta-button">
-                  <i class="fas fa-book-open"></i> Xem Thực Đơn
-                </button>
-                <button class="cta-button btn-secondary">
-                  <i class="fas fa-calendar-check"></i> Đặt Bàn Ngay
-                </button>
-              </div>
-            </div>
-
-            <div class="detail-image-gallery">
-              <div class="main-image">
-                <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80" alt="Restaurant">
-                <div class="image-badge">
-                  <i class="fas fa-utensils"></i>
-                  <span>The Horizon</span>
-                </div>
-              </div>
-              <div class="image-grid">
-                <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=400&q=80" alt="Food">
-                <img src="https://images.unsplash.com/photo-1551218808-94e220e084d2?w=400&q=80" alt="Dining">
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Pool Section -->
-      <section class="service-detail-section" id="pool-section">
-        <div class="container">
-          <div class="service-detail-wrapper" data-aos="fade-up">
-            <div class="detail-image-gallery">
-              <div class="main-image">
-                <img src="https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?w=800&q=80" alt="Infinity Pool">
-                <div class="image-badge">
-                  <i class="fas fa-swimming-pool"></i>
-                  <span>Infinity Pool</span>
-                </div>
-              </div>
-              <div class="image-grid">
-                <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&q=80" alt="Pool View">
-                <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=400&q=80" alt="Sunset Pool">
-              </div>
-            </div>
-            
-            <div class="detail-content">
-              <div class="content-header">
-                <span class="pre-title">
-                  <i class="fas fa-water"></i> HỒ BƠI VÔ CỰC
-                </span>
-                <h2 class="section-heading">Trải Nghiệm Thư Giãn Tuyệt Đối</h2>
-              </div>
-
-              <p class="detail-description">
-                Hòa mình vào làn nước trong xanh của hồ bơi vô cực, nơi tầm mắt của bạn được 
-                giải phóng ra đại dương bao la. Đây là địa điểm hoàn hảo để thư giãn dưới ánh nắng, 
-                thưởng thức một ly cocktail mát lạnh từ quầy bar bên hồ.
-              </p>
-
-              <div class="feature-grid">
-                <div class="feature-item">
-                  <div class="feature-icon">
-                    <i class="fas fa-infinity"></i>
-                  </div>
-                  <h4>View Đại Dương</h4>
-                  <p>Hòa quyện với bầu trời và biển cả</p>
-                </div>
-                <div class="feature-item">
-                  <div class="feature-icon">
-                    <i class="fas fa-cocktail"></i>
-                  </div>
-                  <h4>Pool Bar</h4>
-                  <p>Cocktail & Đồ uống tươi mát</p>
-                </div>
-                <div class="feature-item">
-                  <div class="feature-icon">
-                    <i class="fas fa-umbrella-beach"></i>
-                  </div>
-                  <h4>Cabana Riêng Tư</h4>
-                  <p>Không gian thư giãn sang trọng</p>
-                </div>
-              </div>
-
-              <div class="service-info-box">
-                <div class="info-item">
-                  <i class="fas fa-clock"></i>
-                  <div>
-                    <strong>Giờ mở cửa</strong>
-                    <span>6:00 AM - 8:00 PM</span>
-                  </div>
-                </div>
-                <div class="info-item">
-                  <i class="fas fa-ruler-combined"></i>
-                  <div>
-                    <strong>Kích thước</strong>
-                    <span>25m x 15m</span>
-                  </div>
-                </div>
-                <div class="info-item">
-                  <i class="fas fa-temperature-high"></i>
-                  <div>
-                    <strong>Nhiệt độ</strong>
-                    <span>28-30°C</span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="action-buttons">
-                <button class="cta-button">
-                  <i class="fas fa-calendar-alt"></i> Đặt Cabana
-                </button>
-                <button class="cta-button btn-secondary">
-                  <i class="fas fa-images"></i> Xem Thư Viện Ảnh
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Fitness Section -->
-      <section class="service-detail-section alt-bg" id="fitness-section">
-        <div class="container">
-          <div class="service-detail-wrapper reverse" data-aos="fade-up">
-            <div class="detail-content">
-              <div class="content-header">
-                <span class="pre-title">
-                  <i class="fas fa-dumbbell"></i> THỂ THAO & SỨC KHỎE
-                </span>
-                <h2 class="section-heading">Fitness & Yoga Center</h2>
-              </div>
-
-              <p class="detail-description">
-                Nâng cao sức khỏe và tinh thần trong không gian tràn ngập thiên nhiên. 
-                Bạn có thể lựa chọn từ phòng gym hiện đại với đầy đủ trang thiết bị, các lớp 
-                yoga và thiền định ngoài trời, đến những hoạt động thể thao sôi động.
-              </p>
-
-              <div class="feature-grid">
-                <div class="feature-item">
-                  <div class="feature-icon">
-                    <i class="fas fa-dumbbell"></i>
-                  </div>
-                  <h4>Phòng Gym Hiện Đại</h4>
-                  <p>Trang thiết bị cao cấp, hiện đại</p>
-                </div>
-                <div class="feature-item">
-                  <div class="feature-icon">
-                    <i class="fas fa-spa"></i>
-                  </div>
-                  <h4>Yoga & Meditation</h4>
-                  <p>Lớp học ngoài trời mỗi sáng</p>
-                </div>
-                <div class="feature-item">
-                  <div class="feature-icon">
-                    <i class="fas fa-user-friends"></i>
-                  </div>
-                  <h4>Huấn Luyện Viên</h4>
-                  <p>Hỗ trợ chuyên nghiệp 1-1</p>
-                </div>
-              </div>
-
-              <div class="service-info-box">
-                <div class="info-item">
-                  <i class="fas fa-clock"></i>
-                  <div>
-                    <strong>Giờ mở cửa</strong>
-                    <span>5:00 AM - 10:00 PM</span>
-                  </div>
-                </div>
-                <div class="info-item">
-                  <i class="fas fa-users"></i>
-                  <div>
-                    <strong>Lớp Yoga</strong>
-                    <span>7:00 AM & 5:00 PM</span>
-                  </div>
-                </div>
-                <div class="info-item">
-                  <i class="fas fa-ticket-alt"></i>
-                  <div>
-                    <strong>Miễn phí</strong>
-                    <span>Cho khách lưu trú</span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="action-buttons">
-                <button class="cta-button">
-                  <i class="fas fa-user-plus"></i> Đăng Ký Lớp Học
-                </button>
-                <button class="cta-button btn-secondary">
-                  <i class="fas fa-dumbbell"></i> Thuê PT
-                </button>
-              </div>
-            </div>
-
-            <div class="detail-image-gallery">
-              <div class="main-image">
-                <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&q=80" alt="Fitness Center">
-                <div class="image-badge">
-                  <i class="fas fa-dumbbell"></i>
-                  <span>Fitness Center</span>
-                </div>
-              </div>
-              <div class="image-grid">
-                <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&q=80" alt="Yoga">
-                <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&q=80" alt="Gym Equipment">
-              </div>
-            </div>
+            }
           </div>
         </div>
       </section>
@@ -679,20 +148,20 @@
         <div class="container">
           <div class="cta-content" data-aos="fade-up">
             <div class="cta-icon">
-              <i class="fas fa-phone-volume"></i>
+              <i class="fas fa-concierge-bell"></i>
             </div>
-            <h2>Sẵn Sàng Trải Nghiệm Dịch Vụ Đẳng Cấp?</h2>
+            <h2>Tận Hưởng Đầy Đủ Tiện Ích Cao Cấp</h2>
             <p>
-              Đội ngũ của chúng tôi luôn sẵn sàng hỗ trợ bạn 24/7. Liên hệ ngay để được tư vấn 
-              và đặt dịch vụ với những ưu đãi hấp dẫn.
+              SPA thư giãn, ẩm thực 5 sao, dịch vụ giặt là và vận chuyển tiện lợi. 
+              Liên hệ ngay để được phục vụ với chất lượng tốt nhất.
             </p>
             <div class="cta-buttons">
-              <button class="cta-button cta-primary">
-                <i class="fas fa-phone-alt"></i> Gọi Ngay: (+84) 123 456 789
-              </button>
-              <button class="cta-button cta-secondary">
-                <i class="fas fa-envelope"></i> Email: services@serenehorizon.com
-              </button>
+              <a href="@Url.Action("Index", "DatDichVu")" class="cta-button cta-primary">
+                <i class="fas fa-calendar-check"></i> Đặt Dịch Vụ Ngay
+              </a>
+              <a href="tel:0287123456" class="cta-button cta-secondary">
+                <i class="fas fa-phone-alt"></i> Gọi: 0287 123 4567
+              </a>
             </div>
             <div class="cta-features">
               <div class="cta-feature">
@@ -712,5 +181,5 @@
         </div>
       </section>
     </main>
-
+</section>
 <script src="~/assets/js/dich-vu.js"></script>

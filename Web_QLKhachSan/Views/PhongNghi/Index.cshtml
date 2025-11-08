@@ -93,182 +93,81 @@
             </div>
 
             <div class="room-listing-grid">
-                <div class="room-item">
-                    <div class="room-item-image">
-                        <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=870&q=80"
-                             alt="Deluxe Ocean View" />
-                        <div class="tag">View Biển</div>
-                    </div>
-                    <div class="room-item-content">
-                        <h3>Deluxe Ocean View</h3>
-                        <p class="price">$150 <span>/ đêm</span></p>
-                        <p class="description">
-                            Căn phòng rộng 35m² với ban công riêng nhìn thẳng ra đại dương xanh biếc. 
-                            Thiết kế hiện đại với đầy đủ tiện nghi cao cấp.
-                        </p>
-                        <div class="amenities-icons">
-                            <i class="fas fa-wifi" title="Wifi miễn phí"></i>
-                            <i class="fas fa-bath" title="Bồn tắm"></i>
-                            <i class="fas fa-tv" title="TV màn hình phẳng"></i>
-                            <i class="fas fa-snowflake" title="Điều hòa"></i>
-                            <i class="fas fa-coffee" title="Minibar"></i>
-                        </div>
-                        <div class="room-actions">
-                            <a href="@Url.Action("Index", "ChiTietPhong")" class="cta-button">Xem Chi Tiết</a>
-                            <div class="booking-btn-wrapper">
-                                <a href="@Url.Action("Index", "ThongTin")" class="btn-booking"></a>
-                                <span class="tooltip">Đặt Phòng Ngay</span>
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var phong in Model)
+                    {
+                        <div class="room-item">
+                            <div class="room-item-image">
+                                @if (!string.IsNullOrEmpty(phong.HinhAnhThumb))
+                                {
+                                    <img src="@phong.HinhAnhThumb" alt="@phong.TenPhong" />
+                                }
+                                else if (phong.PhongAnhs != null && phong.PhongAnhs.Any())
+                                {
+                                    <img src="@phong.PhongAnhs.FirstOrDefault().Url" alt="@phong.TenPhong" />
+                                }
+                                else
+                                {
+                                    <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=870&q=80" alt="@phong.TenPhong" />
+                                }
+                                <div class="tag">@phong.LoaiPhong.TenLoai</div>
+                            </div>
+                            <div class="room-item-content">
+                                <h3>@phong.TenPhong</h3>
+                                <p class="price">$@((phong.Gia ?? phong.LoaiPhong.GiaCoBan ?? 0).ToString("0")) <span>/ đêm</span></p>
+                                <p class="description">
+                                    @(phong.LoaiPhong.MoTa ?? "Phòng nghỉ thoải mái với đầy đủ tiện nghi hiện đại.")
+                                    @if (phong.LoaiPhong.DienTich.HasValue)
+                                    {
+                                        <span>Diện tích: @phong.LoaiPhong.DienTich m².</span>
+                                    }
+                                    @if (phong.LoaiPhong.SoNguoiToiDa.HasValue)
+                                    {
+                                        <span>Tối đa @phong.LoaiPhong.SoNguoiToiDa người.</span>
+                                    }
+                                </p>
+                                <div class="amenities-icons">
+                                    @if (phong.LoaiPhong.TienIches != null && phong.LoaiPhong.TienIches.Any())
+                                    {
+                                        foreach (var tienIch in phong.LoaiPhong.TienIches.Take(5))
+                                        {
+                                            if (!string.IsNullOrEmpty(tienIch.Icon))
+                                            {
+                                                <i class="@tienIch.Icon" title="@tienIch.TenTienIch"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="fas fa-check" title="@tienIch.TenTienIch"></i>
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <i class="fas fa-wifi" title="Wifi miễn phí"></i>
+                                        <i class="fas fa-bath" title="Bồn tắm"></i>
+                                        <i class="fas fa-tv" title="TV màn hình phẳng"></i>
+                                        <i class="fas fa-snowflake" title="Điều hòa"></i>
+                                        <i class="fas fa-coffee" title="Minibar"></i>
+                                    }
+                                </div>
+                                <div class="room-actions">
+                                    <a href="@Url.Action("Index", "ChiTietPhong", new { id = phong.PhongId })" class="cta-button">Xem Chi Tiết</a>
+                                    <div class="booking-btn-wrapper">
+                                        <a href="@Url.Action("Index", "ThongTin", new { phongId = phong.PhongId })" class="btn-booking"></a>
+                                        <span class="tooltip">Đặt Phòng Ngay</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                    }
+                }
+                else
+                {
+                    <div class="no-rooms-message">
+                        <p>Hiện tại không có phòng nào khả dụng. Vui lòng quay lại sau.</p>
                     </div>
-                </div>
-                <div class="room-item">
-                    <div class="room-item-image">
-                        <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=870&q=80"
-                             alt="Executive Suite" />
-                        <div class="tag">Sang trọng</div>
-                    </div>
-                    <div class="room-item-content">
-                        <h3>Executive Suite</h3>
-                        <p class="price">$250 <span>/ đêm</span></p>
-                        <p class="description">
-                            Không gian 60m² sang trọng với phòng khách riêng biệt và tầm
-                            nhìn toàn cảnh.
-                        </p>
-                        <div class="amenities-icons">
-                            <i class="fas fa-wifi" title="Wifi miễn phí"></i>
-                            <i class="fas fa-couch" title="Phòng khách"></i>
-                            <i class="fas fa-mug-saucer" title="Quầy bar mini"></i>
-                            <i class="fas fa-bath" title="Bồn tắm"></i>
-                        </div>
-                        <div class="room-actions">
-                            <a href="@Url.Action("Index", "ChiTietPhong")" class="cta-button">Xem Chi Tiết</a>
-                            <div class="booking-btn-wrapper">
-                                <a href="@Url.Action("Index", "ThongTin")" class="btn-booking"></a>
-                                <span class="tooltip">Đặt Phòng</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="room-item">
-                    <div class="room-item-image">
-                        <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=870&q=80"
-                             alt="Executive Suite" />
-                        <div class="tag">Sang trọng</div>
-                    </div>
-                    <div class="room-item-content">
-                        <h3>Executive Suite</h3>
-                        <p class="price">$250 <span>/ đêm</span></p>
-                        <p class="description">
-                            Không gian 60m² sang trọng với phòng khách riêng biệt và tầm
-                            nhìn toàn cảnh.
-                        </p>
-                        <div class="amenities-icons">
-                            <i class="fas fa-wifi" title="Wifi miễn phí"></i>
-                            <i class="fas fa-couch" title="Phòng khách"></i>
-                            <i class="fas fa-mug-saucer" title="Quầy bar mini"></i>
-                            <i class="fas fa-bath" title="Bồn tắm"></i>
-                        </div>
-                        <div class="room-actions">
-                            <a href="@Url.Action("Index", "ChiTietPhong")" class="cta-button">Xem Chi Tiết</a>
-                            <div class="booking-btn-wrapper">
-                                <a href="@Url.Action("Index", "ThongTin")" class="btn-booking"></a>
-                                <span class="tooltip">Đặt Phòng</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="room-item">
-                    <div class="room-item-image">
-                        <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=870&q=80"
-                             alt="Executive Suite" />
-                        <div class="tag">Sang trọng</div>
-                    </div>
-                    <div class="room-item-content">
-                        <h3>Executive Suite</h3>
-                        <p class="price">$250 <span>/ đêm</span></p>
-                        <p class="description">
-                            Không gian 60m² sang trọng với phòng khách riêng biệt và tầm
-                            nhìn toàn cảnh.
-                        </p>
-                        <div class="amenities-icons">
-                            <i class="fas fa-wifi" title="Wifi miễn phí"></i>
-                            <i class="fas fa-couch" title="Phòng khách"></i>
-                            <i class="fas fa-mug-saucer" title="Quầy bar mini"></i>
-                            <i class="fas fa-bath" title="Bồn tắm"></i>
-                        </div>
-                        <div class="room-actions">
-                            <a href="@Url.Action("Index", "ChiTietPhong")" class="cta-button">Xem Chi Tiết</a>
-                            <div class="booking-btn-wrapper">
-                                <a href="@Url.Action("Index", "ThongTin")" class="btn-booking"></a>
-                                <span class="tooltip">Đặt Phòng</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Room Item 3 -->
-                <div class="room-item">
-                    <div class="room-item-image">
-                        <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=870&q=80"
-                             alt="Premium Bungalow" />
-                        <div class="tag">Độc đáo</div>
-                    </div>
-                    <div class="room-item-content">
-                        <h3>Premium Bungalow</h3>
-                        <p class="price">$320 <span>/ đêm</span></p>
-                        <p class="description">
-                            Villa riêng biệt 80m² với bể bơi riêng và khu vườn nhiệt đới. 
-                            Trải nghiệm nghỉ dưỡng hoàn toàn tách biệt khỏi thế giới bên ngoài.
-                        </p>
-                        <div class="amenities-icons">
-                            <i class="fas fa-swimming-pool" title="Bể bơi riêng"></i>
-                            <i class="fas fa-leaf" title="Vườn riêng"></i>
-                            <i class="fas fa-hot-tub" title="Jacuzzi"></i>
-                            <i class="fas fa-utensils" title="Bếp riêng"></i>
-                            <i class="fas fa-spa" title="Spa tại phòng"></i>
-                        </div>
-                        <div class="room-actions">
-                            <a href="@Url.Action("Index", "ChiTietPhong")" class="cta-button">Xem Chi Tiết</a>
-                            <div class="booking-btn-wrapper">
-                                <a href="@Url.Action("Index", "ThongTin")" class="btn-booking"></a>
-                                <span class="tooltip">Đặt Phòng Ngay</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Room Item 4 -->
-                <div class="room-item">
-                    <div class="room-item-image">
-                        <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=870&q=80"
-                             alt="Family Suite" />
-                        <div class="tag">Gia đình</div>
-                    </div>
-                    <div class="room-item-content">
-                        <h3>Family Suite</h3>
-                        <p class="price">$180 <span>/ đêm</span></p>
-                        <p class="description">
-                            Phòng gia đình rộng 45m² với 2 phòng ngủ riêng biệt và khu vực sinh hoạt chung. 
-                            Thiết kế ấm cúng và an toàn cho trẻ em.
-                        </p>
-                        <div class="amenities-icons">
-                            <i class="fas fa-baby" title="Thân thiện với trẻ em"></i>
-                            <i class="fas fa-bed" title="2 phòng ngủ"></i>
-                            <i class="fas fa-gamepad" title="Khu vui chơi"></i>
-                            <i class="fas fa-kitchen-set" title="Bếp nhỏ"></i>
-                            <i class="fas fa-shield-alt" title="An toàn tuyệt đối"></i>
-                        </div>
-                        <div class="room-actions">
-                            <a href="@Url.Action("Index", "ChiTietPhong")" class="cta-button">Xem Chi Tiết</a>
-                            <div class="booking-btn-wrapper">
-                                <a href="@Url.Action("Index", "ThongTin")" class="btn-booking"></a>
-                                <span class="tooltip">Đặt Phòng Ngay</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                }
             </div>
 
             <div class="pagination">

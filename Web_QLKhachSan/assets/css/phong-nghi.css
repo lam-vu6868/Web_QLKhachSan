@@ -507,7 +507,6 @@
     color: var(--gold);
     transition: all 0.3s ease;
     cursor: pointer;
-    padding: 8px;
     border-radius: 50%;
 }
 
