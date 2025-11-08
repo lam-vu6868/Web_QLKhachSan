@@ -85,13 +85,6 @@
           <Property Name="NgayCapNhat" Type="datetime2" Precision="7" />
           <Property Name="LoaiDichVuId" Type="int" />
         </EntityType>
-        <EntityType Name="DMKHOA">
-          <Key>
-            <PropertyRef Name="MAKHOA" />
-          </Key>
-          <Property Name="MAKHOA" Type="char" MaxLength="2" Nullable="false" />
-          <Property Name="TENKHOA" Type="nvarchar" MaxLength="20" />
-        </EntityType>
         <EntityType Name="GiaTheoNgay">
           <Key>
             <PropertyRef Name="GiaTheoNgayId" />
@@ -194,11 +187,30 @@
           <Property Name="LoaiPhongId" Type="int" Nullable="false" />
           <Property Name="TienIchId" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="LoaiPhongTienNghi">
+          <Key>
+            <PropertyRef Name="LoaiPhongId" />
+            <PropertyRef Name="TienNghiId" />
+          </Key>
+          <Property Name="LoaiPhongId" Type="int" Nullable="false" />
+          <Property Name="TienNghiId" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="LoaiTienIch">
           <Key>
             <PropertyRef Name="LoaiTienIchId" />
           </Key>
           <Property Name="LoaiTienIchId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MaLoai" Type="nvarchar" MaxLength="50" />
+          <Property Name="TenLoai" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="MoTa" Type="nvarchar(max)" />
+          <Property Name="NgayTao" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="NgayCapNhat" Type="datetime2" Precision="7" />
+        </EntityType>
+        <EntityType Name="LoaiTienNghi">
+          <Key>
+            <PropertyRef Name="LoaiTienNghiId" />
+          </Key>
+          <Property Name="LoaiTienNghiId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="MaLoai" Type="nvarchar" MaxLength="50" />
           <Property Name="TenLoai" Type="nvarchar" MaxLength="200" Nullable="false" />
           <Property Name="MoTa" Type="nvarchar(max)" />
@@ -217,6 +229,11 @@
           <Property Name="MatKhau" Type="nvarchar" MaxLength="255" />
           <Property Name="NgayTao" Type="datetime2" Precision="7" Nullable="false" />
           <Property Name="NgayCapNhat" Type="datetime2" Precision="7" />
+          <Property Name="VaiTro" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="TrangThaiLamViec" Type="int" Nullable="false" />
+          <Property Name="HinhAnh" Type="nvarchar" MaxLength="300" />
+          <Property Name="DiaChi" Type="nvarchar" MaxLength="250" />
+          <Property Name="DaHoatDong" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Phong">
           <Key>
@@ -287,6 +304,18 @@
           <Property Name="NgayTao" Type="datetime2" Precision="7" Nullable="false" />
           <Property Name="NgayCapNhat" Type="datetime2" Precision="7" />
         </EntityType>
+        <EntityType Name="TienNghi">
+          <Key>
+            <PropertyRef Name="TienNghiId" />
+          </Key>
+          <Property Name="TienNghiId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TenTienNghi" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="MoTa" Type="nvarchar(max)" />
+          <Property Name="Icon" Type="nvarchar" MaxLength="50" />
+          <Property Name="LoaiTienNghiId" Type="int" />
+          <Property Name="NgayTao" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="NgayCapNhat" Type="datetime2" Precision="7" />
+        </EntityType>
         <EntityType Name="TokenLogin">
           <Key>
             <PropertyRef Name="TokenId" />
@@ -297,7 +326,7 @@
           <Property Name="NgayHetHan" Type="datetime" Nullable="false" />
           <Property Name="token" Type="varchar" MaxLength="255" />
         </EntityType>
-        <Association Name="FK__LoaiPhong__LoaiP__2CF2ADDF">
+        <Association Name="FK__LoaiPhong__LoaiP__22751F6C">
           <End Role="LoaiPhong" Type="Self.LoaiPhong" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -311,7 +340,21 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__LoaiPhong__TienI__2DE6D218">
+        <Association Name="FK__LoaiPhong__LoaiP__245D67DE">
+          <End Role="LoaiPhong" Type="Self.LoaiPhong" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="LoaiPhongTienNghi" Type="Self.LoaiPhongTienNghi" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LoaiPhong">
+              <PropertyRef Name="LoaiPhongId" />
+            </Principal>
+            <Dependent Role="LoaiPhongTienNghi">
+              <PropertyRef Name="LoaiPhongId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__LoaiPhong__TienI__236943A5">
           <End Role="TienIch" Type="Self.TienIch" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -325,7 +368,21 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__TienIch__LoaiTie__32AB8735">
+        <Association Name="FK__LoaiPhong__TienN__25518C17">
+          <End Role="TienNghi" Type="Self.TienNghi" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="LoaiPhongTienNghi" Type="Self.LoaiPhongTienNghi" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TienNghi">
+              <PropertyRef Name="TienNghiId" />
+            </Principal>
+            <Dependent Role="LoaiPhongTienNghi">
+              <PropertyRef Name="TienNghiId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__TienIch__LoaiTie__2A164134">
           <End Role="LoaiTienIch" Type="Self.LoaiTienIch" Multiplicity="0..1" />
           <End Role="TienIch" Type="Self.TienIch" Multiplicity="*" />
           <ReferentialConstraint>
@@ -334,6 +391,18 @@
             </Principal>
             <Dependent Role="TienIch">
               <PropertyRef Name="LoaiTienIchId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__TienNghi__LoaiTi__2B0A656D">
+          <End Role="LoaiTienNghi" Type="Self.LoaiTienNghi" Multiplicity="0..1" />
+          <End Role="TienNghi" Type="Self.TienNghi" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LoaiTienNghi">
+              <PropertyRef Name="LoaiTienNghiId" />
+            </Principal>
+            <Dependent Role="TienNghi">
+              <PropertyRef Name="LoaiTienNghiId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -549,7 +618,6 @@
           <EntitySet Name="DanhGia" EntityType="Self.DanhGia" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DatPhong" EntityType="Self.DatPhong" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DichVu" EntityType="Self.DichVu" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="DMKHOA" EntityType="Self.DMKHOA" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="GiaTheoNgay" EntityType="Self.GiaTheoNgay" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="HoaDon" EntityType="Self.HoaDon" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="KhachHang" EntityType="Self.KhachHang" Schema="dbo" store:Type="Tables" />
@@ -557,25 +625,40 @@
           <EntitySet Name="LoaiDichVu" EntityType="Self.LoaiDichVu" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LoaiPhong" EntityType="Self.LoaiPhong" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LoaiPhongTienIch" EntityType="Self.LoaiPhongTienIch" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LoaiPhongTienNghi" EntityType="Self.LoaiPhongTienNghi" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LoaiTienIch" EntityType="Self.LoaiTienIch" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LoaiTienNghi" EntityType="Self.LoaiTienNghi" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="NhanVien" EntityType="Self.NhanVien" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Phong" EntityType="Self.Phong" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PhongAnh" EntityType="Self.PhongAnh" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TaiKhoan" EntityType="Self.TaiKhoan" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ThanhToan" EntityType="Self.ThanhToan" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TienIch" EntityType="Self.TienIch" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TienNghi" EntityType="Self.TienNghi" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TokenLogin" EntityType="Self.TokenLogin" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK__LoaiPhong__LoaiP__2CF2ADDF" Association="Self.FK__LoaiPhong__LoaiP__2CF2ADDF">
+          <AssociationSet Name="FK__LoaiPhong__LoaiP__22751F6C" Association="Self.FK__LoaiPhong__LoaiP__22751F6C">
             <End Role="LoaiPhong" EntitySet="LoaiPhong" />
             <End Role="LoaiPhongTienIch" EntitySet="LoaiPhongTienIch" />
           </AssociationSet>
-          <AssociationSet Name="FK__LoaiPhong__TienI__2DE6D218" Association="Self.FK__LoaiPhong__TienI__2DE6D218">
+          <AssociationSet Name="FK__LoaiPhong__LoaiP__245D67DE" Association="Self.FK__LoaiPhong__LoaiP__245D67DE">
+            <End Role="LoaiPhong" EntitySet="LoaiPhong" />
+            <End Role="LoaiPhongTienNghi" EntitySet="LoaiPhongTienNghi" />
+          </AssociationSet>
+          <AssociationSet Name="FK__LoaiPhong__TienI__236943A5" Association="Self.FK__LoaiPhong__TienI__236943A5">
             <End Role="TienIch" EntitySet="TienIch" />
             <End Role="LoaiPhongTienIch" EntitySet="LoaiPhongTienIch" />
           </AssociationSet>
-          <AssociationSet Name="FK__TienIch__LoaiTie__32AB8735" Association="Self.FK__TienIch__LoaiTie__32AB8735">
+          <AssociationSet Name="FK__LoaiPhong__TienN__25518C17" Association="Self.FK__LoaiPhong__TienN__25518C17">
+            <End Role="TienNghi" EntitySet="TienNghi" />
+            <End Role="LoaiPhongTienNghi" EntitySet="LoaiPhongTienNghi" />
+          </AssociationSet>
+          <AssociationSet Name="FK__TienIch__LoaiTie__2A164134" Association="Self.FK__TienIch__LoaiTie__2A164134">
             <End Role="LoaiTienIch" EntitySet="LoaiTienIch" />
             <End Role="TienIch" EntitySet="TienIch" />
+          </AssociationSet>
+          <AssociationSet Name="FK__TienNghi__LoaiTi__2B0A656D" Association="Self.FK__TienNghi__LoaiTi__2B0A656D">
+            <End Role="LoaiTienNghi" EntitySet="LoaiTienNghi" />
+            <End Role="TienNghi" EntitySet="TienNghi" />
           </AssociationSet>
           <AssociationSet Name="FK_ChiTietDatDichVu_DatPhong" Association="Self.FK_ChiTietDatDichVu_DatPhong">
             <End Role="DatPhong" EntitySet="DatPhong" />
@@ -656,7 +739,6 @@
           <EntitySet Name="DanhGias" EntityType="DB_QLKhachSanModel.DanhGia" />
           <EntitySet Name="DatPhongs" EntityType="DB_QLKhachSanModel.DatPhong" />
           <EntitySet Name="DichVus" EntityType="DB_QLKhachSanModel.DichVu" />
-          <EntitySet Name="DMKHOAs" EntityType="DB_QLKhachSanModel.DMKHOA" />
           <EntitySet Name="GiaTheoNgays" EntityType="DB_QLKhachSanModel.GiaTheoNgay" />
           <EntitySet Name="HoaDons" EntityType="DB_QLKhachSanModel.HoaDon" />
           <EntitySet Name="KhachHangs" EntityType="DB_QLKhachSanModel.KhachHang" />
@@ -664,12 +746,14 @@
           <EntitySet Name="LoaiDichVus" EntityType="DB_QLKhachSanModel.LoaiDichVu" />
           <EntitySet Name="LoaiPhongs" EntityType="DB_QLKhachSanModel.LoaiPhong" />
           <EntitySet Name="LoaiTienIches" EntityType="DB_QLKhachSanModel.LoaiTienIch" />
+          <EntitySet Name="LoaiTienNghis" EntityType="DB_QLKhachSanModel.LoaiTienNghi" />
           <EntitySet Name="NhanViens" EntityType="DB_QLKhachSanModel.NhanVien" />
           <EntitySet Name="Phongs" EntityType="DB_QLKhachSanModel.Phong" />
           <EntitySet Name="PhongAnhs" EntityType="DB_QLKhachSanModel.PhongAnh" />
           <EntitySet Name="TaiKhoans" EntityType="DB_QLKhachSanModel.TaiKhoan" />
           <EntitySet Name="ThanhToans" EntityType="DB_QLKhachSanModel.ThanhToan" />
           <EntitySet Name="TienIches" EntityType="DB_QLKhachSanModel.TienIch" />
+          <EntitySet Name="TienNghis" EntityType="DB_QLKhachSanModel.TienNghi" />
           <EntitySet Name="TokenLogins" EntityType="DB_QLKhachSanModel.TokenLogin" />
           <AssociationSet Name="FK_ChiTietDatDichVu_DatPhong" Association="DB_QLKhachSanModel.FK_ChiTietDatDichVu_DatPhong">
             <End Role="DatPhong" EntitySet="DatPhongs" />
@@ -731,9 +815,13 @@
             <End Role="LoaiPhong" EntitySet="LoaiPhongs" />
             <End Role="Phong" EntitySet="Phongs" />
           </AssociationSet>
-          <AssociationSet Name="FK__TienIch__LoaiTie__32AB8735" Association="DB_QLKhachSanModel.FK__TienIch__LoaiTie__32AB8735">
+          <AssociationSet Name="FK__TienIch__LoaiTie__2A164134" Association="DB_QLKhachSanModel.FK__TienIch__LoaiTie__2A164134">
             <End Role="LoaiTienIch" EntitySet="LoaiTienIches" />
             <End Role="TienIch" EntitySet="TienIches" />
+          </AssociationSet>
+          <AssociationSet Name="FK__TienNghi__LoaiTi__2B0A656D" Association="DB_QLKhachSanModel.FK__TienNghi__LoaiTi__2B0A656D">
+            <End Role="LoaiTienNghi" EntitySet="LoaiTienNghis" />
+            <End Role="TienNghi" EntitySet="TienNghis" />
           </AssociationSet>
           <AssociationSet Name="FK_PhongAnh_Phong" Association="DB_QLKhachSanModel.FK_PhongAnh_Phong">
             <End Role="Phong" EntitySet="Phongs" />
@@ -746,6 +834,10 @@
           <AssociationSet Name="LoaiPhongTienIch" Association="DB_QLKhachSanModel.LoaiPhongTienIch">
             <End Role="LoaiPhong" EntitySet="LoaiPhongs" />
             <End Role="TienIch" EntitySet="TienIches" />
+          </AssociationSet>
+          <AssociationSet Name="LoaiPhongTienNghi" Association="DB_QLKhachSanModel.LoaiPhongTienNghi">
+            <End Role="LoaiPhong" EntitySet="LoaiPhongs" />
+            <End Role="TienNghi" EntitySet="TienNghis" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="ChiTietDatDichVu">
@@ -840,13 +932,6 @@
           <Property Name="LoaiDichVuId" Type="Int32" />
           <NavigationProperty Name="ChiTietDatDichVus" Relationship="DB_QLKhachSanModel.FK_ChiTietDatDichVu_DichVu" FromRole="DichVu" ToRole="ChiTietDatDichVu" />
           <NavigationProperty Name="LoaiDichVu" Relationship="DB_QLKhachSanModel.FK_DichVu_LoaiDichVu" FromRole="DichVu" ToRole="LoaiDichVu" />
-        </EntityType>
-        <EntityType Name="DMKHOA">
-          <Key>
-            <PropertyRef Name="MAKHOA" />
-          </Key>
-          <Property Name="MAKHOA" Type="String" Nullable="false" MaxLength="2" FixedLength="true" Unicode="false" />
-          <Property Name="TENKHOA" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="GiaTheoNgay">
           <Key>
@@ -953,6 +1038,7 @@
           <NavigationProperty Name="ChiTietDatPhongs" Relationship="DB_QLKhachSanModel.FK_ChiTietDatPhong_LoaiPhong" FromRole="LoaiPhong" ToRole="ChiTietDatPhong" />
           <NavigationProperty Name="Phongs" Relationship="DB_QLKhachSanModel.FK_Phong_LoaiPhong" FromRole="LoaiPhong" ToRole="Phong" />
           <NavigationProperty Name="TienIches" Relationship="DB_QLKhachSanModel.LoaiPhongTienIch" FromRole="LoaiPhong" ToRole="TienIch" />
+          <NavigationProperty Name="TienNghis" Relationship="DB_QLKhachSanModel.LoaiPhongTienNghi" FromRole="LoaiPhong" ToRole="TienNghi" />
         </EntityType>
         <EntityType Name="LoaiTienIch">
           <Key>
@@ -964,7 +1050,19 @@
           <Property Name="MoTa" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="NgayTao" Type="DateTime" Nullable="false" Precision="7" />
           <Property Name="NgayCapNhat" Type="DateTime" Precision="7" />
-          <NavigationProperty Name="TienIches" Relationship="DB_QLKhachSanModel.FK__TienIch__LoaiTie__32AB8735" FromRole="LoaiTienIch" ToRole="TienIch" />
+          <NavigationProperty Name="TienIches" Relationship="DB_QLKhachSanModel.FK__TienIch__LoaiTie__2A164134" FromRole="LoaiTienIch" ToRole="TienIch" />
+        </EntityType>
+        <EntityType Name="LoaiTienNghi">
+          <Key>
+            <PropertyRef Name="LoaiTienNghiId" />
+          </Key>
+          <Property Name="LoaiTienNghiId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MaLoai" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TenLoai" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="MoTa" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="NgayTao" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="NgayCapNhat" Type="DateTime" Precision="7" />
+          <NavigationProperty Name="TienNghis" Relationship="DB_QLKhachSanModel.FK__TienNghi__LoaiTi__2B0A656D" FromRole="LoaiTienNghi" ToRole="TienNghi" />
         </EntityType>
         <EntityType Name="NhanVien">
           <Key>
@@ -978,6 +1076,11 @@
           <Property Name="MatKhau" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="NgayTao" Type="DateTime" Nullable="false" Precision="7" />
           <Property Name="NgayCapNhat" Type="DateTime" Precision="7" />
+          <Property Name="VaiTro" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TrangThaiLamViec" Type="Int32" Nullable="false" />
+          <Property Name="HinhAnh" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="DiaChi" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="DaHoatDong" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="Phong">
           <Key>
@@ -1056,8 +1159,22 @@
           <Property Name="LoaiTienIchId" Type="Int32" />
           <Property Name="NgayTao" Type="DateTime" Nullable="false" Precision="7" />
           <Property Name="NgayCapNhat" Type="DateTime" Precision="7" />
-          <NavigationProperty Name="LoaiTienIch" Relationship="DB_QLKhachSanModel.FK__TienIch__LoaiTie__32AB8735" FromRole="TienIch" ToRole="LoaiTienIch" />
+          <NavigationProperty Name="LoaiTienIch" Relationship="DB_QLKhachSanModel.FK__TienIch__LoaiTie__2A164134" FromRole="TienIch" ToRole="LoaiTienIch" />
           <NavigationProperty Name="LoaiPhongs" Relationship="DB_QLKhachSanModel.LoaiPhongTienIch" FromRole="TienIch" ToRole="LoaiPhong" />
+        </EntityType>
+        <EntityType Name="TienNghi">
+          <Key>
+            <PropertyRef Name="TienNghiId" />
+          </Key>
+          <Property Name="TienNghiId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TenTienNghi" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="MoTa" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Icon" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LoaiTienNghiId" Type="Int32" />
+          <Property Name="NgayTao" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="NgayCapNhat" Type="DateTime" Precision="7" />
+          <NavigationProperty Name="LoaiTienNghi" Relationship="DB_QLKhachSanModel.FK__TienNghi__LoaiTi__2B0A656D" FromRole="TienNghi" ToRole="LoaiTienNghi" />
+          <NavigationProperty Name="LoaiPhongs" Relationship="DB_QLKhachSanModel.LoaiPhongTienNghi" FromRole="TienNghi" ToRole="LoaiPhong" />
         </EntityType>
         <EntityType Name="TokenLogin">
           <Key>
@@ -1250,7 +1367,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__TienIch__LoaiTie__32AB8735">
+        <Association Name="FK__TienIch__LoaiTie__2A164134">
           <End Type="DB_QLKhachSanModel.LoaiTienIch" Role="LoaiTienIch" Multiplicity="0..1" />
           <End Type="DB_QLKhachSanModel.TienIch" Role="TienIch" Multiplicity="*" />
           <ReferentialConstraint>
@@ -1259,6 +1376,18 @@
             </Principal>
             <Dependent Role="TienIch">
               <PropertyRef Name="LoaiTienIchId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__TienNghi__LoaiTi__2B0A656D">
+          <End Type="DB_QLKhachSanModel.LoaiTienNghi" Role="LoaiTienNghi" Multiplicity="0..1" />
+          <End Type="DB_QLKhachSanModel.TienNghi" Role="TienNghi" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LoaiTienNghi">
+              <PropertyRef Name="LoaiTienNghiId" />
+            </Principal>
+            <Dependent Role="TienNghi">
+              <PropertyRef Name="LoaiTienNghiId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1292,7 +1421,11 @@
           <End Type="DB_QLKhachSanModel.LoaiPhong" Role="LoaiPhong" Multiplicity="*" />
           <End Type="DB_QLKhachSanModel.TienIch" Role="TienIch" Multiplicity="*" />
         </Association>
-      </Schema>
+        <Association Name="LoaiPhongTienNghi">
+          <End Type="DB_QLKhachSanModel.LoaiPhong" Role="LoaiPhong" Multiplicity="*" />
+          <End Type="DB_QLKhachSanModel.TienNghi" Role="TienNghi" Multiplicity="*" />
+        </Association>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -1380,14 +1513,6 @@
                 <ScalarProperty Name="TenDichVu" ColumnName="TenDichVu" />
                 <ScalarProperty Name="MaDichVu" ColumnName="MaDichVu" />
                 <ScalarProperty Name="DichVuId" ColumnName="DichVuId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="DMKHOAs">
-            <EntityTypeMapping TypeName="DB_QLKhachSanModel.DMKHOA">
-              <MappingFragment StoreEntitySet="DMKHOA">
-                <ScalarProperty Name="TENKHOA" ColumnName="TENKHOA" />
-                <ScalarProperty Name="MAKHOA" ColumnName="MAKHOA" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1503,9 +1628,26 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="LoaiTienNghis">
+            <EntityTypeMapping TypeName="DB_QLKhachSanModel.LoaiTienNghi">
+              <MappingFragment StoreEntitySet="LoaiTienNghi">
+                <ScalarProperty Name="NgayCapNhat" ColumnName="NgayCapNhat" />
+                <ScalarProperty Name="NgayTao" ColumnName="NgayTao" />
+                <ScalarProperty Name="MoTa" ColumnName="MoTa" />
+                <ScalarProperty Name="TenLoai" ColumnName="TenLoai" />
+                <ScalarProperty Name="MaLoai" ColumnName="MaLoai" />
+                <ScalarProperty Name="LoaiTienNghiId" ColumnName="LoaiTienNghiId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="NhanViens">
             <EntityTypeMapping TypeName="DB_QLKhachSanModel.NhanVien">
               <MappingFragment StoreEntitySet="NhanVien">
+                <ScalarProperty Name="DaHoatDong" ColumnName="DaHoatDong" />
+                <ScalarProperty Name="DiaChi" ColumnName="DiaChi" />
+                <ScalarProperty Name="HinhAnh" ColumnName="HinhAnh" />
+                <ScalarProperty Name="TrangThaiLamViec" ColumnName="TrangThaiLamViec" />
+                <ScalarProperty Name="VaiTro" ColumnName="VaiTro" />
                 <ScalarProperty Name="NgayCapNhat" ColumnName="NgayCapNhat" />
                 <ScalarProperty Name="NgayTao" ColumnName="NgayTao" />
                 <ScalarProperty Name="MatKhau" ColumnName="MatKhau" />
@@ -1591,6 +1733,19 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="TienNghis">
+            <EntityTypeMapping TypeName="DB_QLKhachSanModel.TienNghi">
+              <MappingFragment StoreEntitySet="TienNghi">
+                <ScalarProperty Name="NgayCapNhat" ColumnName="NgayCapNhat" />
+                <ScalarProperty Name="NgayTao" ColumnName="NgayTao" />
+                <ScalarProperty Name="LoaiTienNghiId" ColumnName="LoaiTienNghiId" />
+                <ScalarProperty Name="Icon" ColumnName="Icon" />
+                <ScalarProperty Name="MoTa" ColumnName="MoTa" />
+                <ScalarProperty Name="TenTienNghi" ColumnName="TenTienNghi" />
+                <ScalarProperty Name="TienNghiId" ColumnName="TienNghiId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="TokenLogins">
             <EntityTypeMapping TypeName="DB_QLKhachSanModel.TokenLogin">
               <MappingFragment StoreEntitySet="TokenLogin">
@@ -1605,6 +1760,14 @@
           <AssociationSetMapping Name="LoaiPhongTienIch" TypeName="DB_QLKhachSanModel.LoaiPhongTienIch" StoreEntitySet="LoaiPhongTienIch">
             <EndProperty Name="TienIch">
               <ScalarProperty Name="TienIchId" ColumnName="TienIchId" />
+            </EndProperty>
+            <EndProperty Name="LoaiPhong">
+              <ScalarProperty Name="LoaiPhongId" ColumnName="LoaiPhongId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="LoaiPhongTienNghi" TypeName="DB_QLKhachSanModel.LoaiPhongTienNghi" StoreEntitySet="LoaiPhongTienNghi">
+            <EndProperty Name="TienNghi">
+              <ScalarProperty Name="TienNghiId" ColumnName="TienNghiId" />
             </EndProperty>
             <EndProperty Name="LoaiPhong">
               <ScalarProperty Name="LoaiPhongId" ColumnName="LoaiPhongId" />

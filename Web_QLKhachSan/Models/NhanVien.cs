@@ -22,5 +22,10 @@ namespace Web_QLKhachSan.Models
         public string MatKhau { get; set; }
         public System.DateTime NgayTao { get; set; }
         public Nullable<System.DateTime> NgayCapNhat { get; set; }
+        public string VaiTro { get; set; }
+        public int TrangThaiLamViec { get; set; }
+        public string HinhAnh { get; set; }
+        public string DiaChi { get; set; }
+        public bool DaHoatDong { get; set; }
     }
 }

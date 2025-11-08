@@ -168,11 +168,14 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
-    <Compile Include="Areas\NhanVien\NhanVienAreaRegistration.cs" />
+    <Compile Include="Areas\NhanVienBuongPhong\NhanVienBuongPhongAreaRegistration.cs" />
+    <Compile Include="Areas\NhanVienLeTan\Controllers\DashboardNVLeTanController.cs" />
+    <Compile Include="Areas\NhanVienLeTan\NhanVienAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\BaoCaoTaiChinhController.cs" />
     <Compile Include="Areas\Admin\Controllers\BaoCaoThongKeController.cs" />
     <Compile Include="Areas\Admin\Controllers\DashboardAdminController.cs" />
     <Compile Include="Areas\Admin\Controllers\QuanLyNhanVienController.cs" />
+    <Compile Include="Areas\NhanVienLeTan\NhanVienLeTanAreaRegistration.cs" />
     <Compile Include="Controllers\CapDoKhachHangController.cs" />
     <Compile Include="Controllers\ChinhSachVaDieuKhoanController.cs" />
     <Compile Include="Controllers\ChiTietPhongController.cs" />
@@ -183,13 +186,6 @@
     <Compile Include="Controllers\GioiThieuController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\HoTroKhachHangController.cs" />
-    <Compile Include="Areas\NhanVien\Controllers\BaoCaoCaLamController.cs" />
-    <Compile Include="Areas\NhanVien\Controllers\DashboardNhanVienController.cs" />
-    <Compile Include="Areas\NhanVien\Controllers\QuanLyDatPhongController.cs" />
-    <Compile Include="Areas\NhanVien\Controllers\QuanLyDichVuController.cs" />
-    <Compile Include="Areas\NhanVien\Controllers\QuanLyKhachController.cs" />
-    <Compile Include="Areas\NhanVien\Controllers\QuanLyPhongController.cs" />
-    <Compile Include="Areas\NhanVien\Controllers\ThanhToanHoaDonController.cs" />
     <Compile Include="Controllers\IndexController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\PhongNghiController.cs" />
@@ -235,9 +231,6 @@
       <DependentUpon>Contect.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DichVuToken.cs" />
-    <Compile Include="Models\DMKHOA.cs">
-      <DependentUpon>Contect.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\GiaTheoNgay.cs">
       <DependentUpon>Contect.tt</DependentUpon>
     </Compile>
@@ -257,6 +250,9 @@
       <DependentUpon>Contect.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\LoaiTienIch.cs">
+      <DependentUpon>Contect.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\LoaiTienNghi.cs">
       <DependentUpon>Contect.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\MailKitEmailService.cs" />
@@ -279,6 +275,9 @@
     <Compile Include="Models\TienIch.cs">
       <DependentUpon>Contect.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\TienNghi.cs">
+      <DependentUpon>Contect.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\TokenLogin.cs">
       <DependentUpon>Contect.tt</DependentUpon>
     </Compile>
@@ -295,23 +294,6 @@
     <Content Include="Areas\Admin\assets\js\shared.js" />
     <Content Include="Areas\Admin\assets\js\quanly-nhanvien.js" />
     <Content Include="Areas\Admin\assets\js\quanly-taichinh.js" />
-    <Content Include="Areas\NhanVien\assets\css\baocao-calam.css" />
-    <Content Include="Areas\NhanVien\assets\css\dashboard.css" />
-    <Content Include="Areas\NhanVien\assets\css\quanly-datphong.css" />
-    <Content Include="Areas\NhanVien\assets\css\quanly-dichvu.css" />
-    <Content Include="Areas\NhanVien\assets\css\quanly-khach.css" />
-    <Content Include="Areas\NhanVien\assets\css\quanly-phong.css" />
-    <Content Include="Areas\NhanVien\assets\css\shared.css" />
-    <Content Include="Areas\NhanVien\assets\css\thanhtoan-hoadon.css" />
-    <Content Include="Areas\NhanVien\assets\js\baocao-calam.js" />
-    <Content Include="Areas\NhanVien\assets\js\dashboard.js" />
-    <Content Include="Areas\NhanVien\assets\js\quanly-datphong-clean.js" />
-    <Content Include="Areas\NhanVien\assets\js\quanly-datphong.js" />
-    <Content Include="Areas\NhanVien\assets\js\quanly-dichvu.js" />
-    <Content Include="Areas\NhanVien\assets\js\quanly-khach.js" />
-    <Content Include="Areas\NhanVien\assets\js\quanly-phong.js" />
-    <Content Include="Areas\NhanVien\assets\js\shared.js" />
-    <Content Include="Areas\NhanVien\assets\js\thanhtoan-hoadon.js" />
     <Content Include="assets\css\chi-tiet-phong.css" />
     <Content Include="assets\css\chinhsach-dieukhoan.css" />
     <Content Include="assets\css\dang-nhap.css" />
@@ -323,6 +305,8 @@
     <Content Include="assets\css\header-footer.css" />
     <Content Include="assets\css\ho-tro-khach-hang.css" />
     <Content Include="assets\css\index.css" />
+    <Content Include="assets\css\NhanVienLeTan\dashboard.css" />
+    <Content Include="assets\css\NhanVienLeTan\layout.css" />
     <Content Include="assets\css\phong-nghi.css" />
     <Content Include="assets\css\thongbao.css" />
     <Content Include="assets\css\thuvien-anh.css" />
@@ -346,6 +330,8 @@
     <Content Include="assets\js\ho-tro-khach-hang.js" />
     <Content Include="assets\js\index.js" />
     <Content Include="assets\js\load.js" />
+    <Content Include="assets\js\NhanVienLeTan\dashboard.js" />
+    <Content Include="assets\js\NhanVienLeTan\layout.js" />
     <Content Include="assets\js\phong-nghi.js" />
     <Content Include="assets\js\slideshow.js" />
     <Content Include="assets\js\thuvien-anh.js" />
@@ -387,18 +373,10 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="assets\imgs\banner.avif" />
     <Content Include="Areas\Admin\Views\web.config" />
-    <Content Include="Areas\NhanVien\Views\web.config" />
+    <Content Include="Areas\NhanVienLeTan\Views\web.config" />
     <Content Include="Areas\Admin\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_Layout.cshtml" />
-    <Content Include="Areas\NhanVien\Views\_ViewStart.cshtml" />
-    <Content Include="Areas\NhanVien\Views\Shared\_LayoutAdmin.cshtml" />
-    <Content Include="Areas\NhanVien\Views\DashboardNhanVien\Index.cshtml" />
-    <Content Include="Areas\NhanVien\Views\BaoCaoCaLam\Index.cshtml" />
-    <Content Include="Areas\NhanVien\Views\QuanLyDatPhong\Index.cshtml" />
-    <Content Include="Areas\NhanVien\Views\QuanLyDichVu\Index.cshtml" />
-    <Content Include="Areas\NhanVien\Views\QuanLyKhach\Index.cshtml" />
-    <Content Include="Areas\NhanVien\Views\QuanLyPhong\Index.cshtml" />
-    <Content Include="Areas\NhanVien\Views\ThanhToanHoaDon\Index.cshtml" />
+    <Content Include="Areas\NhanVienLeTan\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Admin\Views\BaoCaoTaiChinh\Index.cshtml" />
     <Content Include="Areas\Admin\Views\BaoCaoThongKe\Index.cshtml" />
     <Content Include="Areas\Admin\Views\DashboardAdmin\Index.cshtml" />
@@ -410,6 +388,9 @@
     <Content Include="Models\Contect.edmx.diagram">
       <DependentUpon>Contect.edmx</DependentUpon>
     </Content>
+    <Content Include="Areas\NhanVienBuongPhong\Views\web.config" />
+    <Content Include="Areas\NhanVienLeTan\Views\DashboardNVLeTan\Index.cshtml" />
+    <Content Include="Areas\NhanVienLeTan\Views\Shared\_LayoutLeTan.cshtml" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />
@@ -460,8 +441,12 @@
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Admin\assets\imgs\" />
     <Folder Include="Areas\Admin\Data\" />
-    <Folder Include="Areas\NhanVien\assets\imgs\" />
-    <Folder Include="Areas\NhanVien\Data\" />
+    <Folder Include="Areas\NhanVienBuongPhong\Controllers\" />
+    <Folder Include="Areas\NhanVienBuongPhong\Data\" />
+    <Folder Include="Areas\NhanVienBuongPhong\Views\Shared\" />
+    <Folder Include="Areas\NhanVienLeTan\Data\" />
+    <Folder Include="Areas\NhanVienLeTan\ViewModels\" />
+    <Folder Include="Areas\NhanVienLeTan\Views\SoDoPhong\" />
     <Folder Include="Views\CookieTest\" />
   </ItemGroup>
   <ItemGroup>
