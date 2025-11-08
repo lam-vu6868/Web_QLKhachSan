@@ -128,67 +128,6 @@
     padding: 25px;
 }
 
-/* ===== QUICK FILTERS ===== */
-.quick-filters {
-    margin-bottom: 25px;
-}
-
-.quick-filters h5 {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--deep-navy);
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.quick-filters h5::before {
-    content: '';
-    width: 4px;
-    height: 16px;
-    background: var(--gold);
-    border-radius: 2px;
-}
-
-.quick-filter-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-}
-
-.quick-filter-tag {
-    padding: 8px 16px;
-    background: var(--off-white);
-    border: 2px solid var(--border-light);
-    border-radius: 25px;
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: var(--text-secondary);
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-/* Remove the sweep effect that might cause corners */
-.quick-filter-tag::before {
-    display: none !important;
-}
-
-.quick-filter-tag:hover::before {
-    display: none !important;
-}
-
-.quick-filter-tag:hover,
-.quick-filter-tag.active {
-    background: var(--deep-navy);
-    color: var(--white);
-    border-color: var(--deep-navy);
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(10, 25, 49, 0.2);
-}
-
 /* ===== FILTER GROUPS ===== */
 .filter-groups-container {
     display: flex;
@@ -894,15 +833,6 @@
         font-size: 0.9rem;
     }
     
-    .quick-filter-tags {
-        gap: 6px;
-    }
-    
-    .quick-filter-tag {
-        padding: 6px 12px;
-        font-size: 0.85rem;
-    }
-    
     .listing-header {
         flex-direction: column;
         gap: 15px;
@@ -1032,11 +962,6 @@
         padding: 8px 10px;
         font-size: 0.85rem;
         gap: 8px;
-    }
-    
-    .quick-filter-tag {
-        padding: 5px 10px;
-        font-size: 0.8rem;
     }
     
     .filter-apply-btn {
@@ -1193,7 +1118,6 @@
 }
 
 /* Focus styles */
-.quick-filter-tag:focus,
 .checkbox-group input:focus,
 .filter-apply-btn:focus,
 .cta-button:focus,

@@ -62,6 +62,54 @@
             </div>
         </div>
 
+        <!-- Hero Search Bar -->
+        <div class="hero-search-container" data-aos="fade-up" data-aos-delay="600">
+            <div class="hero-search-box">
+                <div class="search-form-compact">
+                    <div class="search-fields-row">
+                        <div class="search-field-compact">
+                            <label><i class="fas fa-calendar-alt"></i> Check-in</label>
+                            <input type="date" id="checkin-date" class="search-input-compact">
+                        </div>
+                        
+                        <div class="search-field-compact">
+                            <label><i class="fas fa-calendar-check"></i> Check-out</label>
+                            <input type="date" id="checkout-date" class="search-input-compact">
+                        </div>
+                        
+                        <div class="search-field-compact">
+                            <label><i class="fas fa-users"></i> Khách</label>
+                            <select id="guest-count" class="search-input-compact">
+                                <option value="1">1 khách</option>
+                                <option value="2" selected>2 khách</option>
+                                <option value="3">3 khách</option>
+                                <option value="4">4 khách</option>
+                                <option value="5+">5+ khách</option>
+                            </select>
+                        </div>
+                        
+                        <div class="search-field-compact">
+                            <label><i class="fas fa-bed"></i> Loại phòng</label>
+                            <select id="room-type" class="search-input-compact">
+                                <option value="">Tất cả</option>
+                                <option value="deluxe">Deluxe</option>
+                                <option value="premium">Premium</option>
+                                <option value="executive">Executive</option>
+                                <option value="family">Family</option>
+                            </select>
+                        </div>
+                        
+                        <div class="search-action-compact">
+                            <button type="button" class="search-btn-compact" id="search-rooms">
+                                <i class="fas fa-search"></i>
+                                <span>Tìm Kiếm</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Hero CTA Buttons -->
         <div class="hero-cta-buttons" data-aos="fade-up" data-aos-delay="800">
             <a href="@Url.Action("Index", "PhongNghi")" class="hero-btn hero-btn-primary">

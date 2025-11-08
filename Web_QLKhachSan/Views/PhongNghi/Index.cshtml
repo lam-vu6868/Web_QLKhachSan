@@ -1,4 +1,5 @@
-﻿@{
+﻿@model List<Web_QLKhachSan.Models.Phong>
+@{
     ViewBag.Title = "Phòng Nghỉ";
 }
 <link rel="stylesheet" href="~/assets/css/phong-nghi.css" />
@@ -23,18 +24,6 @@
 
             <div class="filter-content active">
                 <div class="filter-content-inner">
-                    <!-- Quick Filters -->
-                    <div class="quick-filters">
-                        <h5><i class="fas fa-lightning-bolt"></i> Bộ lọc nhanh</h5>
-                        <div class="quick-filter-tags">
-                            <span class="quick-filter-tag active">Tất cả</span>
-                            <span class="quick-filter-tag">View biển</span>
-                            <span class="quick-filter-tag">Giá tốt</span>
-                            <span class="quick-filter-tag">Sang trọng</span>
-                            <span class="quick-filter-tag">Phổ biến</span>
-                        </div>
-                    </div>
-
                     <div class="filter-groups-container">
                         <!-- Price Range Filter -->
                         <div class="filter-group">
@@ -52,26 +41,16 @@
                         <div class="filter-group">
                             <h5><i class="fas fa-bed"></i> Loại phòng</h5>
                             <div class="checkbox-group">
-                                <label>
-                                    <input type="checkbox" checked />
-                                    <span>Standard</span>
-                                </label>
-                                <label>
-                                    <input type="checkbox" />
-                                    <span>Superior</span>
-                                </label>
-                                <label>
-                                    <input type="checkbox" />
-                                    <span>Deluxe</span>
-                                </label>
-                                <label>
-                                    <input type="checkbox" />
-                                    <span>Suite</span>
-                                </label>
-                                <label>
-                                    <input type="checkbox" />
-                                    <span>Executive</span>
-                                </label>
+                                @if (ViewBag.LoaiPhongs != null)
+                                {
+                                    foreach (var loaiPhong in (List<Web_QLKhachSan.Models.LoaiPhong>)ViewBag.LoaiPhongs)
+                                    {
+                                        <label>
+                                            <input type="checkbox" value="@loaiPhong.LoaiPhongId" name="loaiPhong" />
+                                            <span>@loaiPhong.TenLoai</span>
+                                        </label>
+                                    }
+                                }
                             </div>
                         </div>
 
@@ -79,30 +58,16 @@
                         <div class="filter-group">
                             <h5><i class="fas fa-concierge-bell"></i> Tiện ích</h5>
                             <div class="checkbox-group">
-                                <label>
-                                    <input type="checkbox" checked />
-                                    <span>View biển tuyệt đẹp</span>
-                                </label>
-                                <label>
-                                    <input type="checkbox" />
-                                    <span>Ban công riêng</span>
-                                </label>
-                                <label>
-                                    <input type="checkbox" />
-                                    <span>Bồn tắm sang trọng</span>
-                                </label>
-                                <label>
-                                    <input type="checkbox" />
-                                    <span>Phòng khách riêng</span>
-                                </label>
-                                <label>
-                                    <input type="checkbox" />
-                                    <span>Minibar miễn phí</span>
-                                </label>
-                                <label>
-                                    <input type="checkbox" />
-                                    <span>Wifi tốc độ cao</span>
-                                </label>
+                                @if (ViewBag.TienIches != null)
+                                {
+                                    foreach (var tienIch in (List<Web_QLKhachSan.Models.TienIch>)ViewBag.TienIches)
+                                    {
+                                        <label>
+                                            <input type="checkbox" value="@tienIch.TienIchId" name="tienIch" />
+                                            <span>@tienIch.TenTienIch</span>
+                                        </label>
+                                    }
+                                }
                             </div>
                         </div>
 
@@ -117,7 +82,7 @@
 
         <section class="room-listing-area">
             <div class="listing-header">
-                <p>Hiển thị <strong>12</strong> phòng nghỉ tuyệt vời</p>
+                <p>Hiển thị <strong>@(Model?.Count ?? 0)</strong> phòng nghỉ tuyệt vời</p>
                 <select name="sort" id="sort">
                     <option value="default">Sắp xếp mặc định</option>
                     <option value="price-asc">Giá: Thấp đến Cao</option>
@@ -294,68 +259,6 @@
                             <i class="fas fa-gamepad" title="Khu vui chơi"></i>
                             <i class="fas fa-kitchen-set" title="Bếp nhỏ"></i>
                             <i class="fas fa-shield-alt" title="An toàn tuyệt đối"></i>
-                        </div>
-                        <div class="room-actions">
-                            <a href="@Url.Action("Index", "ChiTietPhong")" class="cta-button">Xem Chi Tiết</a>
-                            <div class="booking-btn-wrapper">
-                                <a href="@Url.Action("Index", "ThongTin")" class="btn-booking"></a>
-                                <span class="tooltip">Đặt Phòng Ngay</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Room Item 5 -->
-                <div class="room-item">
-                    <div class="room-item-image">
-                        <img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=870&q=80"
-                             alt="Standard Room" />
-                        <div class="tag">Giá tốt</div>
-                    </div>
-                    <div class="room-item-content">
-                        <h3>Standard Room</h3>
-                        <p class="price">$85 <span>/ đêm</span></p>
-                        <p class="description">
-                            Phòng tiêu chuẩn 25m² với đầy đủ tiện nghi cơ bản và view thành phố. 
-                            Lựa chọn kinh tế cho những chuyến đi ngắn ngày.
-                        </p>
-                        <div class="amenities-icons">
-                            <i class="fas fa-wifi" title="Wifi miễn phí"></i>
-                            <i class="fas fa-tv" title="TV cable"></i>
-                            <i class="fas fa-snowflake" title="Điều hòa"></i>
-                            <i class="fas fa-phone" title="Điện thoại"></i>
-                            <i class="fas fa-coffee" title="Trà, cà phê"></i>
-                        </div>
-                        <div class="room-actions">
-                            <a href="@Url.Action("Index", "ChiTietPhong")" class="cta-button">Xem Chi Tiết</a>
-                            <div class="booking-btn-wrapper">
-                                <a href="@Url.Action("Index", "ThongTin")" class="btn-booking"></a>
-                                <span class="tooltip">Đặt Phòng Ngay</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Room Item 6 -->
-                <div class="room-item">
-                    <div class="room-item-image">
-                        <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=870&q=80"
-                             alt="Honeymoon Suite" />
-                        <div class="tag">Lãng mạn</div>
-                    </div>
-                    <div class="room-item-content">
-                        <h3>Honeymoon Suite</h3>
-                        <p class="price">$220 <span>/ đêm</span></p>
-                        <p class="description">
-                            Suite tuần trăng mật 50m² với thiết kế lãng mạn, bồn tắm đôi và ban công riêng. 
-                            Không gian hoàn hảo cho những khoảnh khắc đặc biệt.
-                        </p>
-                        <div class="amenities-icons">
-                            <i class="fas fa-heart" title="Thiết kế lãng mạn"></i>
-                            <i class="fas fa-bath" title="Bồn tắm đôi"></i>
-                            <i class="fas fa-glass-cheers" title="Champagne miễn phí"></i>
-                            <i class="fas fa-rose" title="Hoa tươi"></i>
-                            <i class="fas fa-candle-holder" title="Nến thơm"></i>
                         </div>
                         <div class="room-actions">
                             <a href="@Url.Action("Index", "ChiTietPhong")" class="cta-button">Xem Chi Tiết</a>
