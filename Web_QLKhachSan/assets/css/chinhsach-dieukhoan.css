@@ -40,11 +40,6 @@
     --header-height: 80px;
     --container-max-width: 1200px;
 }
-
-/* ===== MAIN PAGE CONTAINER ===== */
-
-
-
 /* ===== PAGE HEADER ===== */
 .page-header {
     text-align: center;
@@ -401,8 +396,8 @@
     font-weight: 700;
 }
 
-/* ===== SPECIAL CONTENT BOXES ===== */
 
+/* ===== SPECIAL CONTENT BOXES ===== */
 /* Highlight Box (for check-in/check-out times) */
 .highlight-box {
     background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(212, 175, 55, 0.05));
@@ -719,6 +714,10 @@
     transform: translateY(-3px) scale(1.1);
     box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
 }
+.contact-item {
+    color: var(--text-primary);
+    font-size: 1rem;
+}
 
 /* ===== RESPONSIVE DESIGN ===== */
 
@@ -877,7 +876,7 @@
         text-align: center;
         gap: 10px;
     }
-    
+
     .contact-item {
         flex-direction: column;
         text-align: center;

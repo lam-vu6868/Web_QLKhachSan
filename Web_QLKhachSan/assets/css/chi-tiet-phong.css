@@ -19,12 +19,6 @@
     --font-primary: 'Poppins', sans-serif;
     --font-display: 'Playfair Display', serif;
 }
-
-/* ===== BASE STYLES ===== */
-
-
-
-
 /* ===== PAGE HEADER ===== */
 .page-header {
     background: linear-gradient(rgba(10, 25, 49, 0.7), rgba(44, 62, 80, 0.7)), 
@@ -34,7 +28,6 @@
     position: relative;
     overflow: hidden;
 }
-
 .page-header::before {
     content: '';
     position: absolute;
@@ -45,7 +38,6 @@
     background: radial-gradient(circle at 30% 50%, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
     pointer-events: none;
 }
-
 .breadcrumb {
     display: flex;
     align-items: center;
@@ -54,7 +46,6 @@
     font-size: 0.9rem;
     opacity: 0.8;
 }
-
 .breadcrumb a {
     color: var(--white);
     text-decoration: none;

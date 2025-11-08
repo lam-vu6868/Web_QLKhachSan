@@ -462,7 +462,6 @@
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\NhanVien\assets\imgs\" />
     <Folder Include="Areas\NhanVien\Data\" />
-    <Folder Include="Attributes\" />
     <Folder Include="Views\CookieTest\" />
   </ItemGroup>
   <ItemGroup>
