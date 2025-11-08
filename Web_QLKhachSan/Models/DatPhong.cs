@@ -25,7 +25,7 @@ namespace Web_QLKhachSan.Models
         public int DatPhongId { get; set; }
         public string MaDatPhong { get; set; }
         public Nullable<int> MaKhachHang { get; set; }
-        public Nullable<int> MaNhanVien { get; set; }
+        public Nullable<int> NhanVienId { get; set; }
         public System.DateTime NgayDat { get; set; }
         public Nullable<System.DateTime> NgayNhan { get; set; }
         public Nullable<System.DateTime> NgayTra { get; set; }

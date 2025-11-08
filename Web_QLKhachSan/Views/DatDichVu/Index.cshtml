@@ -1,0 +1,162 @@
+﻿
+@{
+    ViewBag.Title = "Đặt Dịch Vụ";
+}
+<link rel="stylesheet" href="~/assets/css/dat-dich-vu.css" />
+<div class="booking-container">
+    <div class="container">
+        <div class="booking-form-wrapper">
+            <!-- Form Header -->
+            <div class="form-header">
+                <div class="form-header-content">
+                    <div class="form-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <h1>Đặt Dịch Vụ</h1>
+                    <p>Vui lòng điền đầy đủ thông tin để chúng tôi phục vụ bạn tốt nhất</p>
+                </div>
+            </div>
+
+            <!-- Form Body -->
+            <div class="form-body">
+                <form id="bookingForm" method="post">
+                    <!-- Thông tin liên hệ -->
+                    <div class="form-section">
+                        <h3 class="section-title">
+                            <i class="fas fa-user"></i>
+                            Thông tin Liên hệ
+                        </h3>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    Họ và Tên <span class="required">*</span>
+                                </label>
+                                <input type="text" name="FullName" class="form-input" placeholder="Nhập họ và tên" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">
+                                    Số điện thoại <span class="required">*</span>
+                                </label>
+                                <input type="tel" name="PhoneNumber" class="form-input" placeholder="Nhập số điện thoại" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Email</label>
+                                <input type="email" name="Email" class="form-input" placeholder="Nhập email (để nhận xác nhận)">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">
+                                    Số phòng <span class="required">*</span>
+                                </label>
+                                <input type="text" name="RoomNumber" class="form-input" placeholder="Ví dụ: 201, 305..." required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Thông tin dịch vụ -->
+                    <div class="form-section">
+                        <h3 class="section-title">
+                            <i class="fas fa-spa"></i>
+                            Thông tin Dịch vụ
+                        </h3>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    Tên Dịch vụ <span class="required">*</span>
+                                </label>
+                                <select name="ServiceCategory" class="form-select" required id="serviceCategory">
+                                    <option value="">-- Chọn loại dịch vụ --</option>
+                                    <option value="spa">Spa & Sức khỏe</option>
+                                    <option value="fnb">Ẩm thực & Đồ uống</option>
+                                    <option value="laundry">Dịch vụ Giặt là</option>
+                                    <option value="transport">Dịch vụ Vận chuyển</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">
+                                    Số lượng khách <span class="required">*</span>
+                                </label>
+                                <select name="GuestCount" class="form-select" required>
+                                    <option value="">-- Chọn số lượng --</option>
+                                    <option value="1">1 khách</option>
+                                    <option value="2">2 khách</option>
+                                    <option value="3">3 khách</option>
+                                    <option value="4">4 khách</option>
+                                    <option value="5">5+ khách</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label class="form-label">
+                                Chọn gói dịch vụ/trị liệu <span class="required">*</span>
+                            </label>
+                            <div class="service-package-grid">
+                                <!-- Service Package Options -->
+                                <div class="package-option">
+                                    <input type="checkbox" id="spa_massage" name="ServicePackage" value="spa_massage_60" class="package-checkbox">
+                                    <label for="spa_massage" class="package-label">
+                                        <div class="package-content">
+                                            <strong>Massage toàn thân (60 phút)</strong>
+                                        </div>
+                                        <span class="package-price">500,000₫</span>
+                                    </label>
+                                </div>
+                                <div class="package-option">
+                                    <input type="checkbox" id="fnb_breakfast" name="ServicePackage" value="fnb_breakfast" class="package-checkbox">
+                                    <label for="fnb_breakfast" class="package-label">
+                                        <div class="package-content">
+                                            <strong>Phục vụ bữa sáng tại phòng</strong>
+                                        </div>
+                                        <span class="package-price">500,000₫</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    Ngày mong muốn <span class="required">*</span>
+                                </label>
+                                <input type="date" name="PreferredDate" class="form-input" required min="">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">
+                                    Giờ mong muốn <span class="required">*</span>
+                                </label>
+                                <input type="time" name="PreferredTime" class="form-input" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label class="form-label">Ghi chú đặc biệt</label>
+                            <textarea name="SpecialNotes" class="form-textarea" placeholder="Ví dụ: Tôi muốn nhân viên nữ, Tôi bị dị ứng với tinh dầu, Yêu cầu đặc biệt khác..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i>
+                            Gửi Yêu Cầu Đặt Dịch Vụ
+                        </button>
+                        <a href="/DichVu" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i>
+                            Quay Lại
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="~/assets/js/dat-dich-vu.js"></script>
+}
+
