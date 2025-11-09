@@ -1,0 +1,157 @@
+﻿/* =============================================
+   Sơ Đồ Phòng CSS
+   File: sodoPhong.css
+============================================= */
+
+/* Room Card Styles */
+.room-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+}
+
+.room-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important;
+}
+
+/* Border Colors for Cards */
+.border-left-primary {
+    border-left: 4px solid #4e73df;
+}
+
+.border-left-success {
+ border-left: 4px solid #1cc88a;
+}
+
+.border-left-warning {
+    border-left: 4px solid #f6c23e;
+}
+
+.border-left-danger {
+    border-left: 4px solid #e74a3b;
+}
+
+.border-left-info {
+    border-left: 4px solid #36b9cc;
+}
+
+.border-left-secondary {
+    border-left: 4px solid #858796;
+}
+
+/* Text Styles */
+.text-xs {
+    font-size: 0.7rem;
+}
+
+.text-gray-800 {
+    color: #5a5c69 !important;
+}
+
+.text-gray-300 {
+    color: #dddfeb !important;
+}
+
+/* Card Animation */
+@keyframes cardPulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+  transform: scale(1.02);
+    }
+}
+
+.room-card.pulse {
+ animation: cardPulse 2s infinite;
+}
+
+/* Filter Section */
+.form-inline .form-group {
+    margin-right: 1rem;
+margin-bottom: 0.5rem;
+}
+
+.form-inline label {
+    margin-right: 0.5rem;
+    font-weight: 500;
+}
+
+/* Modal Styles */
+.modal-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.modal-header .close {
+    color: white;
+    opacity: 0.8;
+}
+
+.modal-header .close:hover {
+    opacity: 1;
+}
+
+/* Badge Styles */
+.badge-pill {
+    padding: 0.25rem 0.6rem;
+    font-size: 0.75rem;
+}
+
+/* Loading Animation */
+.loading-spinner {
+    display: inline-block;
+    width: 2rem;
+    height: 2rem;
+  border: 3px solid rgba(102, 126, 234, 0.2);
+    border-top-color: #667eea;
+    border-radius: 50%;
+    animation: spinner 0.6s linear infinite;
+}
+
+@keyframes spinner {
+    to {
+     transform: rotate(360deg);
+    }
+}
+
+/* Tooltip for Room Cards */
+.room-card .tooltip-inner {
+    max-width: 300px;
+    background-color: #333;
+}
+
+/* Responsive Grid */
+@media (max-width: 576px) {
+    .room-card .card-body {
+        padding: 0.75rem !important;
+    }
+    
+    .room-card h5 {
+        font-size: 1rem;
+    }
+    
+    .room-card .badge {
+        font-size: 0.65rem;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .sidebar,
+    .top-bar,
+    .card-header .btn,
+    .modal {
+        display: none !important;
+    }
+  
+    .main-content {
+        margin-left: 0;
+    padding: 0;
+    }
+    
+    .room-card {
+        break-inside: avoid;
+  page-break-inside: avoid;
+    }
+}

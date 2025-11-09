@@ -1,0 +1,244 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quên Mật Khẩu - Serene Horizon</title>
+    <link rel="shortcut icon" href="~/assets/imgs/logo.png" type="image/x-icon" />
+    
+    <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+ 
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    
+    <style>
+      * {
+        margin: 0;
+padding: 0;
+  box-sizing: border-box;
+  }
+
+    body {
+    font-family: 'Montserrat', sans-serif;
+   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+     min-height: 100vh;
+ display: flex;
+         align-items: center;
+   justify-content: center;
+padding: 20px;
+}
+
+        .forgot-container {
+  max-width: 500px;
+      width: 100%;
+       background: white;
+       border-radius: 20px;
+          padding: 50px 40px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      }
+
+   .forgot-header {
+  text-align: center;
+        margin-bottom: 30px;
+      }
+
+  .forgot-header .icon {
+   width: 80px;
+  height: 80px;
+ background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+     border-radius: 50%;
+    display: flex;
+   align-items: center;
+justify-content: center;
+         margin: 0 auto 20px;
+        }
+
+ .forgot-header .icon i {
+   font-size: 36px;
+      color: white;
+  }
+
+   .forgot-header h2 {
+ font-size: 24px;
+       color: #333;
+    margin-bottom: 10px;
+        }
+
+        .forgot-header p {
+  color: #666;
+       font-size: 14px;
+  }
+
+     .form-row {
+        margin-bottom: 25px;
+   }
+
+   .form-row label {
+       display: block;
+     margin-bottom: 8px;
+   color: #333;
+       font-weight: 500;
+font-size: 14px;
+   }
+
+ .input-wrapper {
+      position: relative;
+ }
+
+   .input-wrapper i {
+position: absolute;
+left: 15px;
+    top: 50%;
+          transform: translateY(-50%);
+ color: #999;
+        }
+
+        .form-control {
+    width: 100%;
+padding: 12px 15px 12px 45px;
+  border: 2px solid #e0e0e0;
+   border-radius: 10px;
+font-size: 14px;
+       transition: all 0.3s ease;
+       font-family: 'Montserrat', sans-serif;
+   }
+
+    .form-control:focus {
+    outline: none;
+       border-color: #667eea;
+      box-shadow: 0 0 0 4px rgba(102,126,234,0.1);
+ }
+
+     .btn-submit {
+      width: 100%;
+ padding: 14px;
+   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+       border: none;
+         border-radius: 10px;
+      font-size: 16px;
+font-weight: 600;
+         cursor: pointer;
+ transition: all 0.3s ease;
+    margin-bottom: 15px;
+     }
+
+    .btn-submit:hover {
+   transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(102,126,234,0.4);
+  }
+
+  .btn-back {
+  width: 100%;
+  padding: 14px;
+  background: #e0e0e0;
+       color: #333;
+   border: none;
+            border-radius: 10px;
+  font-size: 16px;
+   font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+ display: inline-block;
+     text-align: center;
+        }
+
+    .btn-back:hover {
+       background: #d0d0d0;
+       text-decoration: none;
+        color: #333;
+        }
+
+        /* Alert Styles */
+      .alert {
+   padding: 12px 15px;
+border-radius: 8px;
+    margin-bottom: 20px;
+font-size: 14px;
+      display: flex;
+ align-items: center;
+       gap: 10px;
+ }
+
+ .alert-danger {
+      background: #fee;
+       color: #c33;
+border-left: 4px solid #c33;
+ }
+
+     .alert-success {
+  background: #efe;
+            color: #3c3;
+   border-left: 4px solid #3c3;
+   }
+
+.alert-info {
+   background: #eff;
+ color: #39c;
+     border-left: 4px solid #39c;
+      }
+    </style>
+</head>
+<body>
+    <div class="forgot-container">
+     <div class="forgot-header">
+       <div class="icon">
+   <i class="fas fa-key"></i>
+ </div>
+    <h2>Quên Mật Khẩu</h2>
+   <p>Nhập email của bạn để nhận mã OTP</p>
+    </div>
+
+        @* Alert Messages *@
+ @if (TempData["ErrorMessage"] != null)
+    {
+     <div class="alert alert-danger">
+    <i class="fas fa-exclamation-circle"></i> @TempData["ErrorMessage"]
+   </div>
+ }
+
+  @if (TempData["SuccessMessage"] != null)
+   {
+            <div class="alert alert-success">
+     <i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]
+     </div>
+   }
+
+        @if (TempData["InfoMessage"] != null)
+   {
+      <div class="alert alert-info">
+    <i class="fas fa-info-circle"></i> @TempData["InfoMessage"]
+       </div>
+ }
+
+    @using (Html.BeginForm("QuenMatKhau", "DangNhapNV", new { area = "DangNhapNV" }, FormMethod.Post))
+ {
+     @Html.AntiForgeryToken()
+
+       <div class="form-row">
+  <label for="email">Email</label>
+  <div class="input-wrapper">
+ <i class="fas fa-envelope"></i>
+ <input type="email" id="email" name="email" class="form-control" placeholder="Nhập email của bạn" required />
+  </div>
+        </div>
+
+     <button type="submit" class="btn-submit">
+   <i class="fas fa-paper-plane"></i> Gửi Mã OTP
+      </button>
+        }
+
+      <a href="@Url.Action("DangNhap", "DangNhapNV", new { area = "DangNhapNV" })" class="btn-back">
+ <i class="fas fa-arrow-left"></i> Quay Lại Đăng Nhập
+        </a>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</body>
+</html>

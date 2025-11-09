@@ -1,0 +1,361 @@
+﻿@model Web_QLKhachSan.Areas.DangNhapNV.ViewModels.DangNhapNVViewModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Nhập Nhân Viên - Serene Horizon</title>
+    <link rel="shortcut icon" href="~/assets/imgs/logo.png" type="image/x-icon" />
+    
+ <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+ font-family: 'Montserrat', sans-serif;
+     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+   min-height: 100vh;
+    display: flex;
+            align-items: center;
+      justify-content: center;
+            padding: 20px;
+  }
+
+        .login-container {
+            display: flex;
+            max-width: 1000px;
+       width: 100%;
+      background: white;
+      border-radius: 20px;
+     overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      }
+
+    .login-left {
+         flex: 1;
+         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 60px 40px;
+      color: white;
+          display: flex;
+            flex-direction: column;
+  justify-content: center;
+        }
+
+   .login-left h1 {
+     font-size: 32px;
+       font-weight: 700;
+   margin-bottom: 20px;
+ }
+
+        .login-left p {
+        font-size: 16px;
+      line-height: 1.6;
+ opacity: 0.9;
+        }
+
+    .login-left .features {
+            margin-top: 40px;
+        }
+
+ .feature-item {
+    display: flex;
+            align-items: center;
+            gap: 15px;
+ margin-bottom: 20px;
+   }
+
+        .feature-item i {
+     font-size: 24px;
+        }
+
+        .login-right {
+  flex: 1;
+            padding: 60px 50px;
+      }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .login-header h2 {
+            font-size: 28px;
+       color: #333;
+      margin-bottom: 10px;
+        }
+
+        .login-header p {
+  color: #666;
+       font-size: 14px;
+      }
+
+  .form-row {
+     margin-bottom: 25px;
+        }
+
+        .form-row label {
+         display: block;
+        margin-bottom: 8px;
+     color: #333;
+    font-weight: 500;
+            font-size: 14px;
+      }
+
+        .input-wrapper {
+ position: relative;
+     }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+  transform: translateY(-50%);
+            color: #999;
+        }
+
+        .form-control {
+       width: 100%;
+      padding: 12px 15px 12px 45px;
+            border: 2px solid #e0e0e0;
+     border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+      font-family: 'Montserrat', sans-serif;
+        }
+
+        .form-control:focus {
+      outline: none;
+border-color: #667eea;
+    box-shadow: 0 0 0 4px rgba(102,126,234,0.1);
+        }
+
+        .checkbox-group {
+            display: flex;
+       align-items: center;
+            margin-bottom: 25px;
+}
+
+.checkbox-group input[type="checkbox"] {
+      margin-right: 8px;
+            width: 18px;
+     height: 18px;
+          cursor: pointer;
+ }
+
+ .checkbox-group label {
+            font-size: 14px;
+   color: #666;
+            cursor: pointer;
+            margin: 0;
+   }
+
+        .btn-login {
+       width: 100%;
+   padding: 14px;
+         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+    font-weight: 600;
+        cursor: pointer;
+       transition: all 0.3s ease;
+        }
+
+.btn-login:hover {
+    transform: translateY(-2px);
+ box-shadow: 0 8px 20px rgba(102,126,234,0.4);
+        }
+
+        .forgot-password {
+     text-align: center;
+            margin-top: 20px;
+   }
+
+        .forgot-password a {
+   color: #667eea;
+     text-decoration: none;
+            font-size: 14px;
+  }
+
+        .forgot-password a:hover {
+       text-decoration: underline;
+        }
+
+        /* Alert Styles */
+        .alert {
+padding: 12px 15px;
+            border-radius: 8px;
+ margin-bottom: 20px;
+   font-size: 14px;
+     display: flex;
+            align-items: center;
+          gap: 10px;
+        }
+
+        .alert-danger {
+            background: #fee;
+            color: #c33;
+            border-left: 4px solid #c33;
+     }
+
+        .alert-success {
+background: #efe;
+            color: #3c3;
+   border-left: 4px solid #3c3;
+        }
+
+        .alert-info {
+            background: #eff;
+   color: #39c;
+       border-left: 4px solid #39c;
+      }
+
+   .validation-summary-errors {
+      background: #fee;
+      color: #c33;
+        padding: 15px;
+   border-radius: 8px;
+       margin-bottom: 20px;
+        }
+
+        .validation-summary-errors ul {
+      margin: 0;
+     padding-left: 20px;
+        }
+
+     .field-validation-error, .text-danger {
+ color: #c33;
+       font-size: 12px;
+       margin-top: 5px;
+   display: block;
+        }
+
+        @@media (max-width: 768px) {
+            .login-container {
+  flex-direction: column;
+            }
+
+   .login-left {
+  padding: 40px 30px;
+            }
+
+      .login-right {
+           padding: 40px 30px;
+            }
+ }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- Left Side -->
+   <div class="login-left">
+            <h1><i class="fas fa-hotel"></i> Serene Horizon</h1>
+   <p>Hệ thống quản lý khách sạn chuyên nghiệp dành cho nhân viên</p>
+            
+     <div class="features">
+ <div class="feature-item">
+               <i class="fas fa-shield-alt"></i>
+              <span>Bảo mật cao</span>
+         </div>
+      <div class="feature-item">
+            <i class="fas fa-tachometer-alt"></i>
+     <span>Quản lý nhanh chóng</span>
+     </div>
+                <div class="feature-item">
+      <i class="fas fa-users"></i>
+           <span>Hỗ trợ đa vai trò</span>
+     </div>
+          </div>
+      </div>
+
+    <!-- Right Side - Login Form -->
+        <div class="login-right">
+    <div class="login-header">
+      <h2>Đăng Nhập Nhân Viên</h2>
+                <p>Nhập thông tin đăng nhập của bạn</p>
+            </div>
+
+            @* Alert Messages *@
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger">
+         <i class="fas fa-exclamation-circle"></i> @TempData["ErrorMessage"]
+   </div>
+ }
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+     <div class="alert alert-success">
+             <i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]
+ </div>
+          }
+
+            @if (TempData["InfoMessage"] != null)
+     {
+       <div class="alert alert-info">
+              <i class="fas fa-info-circle"></i> @TempData["InfoMessage"]
+    </div>
+            }
+
+    @Html.ValidationSummary(true, "", new { @class = "validation-summary-errors" })
+
+        @using (Html.BeginForm("DangNhap", "DangNhapNV", new { area = "DangNhapNV", returnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "login-form" }))
+       {
+    @Html.AntiForgeryToken()
+
+             <div class="form-row">
+        @Html.LabelFor(m => m.TenDangNhap)
+         <div class="input-wrapper">
+         <i class="fas fa-user"></i>
+  @Html.TextBoxFor(m => m.TenDangNhap, new { @class = "form-control", placeholder = "Nhập email hoặc mã nhân viên", autocomplete = "username" })
+  </div>
+          @Html.ValidationMessageFor(m => m.TenDangNhap, "", new { @class = "field-validation-error" })
+</div>
+
+   <div class="form-row">
+      @Html.LabelFor(m => m.MatKhau)
+        <div class="input-wrapper">
+   <i class="fas fa-lock"></i>
+   @Html.PasswordFor(m => m.MatKhau, new { @class = "form-control", placeholder = "Nhập mật khẩu", autocomplete = "current-password" })
+           </div>
+             @Html.ValidationMessageFor(m => m.MatKhau, "", new { @class = "field-validation-error" })
+    </div>
+
+        <div class="checkbox-group">
+     @Html.CheckBoxFor(m => m.GhiNho, new { id = "remember-me" })
+        @Html.LabelFor(m => m.GhiNho, "Ghi nhớ đăng nhập", new { @for = "remember-me" })
+ </div>
+
+       <button type="submit" class="btn-login">
+    <i class="fas fa-sign-in-alt"></i> Đăng Nhập
+     </button>
+
+     <div class="forgot-password">
+    <a href="@Url.Action("QuenMatKhau", "DangNhapNV", new { area = "DangNhapNV" })">
+        <i class="fas fa-key"></i> Quên mật khẩu?
+  </a>
+      </div>
+            }
+        </div>
+</div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@3.2.12/dist/jquery.validate.unobtrusive.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,335 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xác Thực OTP - Serene Horizon</title>
+    <link rel="shortcut icon" href="~/assets/imgs/logo.png" type="image/x-icon" />
+ 
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  
+  <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+     
+        body {
+   font-family: 'Montserrat', sans-serif;
+       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        display: flex;
+  align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+    .otp-container {
+     max-width: 500px;
+            width: 100%;
+ background: white;
+      border-radius: 20px;
+  padding: 50px 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    text-align: center;
+        }
+
+        .otp-header .icon {
+            width: 80px;
+          height: 80px;
+ background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+     border-radius: 50%;
+            display: flex;
+     align-items: center;
+ justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+      .otp-header .icon i {
+            font-size: 36px;
+     color: white;
+}
+
+        .otp-header h2 {
+     font-size: 24px;
+     color: #333;
+ margin-bottom: 10px;
+    }
+
+   .otp-header p {
+            color: #666;
+       font-size: 14px;
+    margin-bottom: 30px;
+        }
+
+        .email-display {
+ background: #f8f9fa;
+            padding: 10px 15px;
+       border-radius: 8px;
+        margin-bottom: 30px;
+      color: #667eea;
+            font-weight: 600;
+        }
+
+        .otp-inputs {
+    display: flex;
+            gap: 10px;
+    justify-content: center;
+     margin-bottom: 30px;
+        }
+
+  .otp-input {
+    width: 50px;
+   height: 50px;
+            font-size: 24px;
+            text-align: center;
+      border: 2px solid #e0e0e0;
+   border-radius: 10px;
+     transition: all 0.3s ease;
+            font-family: 'Montserrat', sans-serif;
+    }
+
+        .otp-input:focus {
+    outline: none;
+            border-color: #667eea;
+  box-shadow: 0 0 0 4px rgba(102,126,234,0.1);
+  }
+
+        .btn-verify {
+            width: 100%;
+            padding: 14px;
+       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+border: none;
+            border-radius: 10px;
+         font-size: 16px;
+            font-weight: 600;
+     cursor: pointer;
+    transition: all 0.3s ease;
+     margin-bottom: 15px;
+        }
+
+        .btn-verify:hover {
+       transform: translateY(-2px);
+          box-shadow: 0 8px 20px rgba(102,126,234,0.4);
+     }
+
+        .resend-section {
+         margin-top: 20px;
+            padding-top: 20px;
+        border-top: 1px solid #e0e0e0;
+        }
+
+        .resend-text {
+            color: #666;
+       font-size: 14px;
+  margin-bottom: 10px;
+        }
+
+    .btn-resend {
+   background: transparent;
+ color: #667eea;
+         border: none;
+    font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: underline;
+   }
+
+        .btn-resend:hover {
+     color: #764ba2;
+        }
+
+        .btn-back {
+          width: 100%;
+            padding: 14px;
+            background: #e0e0e0;
+            color: #333;
+            border: none;
+     border-radius: 10px;
+            font-size: 16px;
+      font-weight: 600;
+        cursor: pointer;
+      transition: all 0.3s ease;
+     text-decoration: none;
+      display: inline-block;
+        }
+
+        .btn-back:hover {
+      background: #d0d0d0;
+        }
+
+        .alert {
+     padding: 12px 15px;
+            border-radius: 8px;
+      margin-bottom: 20px;
+            font-size: 14px;
+          display: flex;
+ align-items: center;
+            gap: 10px;
+            text-align: left;
+        }
+
+        .alert-danger {
+            background: #fee;
+ color: #c33;
+            border-left: 4px solid #c33;
+        }
+
+      .alert-success {
+            background: #efe;
+            color: #3c3;
+         border-left: 4px solid #3c3;
+        }
+
+        .timer {
+            color: #ff6b6b;
+  font-weight: 600;
+            font-size: 18px;
+          margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="otp-container">
+        <div class="otp-header">
+         <div class="icon">
+                <i class="fas fa-shield-alt"></i>
+  </div>
+    <h2>Xác Thực Mã OTP</h2>
+            <p>Nhập mã OTP 6 số đã được gửi đến email của bạn</p>
+        </div>
+
+        <div class="email-display">
+     <i class="fas fa-envelope"></i> @ViewBag.Email
+        </div>
+
+      @if (TempData["ErrorMessage"] != null)
+        {
+       <div class="alert alert-danger">
+      <i class="fas fa-exclamation-circle"></i> @TempData["ErrorMessage"]
+          </div>
+        }
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+      <div class="alert alert-success">
+      <i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]
+    </div>
+      }
+
+   @using (Html.BeginForm("XacThucOTP", "DangNhapNV", new { area = "DangNhapNV" }, FormMethod.Post, new { id = "otpForm" }))
+    {
+   @Html.AntiForgeryToken()
+          
+     <div class="otp-inputs">
+       <input type="text" class="otp-input" maxlength="1" id="otp1" />
+                <input type="text" class="otp-input" maxlength="1" id="otp2" />
+         <input type="text" class="otp-input" maxlength="1" id="otp3" />
+        <input type="text" class="otp-input" maxlength="1" id="otp4" />
+       <input type="text" class="otp-input" maxlength="1" id="otp5" />
+      <input type="text" class="otp-input" maxlength="1" id="otp6" />
+     </div>
+
+     <input type="hidden" name="otp" id="otpValue" />
+
+     <div class="timer">
+        <i class="fas fa-clock"></i> Mã OTP hết hạn sau: <span id="countdown">5:00</span>
+            </div>
+
+     <button type="submit" class="btn-verify">
+      <i class="fas fa-check-circle"></i> Xác Thực
+       </button>
+ }
+
+
+
+        <a href="@Url.Action("QuenMatKhau", "DangNhapNV", new { area = "DangNhapNV" })" class="btn-back">
+     <i class="fas fa-arrow-left"></i> Quay Lại
+        </a>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // OTP Input Handling
+     const inputs = document.querySelectorAll('.otp-input');
+        inputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+    if (e.target.value.length === 1 && index < inputs.length - 1) {
+                  inputs[index + 1].focus();
+      }
+      updateOTPValue();
+ });
+
+      input.addEventListener('keydown', (e) => {
+    if (e.key === 'Backspace' && !e.target.value && index > 0) {
+       inputs[index - 1].focus();
+      }
+    });
+
+     input.addEventListener('paste', (e) => {
+  e.preventDefault();
+     const pastedData = e.clipboardData.getData('text').slice(0, 6);
+         pastedData.split('').forEach((char, i) => {
+if (inputs[i]) inputs[i].value = char;
+         });
+       updateOTPValue();
+  });
+        });
+
+        function updateOTPValue() {
+          const otp = Array.from(inputs).map(input => input.value).join('');
+        document.getElementById('otpValue').value = otp;
+        }
+
+        // Countdown Timer
+        let timeLeft = 300; // 5 minutes
+        const countdown = document.getElementById('countdown');
+     
+    const timer = setInterval(() => {
+    const minutes = Math.floor(timeLeft / 60);
+         const seconds = timeLeft % 60;
+            countdown.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            
+         if (timeLeft <= 0) {
+         clearInterval(timer);
+    countdown.textContent = 'Hết hạn!';
+ inputs.forEach(input => input.disabled = true);
+            }
+  timeLeft--;
+        }, 1000);
+
+        // Resend OTP
+        function guiLaiOTP() {
+            $.ajax({
+                url: '@Url.Action("GuiLaiOTP", "DangNhapNV", new { area = "DangNhapNV" })',
+    type: 'POST',
+      success: function(response) {
+        if (response.success) {
+            alert('Mã OTP mới đã được gửi!');
+      timeLeft = 300;
+             inputs.forEach(input => {
+      input.disabled = false;
+               input.value = '';
+             });
+   inputs[0].focus();
+               } else {
+      alert(response.message || 'Có lỗi xảy ra!');
+               }
+       },
+                error: function() {
+        alert('Không thể gửi lại OTP. Vui lòng thử lại!');
+         }
+            });
+        }
+
+  // Auto focus first input
+    inputs[0].focus();
+    </script>
+</body>
+</html>

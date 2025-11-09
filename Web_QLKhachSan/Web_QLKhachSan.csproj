@@ -168,14 +168,21 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
+    <Compile Include="Areas\DangNhapNV\Controllers\DangNhapNVController.cs" />
+    <Compile Include="Areas\DangNhapNV\DangNhapNVAreaRegistration.cs" />
+    <Compile Include="Areas\DangNhapNV\ViewModels\DangNhapNVViewModel.cs" />
+    <Compile Include="Areas\DangNhapNV\ViewModels\DatLaiMatKhauNVViewModel.cs" />
     <Compile Include="Areas\NhanVienBuongPhong\NhanVienBuongPhongAreaRegistration.cs" />
-    <Compile Include="Areas\NhanVienLeTan\Controllers\DashboardNVLeTanController.cs" />
+    <Compile Include="Areas\NhanVienLeTan\Controllers\DashboardNVLTController.cs" />
+    <Compile Include="Areas\NhanVienLeTan\Controllers\SoDoPhongController.cs" />
     <Compile Include="Areas\NhanVienLeTan\NhanVienAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\BaoCaoTaiChinhController.cs" />
     <Compile Include="Areas\Admin\Controllers\BaoCaoThongKeController.cs" />
     <Compile Include="Areas\Admin\Controllers\DashboardAdminController.cs" />
     <Compile Include="Areas\Admin\Controllers\QuanLyNhanVienController.cs" />
     <Compile Include="Areas\NhanVienLeTan\NhanVienLeTanAreaRegistration.cs" />
+    <Compile Include="Areas\NhanVienLeTan\ViewModels\PhongStatusViewModel.cs" />
+    <Compile Include="Areas\NhanVienLeTan\ViewModels\SoDoPhongViewModel.cs" />
     <Compile Include="Controllers\CapDoKhachHangController.cs" />
     <Compile Include="Controllers\ChinhSachVaDieuKhoanController.cs" />
     <Compile Include="Controllers\ChiTietPhongController.cs" />
@@ -194,6 +201,7 @@
     <Compile Include="Controllers\ThuVienAnhController.cs" />
     <Compile Include="Controllers\TimHieuThemController.cs" />
     <Compile Include="Controllers\XacNhanController.cs" />
+    <Compile Include="Filters\NhanVienAuthorizeAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -294,6 +302,10 @@
     <Content Include="Areas\Admin\assets\js\shared.js" />
     <Content Include="Areas\Admin\assets\js\quanly-nhanvien.js" />
     <Content Include="Areas\Admin\assets\js\quanly-taichinh.js" />
+    <Content Include="Areas\NhanVienLeTan\assets\css\layout.css" />
+    <Content Include="Areas\NhanVienLeTan\assets\css\sodoPhong.css" />
+    <Content Include="Areas\NhanVienLeTan\assets\js\layout.js" />
+    <Content Include="Areas\NhanVienLeTan\assets\js\sodoPhong.js" />
     <Content Include="assets\css\chi-tiet-phong.css" />
     <Content Include="assets\css\chinhsach-dieukhoan.css" />
     <Content Include="assets\css\dang-nhap.css" />
@@ -305,8 +317,6 @@
     <Content Include="assets\css\header-footer.css" />
     <Content Include="assets\css\ho-tro-khach-hang.css" />
     <Content Include="assets\css\index.css" />
-    <Content Include="assets\css\NhanVienLeTan\dashboard.css" />
-    <Content Include="assets\css\NhanVienLeTan\layout.css" />
     <Content Include="assets\css\phong-nghi.css" />
     <Content Include="assets\css\thongbao.css" />
     <Content Include="assets\css\thuvien-anh.css" />
@@ -330,8 +340,6 @@
     <Content Include="assets\js\ho-tro-khach-hang.js" />
     <Content Include="assets\js\index.js" />
     <Content Include="assets\js\load.js" />
-    <Content Include="assets\js\NhanVienLeTan\dashboard.js" />
-    <Content Include="assets\js\NhanVienLeTan\layout.js" />
     <Content Include="assets\js\phong-nghi.js" />
     <Content Include="assets\js\slideshow.js" />
     <Content Include="assets\js\thuvien-anh.js" />
@@ -389,8 +397,13 @@
       <DependentUpon>Contect.edmx</DependentUpon>
     </Content>
     <Content Include="Areas\NhanVienBuongPhong\Views\web.config" />
-    <Content Include="Areas\NhanVienLeTan\Views\DashboardNVLeTan\Index.cshtml" />
-    <Content Include="Areas\NhanVienLeTan\Views\Shared\_LayoutLeTan.cshtml" />
+    <Content Include="Areas\NhanVienLeTan\Views\Shared\_LayoutNVLT.cshtml" />
+    <Content Include="Areas\NhanVienLeTan\Views\SoDoPhong\Index.cshtml" />
+    <Content Include="Areas\DangNhapNV\Views\DangNhapNV\DangNhap.cshtml" />
+    <Content Include="Areas\DangNhapNV\Views\DangNhapNV\QuenMatKhau.cshtml" />
+    <Content Include="Areas\DangNhapNV\Views\web.config" />
+    <Content Include="Areas\DangNhapNV\Views\DangNhapNV\XacThucOTP.cshtml" />
+    <Content Include="Areas\DangNhapNV\Views\DangNhapNV\DatLaiMatKhau.cshtml" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />
@@ -445,8 +458,8 @@
     <Folder Include="Areas\NhanVienBuongPhong\Data\" />
     <Folder Include="Areas\NhanVienBuongPhong\Views\Shared\" />
     <Folder Include="Areas\NhanVienLeTan\Data\" />
-    <Folder Include="Areas\NhanVienLeTan\ViewModels\" />
-    <Folder Include="Areas\NhanVienLeTan\Views\SoDoPhong\" />
+    <Folder Include="Areas\NhanVienLeTan\Views\DashboardNVLT\" />
+    <Folder Include="SQL_Scripts\" />
     <Folder Include="Views\CookieTest\" />
   </ItemGroup>
   <ItemGroup>

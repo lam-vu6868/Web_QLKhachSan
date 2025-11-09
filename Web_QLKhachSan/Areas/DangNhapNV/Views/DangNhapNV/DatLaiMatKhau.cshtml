@@ -1,0 +1,368 @@
+﻿@model Web_QLKhachSan.Areas.DangNhapNV.ViewModels.DatLaiMatKhauNVViewModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đặt Lại Mật Khẩu - Serene Horizon</title>
+    <link rel="shortcut icon" href="~/assets/imgs/logo.png" type="image/x-icon" />
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    
+ <style>
+     * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+ font-family: 'Montserrat', sans-serif;
+   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+       min-height: 100vh;
+       display: flex;
+  align-items: center;
+      justify-content: center;
+   padding: 20px;
+   }
+
+        .reset-container {
+ max-width: 500px;
+      width: 100%;
+       background: white;
+      border-radius: 20px;
+      padding: 50px 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+   }
+
+   .reset-header {
+     text-align: center;
+       margin-bottom: 30px;
+  }
+
+        .reset-header .icon {
+    width: 80px;
+        height: 80px;
+       background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+     border-radius: 50%;
+       display: flex;
+      align-items: center;
+            justify-content: center;
+     margin: 0 auto 20px;
+}
+
+ .reset-header .icon i {
+     font-size: 36px;
+     color: white;
+ }
+
+    .reset-header h2 {
+       font-size: 24px;
+       color: #333;
+ margin-bottom: 10px;
+        }
+
+        .reset-header p {
+      color: #666;
+      font-size: 14px;
+  }
+
+        .email-display {
+ background: #e7f3ff;
+        padding: 10px 15px;
+    border-radius: 8px;
+            margin-bottom: 30px;
+      color: #0066cc;
+            font-weight: 600;
+      text-align: center;
+        }
+
+        .form-row {
+      margin-bottom: 25px;
+        }
+
+        .form-row label {
+ display: block;
+          margin-bottom: 8px;
+     color: #333;
+        font-weight: 500;
+     font-size: 14px;
+     }
+
+ .input-wrapper {
+      position: relative;
+}
+
+        .input-wrapper i {
+            position: absolute;
+     left: 15px;
+     top: 50%;
+      transform: translateY(-50%);
+ color: #999;
+  }
+
+   .form-control {
+       width: 100%;
+       padding: 12px 15px 12px 45px;
+     border: 2px solid #e0e0e0;
+    border-radius: 10px;
+      font-size: 14px;
+    transition: all 0.3s ease;
+    font-family: 'Montserrat', sans-serif;
+ }
+
+        .form-control:focus {
+ outline: none;
+     border-color: #28a745;
+        box-shadow: 0 0 0 4px rgba(40,167,69,0.1);
+        }
+
+   .toggle-password {
+            position: absolute;
+   right: 15px;
+       top: 50%;
+ transform: translateY(-50%);
+  background: none;
+     border: none;
+    cursor: pointer;
+     color: #999;
+ font-size: 18px;
+   }
+
+    .toggle-password:hover {
+  color: #667eea;
+  }
+
+    .password-strength {
+     margin-top: 10px;
+        }
+
+.strength-bar {
+            height: 4px;
+       background: #e0e0e0;
+ border-radius: 2px;
+   margin-bottom: 5px;
+        }
+
+     .strength-bar-fill {
+    height: 100%;
+       border-radius: 2px;
+        transition: all 0.3s ease;
+        }
+
+   .strength-text {
+       font-size: 12px;
+        color: #666;
+ }
+
+     .btn-submit {
+      width: 100%;
+   padding: 14px;
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+     color: white;
+       border: none;
+       border-radius: 10px;
+            font-size: 16px;
+       font-weight: 600;
+     cursor: pointer;
+     transition: all 0.3s ease;
+     }
+
+        .btn-submit:hover {
+  transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(40,167,69,0.4);
+        }
+
+        .alert {
+        padding: 12px 15px;
+            border-radius: 8px;
+    margin-bottom: 20px;
+   font-size: 14px;
+   display: flex;
+       align-items: center;
+       gap: 10px;
+        }
+
+.alert-danger {
+            background: #fee;
+         color: #c33;
+      border-left: 4px solid #c33;
+ }
+
+    .field-validation-error {
+       color: #c33;
+     font-size: 12px;
+        margin-top: 5px;
+            display: block;
+     }
+
+        .security-tips {
+        margin-top: 30px;
+     padding: 20px;
+       background: #f8f9fa;
+   border-radius: 10px;
+  }
+
+        .security-tips h4 {
+      font-size: 14px;
+  color: #333;
+         margin-bottom: 10px;
+}
+
+        .security-tips ul {
+       margin-left: 20px;
+ }
+
+.security-tips li {
+       font-size: 12px;
+      color: #666;
+    margin-bottom: 5px;
+   }
+    </style>
+</head>
+<body>
+    <div class="reset-container">
+     <div class="reset-header">
+   <div class="icon">
+  <i class="fas fa-lock"></i>
+     </div>
+     <h2>Đặt Lại Mật Khẩu</h2>
+  <p>Tạo mật khẩu mới cho tài khoản của bạn</p>
+   </div>
+
+  <div class="email-display">
+     <i class="fas fa-envelope"></i> @ViewBag.Email
+  </div>
+
+        @if (TempData["ErrorMessage"] != null)
+ {
+            <div class="alert alert-danger">
+       <i class="fas fa-exclamation-circle"></i> @TempData["ErrorMessage"]
+            </div>
+ }
+
+   @using (Html.BeginForm("DatLaiMatKhau", "DangNhapNV", new { area = "DangNhapNV" }, FormMethod.Post, new { id = "resetForm" }))
+        {
+    @Html.AntiForgeryToken()
+
+   <div class="form-row">
+    @Html.LabelFor(m => m.MatKhauMoi)
+     <div class="input-wrapper">
+     <i class="fas fa-lock"></i>
+         @Html.PasswordFor(m => m.MatKhauMoi, new { @class = "form-control", placeholder = "Nhập mật khẩu mới", id = "passwordInput" })
+    <button type="button" class="toggle-password" onclick="togglePassword('passwordInput', this)">
+  <i class="fas fa-eye"></i>
+    </button>
+      </div>
+        @Html.ValidationMessageFor(m => m.MatKhauMoi, "", new { @class = "field-validation-error" })
+   
+   <div class="password-strength">
+      <div class="strength-bar">
+       <div class="strength-bar-fill" id="strengthBar"></div>
+          </div>
+       <div class="strength-text" id="strengthText">Nhập mật khẩu để kiểm tra độ mạnh</div>
+ </div>
+  </div>
+
+    <div class="form-row">
+        @Html.LabelFor(m => m.XacNhanMatKhau)
+   <div class="input-wrapper">
+            <i class="fas fa-lock"></i>
+     @Html.PasswordFor(m => m.XacNhanMatKhau, new { @class = "form-control", placeholder = "Xác nhận mật khẩu", id = "confirmInput" })
+                <button type="button" class="toggle-password" onclick="togglePassword('confirmInput', this)">
+        <i class="fas fa-eye"></i>
+          </button>
+        </div>
+ @Html.ValidationMessageFor(m => m.XacNhanMatKhau, "", new { @class = "field-validation-error" })
+   </div>
+
+     <button type="submit" class="btn-submit">
+          <i class="fas fa-check-circle"></i> Đặt Lại Mật Khẩu
+        </button>
+        }
+
+   <div class="security-tips">
+            <h4><i class="fas fa-shield-alt"></i> Mẹo bảo mật:</h4>
+    <ul>
+                <li>Sử dụng ít nhất 6 ký tự</li>
+        <li>Kết hợp chữ hoa, chữ thường, số và ký tự đặc biệt</li>
+       <li>Không sử dụng thông tin cá nhân dễ đoán</li>
+       <li>Không sử dụng lại mật khẩu cũ</li>
+     </ul>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@3.2.12/dist/jquery.validate.unobtrusive.min.js"></script>
+    
+    <script>
+        // Toggle Password Visibility
+        function togglePassword(inputId, button) {
+ const input = document.getElementById(inputId);
+       const icon = button.querySelector('i');
+       
+  if (input.type === 'password') {
+ input.type = 'text';
+     icon.classList.remove('fa-eye');
+    icon.classList.add('fa-eye-slash');
+   } else {
+   input.type = 'password';
+         icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+     }
+  }
+
+        // Password Strength Checker
+        document.getElementById('passwordInput').addEventListener('input', function() {
+ const password = this.value;
+         const strengthBar = document.getElementById('strengthBar');
+    const strengthText = document.getElementById('strengthText');
+          
+       let strength = 0;
+     let color = '#e0e0e0';
+            let text = 'Rất yếu';
+
+    if (password.length >= 6) strength++;
+       if (password.length >= 10) strength++;
+ if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+   if (/\d/.test(password)) strength++;
+      if (/[^a-zA-Z0-9]/.test(password)) strength++;
+
+        switch(strength) {
+      case 0:
+         case 1:
+      color = '#dc3545';
+          text = 'Rất yếu';
+   break;
+   case 2:
+         color = '#ffc107';
+          text = 'Yếu';
+ break;
+   case 3:
+        color = '#28a745';
+       text = 'Trung bình';
+    break;
+      case 4:
+         color = '#20c997';
+      text = 'Mạnh';
+           break;
+       case 5:
+    color = '#17a2b8';
+       text = 'Rất mạnh';
+          break;
+        }
+
+        strengthBar.style.width = (strength * 20) + '%';
+            strengthBar.style.backgroundColor = color;
+strengthText.textContent = text;
+         strengthText.style.color = color;
+  });
+    </script>
+</body>
+</html>

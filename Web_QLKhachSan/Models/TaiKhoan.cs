@@ -30,9 +30,11 @@ namespace Web_QLKhachSan.Models
         public string OTPCode { get; set; }
         public Nullable<System.DateTime> OTPExpires { get; set; }
         public string Email { get; set; }
+        public Nullable<int> MaNhanVien { get; set; }
     
         public virtual KhachHang KhachHang { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TokenLogin> TokenLogins { get; set; }
+        public virtual NhanVien NhanVien { get; set; }
     }
 }
