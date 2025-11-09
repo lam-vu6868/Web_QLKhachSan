@@ -1,7 +1,46 @@
-﻿@{
-    ViewBag.Title = "Chi Tiết Phòng";
+﻿@model Web_QLKhachSan.Models.Phong
+
+@{
+    ViewBag.Title = (Model != null ? Model.TenPhong : "Chi Tiết") + " - Chi Tiết Phòng";
 }
 <link rel="stylesheet" href="~/assets/css/chi-tiet-phong.css" />
+
+@if (Model == null)
+{
+    <div class="container" style="padding: 100px 0;">
+        <div style="max-width: 800px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <h2 style="color: #d4af37;">⚠️ Debug Information</h2>
+
+            @if (ViewBag.ErrorMessage != null)
+            {
+                <div style="background: #fee; border-left: 4px solid #f00; padding: 15px; margin: 20px 0;">
+                    <strong>Error:</strong> @ViewBag.ErrorMessage
+                </div>
+            }
+
+            <div style="background: #f9f9f9; padding: 15px; margin: 20px 0; border-radius: 5px;">
+                <p><strong>Tổng số LoaiPhong trong database:</strong> @ViewBag.TotalLoaiPhongs</p>
+                <p><strong>ID được yêu cầu:</strong> @ViewBag.RequestedId</p>
+                <p><strong>Các ID có sẵn trong database:</strong> @ViewBag.AllIds</p>
+            </div>
+
+            @if (ViewBag.StackTrace != null)
+            {
+                <details style="margin: 20px 0;">
+                    <summary style="cursor: pointer; color: #d4af37; font-weight: bold;">Stack Trace</summary>
+                    <pre style="background: #f5f5f5; padding: 10px; overflow: auto; font-size: 12px;">@ViewBag.StackTrace</pre>
+                </details>
+            }
+
+            <div style="text-align: center; margin-top: 30px;">
+                <a href="@Url.Action("Index", "PhongNghi")" style="display: inline-block; padding: 12px 30px; background: #d4af37; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                    ← Quay lại danh sách phòng
+                </a>
+            </div>
+        </div>
+    </div>
+    return;
+}
 
 <!-- Page Header -->
 <section class="page-header">
@@ -11,10 +50,10 @@
             <i class="fas fa-chevron-right"></i>
             <span>Chi tiết phòng</span>
         </div>
-        <h1 data-aos="fade-up">Deluxe Ocean View</h1>
+        <h1 data-aos="fade-up">@Model.TenPhong</h1>
         <div class="room-badges" data-aos="fade-up" data-aos-delay="100">
-            <span class="badge premium">Premium</span>
-            <span class="badge view">View Biển</span>
+            <span class="badge premium">@Model.MaPhong</span>
+            <span class="badge view">@Model.LoaiPhong.TenLoai</span>
             <span class="badge rating">
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
@@ -34,9 +73,15 @@
             <!-- Image Gallery -->
             <div class="gallery-section" data-aos="fade-right">
                 <div class="main-gallery">
+                    @{
+                        var phongAnhs = Model.PhongAnhs != null && Model.PhongAnhs.Any()
+                            ? Model.PhongAnhs.OrderBy(pa => pa.ThuTu).ToList()
+                            : new List<Web_QLKhachSan.Models.PhongAnh>();
+                        var firstImage = phongAnhs.FirstOrDefault()?.Url ?? Model.HinhAnhThumb ?? "https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=1740&q=80";
+                    }
                     <div class="gallery-main">
-                        <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=1740&q=80"
-                             alt="Deluxe Ocean View - Main"
+                        <img src="@firstImage"
+                             alt="@Model.TenPhong - Main"
                              id="main-image" />
                         <div class="gallery-controls">
                             <button class="gallery-btn prev" id="prev-btn">
@@ -48,26 +93,26 @@
                         </div>
                         <div class="gallery-indicators" id="gallery-indicators"></div>
                     </div>
-                    
+
                     <div class="gallery-thumbnails" id="gallery-thumbnails">
-                        <div class="thumbnail active" data-src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=1740&q=80">
-                            <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=300&q=80" alt="View 1" />
-                        </div>
-                        <div class="thumbnail" data-src="https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?auto=format&fit=crop&w=1740&q=80">
-                            <img src="https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?auto=format&fit=crop&w=300&q=80" alt="View 2" />
-                        </div>
-                        <div class="thumbnail" data-src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=1740&q=80">
-                            <img src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=300&q=80" alt="View 3" />
-                        </div>
-                        <div class="thumbnail" data-src="https://images.unsplash.com/photo-1598605272254-16f0c0ecdfa5?auto=format&fit=crop&w=1740&q=80">
-                            <img src="https://images.unsplash.com/photo-1598605272254-16f0c0ecdfa5?auto=format&fit=crop&w=300&q=80" alt="View 4" />
-                        </div>
-                        <div class="thumbnail" data-src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1740&q=80">
-                            <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=300&q=80" alt="View 5" />
-                        </div>
-                        <div class="thumbnail" data-src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=1740&q=80">
-                            <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=300&q=80" alt="View 6" />
-                        </div>
+                        @if (phongAnhs.Any())
+                        {
+                            for (int i = 0; i < phongAnhs.Count; i++)
+                            {
+                                var phongAnh = phongAnhs[i];
+                                var activeClass = i == 0 ? "active" : "";
+                                <div class="thumbnail @activeClass" data-src="@phongAnh.Url">
+                                    <img src="@phongAnh.Url" alt="@(phongAnh.ChuThich ?? Model.TenPhong + " - View " + (i + 1))" />
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            @* Fallback images nếu không có ảnh trong database *@
+                            <div class="thumbnail active" data-src="@firstImage">
+                                <img src="@firstImage" alt="@Model.TenPhong - View 1" />
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
@@ -77,13 +122,19 @@
                 <div class="room-info-content">
                     <div class="room-header">
                         <div class="room-title">
-                            <h2>Deluxe Ocean View</h2>
-                            <p class="room-subtitle">Không gian sang trọng với tầm nhìn tuyệt đẹp</p>
+                            <h2>@Model.TenPhong</h2>
+                            <p class="room-subtitle">@Model.LoaiPhong.TenLoai - @(Model.LoaiPhong.MoTa ?? "Không gian sang trọng")</p>
                         </div>
-                        <div class="room-price">
-                            <span class="price-amount">$150</span>
-                            <span class="price-unit">/ đêm</span>
-                        </div>
+                        @{
+                            var giaPhong = Model.Gia ?? Model.LoaiPhong.GiaCoBan;
+                        }
+                        @if (giaPhong.HasValue)
+                        {
+                            <div class="room-price">
+                                <span class="price-amount">@giaPhong.Value.ToString("N0")₫</span>
+                                <span class="price-unit">/ đêm</span>
+                            </div>
+                        }
                     </div>
                     <!-- Booking Section -->
                     <div class="booking-section" data-aos="fade-up">
@@ -100,34 +151,32 @@
                     </div>
 
                     <div class="room-features">
-                        <div class="feature-item">
-                            <i class="fas fa-ruler-combined"></i>
-                            <span>35m²</span>
-                        </div>
-                        <div class="feature-item">
-                            <i class="fas fa-bed"></i>
-                            <span>Giường King</span>
-                        </div>
-                        <div class="feature-item">
-                            <i class="fas fa-users"></i>
-                            <span>2 Khách</span>
-                        </div>
-                        <div class="feature-item">
-                            <i class="fas fa-water"></i>
-                            <span>View Biển</span>
-                        </div>
+                        @if (Model.LoaiPhong.DienTich.HasValue)
+                        {
+                            <div class="feature-item">
+                                <i class="fas fa-ruler-combined"></i>
+                                <span>@Model.LoaiPhong.DienTich.Value.ToString("0")m²</span>
+                            </div>
+                        }
+                        @if (Model.LoaiPhong.SoNguoiToiDa.HasValue)
+                        {
+                            <div class="feature-item">
+                                <i class="fas fa-users"></i>
+                                <span>@Model.LoaiPhong.SoNguoiToiDa Khách</span>
+                            </div>
+                        }
+                        @foreach (var tienIch in Model.LoaiPhong.TienIches.Take(4))
+                        {
+                            var iconClass = !string.IsNullOrEmpty(tienIch.Icon) ? tienIch.Icon : "fas fa-star";
+                            <div class="feature-item">
+                                <i class="@iconClass"></i>
+                                <span>@tienIch.TenTienIch</span>
+                            </div>
+                        }
                     </div>
 
                     <div class="room-description">
-                        <p>
-                            Tận hưởng không gian nghỉ dưỡng tuyệt vời với ban công riêng nhìn thẳng ra đại dương xanh biếc.
-                            Căn phòng được thiết kế tinh tế với nội thất cao cấp, giường cỡ King êm ái và phòng tắm
-                            lát đá cẩm thạch sang trọng.
-                        </p>
-                        <p>
-                            Đây là sự lựa chọn hoàn hảo cho các cặp đôi hoặc những ai tìm kiếm sự thư thái,
-                            lãng mạn và trải nghiệm nghỉ dưỡng đẳng cấp.
-                        </p>
+                        <p>@Html.Raw(Model.LoaiPhong.MoTa ?? "Tận hưởng không gian nghỉ dưỡng tuyệt vời với thiết kế tinh tế và nội thất cao cấp.")</p>
                     </div>
                 </div>
 
@@ -138,44 +187,33 @@
         <!-- Amenities Section -->
         <div class="amenities-section" data-aos="fade-up">
             <h3 class="section-title">Tiện nghi phòng</h3>
-            <div class="amenities-grid">
-                <div class="amenity-category">
-                    <h4><i class="fas fa-bed"></i> Phòng ngủ</h4>
-                    <ul>
-                        <li>Giường King size cao cấp</li>
-                        <li>Ga giường cotton Ai Cập</li>
-                        <li>Gối memory foam</li>
-                        <li>Rèm cửa blackout</li>
-                    </ul>
+            @if (Model.LoaiPhong.TienNghis != null && Model.LoaiPhong.TienNghis.Any())
+            {
+                <div class="amenities-grid">
+                    @{
+                        var tienNghiGroups = Model.LoaiPhong.TienNghis
+                            .GroupBy(tn => tn.LoaiTienNghi != null ? tn.LoaiTienNghi.TenLoai : "Tiện nghi khác");
+                    }
+                    @foreach (var group in tienNghiGroups)
+                    {
+                        var firstIcon = group.FirstOrDefault()?.Icon;
+                        var groupIconClass = !string.IsNullOrEmpty(firstIcon) ? firstIcon : "fas fa-star";
+                        <div class="amenity-category">
+                            <h4><i class="@groupIconClass"></i> @group.Key</h4>
+                            <ul>
+                                @foreach (var tienNghi in group)
+                                {
+                                    <li>@tienNghi.TenTienNghi</li>
+                                }
+                            </ul>
+                        </div>
+                    }
                 </div>
-                <div class="amenity-category">
-                    <h4><i class="fas fa-bath"></i> Phòng tắm</h4>
-                    <ul>
-                        <li>Bồn tắm đá cẩm thạch</li>
-                        <li>Vòi sen rainfall</li>
-                        <li>Khăn tắm cao cấp</li>
-                        <li>Amenities hữu cơ</li>
-                    </ul>
-                </div>
-                <div class="amenity-category">
-                    <h4><i class="fas fa-tv"></i> Giải trí</h4>
-                    <ul>
-                        <li>Smart TV 55 inch</li>
-                        <li>Netflix & streaming</li>
-                        <li>Loa Bluetooth</li>
-                        <li>Wifi tốc độ cao</li>
-                    </ul>
-                </div>
-                <div class="amenity-category">
-                    <h4><i class="fas fa-coffee"></i> Tiện ích</h4>
-                    <ul>
-                        <li>Minibar đầy đủ</li>
-                        <li>Máy pha coffee</li>
-                        <li>Két an toàn điện tử</li>
-                        <li>Dịch vụ phòng 24/7</li>
-                    </ul>
-                </div>
-            </div>
+            }
+            else
+            {
+                <p>Thông tin tiện nghi sẽ được cập nhật sớm.</p>
+            }
         </div>
 
         <!-- Similar Rooms -->
@@ -213,7 +251,7 @@
                         <a href="#" class="btn-view-room">Xem chi tiết</a>
                     </div>
                 </div>
-                
+
                 <div class="room-card">
                     <div class="room-image">
                         <img src="https://images.unsplash.com/photo-1591088398332-8a7791972843?auto=format&fit=crop&w=800&q=80" alt="Family Suite" />
@@ -229,7 +267,7 @@
                         <a href="#" class="btn-view-room">Xem chi tiết</a>
                     </div>
                 </div>
-                
+
                 <div class="room-card">
                     <div class="room-image">
                         <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80" alt="Superior Garden" />

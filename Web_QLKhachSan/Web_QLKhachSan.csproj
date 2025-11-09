@@ -389,13 +389,6 @@
     <Content Include="Areas\Admin\Views\BaoCaoThongKe\Index.cshtml" />
     <Content Include="Areas\Admin\Views\DashboardAdmin\Index.cshtml" />
     <Content Include="Areas\Admin\Views\QuanLyNhanVien\Index.cshtml" />
-    <EntityDeploy Include="Models\Contect.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>Contect.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="Models\Contect.edmx.diagram">
-      <DependentUpon>Contect.edmx</DependentUpon>
-    </Content>
     <Content Include="Areas\NhanVienBuongPhong\Views\web.config" />
     <Content Include="Areas\NhanVienLeTan\Views\Shared\_LayoutNVLT.cshtml" />
     <Content Include="Areas\NhanVienLeTan\Views\SoDoPhong\Index.cshtml" />
@@ -404,6 +397,13 @@
     <Content Include="Areas\DangNhapNV\Views\web.config" />
     <Content Include="Areas\DangNhapNV\Views\DangNhapNV\XacThucOTP.cshtml" />
     <Content Include="Areas\DangNhapNV\Views\DangNhapNV\DatLaiMatKhau.cshtml" />
+    <EntityDeploy Include="Models\Contect.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Contect.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\Contect.edmx.diagram">
+      <DependentUpon>Contect.edmx</DependentUpon>
+    </Content>
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />

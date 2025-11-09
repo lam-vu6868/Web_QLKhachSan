@@ -321,18 +321,6 @@ body {
     position: relative;
 }
 
-.category-badge {
-    display: inline-block;
-    padding: 6px 16px;
-    background: linear-gradient(45deg, #f093fb, #f5576c);
-    color: white;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    margin-bottom: 10px;
-}
-
 .service-category[data-category="spa"] .category-badge {
     background: linear-gradient(45deg, #11998e, #38ef7d);
 }
