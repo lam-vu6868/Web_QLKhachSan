@@ -115,7 +115,7 @@
                             </div>
                             <div class="room-item-content">
                                 <h3>@phong.TenPhong</h3>
-                                <p class="price">$@((phong.Gia ?? phong.LoaiPhong.GiaCoBan ?? 0).ToString("0")) <span>/ đêm</span></p>
+                                <p class="price">@((phong.Gia ?? phong.LoaiPhong.GiaCoBan ?? 0).ToString("#,##0"))₫ <span>/ đêm</span></p>
                                 <p class="description">
                                     @(phong.LoaiPhong.MoTa ?? "Phòng nghỉ thoải mái với đầy đủ tiện nghi hiện đại.")
                                     @if (phong.LoaiPhong.DienTich.HasValue)

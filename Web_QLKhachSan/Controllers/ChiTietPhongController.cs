@@ -42,6 +42,16 @@ namespace Web_QLKhachSan.Controllers
                     return View(null as Phong);
                 }
 
+                // Lấy 4 phòng tương tự (cùng LoaiPhongId, khác PhongId)
+                var similarRooms = db.Phongs
+                    .Include("LoaiPhong")
+                    .Include("PhongAnhs")
+                    .Where(p => p.LoaiPhongId == phong.LoaiPhongId && p.PhongId != phong.PhongId)
+                    .Take(4)
+                    .ToList();
+
+                ViewBag.SimilarRooms = similarRooms;
+
                 return View(phong);
             }
             catch (Exception ex)

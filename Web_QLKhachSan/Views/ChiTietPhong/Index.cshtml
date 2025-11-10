@@ -175,9 +175,9 @@
                         }
                     </div>
 
-                    <div class="room-description">
+                    @*<div class="room-description">
                         <p>@Html.Raw(Model.LoaiPhong.MoTa ?? "Tận hưởng không gian nghỉ dưỡng tuyệt vời với thiết kế tinh tế và nội thất cao cấp.")</p>
-                    </div>
+                    </div>*@
                 </div>
 
 
@@ -220,69 +220,42 @@
         <div class="similar-rooms-section" data-aos="fade-up">
             <h3 class="section-title">Phòng tương tự</h3>
             <div class="rooms-carousel">
-                <div class="room-card">
-                    <div class="room-image">
-                        <img src="https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=800&q=80" alt="Executive Suite" />
-                        <div class="room-tag">Cao cấp</div>
-                    </div>
-                    <div class="room-info">
-                        <h4>Executive Suite</h4>
-                        <p class="room-price">$250 <span>/ đêm</span></p>
-                        <div class="room-features">
-                            <span><i class="fas fa-ruler-combined"></i> 60m²</span>
-                            <span><i class="fas fa-users"></i> 4 khách</span>
+                @if (ViewBag.SimilarRooms != null && ((List<Web_QLKhachSan.Models.Phong>)ViewBag.SimilarRooms).Any())
+                {
+                    foreach (var room in (List<Web_QLKhachSan.Models.Phong>)ViewBag.SimilarRooms)
+                    {
+                        var roomImage = room.PhongAnhs != null && room.PhongAnhs.Any()
+                            ? room.PhongAnhs.OrderBy(pa => pa.ThuTu).FirstOrDefault()?.Url
+                            : room.HinhAnhThumb ?? "https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=800&q=80";
+                        var roomPrice = room.Gia ?? room.LoaiPhong.GiaCoBan ?? 0;
+                        var roomTag = room.LoaiPhong.TenLoai ?? "Phòng";
+                        <div class="room-card">
+                            <div class="room-image">
+                                <img src="@roomImage" alt="@room.TenPhong" />
+                                <div class="room-tag">@roomTag</div>
+                            </div>
+                            <div class="room-info">
+                                <h4>@room.TenPhong</h4>
+                                <p class="room-price">@roomPrice.ToString("N0")₫ <span>/ đêm</span></p>
+                                <div class="room-features">
+                                    @if (room.LoaiPhong.DienTich.HasValue)
+                                    {
+                                        <span><i class="fas fa-ruler-combined"></i> @room.LoaiPhong.DienTich.Value.ToString("0")m²</span>
+                                    }
+                                    @if (room.LoaiPhong.SoNguoiToiDa.HasValue)
+                                    {
+                                        <span><i class="fas fa-users"></i> @room.LoaiPhong.SoNguoiToiDa khách</span>
+                                    }
+                                </div>
+                                <a href="@Url.Action("Index", "ChiTietPhong", new { id = room.PhongId })" class="btn-view-room">Xem chi tiết</a>
+                            </div>
                         </div>
-                        <a href="#" class="btn-view-room">Xem chi tiết</a>
-                    </div>
-                </div>
-
-                <div class="room-card">
-                    <div class="room-image">
-                        <img src="https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=800&q=80" alt="Executive Suite" />
-                        <div class="room-tag">Cao cấp</div>
-                    </div>
-                    <div class="room-info">
-                        <h4>Executive Suite</h4>
-                        <p class="room-price">$250 <span>/ đêm</span></p>
-                        <div class="room-features">
-                            <span><i class="fas fa-ruler-combined"></i> 60m²</span>
-                            <span><i class="fas fa-users"></i> 4 khách</span>
-                        </div>
-                        <a href="#" class="btn-view-room">Xem chi tiết</a>
-                    </div>
-                </div>
-
-                <div class="room-card">
-                    <div class="room-image">
-                        <img src="https://images.unsplash.com/photo-1591088398332-8a7791972843?auto=format&fit=crop&w=800&q=80" alt="Family Suite" />
-                        <div class="room-tag">Gia đình</div>
-                    </div>
-                    <div class="room-info">
-                        <h4>Family Suite</h4>
-                        <p class="room-price">$300 <span>/ đêm</span></p>
-                        <div class="room-features">
-                            <span><i class="fas fa-ruler-combined"></i> 80m²</span>
-                            <span><i class="fas fa-users"></i> 6 khách</span>
-                        </div>
-                        <a href="#" class="btn-view-room">Xem chi tiết</a>
-                    </div>
-                </div>
-
-                <div class="room-card">
-                    <div class="room-image">
-                        <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80" alt="Superior Garden" />
-                        <div class="room-tag">View vườn</div>
-                    </div>
-                    <div class="room-info">
-                        <h4>Superior Garden View</h4>
-                        <p class="room-price">$120 <span>/ đêm</span></p>
-                        <div class="room-features">
-                            <span><i class="fas fa-ruler-combined"></i> 30m²</span>
-                            <span><i class="fas fa-users"></i> 2 khách</span>
-                        </div>
-                        <a href="#" class="btn-view-room">Xem chi tiết</a>
-                    </div>
-                </div>
+                    }
+                }
+                else
+                {
+                    <p style="text-align: center; color: #999; padding: 40px 0;">Không có phòng tương tự</p>
+                }
             </div>
         </div>
     </div>
