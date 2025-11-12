@@ -28,6 +28,7 @@ namespace Web_QLKhachSan.Models
         public Nullable<System.DateTime> NgayCapNhat { get; set; }
         public string HinhAnh { get; set; }
         public string Icon { get; set; }
+        public string Slogan { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DichVu> DichVus { get; set; }

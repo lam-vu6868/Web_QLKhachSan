@@ -363,101 +363,85 @@
             <p class="section-subtitle">Trải nghiệm đẳng cấp 5 sao với đa dạng tiện ích</p>
         </div>
         <div class="services-grid-modern">
-            <div class="service-item-modern" data-aos="fade-up" data-aos-delay="100">
-                <div class="service-bg"
-                     style="
-                  background-image: url('https://images.unsplash.com/photo-1544148103-0773bf10d330?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80');
-                "></div>
-                <div class="service-gradient"></div>
-                <div class="service-icon">
-                    <i class="fas fa-utensils"></i>
-                </div>
-                <div class="service-content">
-                    <h3>Nhà Hàng</h3>
-                    <p>Khám phá ẩm thực tinh hoa</p>
-                    <ul class="service-features">
-                        <li><i class="fas fa-check"></i> Ẩm thực 5 sao</li>
-                        <li><i class="fas fa-check"></i> Đầu bếp chuyên nghiệp</li>
-                        <li><i class="fas fa-check"></i> Phục vụ 24/7</li>
-                    </ul>
-                    <a href="@Url.Action("Index", "DichVu")" class="service-link">
-                        <span>Khám Phá</span>
-                        <i class="fas fa-arrow-right"></i>
-                    </a>
-                </div>
-            </div>
+            @if (ViewBag.LoaiDichVus != null && ((List<Web_QLKhachSan.Models.LoaiDichVu>)ViewBag.LoaiDichVus).Any())
+            {
+                int delayIndex = 1;
+                foreach (var loaiDichVu in (List<Web_QLKhachSan.Models.LoaiDichVu>)ViewBag.LoaiDichVus)
+                {
+                    var serviceImage = !string.IsNullOrEmpty(loaiDichVu.HinhAnh)
+                        ? loaiDichVu.HinhAnh
+                        : "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1740&q=80";
+                    var serviceIcon = !string.IsNullOrEmpty(loaiDichVu.Icon)
+                        ? loaiDichVu.Icon
+                        : "fas fa-concierge-bell";
+                    var serviceSlogan = !string.IsNullOrEmpty(loaiDichVu.Slogan)
+                        ? loaiDichVu.Slogan
+                        : "Trải nghiệm dịch vụ đẳng cấp";
+                    
+                    // Lấy 3 dịch vụ đầu tiên của loại này
+                    var topDichVus = loaiDichVu.DichVus
+                        .Where(d => d.DaHoatDong)
+                        .Take(3)
+                        .ToList();
 
-            <div class="service-item-modern" data-aos="fade-up" data-aos-delay="200">
-                <div class="service-bg"
-                     style="
-                  background-image: url('https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80');
-                "></div>
-                <div class="service-gradient"></div>
-                <div class="service-icon">
-                    <i class="fas fa-spa"></i>
+                    <div class="service-item-modern" data-aos="fade-up" data-aos-delay="@(delayIndex * 100)">
+                        <div class="service-bg" style="background-image: url('@serviceImage');"></div>
+                        <div class="service-gradient"></div>
+                        <div class="service-icon">
+                            <i class="@serviceIcon"></i>
+                        </div>
+                        <div class="service-content">
+                            <h3>@loaiDichVu.TenLoai</h3>
+                            <p>@serviceSlogan</p>
+                            <ul class="service-features">
+                                @if (topDichVus.Any())
+                                {
+                                    foreach (var dichVu in topDichVus)
+                                    {
+                                        <li><i class="fas fa-check"></i> @dichVu.TenDichVu</li>
+                                    }
+                                }
+                                else
+                                {
+                                    <li><i class="fas fa-check"></i> Dịch vụ chuyên nghiệp</li>
+                                    <li><i class="fas fa-check"></i> Chất lượng đảm bảo</li>
+                                    <li><i class="fas fa-check"></i> Phục vụ tận tình</li>
+                                }
+                            </ul>
+                            <a href="@Url.Action("Index", "DichVu")" class="service-link">
+                                <span>Khám Phá</span>
+                                <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    delayIndex++;
+                }
+            }
+            else
+            {
+                @* Fallback nếu không có dữ liệu *@
+                <div class="service-item-modern" data-aos="fade-up" data-aos-delay="100">
+                    <div class="service-bg" style="background-image: url('https://images.unsplash.com/photo-1544148103-0773bf10d330?auto=format&fit=crop&w=1740&q=80');"></div>
+                    <div class="service-gradient"></div>
+                    <div class="service-icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <div class="service-content">
+                        <h3>Nhà Hàng</h3>
+                        <p>Khám phá ẩm thực tinh hoa</p>
+                        <ul class="service-features">
+                            <li><i class="fas fa-check"></i> Ẩm thực 5 sao</li>
+                            <li><i class="fas fa-check"></i> Đầu bếp chuyên nghiệp</li>
+                            <li><i class="fas fa-check"></i> Phục vụ 24/7</li>
+                        </ul>
+                        <a href="@Url.Action("Index", "DichVu")" class="service-link">
+                            <span>Khám Phá</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
                 </div>
-                <div class="service-content">
-                    <h3>Spa & Wellness</h3>
-                    <p>Tái tạo và thư giãn</p>
-                    <ul class="service-features">
-                        <li><i class="fas fa-check"></i> Massage cao cấp</li>
-                        <li><i class="fas fa-check"></i> Liệu pháp thư giãn</li>
-                        <li><i class="fas fa-check"></i> Chăm sóc toàn diện</li>
-                    </ul>
-                    <a href="@Url.Action("Index", "DichVu")" class="service-link">
-                        <span>Khám Phá</span>
-                        <i class="fas fa-arrow-right"></i>
-                    </a>
-                </div>
-            </div>
-
-            <div class="service-item-modern" data-aos="fade-up" data-aos-delay="300">
-                <div class="service-bg"
-                     style="
-                  background-image: url('https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1648&q=80');
-                "></div>
-                <div class="service-gradient"></div>
-                <div class="service-icon">
-                    <i class="fas fa-swimming-pool"></i>
-                </div>
-                <div class="service-content">
-                    <h3>Hồ Bơi Vô Cực</h3>
-                    <p>Hòa mình vào vực sâu</p>
-                    <ul class="service-features">
-                        <li><i class="fas fa-check"></i> View tuyệt đẹp</li>
-                        <li><i class="fas fa-check"></i> Nước sạch tiêu chuẩn</li>
-                        <li><i class="fas fa-check"></i> Bar bên hồ bơi</li>
-                    </ul>
-                    <a href="@Url.Action("Index", "DichVu")" class="service-link">
-                        <span>Khám Phá</span>
-                        <i class="fas fa-arrow-right"></i>
-                    </a>
-                </div>
-            </div>
-
-            <div class="service-item-modern" data-aos="fade-up" data-aos-delay="400">
-                <div class="service-bg"
-                     style="
-                  background-image: url('https://images.unsplash.com/photo-1477332552946-cfb384aeaf1c?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
-                "></div>
-                <div class="service-gradient"></div>
-                <div class="service-icon">
-                    <i class="fas fa-tree"></i>
-                </div>
-                <div class="service-content">
-                    <h3>Hòa Vào Thiên Nhiên</h3>
-                    <p>Kết nối cùng thiên nhiên</p>
-                    <ul class="service-features">
-                        <li><i class="fas fa-check"></i> Vườn xanh yên bình</li>
-                        <li><i class="fas fa-check"></i> Tour du lịch sinh thái</li>
-                        <li><i class="fas fa-check"></i> Hoạt động ngoài trời</li>
-                    </ul>
-                    <a href="@Url.Action("Index", "DichVu")" class="service-link">
-                        <span>Khám Phá</span>
-                        <i class="fas fa-arrow-right"></i>
-                    </a>
-                </div>
-            </div>
+            }
         </div>
     </div>
 </section>

@@ -661,6 +661,7 @@
     white-space: nowrap;
     position: relative;
     overflow: hidden;
+    text-decoration: none;
 }
 
 .btn-book-now-main::before {
@@ -677,11 +678,11 @@
 .btn-book-now-main:hover::before {
     left: 100%;
 }
-
 .btn-book-now-main:hover {
     transform: translateY(-3px);
     box-shadow: 0 12px 35px rgba(212, 175, 55, 0.4);
     background: linear-gradient(135deg, #e6c547 0%, #d4af37 100%);
+    color: var(--primary-navy);
 }
 
 .btn-book-now-main:active {
