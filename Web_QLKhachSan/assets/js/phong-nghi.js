@@ -49,28 +49,59 @@ document.addEventListener("DOMContentLoaded", function () {
     observer.observe(filterSidebar);
   }
 
-  // Price range slider functionality
+  // Price range slider functionality with fixed price levels
   const priceSlider = document.querySelector(
     '.price-range-slider input[type="range"]'
   );
-  const priceDisplay = document.querySelector(".price-range-slider p");
+  const priceDisplays = document.querySelectorAll(".price-range-slider .price-display span");
+  const priceValueDisplay = document.querySelector(".price-value");
 
-  if (priceSlider && priceDisplay) {
-    priceSlider.addEventListener("input", function () {
-      const value = this.value;
-      priceDisplay.textContent = `Giá: $50 - $${value}`;
-    });
+  if (priceSlider) {
+    // Định nghĩa 4 mức giá cố định (300, 400, 600, 900)
+    const priceLevels = [300000, 400000, 600000, 900000];
+    
+    // Format số tiền theo VN (300.000đ)
+    function formatVND(amount) {
+      return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + "đ";
+    }
+    
+    // Lấy giá trị từ server (đã được set trong HTML value attribute)
+    const currentLevel = parseInt(priceSlider.value);
+    
+    // Cập nhật hiển thị giá min/max
+    if (priceDisplays.length >= 2) {
+      priceDisplays[0].textContent = formatVND(priceLevels[0]); // 300.000đ
+      priceDisplays[1].textContent = formatVND(priceLevels[3]); // 900.000đ
+    }
+    
+    // Hàm cập nhật giá trị và gradient
+    function updatePrice() {
+      const level = parseInt(priceSlider.value);
+      const selectedPrice = priceLevels[level];
+      
+      // Cập nhật giá hiển thị trong tiêu đề h5
+      if (priceValueDisplay) {
+        priceValueDisplay.textContent = `(≤ ${formatVND(selectedPrice)})`;
+      }
+      
+      // Cập nhật gradient cho slider
+      const percentage = (level / 3) * 100;
+      priceSlider.style.background = `linear-gradient(to right, #d4af37 0%, #d4af37 ${percentage}%, #ddd ${percentage}%, #ddd 100%)`;
+    }
+    
+    // Khởi tạo giá trị và gradient từ server
+    updatePrice();
+    
+    // Lắng nghe sự kiện thay đổi
+    priceSlider.addEventListener("input", updatePrice);
   }
 
   // Filter functionality
   const applyFilterBtn = document.querySelector(".filter-apply-btn");
   if (applyFilterBtn) {
     applyFilterBtn.addEventListener("click", function () {
-      // Here you would implement actual filtering logic
+      // Filter logic is handled by form submission
       console.log("Applying filters...");
-
-      // For now, just show a message
-      alert("Bộ lọc đã được áp dụng!");
     });
   }
 
@@ -242,4 +273,105 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
   }
+});
+
+// Handle sort change
+function handleSortChange(select) {
+  const sortValue = select.value;
+  const currentUrl = window.location.href.split('?')[0];
+  const urlParams = new URLSearchParams(window.location.search);
+  
+  // Lấy các filter hiện tại
+  const currentPage = urlParams.get('page') || '1';
+  const priceLevel = urlParams.get('priceLevel');
+  const loaiPhong = urlParams.getAll('loaiPhong');
+  const tienIch = urlParams.getAll('tienIch');
+  
+  // Tạo URL mới giữ lại tất cả filter
+  const newParams = new URLSearchParams();
+  newParams.set('sort', sortValue);
+  newParams.set('page', currentPage);
+  
+  if (priceLevel) {
+    newParams.set('priceLevel', priceLevel);
+  }
+  
+  loaiPhong.forEach(lp => {
+    newParams.append('loaiPhong', lp);
+  });
+  
+  tienIch.forEach(ti => {
+    newParams.append('tienIch', ti);
+  });
+  
+  window.location.href = currentUrl + '?' + newParams.toString();
+}
+
+// ============================================
+// Logic tách biệt 2 bộ lọc: Giá và Loại phòng
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+  const filterForm = document.getElementById('filterForm');
+  const priceSlider = document.getElementById('priceRange');
+  const loaiPhongCheckboxes = document.querySelectorAll('input[name="loaiPhong"]');
+  
+  if (!filterForm || !priceSlider) return;
+  
+  // Hàm cập nhật gradient cho slider
+  function updatePriceSlider() {
+    if (!priceSlider) return;
+    
+    const priceLevels = [300000, 400000, 600000, 900000];
+    const level = parseInt(priceSlider.value);
+    const selectedPrice = priceLevels[level];
+    
+    // Format VND
+    function formatVND(amount) {
+      return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + "đ";
+    }
+    
+    // Cập nhật giá hiển thị
+    const priceValueDisplay = document.querySelector(".price-value");
+    if (priceValueDisplay) {
+      priceValueDisplay.textContent = `(≤ ${formatVND(selectedPrice)})`;
+    }
+    
+    // Cập nhật gradient cho slider
+    const percentage = (level / 3) * 100;
+    priceSlider.style.background = `linear-gradient(to right, #d4af37 0%, #d4af37 ${percentage}%, #ddd ${percentage}%, #ddd 100%)`;
+  }
+  
+  // Khi thay đổi slider giá -> Uncheck tất cả checkbox loại phòng
+  priceSlider.addEventListener('change', function() {
+    loaiPhongCheckboxes.forEach(cb => {
+      cb.checked = false;
+    });
+  });
+  
+  // Khi check/uncheck loại phòng -> Reset slider về 0 (không lọc giá)
+  loaiPhongCheckboxes.forEach(function(checkbox) {
+    checkbox.addEventListener('change', function() {
+      if (this.checked) {
+        // Khi check loại phòng, reset slider về giá trị mặc định
+        priceSlider.value = 0;
+        // Cập nhật lại gradient và text
+        updatePriceSlider();
+      }
+    });
+  });
+  
+  // Khi submit form, loại bỏ parameter không cần thiết
+  filterForm.addEventListener('submit', function(e) {
+    const hasLoaiPhong = Array.from(loaiPhongCheckboxes).some(cb => cb.checked);
+    
+    if (hasLoaiPhong) {
+      // Nếu có chọn loại phòng -> Xóa priceLevel khỏi form
+      priceSlider.removeAttribute('name');
+    } else {
+      // Nếu không chọn loại phòng -> Giữ priceLevel
+      if (!priceSlider.hasAttribute('name')) {
+        priceSlider.setAttribute('name', 'priceLevel');
+      }
+    }
+  });
 });

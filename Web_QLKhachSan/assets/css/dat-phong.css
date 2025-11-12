@@ -236,7 +236,6 @@ input.error, input:invalid {
   grid-template-columns: 2fr 1fr;
   gap: 40px;
   position: relative; /* Cần thiết cho sticky positioning */
-  min-height: 100vh; /* Đảm bảo có đủ nội dung để test sticky */
   overflow: visible; /* Đảm bảo không có overflow hidden */
 }
 
@@ -730,21 +729,17 @@ input.error, input:invalid {
 
 /* Order summary */
 .order-summary {
-  /* CỐT LÕI CỦA STICKY */
     position: sticky; 
-    top: 90px; /* Khoảng cách từ top khi sticky */
-
+    top: 100px; /* Khoảng cách từ top khi sticky (navbar height + spacing) */
     background: #fff;
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-    z-index: 999; 
-    
-    /* Các thuộc tính bạn đã dùng để kiểm soát chiều cao/cuộn của chính nó */
+    z-index: 100; 
     height: fit-content;
-    max-height: none; 
-    overflow: visible; 
-    left: 0; /* Giữ lại để đảm bảo vị trí ngang */
+    max-height: calc(100vh - 120px); /* Đảm bảo không vượt quá viewport */
+    overflow-y: auto; /* Cho phép scroll nếu nội dung quá dài */
+    transition: box-shadow 0.3s ease;
 }
 
 /* Hiệu ứng khi order-summary ở trạng thái sticky */

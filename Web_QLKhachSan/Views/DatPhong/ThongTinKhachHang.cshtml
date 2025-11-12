@@ -14,18 +14,8 @@
 <main class="main-content-area">
     <div class="container checkout-layout">
         <div class="checkout-form-area">
-            <div class="checkout-steps">
-                <div class="step active">1. Thông tin</div>
-                <div class="step" onclick="location.href='@Url.Action("Index", "DichVuThem")'">
-                    2. Dịch Vụ
-                </div>
-                <div class="step" onclick="location.href='@Url.Action("Index", "ThanhToan")'">
-                    3. Thanh toán
-                </div>
-                <div class="step" onclick="location.href='@Url.Action("Index", "XacNhan")'">
-                    4. Xác nhận
-                </div>
-            </div>
+            @{ ViewBag.CurrentStep = 1; }
+            @Html.Partial("_CheckoutSteps")
 
             <form class="checkout-form">
                 <h2 class="form-section-title">Thông Tin Liên Hệ</h2>
@@ -81,8 +71,8 @@
                     </div>
                     <div class="form-group third-width">
                         <label for="promo-code">Mã khuyến mãi</label>
-                        <input type="text" 
-                               id="promo-code" 
+                        <input type="text"
+                               id="promo-code"
                                name="promo-code"
                                placeholder="Nhập mã giảm giá" />
                     </div>

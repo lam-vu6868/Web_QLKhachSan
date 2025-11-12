@@ -24,71 +24,86 @@
 
             <div class="filter-content active">
                 <div class="filter-content-inner">
-                    <div class="filter-groups-container">
-                        <!-- Price Range Filter -->
-                        <div class="filter-group">
-                            <h5><i class="fas fa-dollar-sign"></i> Khoảng giá (/đêm)</h5>
-                            <div class="price-range-slider">
-                                <input type="range" min="50" max="500" value="250" class="slider" id="priceRange" />
-                                <div class="price-display">
-                                    <span>$50</span>
-                                    <span>$500</span>
+                    <form id="filterForm" method="get" action="@Url.Action("Index", "PhongNghi")">
+                        <div class="filter-groups-container">
+                            <!-- Price Range Filter -->
+                            <div class="filter-group">
+                                <h5>
+                                    <i class="fas fa-dollar-sign"></i> Khoảng giá 
+                                    <span class="price-value" style="color: #d4af37; font-weight: bold;"></span>
+                                </h5>
+                                <div class="price-range-slider">
+                                    @{
+                                        // Mặc định là 0 (300k), nếu có filter thì dùng filter
+                                        var selectedPriceLevel = ViewBag.PriceLevel ?? 0;
+                                    }
+                                    @* Slider với 4 mức giá: 0=300k, 1=400k, 2=600k, 3=900k *@
+                                    <input type="range" min="0" max="3" value="@selectedPriceLevel" step="1" class="slider" id="priceRange" name="priceLevel" />
+                                    <div class="price-display">
+                                        <span>@((ViewBag.MinPrice ?? 300000).ToString("#,##0"))đ</span>
+                                        <span>@((ViewBag.MaxPrice ?? 900000).ToString("#,##0"))đ</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Room Type Filter -->
-                        <div class="filter-group">
-                            <h5><i class="fas fa-bed"></i> Loại phòng</h5>
-                            <div class="checkbox-group">
-                                @if (ViewBag.LoaiPhongs != null)
-                                {
-                                    foreach (var loaiPhong in (List<Web_QLKhachSan.Models.LoaiPhong>)ViewBag.LoaiPhongs)
+                            <!-- Room Type Filter -->
+                            <div class="filter-group">
+                                <h5><i class="fas fa-bed"></i> Loại phòng</h5>
+                                <div class="checkbox-group">
+                                    @if (ViewBag.LoaiPhongs != null)
                                     {
-                                        <label>
-                                            <input type="checkbox" value="@loaiPhong.LoaiPhongId" name="loaiPhong" />
-                                            <span>@loaiPhong.TenLoai</span>
-                                        </label>
+                                        var selectedLoaiPhong = ViewBag.SelectedLoaiPhong as int[] ?? new int[0];
+                                        foreach (var loaiPhong in (List<Web_QLKhachSan.Models.LoaiPhong>)ViewBag.LoaiPhongs)
+                                        {
+                                            var isChecked = selectedLoaiPhong.Contains(loaiPhong.LoaiPhongId);
+                                            <label>
+                                                <input type="checkbox" value="@loaiPhong.LoaiPhongId" name="loaiPhong" @(isChecked ? "checked" : "") />
+                                                <span>@loaiPhong.TenLoai</span>
+                                            </label>
+                                        }
                                     }
-                                }
+                                </div>
                             </div>
-                        </div>
 
-                        <!-- Amenities Filter -->
-                        <div class="filter-group">
-                            <h5><i class="fas fa-concierge-bell"></i> Tiện ích</h5>
-                            <div class="checkbox-group">
-                                @if (ViewBag.TienIches != null)
-                                {
-                                    foreach (var tienIch in (List<Web_QLKhachSan.Models.TienIch>)ViewBag.TienIches)
+                            <!-- Amenities Filter -->
+                            <div class="filter-group">
+                                <h5><i class="fas fa-concierge-bell"></i> Tiện ích</h5>
+                                <div class="checkbox-group">
+                                    @if (ViewBag.TienIches != null)
                                     {
-                                        <label>
-                                            <input type="checkbox" value="@tienIch.TienIchId" name="tienIch" />
-                                            <span>@tienIch.TenTienIch</span>
-                                        </label>
+                                        var selectedTienIch = ViewBag.SelectedTienIch as int[] ?? new int[0];
+                                        foreach (var tienIch in (List<Web_QLKhachSan.Models.TienIch>)ViewBag.TienIches)
+                                        {
+                                            var isChecked = selectedTienIch.Contains(tienIch.TienIchId);
+                                            <label>
+                                                <input type="checkbox" value="@tienIch.TienIchId" name="tienIch" @(isChecked ? "checked" : "") />
+                                                <span>@tienIch.TenTienIch</span>
+                                            </label>
+                                        }
                                     }
-                                }
+                                </div>
                             </div>
-                        </div>
 
-                        <button class="filter-apply-btn">
-                            <i class="fas fa-search"></i>
-                            Áp dụng bộ lọc
-                        </button>
-                    </div>
+                            @* Hidden field để giữ sort *@
+                            <input type="hidden" name="sort" value="@ViewBag.CurrentSort" />
+
+                            <button type="submit" class="filter-apply-btn">
+                                <i class="fas fa-search"></i>
+                                Áp dụng bộ lọc
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </aside>
 
         <section class="room-listing-area">
             <div class="listing-header">
-                <p>Hiển thị <strong>@(Model?.Count ?? 0)</strong> phòng nghỉ tuyệt vời</p>
-                <select name="sort" id="sort">
-                    <option value="default">Sắp xếp mặc định</option>
-                    <option value="price-asc">Giá: Thấp đến Cao</option>
-                    <option value="price-desc">Giá: Cao đến Thấp</option>
-                    <option value="rating">Đánh giá cao nhất</option>
-                    <option value="newest">Mới nhất</option>
+                <p>Hiển thị <strong>@(Model?.Count ?? 0)</strong> / <strong>@(ViewBag.TotalItems ?? 0)</strong> phòng nghỉ tuyệt vời</p>
+                <select name="sort" id="sort" onchange="handleSortChange(this)">
+                    <option value="default" @(ViewBag.CurrentSort == "default" ? "selected" : "")>Sắp xếp mặc định</option>
+                    <option value="price-asc" @(ViewBag.CurrentSort == "price-asc" ? "selected" : "")>Giá: Thấp đến Cao</option>
+                    <option value="price-desc" @(ViewBag.CurrentSort == "price-desc" ? "selected" : "")>Giá: Cao đến Thấp</option>
                 </select>
             </div>
 
@@ -111,6 +126,52 @@
                                 {
                                     <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=870&q=80" alt="@phong.TenPhong" />
                                 }
+                                
+                                @* Icon trạng thái phòng *@
+                                @{
+                                    string statusClass = "";
+                                    string statusIcon = "";
+                                    string statusText = "";
+                                    
+                                    switch (phong.TrangThaiPhong)
+                                    {
+                                        case 0: // Trống
+                                            statusClass = "status-available";
+                                            statusIcon = "fas fa-check-circle";
+                                            statusText = "Trống";
+                                            break;
+                                        case 1: // Đã đặt
+                                            statusClass = "status-booked";
+                                            statusIcon = "fas fa-calendar-check";
+                                            statusText = "Đã đặt";
+                                            break;
+                                        case 2: // Đang ở
+                                            statusClass = "status-occupied";
+                                            statusIcon = "fas fa-user-check";
+                                            statusText = "Đang ở";
+                                            break;
+                                        case 3: // Đang dọn
+                                            statusClass = "status-cleaning";
+                                            statusIcon = "fas fa-broom";
+                                            statusText = "Đang dọn";
+                                            break;
+                                        case 4: // Bảo trì
+                                            statusClass = "status-maintenance";
+                                            statusIcon = "fas fa-tools";
+                                            statusText = "Bảo trì";
+                                            break;
+                                        default:
+                                            statusClass = "status-unknown";
+                                            statusIcon = "fas fa-question-circle";
+                                            statusText = "N/A";
+                                            break;
+                                    }
+                                }
+                                <div class="room-status-badge @statusClass">
+                                    <i class="@statusIcon"></i>
+                                    <span>@statusText</span>
+                                </div>
+                                
                                 <div class="tag">@phong.LoaiPhong.TenLoai</div>
                             </div>
                             <div class="room-item-content">
@@ -130,7 +191,7 @@
                                 <div class="amenities-icons">
                                     @if (phong.LoaiPhong.TienIches != null && phong.LoaiPhong.TienIches.Any())
                                     {
-                                        foreach (var tienIch in phong.LoaiPhong.TienIches.Take(5))
+                                        foreach (var tienIch in phong.LoaiPhong.TienIches.Take(6))
                                         {
                                             if (!string.IsNullOrEmpty(tienIch.Icon))
                                             {
@@ -149,6 +210,7 @@
                                         <i class="fas fa-tv" title="TV màn hình phẳng"></i>
                                         <i class="fas fa-snowflake" title="Điều hòa"></i>
                                         <i class="fas fa-coffee" title="Minibar"></i>
+                                        <i class="fas fa-bed" title="Giường thoải mái"></i>
                                     }
                                 </div>
                                 <div class="room-actions">
@@ -170,12 +232,71 @@
                 }
             </div>
 
-            <div class="pagination">
-                <a href="#" class="active">1</a>
-                <a href="#">2</a>
-                <a href="#">3</a>
-                <a href="#">&raquo;</a>
-            </div>
+            @if (ViewBag.TotalPages > 1)
+            {
+                <div class="pagination">
+                    @{
+                        // Hàm helper để build URL với mảng parameters
+                        Func<int, string> buildPaginationUrl = (pageNum) =>
+                        {
+                            var url = Url.Action("Index") + "?page=" + pageNum;
+                            
+                            if (ViewBag.CurrentSort != null && ViewBag.CurrentSort != "default")
+                            {
+                                url += "&sort=" + ViewBag.CurrentSort;
+                            }
+                            
+                            if (ViewBag.PriceLevel != null)
+                            {
+                                url += "&priceLevel=" + ViewBag.PriceLevel;
+                            }
+                            
+                            if (ViewBag.SelectedLoaiPhong != null)
+                            {
+                                foreach (int lp in ViewBag.SelectedLoaiPhong)
+                                {
+                                    url += "&loaiPhong=" + lp;
+                                }
+                            }
+                            
+                            if (ViewBag.SelectedTienIch != null)
+                            {
+                                foreach (int ti in ViewBag.SelectedTienIch)
+                                {
+                                    url += "&tienIch=" + ti;
+                                }
+                            }
+                            
+                            return url;
+                        };
+                    }
+                    
+                    @* Nút Previous *@
+                    @if (ViewBag.CurrentPage > 1)
+                    {
+                        <a href="@buildPaginationUrl(ViewBag.CurrentPage - 1)">&laquo;</a>
+                    }
+
+                    @* Hiển thị các trang *@
+                    @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                    {
+                        if (i == ViewBag.CurrentPage)
+                        {
+                            <a href="@buildPaginationUrl(i)" class="active">@i</a>
+                        }
+                        else
+                        {
+                            <a href="@buildPaginationUrl(i)">@i</a>
+                        }
+                    }
+
+                    @* Nút Next *@
+                    @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+                    {
+                        <a href="@buildPaginationUrl(ViewBag.CurrentPage + 1)">&raquo;</a>
+                    }
+                </div>
+            }
         </section>
     </div>
 </main>

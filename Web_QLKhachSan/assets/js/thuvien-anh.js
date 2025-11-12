@@ -1,109 +1,52 @@
-﻿// Gallery data
-const galleryData = [
-    {
-        src: 'assets/imgs/gt1.jpg',
-        title: 'Phòng Deluxe',
-        desc: 'Phòng nghỉ cao cấp với view biển tuyệt đẹp',
-        category: 'phong'
-    },
-    {
-        src: 'assets/imgs/gt2.jpg',
-        title: 'Suite Room',
-        desc: 'Không gian sang trọng và rộng rãi',
-        category: 'phong'
-    },
-    {
-        src: 'assets/imgs/gt3.jpg',
-        title: 'Spa & Massage',
-        desc: 'Thư giãn với dịch vụ spa đẳng cấp 5 sao',
-        category: 'dichvu'
-    },
-    {
-        src: 'assets/imgs/gt4.jpg',
-        title: 'Nhà Hàng',
-        desc: 'Ẩm thực đỉnh cao từ bếp trưởng Michelin',
-        category: 'dichvu'
-    },
-    {
-        src: 'assets/imgs/gt5.jpg',
-        title: 'Sảnh Chính',
-        desc: 'Lối vào sang trọng và ấn tượng',
-        category: 'khonggian'
-    },
-    {
-        src: 'assets/imgs/gt6.jpg',
-        title: 'Hồ Bơi Vô Cực',
-        desc: 'View biển tuyệt đẹp từ hồ bơi rooftop',
-        category: 'khonggian'
-    },
-    {
-        src: 'assets/imgs/gt7.jpg',
-        title: 'Phòng Hội Nghị',
-        desc: 'Không gian tổ chức sự kiện chuyên nghiệp',
-        category: 'sukien'
-    },
-    {
-        src: 'assets/imgs/gt.jpg',
-        title: 'View Tổng Thể',
-        desc: 'Khách sạn nhìn từ trên cao',
-        category: 'khonggian'
-    }
-];
+﻿// Gallery data - will be loaded from DOM
+let galleryData = [];
 
 // Current lightbox index
 let currentLightboxIndex = 0;
 // Array of indices (into galleryData) that are currently visible (after filtering)
-let activeIndices = galleryData.map((_, i) => i);
+let activeIndices = [];
+
+// Load gallery data from DOM
+function loadGalleryDataFromDOM() {
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    galleryData = [];
+    
+    galleryItems.forEach(item => {
+        const img = item.querySelector('img');
+        const categorySpan = item.querySelector('.gallery-category');
+        
+        if (img) {
+            galleryData.push({
+                src: img.getAttribute('src'),
+                title: img.getAttribute('alt') || 'Hình ảnh khách sạn',
+                desc: categorySpan ? categorySpan.textContent.trim() : '',
+                category: 'phong' // Default category since we removed filters
+            });
+        }
+    });
+    
+    activeIndices = galleryData.map((_, i) => i);
+    return galleryData;
+}
 
 // Filter functionality
 document.addEventListener('DOMContentLoaded', function () {
+    // Load gallery data from DOM first
+    loadGalleryDataFromDOM();
+    
     // Re-initialize AOS for this page
     if (typeof AOS !== 'undefined') {
         AOS.refresh();
     }
     
-    setupFilters();
     setupLightbox();
     setupKeyboardNavigation();
     updateActiveIndices();
     updateLightboxCounter();
 });
 
-// Setup filters
-function setupFilters() {
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    const galleryItems = document.querySelectorAll('.gallery-item');
-
-    filterBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            // Remove active class from all buttons
-            filterBtns.forEach(b => b.classList.remove('active'));
-
-            // Add active class to clicked button
-            btn.classList.add('active');
-
-            // Get filter value
-            const filterValue = btn.getAttribute('data-filter');
-
-            // Filter items
-            galleryItems.forEach(item => {
-                const category = item.getAttribute('data-category');
-
-                if (filterValue === 'all' || category === filterValue) {
-                    item.classList.remove('hide');
-                    // Re-trigger AOS animation
-                    item.setAttribute('data-aos', 'zoom-in');
-                    AOS.refresh();
-                } else {
-                    item.classList.add('hide');
-                }
-            });
-
-            // After changing visible items, update the activeIndices used by the lightbox
-            updateActiveIndices();
-        });
-    });
-}
+// Setup filters - REMOVED since we don't have filter buttons anymore
+// function setupFilters() { ... }
 
 // Rebuild activeIndices array from DOM (visible .gallery-item elements)
 function updateActiveIndices() {
@@ -262,48 +205,8 @@ document.addEventListener('DOMContentLoaded', function () {
     images.forEach(img => imageObserver.observe(img));
 });
 
-// Animate stats on scroll
-document.addEventListener('DOMContentLoaded', function () {
-    const statNumbers = document.querySelectorAll('.stat-number');
-    let animated = false;
-
-    const statsObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting && !animated) {
-                animateStats();
-                animated = true;
-            }
-        });
-    }, {
-        threshold: 0.5
-    });
-
-    const statsSection = document.querySelector('.stats-section');
-    if (statsSection) {
-        statsObserver.observe(statsSection);
-    }
-});
-
-function animateStats() {
-    const statNumbers = document.querySelectorAll('.stat-number');
-
-    statNumbers.forEach(stat => {
-        const target = parseInt(stat.textContent);
-        const duration = 2000; // 2 seconds
-        const step = target / (duration / 16); // 60fps
-        let current = 0;
-
-        const timer = setInterval(() => {
-            current += step;
-            if (current >= target) {
-                stat.textContent = target + (stat.textContent.includes('+') ? '+' : '');
-                clearInterval(timer);
-            } else {
-                stat.textContent = Math.floor(current) + (stat.textContent.includes('+') ? '+' : '');
-            }
-        }, 16);
-    });
-}
+// Animate stats on scroll - REMOVED since we don't have stats section anymore
+// Stats section removed from HTML
 
 // Smooth scroll to top button (optional)
 window.addEventListener('scroll', function () {

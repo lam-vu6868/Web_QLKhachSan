@@ -188,19 +188,16 @@
     <Compile Include="Controllers\ChiTietPhongController.cs" />
     <Compile Include="Controllers\DanhGiaController.cs" />
     <Compile Include="Controllers\DashboardKhachHangController.cs" />
+    <Compile Include="Controllers\DatPhongController.cs" />
     <Compile Include="Controllers\DichVuController.cs" />
-    <Compile Include="Controllers\DichVuThemController.cs" />
     <Compile Include="Controllers\GioiThieuController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\HoTroKhachHangController.cs" />
     <Compile Include="Controllers\IndexController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\PhongNghiController.cs" />
-    <Compile Include="Controllers\ThanhToanController.cs" />
-    <Compile Include="Controllers\ThongTinController.cs" />
     <Compile Include="Controllers\ThuVienAnhController.cs" />
     <Compile Include="Controllers\TimHieuThemController.cs" />
-    <Compile Include="Controllers\XacNhanController.cs" />
     <Compile Include="Filters\NhanVienAuthorizeAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -432,11 +429,7 @@
     <Content Include="Views\GioiThieu\Index.cshtml" />
     <Content Include="Views\DanhGia\Index.cshtml" />
     <Content Include="Views\ChiTietPhong\Index.cshtml" />
-    <Content Include="Views\DichVuThem\Index.cshtml" />
-    <Content Include="Views\ThanhToan\Index.cshtml" />
-    <Content Include="Views\ThongTin\Index.cshtml" />
     <Content Include="Views\TimHieuThem\Index.cshtml" />
-    <Content Include="Views\XacNhan\Index.cshtml" />
     <Content Include="Views\DashboardKhachHang\Index.cshtml" />
     <Content Include="Views\ThuVienAnh\Index.cshtml" />
     <Content Include="Views\HoTroKhachHang\Index.cshtml" />
@@ -449,6 +442,11 @@
     <Content Include="Views\Login\XacThucEmail.cshtml" />
     <Content Include="Views\Login\DangNhap.cshtml" />
     <Content Include="Views\Login\DatLaiMatKhau.cshtml" />
+    <Content Include="Views\DatPhong\ThongTinKhachHang.cshtml" />
+    <Content Include="Views\DatPhong\DichVuDatThem.cshtml" />
+    <Content Include="Views\DatPhong\ThanhToan.cshtml" />
+    <Content Include="Views\DatPhong\XacNhanHoaDon.cshtml" />
+    <Content Include="Views\Shared\_CheckoutSteps.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

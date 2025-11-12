@@ -54,6 +54,52 @@
         <div class="room-badges" data-aos="fade-up" data-aos-delay="100">
             <span class="badge premium">@Model.MaPhong</span>
             <span class="badge view">@Model.LoaiPhong.TenLoai</span>
+            
+            @* Badge trạng thái phòng *@
+            @{
+                string statusClass = "";
+                string statusIcon = "";
+                string statusText = "";
+                
+                switch (Model.TrangThaiPhong)
+                {
+                    case 0: // Trống
+                        statusClass = "badge status-available";
+                        statusIcon = "fas fa-check-circle";
+                        statusText = "Trống";
+                        break;
+                    case 1: // Đã đặt
+                        statusClass = "badge status-booked";
+                        statusIcon = "fas fa-calendar-check";
+                        statusText = "Đã đặt";
+                        break;
+                    case 2: // Đang ở
+                        statusClass = "badge status-occupied";
+                        statusIcon = "fas fa-user-check";
+                        statusText = "Đang ở";
+                        break;
+                    case 3: // Đang dọn
+                        statusClass = "badge status-cleaning";
+                        statusIcon = "fas fa-broom";
+                        statusText = "Đang dọn";
+                        break;
+                    case 4: // Bảo trì
+                        statusClass = "badge status-maintenance";
+                        statusIcon = "fas fa-tools";
+                        statusText = "Bảo trì";
+                        break;
+                    default:
+                        statusClass = "badge status-unknown";
+                        statusIcon = "fas fa-question-circle";
+                        statusText = "N/A";
+                        break;
+                }
+            }
+            <span class="@statusClass">
+                <i class="@statusIcon"></i>
+                @statusText
+            </span>
+            
             <span class="badge rating">
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
@@ -143,7 +189,7 @@
                                 <h3>Sẵn sàng đặt phòng?</h3>
                                 <p>Trải nghiệm kỳ nghỉ tuyệt vời với dịch vụ 5 sao và tầm nhìn đại dương tuyệt đẹp</p>
                             </div>
-                            <a href="@Url.Action("Index", "ThongTin")" class="btn-book-now-main">
+                            <a href="@Url.Action("ThongTinKhachHang", "DatPhong")" class="btn-book-now-main">
                                 <i class="fas fa-calendar-check"></i>
                                 Đặt Phòng Ngay
                             </a>

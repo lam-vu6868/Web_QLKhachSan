@@ -105,6 +105,47 @@
     border: 1px solid var(--primary-gold);
 }
 
+/* Room Status Badges */
+.badge.status-available {
+    background: rgba(76, 175, 80, 0.9);
+    color: white;
+    border: 1px solid rgba(76, 175, 80, 1);
+}
+
+.badge.status-booked {
+    background: rgba(255, 152, 0, 0.9);
+    color: white;
+    border: 1px solid rgba(255, 152, 0, 1);
+}
+
+.badge.status-occupied {
+    background: rgba(244, 67, 54, 0.9);
+    color: white;
+    border: 1px solid rgba(244, 67, 54, 1);
+}
+
+.badge.status-cleaning {
+    background: rgba(33, 150, 243, 0.9);
+    color: white;
+    border: 1px solid rgba(33, 150, 243, 1);
+}
+
+.badge.status-maintenance {
+    background: rgba(158, 158, 158, 0.9);
+    color: white;
+    border: 1px solid rgba(158, 158, 158, 1);
+}
+
+.badge.status-unknown {
+    background: rgba(96, 125, 139, 0.9);
+    color: white;
+    border: 1px solid rgba(96, 125, 139, 1);
+}
+
+.badge i {
+    margin-right: 5px;
+}
+
 /* ===== MAIN CONTENT ===== */
 .main-content {
     padding: 60px 0;

@@ -174,9 +174,8 @@
     width: 100%;
     height: 8px;
     border-radius: 4px;
-    background: linear-gradient(to right, var(--gold) 0%, var(--gold) 50%, #ddd 50%, #ddd 100%);
+    background: #ddd;
     outline: none;
-    transition: all 0.3s ease;
     cursor: pointer;
 }
 
@@ -449,6 +448,63 @@
     font-weight: 600;
     box-shadow: 0 3px 10px rgba(212, 175, 55, 0.3);
     backdrop-filter: blur(5px);
+}
+
+/* Room Status Badge */
+.room-status-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.room-status-badge i {
+    font-size: 0.9rem;
+}
+
+/* Status Colors */
+.status-available {
+    background: rgba(76, 175, 80, 0.9);
+    color: white;
+}
+
+.status-booked {
+    background: rgba(255, 152, 0, 0.9);
+    color: white;
+}
+
+.status-occupied {
+    background: rgba(244, 67, 54, 0.9);
+    color: white;
+}
+
+.status-cleaning {
+    background: rgba(33, 150, 243, 0.9);
+    color: white;
+}
+
+.status-maintenance {
+    background: rgba(158, 158, 158, 0.9);
+    color: white;
+}
+
+.status-unknown {
+    background: rgba(96, 125, 139, 0.9);
+    color: white;
+}
+
+.room-status-badge:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 .room-item-content {

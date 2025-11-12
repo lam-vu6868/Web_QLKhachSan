@@ -13,18 +13,8 @@
 <main class="main-content-area">
     <div class="container checkout-layout">
         <div class="checkout-form-area">
-            <div class="checkout-steps">
-                <div class="step" onclick="location.href='@Url.Action("Index", "ThongTin")'">
-                    1. Thông tin
-                </div>
-                <div class="step" onclick="location.href='@Url.Action("Index", "DichVuThem")'">
-                    2. Dịch Vụ
-                </div>
-                <div class="step active">3. Thanh toán</div>
-                <div class="step" onclick="location.href='@Url.Action("Index", "XacNhan")'">
-                    4. Xác nhận
-                </div>
-            </div>
+            @{ ViewBag.CurrentStep = 3; }
+            @Html.Partial("_CheckoutSteps")
 
             <form class="checkout-form">
                 <h2 class="form-section-title">Phương Thức Thanh Toán</h2>
