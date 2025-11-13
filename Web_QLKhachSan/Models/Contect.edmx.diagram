@@ -41,8 +41,8 @@
         <AssociationConnector Association="DB_QLKhachSanModel.FK_ThanhToan_HoaDon" />
         <AssociationConnector Association="DB_QLKhachSanModel.FK_TaiKhoan_KhachHang" />
         <AssociationConnector Association="DB_QLKhachSanModel.FK_Phong_LoaiPhong" />
-        <AssociationConnector Association="DB_QLKhachSanModel.FK__TienIch__LoaiTie__40058253" />
-        <AssociationConnector Association="DB_QLKhachSanModel.FK__TienNghi__LoaiTi__40F9A68C" />
+        <AssociationConnector Association="DB_QLKhachSanModel.FK__TienIch__LoaiTie__2CF2ADDF" />
+        <AssociationConnector Association="DB_QLKhachSanModel.FK__TienNghi__LoaiTi__2DE6D218" />
         <AssociationConnector Association="DB_QLKhachSanModel.FK_TaiKhoan_NhanVien" />
         <AssociationConnector Association="DB_QLKhachSanModel.FK_PhongAnh_Phong" />
         <AssociationConnector Association="DB_QLKhachSanModel.FK_LoginToken_TaiKhoan" />

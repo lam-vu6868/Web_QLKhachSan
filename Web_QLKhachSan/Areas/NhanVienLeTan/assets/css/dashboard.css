@@ -1,0 +1,274 @@
+﻿/* =============================================
+   Dashboard CSS cho Nhân Viên Lễ Tân
+   File: dashboard.css
+============================================= */
+
+/* ===== STAT CARDS ===== */
+.stat-card {
+    border-radius: 12px;
+    padding: 1.5rem;
+  border: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+.stat-card .icon-box {
+    width: 60px;
+  height: 60px;
+    border-radius: 12px;
+display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+}
+
+.stat-card .stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.stat-card .stat-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+}
+
+.stat-card .stat-change {
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+/* Stat Card Colors - Gradient Backgrounds */
+.stat-card.bg-primary-light {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.stat-card.bg-success-light {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+}
+
+.stat-card.bg-warning-light {
+    background: linear-gradient(135deg, #ffc107 0%, #ff8b3d 100%);
+    color: white;
+}
+
+.stat-card.bg-danger-light {
+    background: linear-gradient(135deg, #dc3545 0%, #e83e8c 100%);
+    color: white;
+}
+
+.stat-card.bg-info-light {
+    background: linear-gradient(135deg, #17a2b8 0%, #00d2ff 100%);
+    color: white;
+}
+
+.stat-card.bg-secondary-light {
+    background: linear-gradient(135deg, #6c757d 0%, #adb5bd 100%);
+    color: white;
+}
+
+/* ===== PROGRESS BAR ===== */
+.stat-card .progress {
+    height: 10px;
+    border-radius: 10px;
+    background-color: rgba(255,255,255,0.3);
+    overflow: hidden;
+}
+
+.stat-card .progress-bar {
+    border-radius: 10px;
+}
+
+/* ===== NOTIFICATION BADGE ===== */
+.notification-item {
+    padding: 1rem;
+    border-left: 4px solid;
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.notification-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.notification-item.warning {
+  border-color: #ffc107;
+    background: #fff3cd;
+}
+
+.notification-item.danger {
+    border-color: #dc3545;
+    background: #f8d7da;
+}
+
+.notification-item.info {
+    border-color: #17a2b8;
+    background: #d1ecf1;
+}
+
+.notification-item.success {
+    border-color: #28a745;
+    background: #d4edda;
+}
+
+/* ===== TABLE ===== */
+.table-hover tbody tr {
+transition: all 0.2s ease;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f8f9fc;
+    cursor: pointer;
+    transform: scale(1.01);
+}
+
+.badge-custom {
+    padding: 0.4rem 0.8rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+/* ===== CHART CONTAINER ===== */
+.chart-container {
+    position: relative;
+    height: 300px;
+}
+
+/* ===== EMPTY STATE ===== */
+.empty-state {
+    text-align: center;
+    padding: 2rem;
+    color: #6c757d;
+}
+
+.empty-state i {
+    font-size: 3rem;
+  margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+/* ===== CARD ENHANCEMENTS ===== */
+.card.shadow {
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important;
+}
+
+.card-header {
+    background-color: #f8f9fc;
+    border-bottom: 1px solid #e3e6f0;
+}
+
+.card-header .dropdown-toggle::after {
+    display: none;
+}
+
+/* ===== RESPONSIVE ADJUSTMENTS ===== */
+@media (max-width: 768px) {
+    .stat-card .stat-value {
+     font-size: 1.5rem;
+    }
+
+    .stat-card .icon-box {
+        width: 50px;
+   height: 50px;
+        font-size: 1.5rem;
+    }
+
+    .chart-container {
+        height: 250px;
+    }
+
+    .notification-item {
+padding: 0.75rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .stat-card {
+        padding: 1rem;
+    }
+
+    .stat-card .stat-value {
+    font-size: 1.25rem;
+    }
+
+    .stat-card .stat-label {
+        font-size: 0.8rem;
+    }
+
+    .chart-container {
+     height: 200px;
+  }
+}
+
+/* ===== ANIMATION ===== */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.stat-card {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+.stat-card:nth-child(1) { animation-delay: 0.1s; }
+.stat-card:nth-child(2) { animation-delay: 0.2s; }
+.stat-card:nth-child(3) { animation-delay: 0.3s; }
+.stat-card:nth-child(4) { animation-delay: 0.4s; }
+
+/* ===== LOADING STATE ===== */
+.stat-card.loading {
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card.loading::before {
+    content: '';
+ position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    to {
+        left: 100%;
+    }
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+    .stat-card:hover {
+ transform: none;
+    }
+
+    .notification-item {
+        break-inside: avoid;
+    }
+
+    .card.shadow {
+        box-shadow: none !important;
+        border: 1px solid #dee2e6;
+    }
+}
