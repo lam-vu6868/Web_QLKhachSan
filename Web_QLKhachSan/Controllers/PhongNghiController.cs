@@ -48,24 +48,36 @@ namespace Web_QLKhachSan.Controllers
                                   .Where(p => p.DaHoatDong == true)
                                   .AsQueryable();
 
-            // Logic: 2 bộ lọc độc lập - chỉ áp dụng 1 trong 2
-            // Ưu tiên: nếu có loaiPhong thì bỏ qua priceLevel, và ngược lại
+            // Logic: 3 bộ lọc độc lập - chỉ áp dụng 1 trong 3
+            // Ưu tiên: Loại phòng > Tiện ích > Giá
             
             bool hasLoaiPhongFilter = loaiPhong != null && loaiPhong.Length > 0;
+            bool hasTienIchFilter = tienIch != null && tienIch.Length > 0;
             bool hasPriceFilter = priceLevel.HasValue;
             
             if (hasLoaiPhongFilter)
             {
-                // Nếu lọc theo loại phòng -> BỎ QUA lọc giá, chỉ lọc theo loại phòng
+                // Nếu lọc theo loại phòng -> BỎ QUA lọc giá và tiện ích
                 phongs = phongs.Where(p => loaiPhong.Contains(p.LoaiPhongId));
                 
-                // Reset priceLevel trong ViewBag
+                // Reset các filter khác trong ViewBag
                 ViewBag.PriceLevel = null;
+                ViewBag.SelectedTienIch = null;
                 ViewBag.SelectedLoaiPhong = loaiPhong;
+            }
+            else if (hasTienIchFilter)
+            {
+                // Nếu lọc theo tiện ích -> BỎ QUA lọc giá và loại phòng
+                phongs = phongs.Where(p => p.LoaiPhong.TienIches.Any(ti => tienIch.Contains(ti.TienIchId)));
+                
+                // Reset các filter khác trong ViewBag
+                ViewBag.PriceLevel = null;
+                ViewBag.SelectedLoaiPhong = null;
+                ViewBag.SelectedTienIch = tienIch;
             }
             else if (hasPriceFilter)
             {
-                // Nếu lọc theo giá -> BỎ QUA lọc loại phòng, chỉ lọc theo giá
+                // Nếu lọc theo giá -> BỎ QUA lọc loại phòng và tiện ích
                 var priceLevels = new decimal[] { 300000, 400000, 600000, 900000 };
                 if (priceLevel.Value >= 0 && priceLevel.Value < priceLevels.Length)
                 {
@@ -73,25 +85,18 @@ namespace Web_QLKhachSan.Controllers
                     phongs = phongs.Where(p => (p.Gia ?? p.LoaiPhong.GiaCoBan ?? 0) <= maxPrice);
                 }
                 
-                // Reset loaiPhong trong ViewBag
+                // Reset các filter khác trong ViewBag
                 ViewBag.PriceLevel = priceLevel;
                 ViewBag.SelectedLoaiPhong = null;
+                ViewBag.SelectedTienIch = null;
             }
             else
             {
                 // Không có filter nào -> hiển thị tất cả
                 ViewBag.PriceLevel = null;
                 ViewBag.SelectedLoaiPhong = null;
+                ViewBag.SelectedTienIch = null;
             }
-
-            // Lọc theo tiện ích (vẫn giữ nguyên, không bị ảnh hưởng)
-            if (tienIch != null && tienIch.Length > 0)
-            {
-                phongs = phongs.Where(p => p.LoaiPhong.TienIches.Any(ti => tienIch.Contains(ti.TienIchId)));
-            }
-
-            // Giữ lại filter tiện ích
-            ViewBag.SelectedTienIch = tienIch;
 
             // Xử lý sắp xếp
             switch (sort)

@@ -308,12 +308,13 @@ function handleSortChange(select) {
 }
 
 // ============================================
-// Logic tách biệt 2 bộ lọc: Giá và Loại phòng
+// Logic tách biệt 3 bộ lọc: Giá, Loại phòng và Tiện Ích
 // ============================================
 document.addEventListener('DOMContentLoaded', function() {
   const filterForm = document.getElementById('filterForm');
   const priceSlider = document.getElementById('priceRange');
   const loaiPhongCheckboxes = document.querySelectorAll('input[name="loaiPhong"]');
+  const tienIchCheckboxes = document.querySelectorAll('input[name="tienIch"]');
   
   if (!filterForm || !priceSlider) return;
   
@@ -341,14 +342,17 @@ document.addEventListener('DOMContentLoaded', function() {
     priceSlider.style.background = `linear-gradient(to right, #d4af37 0%, #d4af37 ${percentage}%, #ddd ${percentage}%, #ddd 100%)`;
   }
   
-  // Khi thay đổi slider giá -> Uncheck tất cả checkbox loại phòng
+  // Khi thay đổi slider giá -> Uncheck tất cả checkbox loại phòng và tiện ích
   priceSlider.addEventListener('change', function() {
     loaiPhongCheckboxes.forEach(cb => {
       cb.checked = false;
     });
+    tienIchCheckboxes.forEach(cb => {
+      cb.checked = false;
+    });
   });
   
-  // Khi check/uncheck loại phòng -> Reset slider về 0 (không lọc giá)
+  // Khi check/uncheck loại phòng -> Reset slider về 0 và reset tiện ích
   loaiPhongCheckboxes.forEach(function(checkbox) {
     checkbox.addEventListener('change', function() {
       if (this.checked) {
@@ -356,6 +360,26 @@ document.addEventListener('DOMContentLoaded', function() {
         priceSlider.value = 0;
         // Cập nhật lại gradient và text
         updatePriceSlider();
+        // Reset tất cả checkbox tiện ích
+        tienIchCheckboxes.forEach(cb => {
+          cb.checked = false;
+        });
+      }
+    });
+  });
+  
+  // Khi check/uncheck tiện ích -> Reset slider và reset loại phòng
+  tienIchCheckboxes.forEach(function(checkbox) {
+    checkbox.addEventListener('change', function() {
+      if (this.checked) {
+        // Khi check tiện ích, reset slider về giá trị mặc định
+        priceSlider.value = 0;
+        // Cập nhật lại gradient và text
+        updatePriceSlider();
+        // Reset tất cả checkbox loại phòng
+        loaiPhongCheckboxes.forEach(cb => {
+          cb.checked = false;
+        });
       }
     });
   });
@@ -363,12 +387,13 @@ document.addEventListener('DOMContentLoaded', function() {
   // Khi submit form, loại bỏ parameter không cần thiết
   filterForm.addEventListener('submit', function(e) {
     const hasLoaiPhong = Array.from(loaiPhongCheckboxes).some(cb => cb.checked);
+    const hasTienIch = Array.from(tienIchCheckboxes).some(cb => cb.checked);
     
-    if (hasLoaiPhong) {
-      // Nếu có chọn loại phòng -> Xóa priceLevel khỏi form
+    if (hasLoaiPhong || hasTienIch) {
+      // Nếu có chọn loại phòng hoặc tiện ích -> Xóa priceLevel khỏi form
       priceSlider.removeAttribute('name');
     } else {
-      // Nếu không chọn loại phòng -> Giữ priceLevel
+      // Nếu không chọn loại phòng hay tiện ích -> Giữ priceLevel
       if (!priceSlider.hasAttribute('name')) {
         priceSlider.setAttribute('name', 'priceLevel');
       }
