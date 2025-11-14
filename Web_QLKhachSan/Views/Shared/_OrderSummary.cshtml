@@ -1,19 +1,47 @@
-﻿<aside class="order-summary">
+﻿@model Web_QLKhachSan.Models.ThongTinDatPhongViewModel
+
+<aside class="order-summary">
     <h4>Tóm Tắt Đơn Hàng</h4>
-    <div class="summary-room-details">
-        <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=300&q=80" alt="Deluxe Ocean View" />
-        <div class="room-info-summary">
-            <h5>Deluxe Ocean View</h5>
-            <p>2 khách</p>
+    @if (Model != null && Model.PhongId != null)
+    {
+        <div class="summary-room-details">
+            <img src="@(Model.HinhAnh ?? "https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=300&q=80")" 
+                 alt="@Model.TenPhong" />
+            <div class="room-info-summary">
+                <h5>@Model.TenPhong</h5>
+                <p>@Model.SoNguoi khách</p>
+            </div>
         </div>
-    </div>
-    <div class="summary-line"><span>Nhận phòng:</span><span>10/09/2025</span></div>
-    <div class="summary-line"><span>Trả phòng:</span><span>12/09/2025</span></div>
-    <hr />
-    <div class="summary-line"><span>Giá 2 đêm (2 x $150):</span><span>$300.00</span></div>
-    <div class="summary-line"><span>Thuế & Phí:</span><span>$30.00</span></div>
-    <hr />
-    <div class="summary-line total"><span>Tổng Cộng:</span><span>$330.00</span></div>
+        <div class="summary-line">
+            <span>Nhận phòng:</span>
+            <span id="summary-checkin">@Model.NgayNhan.ToString("dd/MM/yyyy")</span>
+        </div>
+        <div class="summary-line">
+            <span>Trả phòng:</span>
+            <span id="summary-checkout">@Model.NgayTra.ToString("dd/MM/yyyy")</span>
+        </div>
+        <hr />
+        <div class="summary-line">
+            <span>Giá <span id="summary-nights">@Model.SoDem</span> đêm (<span id="summary-nights-detail">@Model.SoDem x @Model.GiaPhong.ToString("#,##0")đ</span>):</span>
+            <span id="summary-room-price">@Model.TongTienPhong.ToString("#,##0")đ</span>
+        </div>
+        <hr />
+        <div class="summary-line total">
+            <span>Tổng Cộng:</span>
+            <span id="summary-total">@Model.TongCong.ToString("#,##0")đ</span>
+        </div>
+    }
+    else
+    {
+        <div class="summary-room-details">
+            <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=300&q=80" 
+                 alt="Phòng khách sạn" />
+            <div class="room-info-summary">
+                <h5>Vui lòng chọn phòng</h5>
+                <p>Chưa có thông tin phòng</p>
+            </div>
+        </div>
+    }
     <div class="trust-badges">
         <i class="fas fa-shield-alt"></i>
         <span>Giao dịch an toàn và bảo mật</span>

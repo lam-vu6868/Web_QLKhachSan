@@ -13,10 +13,13 @@ namespace Web_QLKhachSan
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+            // Default route: specify the root controllers' namespace to avoid
+            // ambiguity with controllers defined inside Areas (e.g. Areas.NhanVienLeTan)
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Index", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "Index", action = "Index", id = UrlParameter.Optional },
+                namespaces: new[] { "Web_QLKhachSan.Controllers" }
             );
         }
     }

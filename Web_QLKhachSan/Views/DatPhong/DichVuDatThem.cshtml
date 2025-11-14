@@ -1,4 +1,5 @@
-﻿@{
+﻿@model Web_QLKhachSan.Models.DichVuDatThemViewModel
+@{
     ViewBag.Title = "Dịch Vụ Thêm";
 }
 <link rel="stylesheet" href="~/assets/css/dat-phong.css" />
@@ -16,163 +17,100 @@
             @Html.Partial("_CheckoutSteps")
             
             <h2 class="form-section-title">Dịch Vụ Thêm</h2>
-            <div class="services-selection">
-                <div class="service-category">
-                    <h3 class="category-title">
-                        <i class="fas fa-spa"></i> Dịch Vụ Spa
-                        <button type="button" class="toggle-service" data-target="spa-services">
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
-                    </h3>
-                    <div class="service-options" id="spa-services">
-                        <label class="service-option">
-                            <input type="checkbox" name="services" value="massage-relax" data-price="1200000">
-                            <div class="service-details">
-                                <div class="service-info">
-                                    <span class="service-name">Massage Toàn Thân Thư Giãn</span>
-                                    <span class="service-description">Liệu pháp massage truyền thống với tinh dầu thiên nhiên (90 phút)</span>
-                                    <div class="service-features">
-                                        <span class="feature"><i class="fas fa-clock"></i> 90 phút</span>
-                                        <span class="feature"><i class="fas fa-leaf"></i> Tinh dầu thiên nhiên</span>
-                                    </div>
+            
+            @if (Model.DanhSachLoaiDichVu != null && Model.DanhSachLoaiDichVu.Any())
+            {
+                <div class="services-selection">
+                    @foreach (var loaiDichVu in Model.DanhSachLoaiDichVu)
+                    {
+                        var dichVuList = loaiDichVu.DichVus.Where(dv => dv.DaHoatDong).OrderBy(dv => dv.TenDichVu).ToList();
+                        
+                        if (dichVuList.Any())
+                        {
+                            <div class="service-category">
+                                <h3 class="category-title">
+                                    @if (!string.IsNullOrEmpty(loaiDichVu.Icon))
+                                    {
+                                        <i class="@loaiDichVu.Icon"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="fas fa-star"></i>
+                                    }
+                                    @loaiDichVu.TenLoai
+                                    <button type="button" class="toggle-service" data-target="service-@loaiDichVu.LoaiDichVuId">
+                                        <i class="fas fa-chevron-down"></i>
+                                    </button>
+                                </h3>
+                                <div class="service-options" id="service-@loaiDichVu.LoaiDichVuId">
+                                    @foreach (var dichVu in dichVuList)
+                                    {
+                                        var gia = dichVu.GiaUuDai ?? dichVu.Gia ?? 0;
+                                        <label class="service-option">
+                                            <input type="checkbox" 
+                                                   name="services" 
+                                                   value="@dichVu.DichVuId" 
+                                                   data-price="@gia"
+                                                   data-name="@dichVu.TenDichVu">
+                                            <div class="service-details">
+                                                <div class="service-info">
+                                                    <span class="service-name">@dichVu.TenDichVu</span>
+                                                    @if (!string.IsNullOrEmpty(dichVu.MoTa))
+                                                    {
+                                                        <span class="service-description">@dichVu.MoTa</span>
+                                                    }
+                                                    <div class="service-features">
+                                                        @if (!string.IsNullOrEmpty(dichVu.MaDichVu))
+                                                        {
+                                                            <span class="feature">
+                                                                <i class="fas fa-tag"></i> @dichVu.MaDichVu
+                                                            </span>
+                                                        }
+                                                        @if (dichVu.GiaUuDai.HasValue && dichVu.Gia.HasValue && dichVu.GiaUuDai < dichVu.Gia)
+                                                        {
+                                                            <span class="feature" style="color: #e74c3c;">
+                                                                <i class="fas fa-percent"></i> Giá ưu đãi
+                                                            </span>
+                                                        }
+                                                    </div>
+                                                </div>
+                                                <div style="text-align: right;">
+                                                    @if (dichVu.GiaUuDai.HasValue && dichVu.Gia.HasValue && dichVu.GiaUuDai < dichVu.Gia)
+                                                    {
+                                                        <div style="text-decoration: line-through; color: #999; font-size: 0.9rem; margin-bottom: 5px;">
+                                                            @dichVu.Gia.Value.ToString("N0")đ
+                                                        </div>
+                                                    }
+                                                    <span class="service-price">@gia.ToString("N0")đ</span>
+                                                </div>
+                                            </div>
+                                        </label>
+                                    }
                                 </div>
-                                <span class="service-price">1,200,000đ</span>
                             </div>
-                        </label>
-                        <label class="service-option">
-                            <input type="checkbox" name="services" value="massage-stone" data-price="1500000">
-                            <div class="service-details">
-                                <div class="service-info">
-                                    <span class="service-name">Massage Trị Liệu Đá Nóng</span>
-                                    <span class="service-description">Liệu pháp đá nóng kết hợp massage sâu (120 phút)</span>
-                                    <div class="service-features">
-                                        <span class="feature"><i class="fas fa-clock"></i> 120 phút</span>
-                                        <span class="feature"><i class="fas fa-fire"></i> Đá nóng trị liệu</span>
-                                    </div>
-                                </div>
-                                <span class="service-price">1,500,000đ</span>
-                            </div>
-                        </label>
-                        <label class="service-option">
-                            <input type="checkbox" name="services" value="facial" data-price="800000">
-                            <div class="service-details">
-                                <div class="service-info">
-                                    <span class="service-name">Chăm Sóc Da Mặt Chuyên Sâu</span>
-                                    <span class="service-description">Làm sạch sâu và dưỡng ẩm chuyên nghiệp (75 phút)</span>
-                                    <div class="service-features">
-                                        <span class="feature"><i class="fas fa-clock"></i> 75 phút</span>
-                                        <span class="feature"><i class="fas fa-gem"></i> Sản phẩm cao cấp</span>
-                                    </div>
-                                </div>
-                                <span class="service-price">800,000đ</span>
-                            </div>
-                        </label>
-                    </div>
+                        }
+                    }
                 </div>
+            }
+            else
+            {
+                <div style="text-align: center; padding: 40px; background: #f8f9fa; border-radius: 10px;">
+                    <i class="fas fa-info-circle" style="font-size: 48px; color: #6c757d; margin-bottom: 15px;"></i>
+                    <p style="font-size: 18px; color: #6c757d;">Hiện tại chưa có dịch vụ nào khả dụng.</p>
+                </div>
+            }
 
-                <div class="service-category">
-                    <h3 class="category-title">
-                        <i class="fas fa-utensils"></i> Ẩm Thực
-                        <button type="button" class="toggle-service" data-target="dining-services">
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
-                    </h3>
-                    <div class="service-options" id="dining-services">
-                        <label class="service-option">
-                            <input type="checkbox" name="services" value="breakfast-buffet" data-price="350000">
-                            <div class="service-details">
-                                <div class="service-info">
-                                    <span class="service-name">Buffet Sáng</span>
-                                    <span class="service-description">Hơn 50 món ăn quốc tế và địa phương tại The Horizon Restaurant</span>
-                                    <div class="service-features">
-                                        <span class="feature"><i class="fas fa-clock"></i> 6:00 - 10:00</span>
-                                        <span class="feature"><i class="fas fa-globe"></i> Món quốc tế</span>
-                                    </div>
-                                </div>
-                                <span class="service-price">350,000đ/người</span>
-                            </div>
-                        </label>
-                        <label class="service-option">
-                            <input type="checkbox" name="services" value="dinner-package" data-price="850000">
-                            <div class="service-details">
-                                <div class="service-info">
-                                    <span class="service-name">Set Dinner tại Nhà Hàng The Horizon</span>
-                                    <span class="service-description">Menu 5 món do bếp trưởng thiết kế với view biển lãng mạn</span>
-                                    <div class="service-features">
-                                        <span class="feature"><i class="fas fa-utensils"></i> 5 món</span>
-                                        <span class="feature"><i class="fas fa-wine-glass"></i> Kèm rượu vang</span>
-                                    </div>
-                                </div>
-                                <span class="service-price">850,000đ/người</span>
-                            </div>
-                        </label>
-                    </div>
-                </div>
-
-                <div class="service-category">
-                    <h3 class="category-title">
-                        <i class="fas fa-dumbbell"></i> Thể Thao & Giải Trí
-                        <button type="button" class="toggle-service" data-target="sports-services">
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
-                    </h3>
-                    <div class="service-options" id="sports-services">
-                        <label class="service-option">
-                            <input type="checkbox" name="services" value="gym-access" data-price="150000">
-                            <div class="service-details">
-                                <div class="service-info">
-                                    <span class="service-name">Truy cập phòng Gym</span>
-                                    <span class="service-description">Phòng gym hiện đại với thiết bị Technogym cao cấp</span>
-                                    <div class="service-features">
-                                        <span class="feature"><i class="fas fa-clock"></i> 5:00 - 23:00</span>
-                                        <span class="feature"><i class="fas fa-dumbbell"></i> Thiết bị hiện đại</span>
-                                    </div>
-                                </div>
-                                <span class="service-price">150,000đ/ngày</span>
-                            </div>
-                        </label>
-                        <label class="service-option">
-                            <input type="checkbox" name="services" value="yoga-class" data-price="250000">
-                            <div class="service-details">
-                                <div class="service-info">
-                                    <span class="service-name">Lớp Yoga (60 phút)</span>
-                                    <span class="service-description">Yoga ngoài trời với view biển cùng HLV chuyên nghiệp</span>
-                                    <div class="service-features">
-                                        <span class="feature"><i class="fas fa-clock"></i> 60 phút</span>
-                                        <span class="feature"><i class="fas fa-user-graduate"></i> HLV riêng</span>
-                                    </div>
-                                </div>
-                                <span class="service-price">250,000đ/buổi</span>
-                            </div>
-                        </label>
-                        <label class="service-option">
-                            <input type="checkbox" name="services" value="tennis" data-price="400000">
-                            <div class="service-details">
-                                <div class="service-info">
-                                    <span class="service-name">Sân Tennis (90 phút)</span>
-                                    <span class="service-description">Sân tennis chuẩn quốc tế với ánh sáng đầy đủ</span>
-                                    <div class="service-features">
-                                        <span class="feature"><i class="fas fa-clock"></i> 90 phút</span>
-                                        <span class="feature"><i class="fas fa-trophy"></i> Chuẩn quốc tế</span>
-                                    </div>
-                                </div>
-                                <span class="service-price">400,000đ</span>
-                            </div>
-                        </label>
-                    </div>
-                </div>
-            </div>
 
             <div class="form-actions">
-                <a href="@Url.Action("Index", "ThongTin")" class="cta-button">
+                <a href="@Url.Action("ThongTinKhachHang", "DatPhong", new { phongId = Model.ThongTinDatPhong.PhongId })" class="cta-button">
                     <i class="fas fa-arrow-left"></i> Quay Lại
                 </a>
-                <a href="@Url.Action("Index", "ThanhToan")" class="cta-button">
+                <a href="@Url.Action("ThanhToan", "DatPhong")" class="cta-button">
                     Tiếp Tục
                 </a>
             </div>
         </div>
-        @Html.Partial("_OrderSummary")
+        @Html.Partial("_OrderSummary", Model.ThongTinDatPhong)
     </div>
 </main>
 

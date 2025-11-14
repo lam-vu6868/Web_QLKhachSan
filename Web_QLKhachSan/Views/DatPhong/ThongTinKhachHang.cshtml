@@ -1,4 +1,5 @@
-﻿@{
+﻿@model Web_QLKhachSan.Models.ThongTinDatPhongViewModel
+@{
     ViewBag.Title = "Thông Tin Đặt Phòng";
 }
 <link rel="stylesheet" href="~/assets/css/dat-phong.css" />
@@ -17,73 +18,197 @@
             @{ ViewBag.CurrentStep = 1; }
             @Html.Partial("_CheckoutSteps")
 
-            <form class="checkout-form">
+            @using (Html.BeginForm("ThongTinKhachHang", "DatPhong", FormMethod.Post, new { @class = "checkout-form", id = "bookingForm" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
                 <h2 class="form-section-title">Thông Tin Liên Hệ</h2>
+
+                @* Row 1: Họ tên (full width) *@
                 <div class="form-row">
                     <div class="form-group full-width">
-                        <label for="full-name">Họ và Tên</label>
-                        <input type="text" id="full-name" placeholder="Nguyễn Văn A" />
+                        <span class="required">@Html.LabelFor(m => m.HoVaTen, new { @class = "control-label" })*</span>
+                        @Html.TextBoxFor(m => m.HoVaTen, new { @class = "form-control readonly-field", @readonly = "readonly" })
+                        @Html.ValidationMessageFor(m => m.HoVaTen, "", new { @class = "text-danger" })
                     </div>
                 </div>
 
-                <div class="form-row">
-                    <div class="form-group half-width">
-                        <label for="checkin-date">Ngày nhận phòng</label>
-                        <input type="date" id="checkin-date" name="checkin-date" />
+                @* Row 2: Mã khuyến mãi và Số người *@
+                <div class="form-row two-columns">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.MaKhuyenMai, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.MaKhuyenMai, new { @class = "form-control", placeholder = "Nhập mã giảm giá" })
                     </div>
-                    <div class="form-group half-width">
-                        <label for="checkout-date">Ngày trả phòng</label>
-                        <input type="text"
-                               id="checkout-date"
-                               name="checkout-date"
-                               placeholder="Nhập ngày trả phòng" />
-                    </div>
-                    <div class="form-group half-width">
-                        <label for="guests">Số người</label>
-                        <input type="number"
-                               id="guests"
-                               name="guests"
-                               min="1"
-                               max="4"
-                               value="1" />
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.SoNguoi, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.SoNguoi, new
+                        {
+                            @type = "number",
+                            @class = "form-control readonly-field",
+                            @readonly = "readonly",
+                            min = 1,
+                            max = Model.SoNguoiToiDa
+                        })
+                        @Html.ValidationMessageFor(m => m.SoNguoi, "", new { @class = "text-danger" })
+                        <small class="date-hint">Tối đa @Model.SoNguoiToiDa người</small>
                     </div>
                 </div>
 
-                <div class="form-row">
-                    <div class="form-group third-width">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" placeholder="email@example.com" />
+                @* Row 3: Ngày nhận và Ngày trả *@
+                <div class="form-row two-columns">
+                    <div class="form-group">
+                        <span class="required">@Html.LabelFor(m => m.NgayNhan, new { @class = "control-label" })*</span>
+                        @Html.TextBoxFor(m => m.NgayNhan, "{0:yyyy-MM-dd}", new
+                        {
+                            @type = "date",
+                            @class = "form-control",
+                            id = "checkin-date",
+                            min = DateTime.Now.ToString("yyyy-MM-dd")
+                        })
+                        @Html.ValidationMessageFor(m => m.NgayNhan, "", new { @class = "text-danger" })
+                        <small class="date-hint">Ngày nhận phòng tối thiểu sau ngày hiện tại 1 ngày</small>
                     </div>
-                    <div class="form-group third-width">
-                        <label for="phone">Số điện thoại</label>
+                    <div class="form-group">
+                        <span class="required">@Html.LabelFor(m => m.NgayTra, new { @class = "control-label" })*</span>
+                        @Html.TextBoxFor(m => m.NgayTra, "{0:yyyy-MM-dd}", new
+                        {
+                            @type = "date",
+                            @class = "form-control",
+                            id = "checkout-date",
+                            min = Model.NgayNhan.AddDays(1).ToString("yyyy-MM-dd")
+                        })
+                        @Html.ValidationMessageFor(m => m.NgayTra, "", new { @class = "text-danger" })
+                        <small class="date-hint">Ngày trả phòng tối thiểu sau ngày nhận 1 ngày</small>
+                    </div>
+                </div>
+
+                @* Row 4: Email và Số điện thoại *@
+                <div class="form-row two-columns">
+                    <div class="form-group">
+                        <span class="required">
+                        @Html.LabelFor(m => m.Email, new { @class = "control-label" })*</span>
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control readonly-field", @readonly = "readonly", @type = "email" })
+                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        <span class="required">
+                            @Html.LabelFor(m => m.SoDienThoai, new { @class = "control-label" }) *
+                        </span>
                         <div class="phone-input-container">
                             <div class="phone-input-wrapper">
                                 <div class="country-flag">
                                     <span class="flag">🇻🇳</span>
                                     <span class="country-code">+84</span>
                                 </div>
-                                <input type="tel"
-                                       id="phone"
-                                       placeholder="0901234567"
-                                       maxlength="11" />
+                                @if (string.IsNullOrEmpty(Model.SoDienThoai))
+                                {
+                                    @Html.TextBoxFor(m => m.SoDienThoai, new
+                                    {
+                                        @type = "tel",
+                                        @class = "form-control",
+                                        placeholder = "0901234567",
+                                        maxlength = 10
+                                    })
+                                }
+                                else
+                                {
+                                    @Html.TextBoxFor(m => m.SoDienThoai, new
+                                    {
+                                        @type = "tel",
+                                        @class = "form-control readonly-field",
+                                        @readonly = "readonly",
+                                        maxlength = 10
+                                    })
+                                }
                             </div>
                         </div>
-                    </div>
-                    <div class="form-group third-width">
-                        <label for="promo-code">Mã khuyến mãi</label>
-                        <input type="text"
-                               id="promo-code"
-                               name="promo-code"
-                               placeholder="Nhập mã giảm giá" />
+                        @Html.ValidationMessageFor(m => m.SoDienThoai, "", new { @class = "text-danger" })
                     </div>
                 </div>
 
-                <a href="@Url.Action("Index", "DichVuThem")" class="cta-button">Tiếp Tục</a>
-            </form>
+                @* Legacy form row for backward compatibility *@
+                <div class="form-row" style="display: none;"></div>
+
+                @* Hidden fields *@
+                @Html.HiddenFor(m => m.PhongId)
+                @Html.HiddenFor(m => m.TenPhong)
+                @Html.HiddenFor(m => m.LoaiPhong)
+                @Html.HiddenFor(m => m.GiaPhong)
+                @Html.HiddenFor(m => m.SoNguoiToiDa)
+                @Html.HiddenFor(m => m.HinhAnh)
+
+                <button type="submit" class="cta-button">Tiếp Tục</button>
+            }
         </div>
-        @Html.Partial("_OrderSummary")
+        @Html.Partial("_OrderSummary", Model)
     </div>
 </main>
+
+@section Scripts {
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var phongId = '@Model.PhongId';
+            var storageKey = 'booking_' + phongId;
+
+            // Khôi phục dữ liệu từ localStorage khi load trang
+            var savedData = localStorage.getItem(storageKey);
+            if (savedData) {
+                try {
+                    var data = JSON.parse(savedData);
+                    
+                    // Chỉ khôi phục nếu field đang trống hoặc có giá trị mặc định
+                    if (data.soDienThoai && $('#SoDienThoai').val().trim() === '') {
+                        $('#SoDienThoai').val(data.soDienThoai);
+                    }
+                    
+                    if (data.maKhuyenMai) {
+                        $('#MaKhuyenMai').val(data.maKhuyenMai);
+                    }
+
+                    if (data.ngayNhan) {
+                        $('#checkin-date').val(data.ngayNhan);
+                    }
+
+                    if (data.ngayTra) {
+                        $('#checkout-date').val(data.ngayTra);
+                    }
+
+                    if (data.soNguoi) {
+                        $('#SoNguoi').val(data.soNguoi);
+                    }
+                } catch (e) {
+                    console.log('Không thể khôi phục dữ liệu:', e);
+                }
+            }
+
+            // Lưu dữ liệu khi người dùng thay đổi
+            function saveToLocalStorage() {
+                var data = {
+                    soDienThoai: $('#SoDienThoai').val(),
+                    maKhuyenMai: $('#MaKhuyenMai').val(),
+                    ngayNhan: $('#checkin-date').val(),
+                    ngayTra: $('#checkout-date').val(),
+                    soNguoi: $('#SoNguoi').val()
+                };
+                localStorage.setItem(storageKey, JSON.stringify(data));
+            }
+
+            // Lắng nghe sự kiện thay đổi
+            $('#SoDienThoai, #MaKhuyenMai, #checkin-date, #checkout-date, #SoNguoi').on('change input', function() {
+                saveToLocalStorage();
+            });
+
+            // Xóa localStorage sau khi submit thành công (tùy chọn)
+            $('#bookingForm').on('submit', function() {
+                // Lưu lần cuối trước khi submit
+                saveToLocalStorage();
+            });
+        });
+    </script>
+}
 
 <script src="~/assets/js/dat-phong.js"></script>
 

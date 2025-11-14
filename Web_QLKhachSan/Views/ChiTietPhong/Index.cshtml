@@ -5,41 +5,14 @@
 }
 <link rel="stylesheet" href="~/assets/css/chi-tiet-phong.css" />
 
-@if (Model == null)
-{
-    <div class="container" style="padding: 100px 0;">
-        <div style="max-width: 800px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-            <h2 style="color: #d4af37;">⚠️ Debug Information</h2>
-
-            @if (ViewBag.ErrorMessage != null)
-            {
-                <div style="background: #fee; border-left: 4px solid #f00; padding: 15px; margin: 20px 0;">
-                    <strong>Error:</strong> @ViewBag.ErrorMessage
-                </div>
-            }
-
-            <div style="background: #f9f9f9; padding: 15px; margin: 20px 0; border-radius: 5px;">
-                <p><strong>Tổng số LoaiPhong trong database:</strong> @ViewBag.TotalLoaiPhongs</p>
-                <p><strong>ID được yêu cầu:</strong> @ViewBag.RequestedId</p>
-                <p><strong>Các ID có sẵn trong database:</strong> @ViewBag.AllIds</p>
-            </div>
-
-            @if (ViewBag.StackTrace != null)
-            {
-                <details style="margin: 20px 0;">
-                    <summary style="cursor: pointer; color: #d4af37; font-weight: bold;">Stack Trace</summary>
-                    <pre style="background: #f5f5f5; padding: 10px; overflow: auto; font-size: 12px;">@ViewBag.StackTrace</pre>
-                </details>
-            }
-
-            <div style="text-align: center; margin-top: 30px;">
-                <a href="@Url.Action("Index", "PhongNghi")" style="display: inline-block; padding: 12px 30px; background: #d4af37; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">
-                    ← Quay lại danh sách phòng
-                </a>
-            </div>
-        </div>
-    </div>
-    return;
+@{
+    // Nếu không có Model (ví dụ: truy cập thẳng trang Chi tiết phòng mà không có id),
+    // chuyển hướng về danh sách phòng `PhongNghi` để tránh hiển thị trang debug.
+    if (Model == null)
+    {
+        Response.Redirect(Url.Action("Index", "PhongNghi"));
+        return;
+    }
 }
 
 <!-- Page Header -->
@@ -189,7 +162,7 @@
                                 <h3>Sẵn sàng đặt phòng?</h3>
                                 <p>Trải nghiệm kỳ nghỉ tuyệt vời với dịch vụ 5 sao và tầm nhìn đại dương tuyệt đẹp</p>
                             </div>
-                            <a href="@Url.Action("ThongTinKhachHang", "DatPhong")" class="btn-book-now-main">
+                            <a href="@Url.Action("ThongTinKhachHang", "DatPhong", new { phongId = Model.PhongId })" class="btn-book-now-main">
                                 <i class="fas fa-calendar-check"></i>
                                 Đặt Phòng Ngay
                             </a>

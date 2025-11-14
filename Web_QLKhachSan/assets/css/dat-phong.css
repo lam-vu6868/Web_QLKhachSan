@@ -14,6 +14,9 @@
   margin-top: 5px;
   display: block;
 }
+.cta-button{
+  background-color: var(--white);
+}
 
 /* Services Selection Styles */
 .services-selection {
@@ -46,7 +49,6 @@
   margin-right: 10px;
   color: var(--gold);
 }
-
 .toggle-service {
   margin-left: auto;
   background: none;
@@ -266,7 +268,7 @@ input.error, input:invalid {
   z-index: 1;
   font-weight: 500;
   color: #777;
-  cursor: pointer;
+  cursor: default;
 }
 
 .step.active {
@@ -299,35 +301,88 @@ input.error, input:invalid {
 }
 
 .form-row {
-  display: flex;
+  display: grid;
   gap: 20px;
+  margin-bottom: 10px;
+  align-items: start;
 }
 
-.half-width {
-  flex: 1;
+/* Grid layout cho các row khác nhau */
+.form-row.two-columns {
+  grid-template-columns: 1fr 1fr;
 }
 
-.third-width {
+.form-row.three-columns {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.form-row.four-columns {
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+/* Default layout cho form-row không có class cụ thể */
+.form-row:not(.two-columns):not(.three-columns):not(.four-columns) {
+  grid-template-columns: 1fr 1fr; /* Default 2 columns */
+}
+
+/* Backward compatibility - sử dụng khi không có class grid cụ thể */
+.form-row:not(.two-columns):not(.three-columns):not(.four-columns).legacy-flex {
+  display: flex;
+  flex-wrap: wrap;
+  grid-template-columns: unset;
+}
+
+.form-row.legacy-flex .half-width {
   flex: 1;
-  min-width: 220px;
+  min-width: 0;
+  flex-basis: calc(50% - 10px);
+}
+
+.form-row.legacy-flex .third-width {
+  flex: 1;
+  min-width: 0;
+  flex-basis: calc(33.333% - 14px);
+}
+
+.form-row.legacy-flex .fourth-width {
+  flex: 1;
+  min-width: 0;
+  flex-basis: calc(25% - 15px);
 }
 
 .full-width {
-  width: 100%;
+  grid-column: 1 / -1; /* Span toàn bộ các cột trong grid */
+  width: 100%; /* Fallback cho flex layout */
 }
 
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 0; /* Remove bottom margin để grid gap handle spacing */
+  display: flex;
+  flex-direction: column;
+  width: 100%; /* Ensure full width within grid cell */
 }
 
 .form-group label {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 5px;
   margin-bottom: 8px;
   font-weight: 500;
   color: var(--deep-navy);
+  min-height: 24px;
+  line-height: 24px;
 }
 
-.form-group input {
+.form-group .required {
+  color: #e74c3c;
+  font-weight: bold;
+  font-size: 14px;
+  display: flex;
+  gap: 5px;
+}
+
+.form-group input,
+.form-group .form-control {
   width: 100%;
   padding: 12px 15px;
   border: 1px solid #ddd;
@@ -335,9 +390,12 @@ input.error, input:invalid {
   font-family: var(--font-primary);
   font-size: 16px;
   transition: var(--transition-smooth);
+  box-sizing: border-box;
+  height: 48px;
 }
 
-.form-group input:focus {
+.form-group input:focus,
+.form-group .form-control:focus {
   border-color: var(--gold);
   outline: none;
   box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
@@ -810,26 +868,124 @@ hr {
   font-size: 20px;
 }
 
+/* Layout đặc biệt cho thông tin khách hàng */
+.customer-info-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+.customer-info-layout .form-group {
+  margin-bottom: 20px;
+}
+
+.date-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+/* Improved form styling */
+.form-group label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: var(--deep-navy);
+  min-height: 24px;
+  line-height: 24px;
+}
+
+.form-group .required {
+  color: #e74c3c;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+/* Enhanced date hints */
+.date-hint {
+  color: #6c757d;
+  font-size: 11px;
+  margin-top: 3px;
+  display: block;
+  font-style: italic;
+  line-height: 1.3;
+}
+
+/* Enhanced input styling */
+.form-group input,
+.form-group .form-control {
+  width: 100%;
+  padding: 12px 15px;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  font-family: var(--font-primary);
+  font-size: 16px;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  height: 48px;
+  background-color: #fff;
+}
+
+.form-group input:focus,
+.form-group .form-control:focus {
+  border-color: var(--gold);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
+  background-color: #fefefe;
+}
+
+.form-group input:hover:not(:focus),
+.form-group .form-control:hover:not(:focus) {
+  border-color: #ced4da;
+}
+
+/* Mobile layout cho customer info */
+@media (max-width: 768px) {
+  .customer-info-layout {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .date-row {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .form-group input,
+  .form-group .form-control {
+    font-size: 16px; /* Prevent zoom on iOS */
+    padding: 14px 15px;
+  }
+}
+
 /* Phone input with country flag */
 .phone-input-container {
   position: relative;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
   background: white;
   transition: all 0.3s ease;
   margin-bottom: 0;
+  width: 100%;
+  box-sizing: border-box;
+  height: 48px;
 }
 
 .phone-input-wrapper {
   display: flex;
   align-items: center;
-  border-radius: 6px;
+  border-radius: 5px;
   overflow: hidden;
+  height: 100%;
 }
 
 .phone-input-container:focus-within {
   border-color: var(--gold);
-  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
 }
 
 /* Error state for phone input container */
@@ -841,33 +997,38 @@ hr {
 .country-flag {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 12px 15px;
+  gap: 5px;
+  padding: 0 12px;
   background: #f8f9fa;
-  border-right: 1px solid #e0e0e0;
-  border-radius: 6px 0 0 6px;
-  min-width: 80px;
+  border-right: 1px solid #ddd;
+  height: 100%;
+  min-width: 70px;
 }
 
 .flag {
-  font-size: 18px;
+  font-size: 20px;
   line-height: 1;
+  display: flex;
+  align-items: center;
 }
 
 .country-code {
   font-weight: 600;
   color: #2c3e50;
   font-size: 14px;
+  white-space: nowrap;
 }
 
 .phone-input-container input[type="tel"] {
   border: none;
   outline: none;
-  padding: 12px 15px;
+  padding: 0 15px;
   flex: 1;
   background: transparent;
   font-size: 16px;
-  border-radius: 0 6px 6px 0;
+  border-radius: 0 5px 5px 0;
+  height: 100%;
+  font-family: var(--font-primary);
 }
 
 .phone-input-container input[type="tel"]:focus {
@@ -929,14 +1090,15 @@ hr {
     text-align: left;
   }
   
+  /* Mobile layout cho form */
   .form-row {
-    flex-direction: column;
-    gap: 0;
+    grid-template-columns: 1fr !important;
+    gap: 15px;
+    margin-bottom: 15px;
   }
   
-  .third-width {
-    width: 100%;
-    min-width: auto;
+  .full-width {
+    grid-column: 1;
   }
   
   .checkout-steps {
@@ -990,4 +1152,72 @@ hr {
     max-width: 540px;
     padding: 0 15px;
   }
+}
+
+/* ======== READONLY FIELDS STYLING ======== */
+.readonly-field {
+  background-color: #f8f9fa !important;
+  cursor: not-allowed !important;
+  color: #495057 !important;
+  border-color: #e9ecef !important;
+}
+
+.readonly-field:focus {
+  box-shadow: none !important;
+  border-color: #e9ecef !important;
+}
+
+/* Required field indicator */
+.required {
+  color: #e74c3c;
+  font-weight: bold;
+  margin-left: 2px;
+}
+
+/* Form validation styles */
+input:invalid:not(:focus):not(:placeholder-shown) {
+  border-color: #e74c3c;
+}
+
+input:valid:not(:focus):not(:placeholder-shown) {
+  border-color: #28a745;
+}
+
+/* ASP.NET MVC Validation styles */
+.text-danger {
+  color: #e74c3c;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+.field-validation-error {
+  color: #e74c3c;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+.validation-summary-errors {
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+  padding: 15px;
+  margin-bottom: 20px;
+  color: #721c24;
+}
+
+.validation-summary-errors ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.input-validation-error {
+  border-color: #e74c3c !important;
+}
+
+input:disabled {
+  background-color: #e9ecef !important;
+  cursor: not-allowed !important;
+  opacity: 0.6;
 }

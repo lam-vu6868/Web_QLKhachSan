@@ -241,6 +241,7 @@
     <Compile Include="Models\DichVu.cs">
       <DependentUpon>Contect.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\DichVuDatThemViewModel.cs" />
     <Compile Include="Models\DichVuToken.cs" />
     <Compile Include="Models\GiaTheoNgay.cs">
       <DependentUpon>Contect.tt</DependentUpon>
@@ -283,6 +284,7 @@
     <Compile Include="Models\ThanhToan.cs">
       <DependentUpon>Contect.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ThongTinDatPhongViewModel.cs" />
     <Compile Include="Models\TienIch.cs">
       <DependentUpon>Contect.tt</DependentUpon>
     </Compile>

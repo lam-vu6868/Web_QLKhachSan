@@ -216,7 +216,7 @@
                                 <div class="room-actions">
                                     <a href="@Url.Action("Index", "ChiTietPhong", new { id = phong.PhongId })" class="cta-button">Xem Chi Tiết</a>
                                     <div class="booking-btn-wrapper">
-                                        <a href="@Url.Action("Index", "ThongTin", new { phongId = phong.PhongId })" class="btn-booking"></a>
+                                        <a href="@Url.Action("ThongTinKhachHang", "DatPhong", new { phongId = phong.PhongId })" class="btn-booking"></a>
                                         <span class="tooltip">Đặt Phòng Ngay</span>
                                     </div>
                                 </div>

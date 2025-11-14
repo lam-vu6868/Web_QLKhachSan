@@ -3,16 +3,16 @@
 }
 
 <div class="checkout-steps">
-    <div class="step @(currentStep == 1 ? "active" : "")" onclick="location.href='@Url.Action("ThongTinKhachHang", "DatPhong")'">
+    <div class="step @(currentStep == 1 ? "active" : "")" ">
         1. Thông tin
     </div>
-    <div class="step @(currentStep == 2 ? "active" : "")" onclick="location.href='@Url.Action("DichVuDatThem", "DatPhong")'">
+    <div class="step @(currentStep == 2 ? "active" : "")"">
         2. Dịch Vụ
     </div>
-    <div class="step @(currentStep == 3 ? "active" : "")" onclick="location.href='@Url.Action("ThanhToan", "DatPhong")'">
+    <div class="step @(currentStep == 3 ? "active" : "")"">
         3. Thanh toán
     </div>
-    <div class="step @(currentStep == 4 ? "active" : "")" onclick="location.href='@Url.Action("XacNhanHoaDon", "DatPhong")'">
+    <div class="step @(currentStep == 4 ? "active" : "")"">
         4. Xác nhận
     </div>
 </div>
