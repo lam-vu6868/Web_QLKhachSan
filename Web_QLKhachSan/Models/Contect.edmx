@@ -5,6 +5,19 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="DB_QLKhachSanModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Bookings">
+          <Key>
+            <PropertyRef Name="booking_id" />
+          </Key>
+          <Property Name="booking_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="customer_name" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="check_in_date" Type="date" Nullable="false" />
+          <Property Name="total_amount" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="deposit_amount" Type="decimal" Precision="10" Scale="2" />
+          <Property Name="payment_ref_id" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="payment_status" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="created_at" Type="datetime" />
+        </EntityType>
         <EntityType Name="ChiTietDatDichVu">
           <Key>
             <PropertyRef Name="ChiTietDatDichVuId" />
@@ -330,6 +343,19 @@
           <Property Name="NgayHetHan" Type="datetime" Nullable="false" />
           <Property Name="token" Type="varchar" MaxLength="255" />
         </EntityType>
+        <EntityType Name="VNPAY_Transaction_Logs">
+          <Key>
+            <PropertyRef Name="log_id" />
+          </Key>
+          <Property Name="log_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="booking_ref_id" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="vnp_txn_ref" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="vnp_amount" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="vnp_response_code" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="vnp_transaction_status" Type="varchar" MaxLength="10" />
+          <Property Name="log_details" Type="nvarchar(max)" />
+          <Property Name="log_time" Type="datetime" />
+        </EntityType>
         <Association Name="FK__LoaiPhong__LoaiP__37703C52">
           <End Role="LoaiPhong" Type="Self.LoaiPhong" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -410,6 +436,9 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <!--Errors Found During Generation:
+warning 6035: The relationship 'FK__VNPAY_Tra__booki__690797E6' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
+        <Association Name="FK__VNPAY_Tra__booki__690797E6" />-->
         <Association Name="FK_ChiTietDatDichVu_DatPhong">
           <End Role="DatPhong" Type="Self.DatPhong" Multiplicity="1" />
           <End Role="ChiTietDatDichVu" Type="Self.ChiTietDatDichVu" Multiplicity="*" />
@@ -629,6 +658,7 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="DB_QLKhachSanModelStoreContainer">
+          <EntitySet Name="Bookings" EntityType="Self.Bookings" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ChiTietDatDichVu" EntityType="Self.ChiTietDatDichVu" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ChiTietDatPhong" EntityType="Self.ChiTietDatPhong" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DanhGia" EntityType="Self.DanhGia" Schema="dbo" store:Type="Tables" />
@@ -652,6 +682,7 @@
           <EntitySet Name="TienIch" EntityType="Self.TienIch" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TienNghi" EntityType="Self.TienNghi" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TokenLogin" EntityType="Self.TokenLogin" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="VNPAY_Transaction_Logs" EntityType="Self.VNPAY_Transaction_Logs" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK__LoaiPhong__LoaiP__37703C52" Association="Self.FK__LoaiPhong__LoaiP__37703C52">
             <End Role="LoaiPhong" EntitySet="LoaiPhong" />
             <End Role="LoaiPhongTienIch" EntitySet="LoaiPhongTienIch" />
@@ -754,6 +785,7 @@
     <edmx:ConceptualModels>
       <Schema Namespace="DB_QLKhachSanModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="DB_QLKhachSanEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Bookings" EntityType="DB_QLKhachSanModel.Booking" />
           <EntitySet Name="ChiTietDatDichVus" EntityType="DB_QLKhachSanModel.ChiTietDatDichVu" />
           <EntitySet Name="ChiTietDatPhongs" EntityType="DB_QLKhachSanModel.ChiTietDatPhong" />
           <EntitySet Name="DanhGias" EntityType="DB_QLKhachSanModel.DanhGia" />
@@ -775,6 +807,7 @@
           <EntitySet Name="TienIches" EntityType="DB_QLKhachSanModel.TienIch" />
           <EntitySet Name="TienNghis" EntityType="DB_QLKhachSanModel.TienNghi" />
           <EntitySet Name="TokenLogins" EntityType="DB_QLKhachSanModel.TokenLogin" />
+          <EntitySet Name="VNPAY_Transaction_Logs" EntityType="DB_QLKhachSanModel.VNPAY_Transaction_Logs" />
           <AssociationSet Name="FK_ChiTietDatDichVu_DatPhong" Association="DB_QLKhachSanModel.FK_ChiTietDatDichVu_DatPhong">
             <End Role="DatPhong" EntitySet="DatPhongs" />
             <End Role="ChiTietDatDichVu" EntitySet="ChiTietDatDichVus" />
@@ -864,6 +897,19 @@
             <End Role="TienNghi" EntitySet="TienNghis" />
           </AssociationSet>
         </EntityContainer>
+        <EntityType Name="Booking">
+          <Key>
+            <PropertyRef Name="booking_id" />
+          </Key>
+          <Property Name="booking_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="customer_name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="check_in_date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="total_amount" Type="Decimal" Nullable="false" Precision="10" Scale="2" />
+          <Property Name="deposit_amount" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="payment_ref_id" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="payment_status" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="created_at" Type="DateTime" Precision="3" />
+        </EntityType>
         <EntityType Name="ChiTietDatDichVu">
           <Key>
             <PropertyRef Name="ChiTietDatDichVuId" />
@@ -1217,6 +1263,19 @@
           <Property Name="token" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="TaiKhoan" Relationship="DB_QLKhachSanModel.FK_LoginToken_TaiKhoan" FromRole="TokenLogin" ToRole="TaiKhoan" />
         </EntityType>
+        <EntityType Name="VNPAY_Transaction_Logs">
+          <Key>
+            <PropertyRef Name="log_id" />
+          </Key>
+          <Property Name="log_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="booking_ref_id" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="vnp_txn_ref" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="vnp_amount" Type="Decimal" Nullable="false" Precision="10" Scale="2" />
+          <Property Name="vnp_response_code" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="vnp_transaction_status" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="log_details" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="log_time" Type="DateTime" Precision="3" />
+        </EntityType>
         <Association Name="FK_ChiTietDatDichVu_DatPhong">
           <End Type="DB_QLKhachSanModel.DatPhong" Role="DatPhong" Multiplicity="1" />
           <End Type="DB_QLKhachSanModel.ChiTietDatDichVu" Role="ChiTietDatDichVu" Multiplicity="*" />
@@ -1473,6 +1532,20 @@
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="DB_QLKhachSanModelStoreContainer" CdmEntityContainer="DB_QLKhachSanEntities">
+          <EntitySetMapping Name="Bookings">
+            <EntityTypeMapping TypeName="DB_QLKhachSanModel.Booking">
+              <MappingFragment StoreEntitySet="Bookings">
+                <ScalarProperty Name="created_at" ColumnName="created_at" />
+                <ScalarProperty Name="payment_status" ColumnName="payment_status" />
+                <ScalarProperty Name="payment_ref_id" ColumnName="payment_ref_id" />
+                <ScalarProperty Name="deposit_amount" ColumnName="deposit_amount" />
+                <ScalarProperty Name="total_amount" ColumnName="total_amount" />
+                <ScalarProperty Name="check_in_date" ColumnName="check_in_date" />
+                <ScalarProperty Name="customer_name" ColumnName="customer_name" />
+                <ScalarProperty Name="booking_id" ColumnName="booking_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="ChiTietDatDichVus">
             <EntityTypeMapping TypeName="DB_QLKhachSanModel.ChiTietDatDichVu">
               <MappingFragment StoreEntitySet="ChiTietDatDichVu">
@@ -1800,6 +1873,20 @@
                 <ScalarProperty Name="NgayTao" ColumnName="NgayTao" />
                 <ScalarProperty Name="MaTaiKhoan" ColumnName="MaTaiKhoan" />
                 <ScalarProperty Name="TokenId" ColumnName="TokenId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="VNPAY_Transaction_Logs">
+            <EntityTypeMapping TypeName="DB_QLKhachSanModel.VNPAY_Transaction_Logs">
+              <MappingFragment StoreEntitySet="VNPAY_Transaction_Logs">
+                <ScalarProperty Name="log_time" ColumnName="log_time" />
+                <ScalarProperty Name="log_details" ColumnName="log_details" />
+                <ScalarProperty Name="vnp_transaction_status" ColumnName="vnp_transaction_status" />
+                <ScalarProperty Name="vnp_response_code" ColumnName="vnp_response_code" />
+                <ScalarProperty Name="vnp_amount" ColumnName="vnp_amount" />
+                <ScalarProperty Name="vnp_txn_ref" ColumnName="vnp_txn_ref" />
+                <ScalarProperty Name="booking_ref_id" ColumnName="booking_ref_id" />
+                <ScalarProperty Name="log_id" ColumnName="log_id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -4,7 +4,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Data.Entity;
+using System.Configuration;
 using Web_QLKhachSan.Models;
+using Web_QLKhachSan.Utils;
 
 namespace Web_QLKhachSan.Controllers
 {
@@ -311,6 +313,10 @@ namespace Web_QLKhachSan.Controllers
                 return RedirectToAction("ThongTinKhachHang");
             }
 
+            // Tự động tạo booking và lưu vào database khi vào trang thanh toán
+            string bookingRef = CreateBookingRecord(thongTinDatPhong);
+            ViewBag.BookingRef = bookingRef;
+
             // Thêm logic để kiểm tra số đêm cho tùy chọn gia hạn
             ViewBag.CanUseCustomDelay = thongTinDatPhong.SoDem >= 2;
             ViewBag.MaxDelayDate = thongTinDatPhong.NgayTra.AddDays(-1);
@@ -318,109 +324,280 @@ namespace Web_QLKhachSan.Controllers
             return View(thongTinDatPhong);
         }
 
-        // POST: DatPhong/ThanhToan
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult ThanhToan(string payment, string delayTime, string customDate, string customTime)
+        private string CreateBookingRecord(ThongTinDatPhongViewModel thongTinDatPhong)
         {
-            // Lấy thông tin đặt phòng từ Session
-            var thongTinDatPhong = Session["ThongTinDatPhong"] as ThongTinDatPhongViewModel;
-            if (thongTinDatPhong == null)
+            try
             {
-                TempData["ErrorMessage"] = "Thông tin đặt phòng không hợp lệ!";
-                return RedirectToAction("ThongTinKhachHang");
-            }
+                string bookingRef = "BOOKING_" + DateTime.Now.Ticks;
 
-            // Xử lý payment method
-            if (payment == "instant-transfer")
-            {
-                // Xử lý thanh toán ngay
-                // TODO: Lưu thông tin thanh toán ngay vào database
-                TempData["PaymentMethod"] = "Chuyển khoản ngay";
-            }
-            else if (payment == "delayed-transfer")
-            {
-                // Validate delay time selection
-                if (string.IsNullOrEmpty(delayTime))
+                // Lưu booking vào database
+                var booking = new Booking
                 {
-                    TempData["ErrorMessage"] = "Vui lòng chọn thời gian gia hạn!";
-                    ViewBag.CanUseCustomDelay = thongTinDatPhong.SoDem >= 2;
-                    ViewBag.MaxDelayDate = thongTinDatPhong.NgayTra.AddDays(-1);
-                    return View(thongTinDatPhong);
+                    customer_name = thongTinDatPhong.HoVaTen,
+                    check_in_date = thongTinDatPhong.NgayNhan,
+                    total_amount = thongTinDatPhong.TongCong,
+                    deposit_amount = thongTinDatPhong.TongCong,
+                    payment_ref_id = bookingRef,
+                    payment_status = "PENDING",
+                    created_at = DateTime.Now
+                };
+
+                db.Bookings.Add(booking);
+                db.SaveChanges();
+
+                // Lưu log VNPay
+                var vnpayLog = new VNPAY_Transaction_Logs
+                {
+                    booking_ref_id = bookingRef,
+                    vnp_txn_ref = DateTime.Now.Ticks.ToString(),
+                    vnp_amount = thongTinDatPhong.TongCong,
+                    vnp_response_code = "WAITING",
+                    vnp_transaction_status = "WAITING",
+                    log_details = $"Tạo booking {bookingRef} - Khách hàng: {thongTinDatPhong.HoVaTen} - Số tiền: {thongTinDatPhong.TongCong:N0}đ",
+                    log_time = DateTime.Now
+                };
+
+                db.VNPAY_Transaction_Logs.Add(vnpayLog);
+                db.SaveChanges();
+
+                return bookingRef;
+            }
+            catch (Exception ex)
+            {
+                return "ERROR_" + DateTime.Now.Ticks;
+            }
+        }
+
+        // API giả lập chuyển khoản thành công
+        public ActionResult SimulatePayment(string bookingRef)
+        {
+            try
+            {
+                // Tìm booking
+                var booking = db.Bookings.FirstOrDefault(b => b.payment_ref_id == bookingRef);
+                if (booking != null)
+                {
+                    // Cập nhật trạng thái thành công
+                    booking.payment_status = "PAID";
+                    
+                    // Lưu log thành công
+                    var vnpayLog = new VNPAY_Transaction_Logs
+                    {
+                        booking_ref_id = bookingRef,
+                        vnp_txn_ref = DateTime.Now.Ticks.ToString(),
+                        vnp_amount = booking.total_amount,
+                        vnp_response_code = "00",
+                        vnp_transaction_status = "00",
+                        log_details = $"GIẢ LẬP chuyển khoản thành công cho booking {bookingRef} - Số tiền: {booking.total_amount:N0}đ",
+                        log_time = DateTime.Now
+                    };
+                    
+                    db.VNPAY_Transaction_Logs.Add(vnpayLog);
+                    db.SaveChanges();
+                    
+                    return Json(new { success = true, message = "Chuyển khoản thành công!" }, JsonRequestBehavior.AllowGet);
+                }
+                
+                return Json(new { success = false, message = "Không tìm thấy booking!" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Lỗi: " + ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
+
+        private ActionResult ProcessVNPayPayment(ThongTinDatPhongViewModel thongTinDatPhong)
+        {
+            // Lấy config VNPay từ Web.config
+            string vnp_Returnurl = ConfigurationManager.AppSettings["vnp_Returnurl"] ?? Url.Action("VNPayReturn", "DatPhong", null, Request.Url.Scheme);
+            string vnp_Url = ConfigurationManager.AppSettings["vnp_Url"] ?? "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
+            string vnp_TmnCode = ConfigurationManager.AppSettings["vnp_TmnCode"] ?? "DEMOTMNCODE";
+            string vnp_HashSecret = ConfigurationManager.AppSettings["vnp_HashSecret"] ?? "DEMOHASHSECRET";
+
+            // Tạo booking reference ID
+            string bookingRef = "BOOKING_" + DateTime.Now.Ticks;
+            long vnpTxnRef = DateTime.Now.Ticks;
+
+            // Lưu booking vào database
+            var booking = new Booking
+            {
+                customer_name = thongTinDatPhong.HoVaTen,
+                check_in_date = thongTinDatPhong.NgayNhan,
+                total_amount = thongTinDatPhong.TongCong,
+                deposit_amount = thongTinDatPhong.TongCong, // Thanh toán toàn bộ
+                payment_ref_id = bookingRef,
+                payment_status = "PENDING",
+                created_at = DateTime.Now
+            };
+
+            db.Bookings.Add(booking);
+            db.SaveChanges();
+
+            // Lưu thông tin VNPay transaction log
+            var vnpayLog = new VNPAY_Transaction_Logs
+            {
+                booking_ref_id = bookingRef,
+                vnp_txn_ref = vnpTxnRef.ToString(),
+                vnp_amount = thongTinDatPhong.TongCong,
+                vnp_response_code = "PENDING",
+                vnp_transaction_status = "PENDING",
+                log_details = $"Khởi tạo thanh toán cho booking {bookingRef} - Khách hàng: {thongTinDatPhong.HoVaTen}",
+                log_time = DateTime.Now
+            };
+
+            db.VNPAY_Transaction_Logs.Add(vnpayLog);
+            db.SaveChanges();
+
+            // Lưu booking ID vào session để dùng khi return
+            Session["CurrentBookingId"] = booking.booking_id;
+            Session["CurrentBookingRef"] = bookingRef;
+
+            // Build URL for VNPay
+            VnPayLibrary vnpay = new VnPayLibrary();
+
+            vnpay.AddRequestData("vnp_Version", VnPayLibrary.VERSION);
+            vnpay.AddRequestData("vnp_Command", "pay");
+            vnpay.AddRequestData("vnp_TmnCode", vnp_TmnCode);
+            vnpay.AddRequestData("vnp_Amount", (thongTinDatPhong.TongCong * 100).ToString()); // VNPay yêu cầu nhân 100
+            vnpay.AddRequestData("vnp_BankCode", "VNPAYQR"); // Mặc định dùng QR
+            vnpay.AddRequestData("vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss"));
+            vnpay.AddRequestData("vnp_CurrCode", "VND");
+            vnpay.AddRequestData("vnp_IpAddr", VnPayUtils.GetIpAddress());
+            vnpay.AddRequestData("vnp_Locale", "vn");
+            vnpay.AddRequestData("vnp_OrderInfo", $"Thanh toan dat phong {bookingRef} - {thongTinDatPhong.HoVaTen}");
+            vnpay.AddRequestData("vnp_OrderType", "other");
+            vnpay.AddRequestData("vnp_ReturnUrl", vnp_Returnurl);
+            vnpay.AddRequestData("vnp_TxnRef", vnpTxnRef.ToString());
+
+            string paymentUrl = vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);
+            
+            // Ghi log
+            var successLog = new VNPAY_Transaction_Logs
+            {
+                booking_ref_id = bookingRef,
+                vnp_txn_ref = vnpTxnRef.ToString(),
+                vnp_amount = thongTinDatPhong.TongCong,
+                vnp_response_code = "REDIRECT",
+                vnp_transaction_status = "REDIRECT",
+                log_details = $"Redirect to VNPay URL: {paymentUrl}",
+                log_time = DateTime.Now
+            };
+            db.VNPAY_Transaction_Logs.Add(successLog);
+            db.SaveChanges();
+
+            return Redirect(paymentUrl);
+        }
+
+        public ActionResult VNPayReturn()
+        {
+            if (Request.QueryString.Count > 0)
+            {
+                string vnp_HashSecret = ConfigurationManager.AppSettings["vnp_HashSecret"] ?? "DEMOHASHSECRET";
+                var vnpayData = Request.QueryString;
+                VnPayLibrary vnpay = new VnPayLibrary();
+
+                foreach (string s in vnpayData)
+                {
+                    // Lấy tất cả querystring data
+                    if (!string.IsNullOrEmpty(s) && s.StartsWith("vnp_"))
+                    {
+                        vnpay.AddResponseData(s, vnpayData[s]);
+                    }
                 }
 
-                DateTime? paymentDeadline = null;
+                string vnp_TxnRef = vnpay.GetResponseData("vnp_TxnRef");
+                string vnp_TransactionNo = vnpay.GetResponseData("vnp_TransactionNo");
+                string vnp_ResponseCode = vnpay.GetResponseData("vnp_ResponseCode");
+                string vnp_TransactionStatus = vnpay.GetResponseData("vnp_TransactionStatus");
+                string vnp_SecureHash = Request.QueryString["vnp_SecureHash"];
+                string vnp_BankCode = Request.QueryString["vnp_BankCode"];
+                decimal vnp_Amount = Convert.ToDecimal(vnpay.GetResponseData("vnp_Amount")) / 100;
 
-                // Xử lý theo loại gia hạn
-                switch (delayTime)
+                bool checkSignature = vnpay.ValidateSignature(vnp_SecureHash, vnp_HashSecret);
+                
+                // Lấy thông tin booking từ session
+                string bookingRef = Session["CurrentBookingRef"] as string;
+                int? bookingId = Session["CurrentBookingId"] as int?;
+
+                if (checkSignature)
                 {
-                    case "3":
-                        paymentDeadline = DateTime.Now.AddHours(3);
-                        TempData["PaymentMethod"] = "Gia hạn 3 giờ";
-                        break;
-                    case "6":
-                        paymentDeadline = DateTime.Now.AddHours(6);
-                        TempData["PaymentMethod"] = "Gia hạn 6 giờ";
-                        break;
-                    case "24":
-                        paymentDeadline = DateTime.Now.AddHours(24);
-                        TempData["PaymentMethod"] = "Gia hạn 24 giờ";
-                        break;
-                    case "custom":
-                        // Validate custom datetime for guests staying 2+ nights
-                        if (thongTinDatPhong.SoDem >= 2)
+                    // Log transaction result
+                    var vnpayLog = new VNPAY_Transaction_Logs
+                    {
+                        booking_ref_id = bookingRef ?? "UNKNOWN",
+                        vnp_txn_ref = vnp_TxnRef,
+                        vnp_amount = vnp_Amount,
+                        vnp_response_code = vnp_ResponseCode,
+                        vnp_transaction_status = vnp_TransactionStatus,
+                        log_details = $"VNPay return - Response: {vnp_ResponseCode}, Status: {vnp_TransactionStatus}, Bank: {vnp_BankCode}, TransNo: {vnp_TransactionNo}",
+                        log_time = DateTime.Now
+                    };
+                    db.VNPAY_Transaction_Logs.Add(vnpayLog);
+
+                    if (vnp_ResponseCode == "00" && vnp_TransactionStatus == "00")
+                    {
+                        // Thanh toán thành công
+                        if (bookingId.HasValue)
                         {
-                            if (string.IsNullOrEmpty(customDate) || string.IsNullOrEmpty(customTime))
+                            var booking = db.Bookings.Find(bookingId.Value);
+                            if (booking != null)
                             {
-                                TempData["ErrorMessage"] = "Vui lòng chọn ngày và giờ thanh toán!";
-                                ViewBag.CanUseCustomDelay = true;
-                                ViewBag.MaxDelayDate = thongTinDatPhong.NgayTra.AddDays(-1);
-                                return View(thongTinDatPhong);
-                            }
-
-                            if (DateTime.TryParse($"{customDate} {customTime}", out DateTime customDateTime))
-                            {
-                                var maxDate = thongTinDatPhong.NgayTra.AddDays(-1);
-                                
-                                if (customDateTime <= DateTime.Now)
-                                {
-                                    TempData["ErrorMessage"] = "Thời gian thanh toán phải sau thời điểm hiện tại!";
-                                    ViewBag.CanUseCustomDelay = true;
-                                    ViewBag.MaxDelayDate = maxDate;
-                                    return View(thongTinDatPhong);
-                                }
-                                
-                                if (customDateTime >= thongTinDatPhong.NgayTra)
-                                {
-                                    TempData["ErrorMessage"] = "Thời gian thanh toán phải trước ngày trả phòng!";
-                                    ViewBag.CanUseCustomDelay = true;
-                                    ViewBag.MaxDelayDate = maxDate;
-                                    return View(thongTinDatPhong);
-                                }
-
-                                paymentDeadline = customDateTime;
-                                TempData["PaymentMethod"] = $"Gia hạn tùy chỉnh đến {customDateTime:dd/MM/yyyy HH:mm}";
-                            }
-                            else
-                            {
-                                TempData["ErrorMessage"] = "Định dạng ngày giờ không hợp lệ!";
-                                ViewBag.CanUseCustomDelay = true;
-                                ViewBag.MaxDelayDate = thongTinDatPhong.NgayTra.AddDays(-1);
-                                return View(thongTinDatPhong);
+                                booking.payment_status = "PAID";
+                                db.SaveChanges();
                             }
                         }
-                        else
+
+                        TempData["PaymentSuccess"] = true;
+                        TempData["TransactionNo"] = vnp_TransactionNo;
+                        TempData["Amount"] = vnp_Amount;
+                        TempData["BankCode"] = vnp_BankCode;
+                        TempData["BookingRef"] = bookingRef;
+                    }
+                    else
+                    {
+                        // Thanh toán thất bại
+                        if (bookingId.HasValue)
                         {
-                            TempData["ErrorMessage"] = "Tùy chọn gia hạn tùy chỉnh chỉ áp dụng cho đặt phòng từ 2 đêm trở lên!";
-                            ViewBag.CanUseCustomDelay = false;
-                            ViewBag.MaxDelayDate = thongTinDatPhong.NgayTra.AddDays(-1);
-                            return View(thongTinDatPhong);
+                            var booking = db.Bookings.Find(bookingId.Value);
+                            if (booking != null)
+                            {
+                                booking.payment_status = "FAILED";
+                                db.SaveChanges();
+                            }
                         }
-                        break;
+
+                        TempData["PaymentSuccess"] = false;
+                        TempData["ErrorMessage"] = "Thanh toán thất bại. Mã lỗi: " + vnp_ResponseCode;
+                    }
+
+                    db.SaveChanges();
                 }
+                else
+                {
+                    // Invalid signature
+                    var errorLog = new VNPAY_Transaction_Logs
+                    {
+                        booking_ref_id = bookingRef ?? "UNKNOWN",
+                        vnp_txn_ref = vnp_TxnRef,
+                        vnp_amount = vnp_Amount,
+                        vnp_response_code = "INVALID_SIGNATURE",
+                        vnp_transaction_status = "INVALID_SIGNATURE",
+                        log_details = $"Invalid signature - Raw URL: {Request.RawUrl}",
+                        log_time = DateTime.Now
+                    };
+                    db.VNPAY_Transaction_Logs.Add(errorLog);
+                    db.SaveChanges();
 
-                // TODO: Lưu thông tin gia hạn vào database
-                TempData["PaymentDeadline"] = paymentDeadline?.ToString("dd/MM/yyyy HH:mm");
+                    TempData["PaymentSuccess"] = false;
+                    TempData["ErrorMessage"] = "Có lỗi xảy ra trong quá trình xử lý thanh toán";
+                }
+            }
+            else
+            {
+                TempData["PaymentSuccess"] = false;
+                TempData["ErrorMessage"] = "Không nhận được phản hồi từ cổng thanh toán";
             }
 
             return RedirectToAction("XacNhanHoaDon");

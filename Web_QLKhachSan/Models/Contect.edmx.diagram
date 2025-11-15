@@ -5,27 +5,29 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="c8423cb5bdce48aab4b21c8374664a54" Name="Diagram1" ZoomLevel="74">
-        <EntityTypeShape EntityType="DB_QLKhachSanModel.ChiTietDatDichVu" Width="1.5" PointX="10.25" PointY="17.25" />
+        <EntityTypeShape EntityType="DB_QLKhachSanModel.Booking" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="DB_QLKhachSanModel.ChiTietDatDichVu" Width="1.5" PointX="8.25" PointY="17.25" />
         <EntityTypeShape EntityType="DB_QLKhachSanModel.ChiTietDatPhong" Width="1.5" PointX="5.25" PointY="16.75" />
         <EntityTypeShape EntityType="DB_QLKhachSanModel.DanhGia" Width="1.5" PointX="8.25" PointY="23.25" />
         <EntityTypeShape EntityType="DB_QLKhachSanModel.DatPhong" Width="1.5" PointX="3" PointY="16.25" />
-        <EntityTypeShape EntityType="DB_QLKhachSanModel.DichVu" Width="1.5" PointX="8" PointY="3" />
-        <EntityTypeShape EntityType="DB_QLKhachSanModel.GiaTheoNgay" Width="1.5" PointX="5.25" PointY="27.75" />
+        <EntityTypeShape EntityType="DB_QLKhachSanModel.DichVu" Width="1.5" PointX="6" PointY="3" />
+        <EntityTypeShape EntityType="DB_QLKhachSanModel.GiaTheoNgay" Width="1.5" PointX="5.25" PointY="24.625" />
         <EntityTypeShape EntityType="DB_QLKhachSanModel.HoaDon" Width="1.5" PointX="8.25" PointY="11.5" />
         <EntityTypeShape EntityType="DB_QLKhachSanModel.KhachHang" Width="1.5" PointX="0.75" PointY="16.625" />
-        <EntityTypeShape EntityType="DB_QLKhachSanModel.KhuyenMai" Width="1.5" PointX="0.75" PointY="0.75" />
-        <EntityTypeShape EntityType="DB_QLKhachSanModel.LoaiDichVu" Width="1.5" PointX="5.75" PointY="3.25" />
+        <EntityTypeShape EntityType="DB_QLKhachSanModel.KhuyenMai" Width="1.5" PointX="8.75" PointY="0.75" />
+        <EntityTypeShape EntityType="DB_QLKhachSanModel.LoaiDichVu" Width="1.5" PointX="3.75" PointY="3.25" />
         <EntityTypeShape EntityType="DB_QLKhachSanModel.LoaiPhong" Width="1.5" PointX="0.75" PointY="11" />
         <EntityTypeShape EntityType="DB_QLKhachSanModel.LoaiTienIch" Width="1.5" PointX="0.75" PointY="7.5" />
         <EntityTypeShape EntityType="DB_QLKhachSanModel.LoaiTienNghi" Width="1.5" PointX="3.75" PointY="7.5" />
-        <EntityTypeShape EntityType="DB_QLKhachSanModel.NhanVien" Width="1.5" PointX="5.75" PointY="31.875" />
+        <EntityTypeShape EntityType="DB_QLKhachSanModel.NhanVien" Width="1.5" PointX="8.75" PointY="6.875" />
         <EntityTypeShape EntityType="DB_QLKhachSanModel.Phong" Width="1.5" PointX="3" PointY="22.5" />
-        <EntityTypeShape EntityType="DB_QLKhachSanModel.PhongAnh" Width="1.5" PointX="5.25" PointY="24.625" />
-        <EntityTypeShape EntityType="DB_QLKhachSanModel.TaiKhoan" Width="1.5" PointX="8" PointY="16.875" />
+        <EntityTypeShape EntityType="DB_QLKhachSanModel.PhongAnh" Width="1.5" PointX="5.25" PointY="28.75" />
+        <EntityTypeShape EntityType="DB_QLKhachSanModel.TaiKhoan" Width="1.5" PointX="11" PointY="16.875" />
         <EntityTypeShape EntityType="DB_QLKhachSanModel.ThanhToan" Width="1.5" PointX="10.5" PointY="12.25" />
         <EntityTypeShape EntityType="DB_QLKhachSanModel.TienIch" Width="1.5" PointX="3" PointY="11.375" />
         <EntityTypeShape EntityType="DB_QLKhachSanModel.TienNghi" Width="1.5" PointX="6" PointY="11.375" />
-        <EntityTypeShape EntityType="DB_QLKhachSanModel.TokenLogin" Width="1.5" PointX="10.25" PointY="26.625" />
+        <EntityTypeShape EntityType="DB_QLKhachSanModel.TokenLogin" Width="1.5" PointX="13.25" PointY="17.625" />
+        <EntityTypeShape EntityType="DB_QLKhachSanModel.VNPAY_Transaction_Logs" Width="1.5" PointX="5.75" PointY="7.75" />
         <AssociationConnector Association="DB_QLKhachSanModel.FK_ChiTietDatDichVu_DatPhong" />
         <AssociationConnector Association="DB_QLKhachSanModel.FK_ChiTietDatDichVu_DichVu" />
         <AssociationConnector Association="DB_QLKhachSanModel.FK_ChiTietDatPhong_DatPhong" />
