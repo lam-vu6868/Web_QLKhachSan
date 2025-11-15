@@ -458,7 +458,6 @@
     <Content Include="Views\DatPhong\ThongTinKhachHang.cshtml" />
     <Content Include="Views\DatPhong\DichVuDatThem.cshtml" />
     <Content Include="Views\DatPhong\ThanhToan.cshtml" />
-    <Content Include="Views\DatPhong\XacNhanHoaDon.cshtml" />
     <Content Include="Views\Shared\_CheckoutSteps.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -469,7 +468,6 @@
     <Folder Include="Areas\NhanVienBuongPhong\Data\" />
     <Folder Include="Areas\NhanVienBuongPhong\Views\Shared\" />
     <Folder Include="Areas\NhanVienLeTan\Data\" />
-    <Folder Include="SQL_Scripts\" />
     <Folder Include="Views\CookieTest\" />
   </ItemGroup>
   <ItemGroup>

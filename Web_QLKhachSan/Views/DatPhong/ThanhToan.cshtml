@@ -1,153 +1,192 @@
-﻿@{
+﻿@model Web_QLKhachSan.Models.ThongTinDatPhongViewModel
+@{
     ViewBag.Title = "Thanh Toán";
 }
 <link rel="stylesheet" href="~/assets/css/dat-phong.css" />
+
 <section class="page-header">
     <div class="container">
         <h1 data-aos="fade-right">Hoàn Tất Đặt Chỗ</h1>
-        <p data-aos="fade-left">
-            Quá trình thanh toán của bạn được bảo mật tuyệt đối
-        </p>
+        <p data-aos="fade-left">Quá trình thanh toán của bạn được bảo mật tuyệt đối</p>
     </div>
 </section>
+
 <main class="main-content-area">
     <div class="container checkout-layout">
         <div class="checkout-form-area">
             @{ ViewBag.CurrentStep = 3; }
             @Html.Partial("_CheckoutSteps")
 
-            <form class="checkout-form">
-                <h2 class="form-section-title">Phương Thức Thanh Toán</h2>
+            <h2 class="form-section-title">Phương Thức Thanh Toán</h2>
+            
+            @using (Html.BeginForm("ThanhToan", "DatPhong", FormMethod.Post, new { @class = "payment-form" }))
+            {
+                @Html.AntiForgeryToken()
+                
                 <div class="payment-methods">
                     <div class="payment-option">
-                        <input type="radio"
-                               id="credit-card"
-                               name="payment"
-                               value="credit-card" />
-                        <label for="credit-card">
+                        <input type="radio" id="instant-transfer" name="payment" value="instant-transfer" checked />
+                        <label for="instant-transfer">
                             <div class="payment-icon">
-                                <i class="fas fa-credit-card"></i>
+                                <i class="fas fa-qrcode"></i>
                             </div>
                             <div class="payment-info">
-                                <h4>Thẻ Tín Dụng / Ghi Nợ</h4>
-                                <p>Visa, Mastercard, JCB, American Express</p>
-                                <div class="card-logos">
-                                    <i class="fab fa-cc-visa"></i>
-                                    <i class="fab fa-cc-mastercard"></i>
-                                    <i class="fab fa-cc-amex"></i>
-                                    <i class="fab fa-cc-jcb"></i>
-                                </div>
+                                <h4>Chuyển Khoản Ngay</h4>
+                                <p>Thanh toán bằng mã QR - Nhanh chóng và tiện lợi</p>
                             </div>
                         </label>
                     </div>
+                    
                     <div class="payment-option">
-                        <input type="radio"
-                               id="bank-transfer"
-                               name="payment"
-                               value="bank-transfer" />
-                        <label for="bank-transfer">
+                        <input type="radio" id="delayed-transfer" name="payment" value="delayed-transfer" />
+                        <label for="delayed-transfer">
                             <div class="payment-icon">
-                                <i class="fas fa-university"></i>
+                                <i class="fas fa-clock"></i>
                             </div>
                             <div class="payment-info">
-                                <h4>Chuyển Khoản Ngân Hàng</h4>
-                                <p>Chuyển khoản qua Vietcombank</p>
-                                <div class="bank-logo">
-                                    <i class="fas fa-building"></i>
-                                </div>
+                                <h4>Gia Hạn Ngày Chuyển</h4>
+                                <p>Chọn thời gian thanh toán phù hợp</p>
                             </div>
                         </label>
                     </div>
                 </div>
 
-                <!-- Hidden fields để lưu dữ liệu từ trang khách hàng -->
-                <input type="hidden" id="first-name" />
-                <input type="hidden" id="last-name" />
-                <input type="hidden" id="email" />
-                <input type="hidden" id="phone" />
-                <input type="hidden" id="checkin-date" />
-                <input type="hidden" id="checkout-date" />
-                <input type="hidden" id="guests" />
-
-                <div class="card-details" id="card-details">
-                    <div class="form-row">
-                        <div class="form-group half-width">
-                            <label for="card-number">Số thẻ</label>
-                            <input type="text"
-                                   id="card-number"
-                                   placeholder="1234 5678 9101 1121"
-                                   maxlength="19" />
+            <!-- QR Code Payment -->
+            <div class="payment-details" id="qr-payment" style="display: block;">
+                <div class="qr-section">
+                    <h3><i class="fas fa-qrcode"></i> Quét mã QR để thanh toán</h3>
+                    <div class="qr-container">
+                        <div class="qr-code">
+                            <img src="~/assets/images/qr-code-sample.svg" alt="QR Code" />
+                            <p class="qr-note">Quét mã QR bằng ứng dụng ngân hàng của bạn</p>
                         </div>
-                        <div class="form-group half-width">
-                            <label for="cardholder">Tên chủ thẻ</label>
-                            <input type="text"
-                                   id="cardholder"
-                                   placeholder="NGUYEN VAN A"
-                                   maxlength="40" />
+                        <div class="bank-info">
+                            <h4>Thông tin chuyển khoản</h4>
+                            <div class="bank-details-info">
+                                <p><strong>Ngân hàng:</strong> Vietcombank</p>
+                                <p><strong>Số tài khoản:</strong> 1234567890</p>
+                                <p><strong>Chủ tài khoản:</strong> THE SERENE HORIZON HOTEL</p>
+                                <p><strong>Số tiền:</strong> <span class="amount">@Model.TongCong.ToString("#,##0")đ</span></p>
+                                <p><strong>Nội dung:</strong> <span class="transfer-note">Dat phong - @Model.HoVaTen</span></p>
+                            </div>
                         </div>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group half-width">
-                            <label for="expiry-date">Ngày hết hạn</label>
-                            <input type="text"
-                                   id="expiry-date"
-                                   placeholder="MM / YY"
-                                   maxlength="7" />
+                    <div class="qr-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>Vui lòng chuyển đúng số tiền và nội dung để được xử lý tự động</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delayed Payment -->
+            <div class="payment-details" id="delayed-payment" style="display: none;">
+                <div class="delayed-section">
+                    <h3><i class="fas fa-clock"></i> Chọn thời gian gia hạn</h3>
+                    
+                    <div class="delay-options">
+                        <div class="delay-option">
+                            <input type="radio" id="delay-3h" name="delay-time" value="3" />
+                            <label for="delay-3h">
+                                <div class="delay-info">
+                                    <h4>3 Giờ</h4>
+                                    <p>Thanh toán trước <span class="deadline">@DateTime.Now.AddHours(3).ToString("HH:mm dd/MM/yyyy")</span></p>
+                                </div>
+                            </label>
                         </div>
-                        <div class="form-group half-width">
-                            <label for="cvv">CVV</label>
-                            <input type="text" id="cvv" placeholder="123" maxlength="4" />
+                        
+                        <div class="delay-option">
+                            <input type="radio" id="delay-6h" name="delay-time" value="6" />
+                            <label for="delay-6h">
+                                <div class="delay-info">
+                                    <h4>6 Giờ</h4>
+                                    <p>Thanh toán trước <span class="deadline">@DateTime.Now.AddHours(6).ToString("HH:mm dd/MM/yyyy")</span></p>
+                                </div>
+                            </label>
+                        </div>
+                        
+                        <div class="delay-option">
+                            <input type="radio" id="delay-24h" name="delay-time" value="24" />
+                            <label for="delay-24h">
+                                <div class="delay-info">
+                                    <h4>Trong Vòng 24 Giờ</h4>
+                                    <p>Thanh toán trước <span class="deadline">@DateTime.Now.AddHours(24).ToString("HH:mm dd/MM/yyyy")</span></p>
+                                </div>
+                            </label>
+                        </div>
+                        
+                        @if (Model.SoDem >= 2)
+                        {
+                            <div class="delay-option">
+                                <input type="radio" id="delay-custom" name="delay-time" value="custom" />
+                                <label for="delay-custom">
+                                    <div class="delay-info">
+                                        <h4>Trên 24 Giờ - Tùy Chỉnh</h4>
+                                        <p>Chọn ngày giờ thanh toán cụ thể (trước ngày trả phòng)</p>
+                                    </div>
+                                </label>
+                            </div>
+                            
+                            <div class="custom-datetime-section" id="custom-datetime" style="display: none;">
+                                <h4><i class="fas fa-calendar-alt"></i> Chọn thời gian thanh toán</h4>
+                                <div class="datetime-inputs">
+                                    <div class="input-group">
+                                        <label for="custom-date">Ngày thanh toán:</label>
+                                        <input type="date" id="custom-date" name="customDate" class="form-control" 
+                                               min="@DateTime.Now.ToString("yyyy-MM-dd")" 
+                                               max="@Model.NgayTra.AddDays(-1).ToString("yyyy-MM-dd")" />
+                                    </div>
+                                    <div class="input-group">
+                                        <label for="custom-time">Giờ thanh toán:</label>
+                                        <input type="time" id="custom-time" name="customTime" class="form-control" value="12:00" />
+                                    </div>
+                                </div>
+                                <div class="datetime-note">
+                                    <i class="fas fa-info-circle"></i>
+                                    <span>Thời gian thanh toán phải trước ngày trả phòng (@Model.NgayTra.ToString("dd/MM/yyyy"))</span>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    
+                    <div class="delayed-payment-info">
+                        <div class="email-notification">
+                            <div class="notification-card">
+                                <div class="notification-icon">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <h4><i class="fas fa-paper-plane"></i> Thông tin thanh toán sẽ được gửi qua email</h4>
+                                    <p>Sau khi xác nhận gia hạn, chúng tôi sẽ gửi email đến <strong>@Model.Email</strong> bao gồm:</p>
+                                    <ul class="email-content-list">
+                                        <li><i class="fas fa-check-circle"></i> Thông tin chi tiết chuyển khoản</li>
+                                        <li><i class="fas fa-qrcode"></i> Mã QR thanh toán tiện lợi</li>
+                                        <li><i class="fas fa-clock"></i> Thời hạn thanh toán chính xác</li>
+                                        <li><i class="fas fa-receipt"></i> Mã đặt phòng và thông tin booking</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="delay-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span>Vui lòng kiểm tra email (kể cả thư mục spam) và thanh toán đúng thời hạn để giữ chỗ phòng</span>
                         </div>
                     </div>
                 </div>
-
-                <div class="bank-details" id="bank-details" style="display: none">
-                    <div class="bank-info">
-                        <h3>Thông tin chuyển khoản</h3>
-                        <div class="bank-selection">
-                            <label for="bank-select">Chọn ngân hàng:</label>
-                            <select id="bank-select">
-                                <option value="vietcombank">Vietcombank</option>
-                                <option value="bidv">BIDV</option>
-                                <option value="agribank">Agribank</option>
-                                <option value="techcombank">Techcombank</option>
-                                <option value="mbbank">MB Bank</option>
-                                <option value="vietinbank">VietinBank</option>
-                            </select>
-                        </div>
-                        <div class="bank-account">
-                            <p>
-                                <strong>Ngân hàng:</strong>
-                                <span id="selected-bank">Vietcombank</span>
-                            </p>
-                            <p>
-                                <strong>Số tài khoản:</strong>
-                                <span id="account-number">1234567890</span>
-                            </p>
-                            <p>
-                                <strong>Chủ tài khoản:</strong> THE SERENE HORIZON HOTEL
-                            </p>
-                            <p>
-                                <strong>Nội dung:</strong>
-                                <span id="transfer-content">Dat phong - [Mã đặt phòng]</span>
-                            </p>
-                        </div>
-                        <div class="upload-receipt">
-                            <label for="receipt-upload">Tải lên ảnh chụp biên lai chuyển khoản:</label>
-                            <input type="file" id="receipt-upload" accept="image/*" />
-                        </div>
-                    </div>
-                </div>
+            </div>
 
                 <div class="form-actions">
-                    <a href="@Url.Action("Index", "DichVuThem")" class="cta-button">
+                    <a href="@Url.Action("DichVuDatThem", "DatPhong")" class="cta-button">
                         <i class="fas fa-arrow-left"></i> Quay Lại
                     </a>
-                    <a href="@Url.Action("Index", "XacNhan")" class="cta-button"> Thanh Toán </a>
+                    <button type="submit" class="cta-button">
+                        <i class="fas fa-check"></i> Xác Nhận Thanh Toán
+                    </button>
                 </div>
-            </form>
+            }
         </div>
-        @Html.Partial("_OrderSummary")
+        
+        @Html.Partial("_OrderSummary", Model)
     </div>
 </main>
 

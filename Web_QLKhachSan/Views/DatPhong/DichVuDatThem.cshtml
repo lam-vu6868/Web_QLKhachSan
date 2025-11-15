@@ -18,100 +18,103 @@
             
             <h2 class="form-section-title">Dịch Vụ Thêm</h2>
             
-            @if (Model.DanhSachLoaiDichVu != null && Model.DanhSachLoaiDichVu.Any())
+            @using (Html.BeginForm("DichVuDatThem", "DatPhong", FormMethod.Post, new { id = "service-form" }))
             {
-                <div class="services-selection">
-                    @foreach (var loaiDichVu in Model.DanhSachLoaiDichVu)
-                    {
-                        var dichVuList = loaiDichVu.DichVus.Where(dv => dv.DaHoatDong).OrderBy(dv => dv.TenDichVu).ToList();
-                        
-                        if (dichVuList.Any())
+                @Html.AntiForgeryToken()
+                
+                if (Model.DanhSachLoaiDichVu != null && Model.DanhSachLoaiDichVu.Any())
+                {
+                    <div class="services-selection">
+                        @foreach (var loaiDichVu in Model.DanhSachLoaiDichVu)
                         {
-                            <div class="service-category">
-                                <h3 class="category-title">
-                                    @if (!string.IsNullOrEmpty(loaiDichVu.Icon))
-                                    {
-                                        <i class="@loaiDichVu.Icon"></i>
-                                    }
-                                    else
-                                    {
-                                        <i class="fas fa-star"></i>
-                                    }
-                                    @loaiDichVu.TenLoai
-                                    <button type="button" class="toggle-service" data-target="service-@loaiDichVu.LoaiDichVuId">
-                                        <i class="fas fa-chevron-down"></i>
-                                    </button>
-                                </h3>
-                                <div class="service-options" id="service-@loaiDichVu.LoaiDichVuId">
-                                    @foreach (var dichVu in dichVuList)
-                                    {
-                                        var gia = dichVu.GiaUuDai ?? dichVu.Gia ?? 0;
-                                        <label class="service-option">
-                                            <input type="checkbox" 
-                                                   name="services" 
-                                                   value="@dichVu.DichVuId" 
-                                                   data-price="@gia"
-                                                   data-name="@dichVu.TenDichVu">
-                                            <div class="service-details">
-                                                <div class="service-info">
-                                                    <span class="service-name">@dichVu.TenDichVu</span>
-                                                    @if (!string.IsNullOrEmpty(dichVu.MoTa))
-                                                    {
-                                                        <span class="service-description">@dichVu.MoTa</span>
-                                                    }
-                                                    <div class="service-features">
-                                                        @if (!string.IsNullOrEmpty(dichVu.MaDichVu))
+                            var dichVuList = loaiDichVu.DichVus.Where(dv => dv.DaHoatDong).OrderBy(dv => dv.TenDichVu).ToList();
+                            
+                            if (dichVuList.Any())
+                            {
+                                <div class="service-category">
+                                    <h3 class="category-title">
+                                        @if (!string.IsNullOrEmpty(loaiDichVu.Icon))
+                                        {
+                                            <i class="@loaiDichVu.Icon"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="fas fa-star"></i>
+                                        }
+                                        @loaiDichVu.TenLoai
+                                        <button type="button" class="toggle-service" data-target="service-@loaiDichVu.LoaiDichVuId">
+                                            <i class="fas fa-chevron-down"></i>
+                                        </button>
+                                    </h3>
+                                    <div class="service-options" id="service-@loaiDichVu.LoaiDichVuId">
+                                        @foreach (var dichVu in dichVuList)
+                                        {
+                                            var gia = dichVu.GiaUuDai ?? dichVu.Gia ?? 0;
+                                            <label class="service-option">
+                                                <input type="checkbox" 
+                                                       name="services" 
+                                                       value="@dichVu.DichVuId" 
+                                                       data-price="@gia"
+                                                       data-name="@dichVu.TenDichVu">
+                                                <div class="service-details">
+                                                    <div class="service-info">
+                                                        <span class="service-name">@dichVu.TenDichVu</span>
+                                                        @if (!string.IsNullOrEmpty(dichVu.MoTa))
                                                         {
-                                                            <span class="feature">
-                                                                <i class="fas fa-tag"></i> @dichVu.MaDichVu
-                                                            </span>
+                                                            <span class="service-description">@dichVu.MoTa</span>
                                                         }
+                                                        <div class="service-features">
+                                                            @if (!string.IsNullOrEmpty(dichVu.MaDichVu))
+                                                            {
+                                                                <span class="feature">
+                                                                    <i class="fas fa-tag"></i> @dichVu.MaDichVu
+                                                                </span>
+                                                            }
+                                                            @if (dichVu.GiaUuDai.HasValue && dichVu.Gia.HasValue && dichVu.GiaUuDai < dichVu.Gia)
+                                                            {
+                                                                <span class="feature" style="color: #e74c3c;">
+                                                                    <i class="fas fa-percent"></i> Giá ưu đãi
+                                                                </span>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                    <div style="text-align: right;">
                                                         @if (dichVu.GiaUuDai.HasValue && dichVu.Gia.HasValue && dichVu.GiaUuDai < dichVu.Gia)
                                                         {
-                                                            <span class="feature" style="color: #e74c3c;">
-                                                                <i class="fas fa-percent"></i> Giá ưu đãi
-                                                            </span>
+                                                            <div style="text-decoration: line-through; color: #999; font-size: 0.9rem; margin-bottom: 5px;">
+                                                                @dichVu.Gia.Value.ToString("N0")đ
+                                                            </div>
                                                         }
+                                                        <span class="service-price">@gia.ToString("N0")đ</span>
                                                     </div>
                                                 </div>
-                                                <div style="text-align: right;">
-                                                    @if (dichVu.GiaUuDai.HasValue && dichVu.Gia.HasValue && dichVu.GiaUuDai < dichVu.Gia)
-                                                    {
-                                                        <div style="text-decoration: line-through; color: #999; font-size: 0.9rem; margin-bottom: 5px;">
-                                                            @dichVu.Gia.Value.ToString("N0")đ
-                                                        </div>
-                                                    }
-                                                    <span class="service-price">@gia.ToString("N0")đ</span>
-                                                </div>
-                                            </div>
-                                        </label>
-                                    }
+                                            </label>
+                                        }
+                                    </div>
                                 </div>
-                            </div>
+                            }
                         }
-                    }
+                    </div>
+                }
+                else
+                {
+                    <div style="text-align: center; padding: 40px; background: #f8f9fa; border-radius: 10px;">
+                        <i class="fas fa-info-circle" style="font-size: 48px; color: #6c757d; margin-bottom: 15px;"></i>
+                        <p style="font-size: 18px; color: #6c757d;">Hiện tại chưa có dịch vụ nào khả dụng.</p>
+                    </div>
+                }
+
+                <div class="form-actions">
+                    <a href="@Url.Action("ThongTinKhachHang", "DatPhong")" class="cta-button">
+                        <i class="fas fa-arrow-left"></i> Quay Lại
+                    </a>
+                    <button type="submit" class="cta-button">
+                        Tiếp Tục
+                    </button>
                 </div>
             }
-            else
-            {
-                <div style="text-align: center; padding: 40px; background: #f8f9fa; border-radius: 10px;">
-                    <i class="fas fa-info-circle" style="font-size: 48px; color: #6c757d; margin-bottom: 15px;"></i>
-                    <p style="font-size: 18px; color: #6c757d;">Hiện tại chưa có dịch vụ nào khả dụng.</p>
-                </div>
-            }
-
-
-            <div class="form-actions">
-                <a href="@Url.Action("ThongTinKhachHang", "DatPhong", new { phongId = Model.ThongTinDatPhong.PhongId })" class="cta-button">
-                    <i class="fas fa-arrow-left"></i> Quay Lại
-                </a>
-                <a href="@Url.Action("ThanhToan", "DatPhong")" class="cta-button">
-                    Tiếp Tục
-                </a>
-            </div>
         </div>
         @Html.Partial("_OrderSummary", Model.ThongTinDatPhong)
     </div>
 </main>
-
 <script src="~/assets/js/dat-phong.js"></script>

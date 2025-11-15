@@ -25,6 +25,31 @@
             <span>Giá <span id="summary-nights">@Model.SoDem</span> đêm (<span id="summary-nights-detail">@Model.SoDem x @Model.GiaPhong.ToString("#,##0")đ</span>):</span>
             <span id="summary-room-price">@Model.TongTienPhong.ToString("#,##0")đ</span>
         </div>
+        
+        <!-- Dịch vụ đã chọn -->
+        <div id="selected-services-section" style="@(Model.DichVuDaChon != null && Model.DichVuDaChon.Any() ? "display: block;" : "display: none;")">
+            <hr />
+            <div class="summary-line">
+                <span style="font-weight: 600; color: #333;">Dịch vụ thêm:</span>
+            </div>
+            <div id="selected-services-list">
+                @if (Model.DichVuDaChon != null)
+                {
+                    foreach (var dichVu in Model.DichVuDaChon)
+                    {
+                        <div class="summary-line service-item" data-service-id="@dichVu.DichVuId">
+                            <span>@dichVu.TenDichVu</span>
+                            <span>@dichVu.Gia.ToString("#,##0")đ</span>
+                        </div>
+                    }
+                }
+            </div>
+            <div class="summary-line" style="margin-top: 8px;">
+                <span>Tổng dịch vụ:</span>
+                <span id="services-total">@Model.TongTienDichVu.ToString("#,##0")đ</span>
+            </div>
+        </div>
+        
         <hr />
         <div class="summary-line total">
             <span>Tổng Cộng:</span>
