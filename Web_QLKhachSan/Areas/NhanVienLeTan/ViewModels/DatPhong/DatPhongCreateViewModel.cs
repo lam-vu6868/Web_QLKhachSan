@@ -8,11 +8,11 @@ namespace Web_QLKhachSan.Areas.NhanVienLeTan.ViewModels.DatPhong
     /// <summary>
     /// ViewModel cho tạo đơn đặt phòng mới
     /// </summary>
-    public class DatPhongCreateViewModel
+  public partial class DatPhongCreateViewModel
     {
         public DatPhongCreateViewModel()
  {
-            DanhSachPhongDat = new List<PhongDatItemViewModel>();
+        DanhSachPhongDat = new List<PhongDatItemViewModel>();
  }
 
         // ===== THÔNG TIN KHÁCH HÀNG =====
@@ -34,10 +34,6 @@ namespace Web_QLKhachSan.Areas.NhanVienLeTan.ViewModels.DatPhong
         [EmailAddress(ErrorMessage = "Email không hợp lệ")]
         [StringLength(100)]
   public string Email { get; set; }
-
-        [Display(Name = "CCCD/Passport")]
-      [StringLength(20)]
-        public string CCCD { get; set; }
 
      [Display(Name = "Địa chỉ")]
     [StringLength(200)]

@@ -330,29 +330,120 @@ foreach (var phongItem in model.DanhSachPhongDat.Where(p => p.SoLuong > 0))
       // ===== POST: Huy - Hủy đơn đặt =====
         [HttpPost]
         public JsonResult Huy(int id, string lyDo)
-        {
-            try
-            {
+    {
+     try
+          {
     var datPhong = db.DatPhongs.Find(id);
     if (datPhong == null)
       return Json(new { success = false, message = "Không tìm thấy đơn đặt phòng!" });
 
          if (datPhong.TrangThaiDatPhong >= 2)
-         return Json(new { success = false, message = "Không thể hủy đơn đã check-in!" });
+   return Json(new { success = false, message = "Không thể hủy đơn đã check-in!" });
 
             datPhong.TrangThaiDatPhong = 4; // Đã hủy
      datPhong.GhiChu = (datPhong.GhiChu ?? "") + $"\n[Hủy đơn] {lyDo} - {DateTime.Now:dd/MM/yyyy HH:mm}";
     datPhong.NgayCapNhat = DateTime.Now;
 
-          db.SaveChanges();
+       db.SaveChanges();
 
    return Json(new { success = true, message = "Hủy đơn đặt phòng thành công!" });
       }
  catch (Exception ex)
-       {
+{
 System.Diagnostics.Debug.WriteLine($"[ERROR - DatPhong/Huy] {ex.Message}");
     return Json(new { success = false, message = "Có lỗi xảy ra!" });
       }
+    }
+
+    // ===== POST: TimKhachHang - AJAX tìm khách hàng theo SĐT =====
+    [HttpPost]
+    public JsonResult TimKhachHang(string soDienThoai)
+    {
+        try
+        {
+    if (string.IsNullOrWhiteSpace(soDienThoai))
+            return Json(new { success = false, message = "Vui lòng nhập số điện thoại!" });
+
+    var khachHang = db.KhachHangs.FirstOrDefault(kh => kh.SoDienThoai == soDienThoai);
+
+            if (khachHang != null)
+            {
+             return Json(new
+      {
+             success = true,
+                  data = new
+          {
+       HoVaTen = khachHang.HoVaTen,
+          Email = khachHang.Email,
+      DiaChi = khachHang.DiaChi,
+  GioiTinh = khachHang.GioiTinh
+  }
+        });
+      }
+
+            return Json(new { success = false, message = "Không tìm thấy khách hàng!" });
+        }
+        catch (Exception ex)
+        {
+System.Diagnostics.Debug.WriteLine($"[ERROR - DatPhong/TimKhachHang] {ex.Message}");
+       return Json(new { success = false, message = "Có lỗi xảy ra!" });
+      }
+    }
+
+    // ===== POST: ValidateKhuyenMai - AJAX validate mã khuyến mãi =====
+    [HttpPost]
+    public JsonResult ValidateKhuyenMai(string maCode, decimal tongTien)
+    {
+        try
+{
+    if (string.IsNullOrWhiteSpace(maCode))
+         return Json(new { success = false, message = "Vui lòng nhập mã khuyến mãi!" });
+
+var khuyenMai = db.KhuyenMais.FirstOrDefault(km =>
+        km.MaKhuyenMai == maCode &&
+   km.DaHoatDong == true &&
+    km.NgayBatDau <= DateTime.Now &&
+ km.NgayKetThuc >= DateTime.Now
+     );
+
+  if (khuyenMai == null)
+      return Json(new { success = false, message = "Mã khuyến mãi không hợp lệ hoặc đã hết hạn!" });
+
+            // Tính tiền giảm (giả sử GiaTri là % hoặc số tiền tùy LoaiKhuyenMai)
+    decimal tienGiam = 0;
+     if (khuyenMai.LoaiKhuyenMai == 0) // Giảm theo %
+        {
+     tienGiam = tongTien * (khuyenMai.GiaTri ?? 0) / 100;
+      // Giới hạn tối đa 50%
+                if (tienGiam > tongTien * 0.5m)
+     {
+    tienGiam = tongTien * 0.5m;
+         }
+     }
+      else // Giảm theo số tiền cố định
+       {
+       tienGiam = khuyenMai.GiaTri ?? 0;
+   // Không được giảm quá tổng tiền
+       if (tienGiam > tongTien)
+     {
+          tienGiam = tongTien;
+     }
+     }
+
+         return Json(new
+     {
+  success = true,
+    maKhuyenMai = khuyenMai.KhuyenMaiId,
+       tenKhuyenMai = khuyenMai.TenKhuyenMai,
+      tienGiam = tienGiam,
+        message = $"Áp dụng thành công! Giảm {tienGiam:N0}đ"
+       });
+  }
+  catch (Exception ex)
+  {
+   System.Diagnostics.Debug.WriteLine($"[ERROR - DatPhong/ValidateKhuyenMai] {ex.Message}");
+     return Json(new { success = false, message = "Có lỗi xảy ra khi kiểm tra mã khuyến mãi!" });
+}
     }
 
  // ===== HELPER METHODS =====

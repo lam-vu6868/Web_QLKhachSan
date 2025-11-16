@@ -184,6 +184,7 @@
     <Compile Include="Areas\NhanVienLeTan\NhanVienLeTanAreaRegistration.cs" />
     <Compile Include="Areas\NhanVienLeTan\ViewModels\DashboardViewModel.cs" />
     <Compile Include="Areas\NhanVienLeTan\ViewModels\DatPhong\DatPhongCreateViewModel.cs" />
+    <Compile Include="Areas\NhanVienLeTan\ViewModels\DatPhong\DatPhongCreateViewModel.Validation.cs" />
     <Compile Include="Areas\NhanVienLeTan\ViewModels\DatPhong\DatPhongDetailViewModel.cs" />
     <Compile Include="Areas\NhanVienLeTan\ViewModels\DatPhong\DatPhongEditViewModel.cs" />
     <Compile Include="Areas\NhanVienLeTan\ViewModels\DatPhong\DatPhongListViewModel.cs" />
@@ -310,6 +311,7 @@
     <Content Include="Areas\NhanVienLeTan\assets\css\layout.css" />
     <Content Include="Areas\NhanVienLeTan\assets\css\sodoPhong.css" />
     <Content Include="Areas\NhanVienLeTan\assets\js\dashboard.js" />
+    <Content Include="Areas\NhanVienLeTan\assets\js\datphong-create.js" />
     <Content Include="Areas\NhanVienLeTan\assets\js\layout.js" />
     <Content Include="Areas\NhanVienLeTan\assets\js\sodoPhong.js" />
     <Content Include="assets\css\chi-tiet-phong.css" />
@@ -412,6 +414,7 @@
     </Content>
     <Content Include="Areas\NhanVienLeTan\Views\DashboardNVLT\Index.cshtml" />
     <Content Include="Areas\NhanVienLeTan\Views\DatPhong\Index.cshtml" />
+    <Content Include="Areas\NhanVienLeTan\Views\DatPhong\Create.cshtml" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />
