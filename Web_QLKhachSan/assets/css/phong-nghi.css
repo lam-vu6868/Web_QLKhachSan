@@ -688,6 +688,107 @@
     bottom: 75px;
 }
 
+/* ===== DISABLED BOOKING BUTTON ===== */
+.btn-booking-disabled {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    background: #6c757d;
+    color: var(--white);
+    text-decoration: none;
+    border-radius: 50%;
+    box-shadow: 0 5px 15px rgba(108, 117, 125, 0.3);
+    border: 3px solid var(--white);
+    position: relative;
+    cursor: not-allowed;
+    opacity: 0.9;
+}
+
+.btn-booking-disabled::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 16px;
+    height: 2px;
+    background: currentColor;
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.btn-booking-disabled::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 16px;
+    height: 2px;
+    background: currentColor;
+    transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+/* Màu tooltip theo trạng thái phòng */
+.tooltip-unavailable {
+    background: #dc3545;
+}
+
+.tooltip-unavailable::after {
+    border-top-color: #dc3545;
+}
+
+/* Trạng thái Đã Đặt - Màu cam */
+.btn-booking-disabled.status-booked {
+    background: rgba(255, 152, 0, 0.9);
+}
+
+.tooltip-unavailable.status-booked {
+    background: rgba(255, 152, 0, 0.95);
+}
+
+.tooltip-unavailable.status-booked::after {
+    border-top-color: rgba(255, 152, 0, 0.95);
+}
+
+/* Trạng thái Đang Ở - Màu đỏ */
+.btn-booking-disabled.status-occupied {
+    background: rgba(244, 67, 54, 0.9);
+}
+
+.tooltip-unavailable.status-occupied {
+    background: rgba(244, 67, 54, 0.95);
+}
+
+.tooltip-unavailable.status-occupied::after {
+    border-top-color: rgba(244, 67, 54, 0.95);
+}
+
+/* Trạng thái Đang Dọn - Màu xanh dương */
+.btn-booking-disabled.status-cleaning {
+    background: rgba(33, 150, 243, 0.9);
+}
+
+.tooltip-unavailable.status-cleaning {
+    background: rgba(33, 150, 243, 0.95);
+}
+
+.tooltip-unavailable.status-cleaning::after {
+    border-top-color: rgba(33, 150, 243, 0.95);
+}
+
+/* Trạng thái Bảo Trì - Màu xám */
+.btn-booking-disabled.status-maintenance {
+    background: rgba(158, 158, 158, 0.9);
+}
+
+.tooltip-unavailable.status-maintenance {
+    background: rgba(158, 158, 158, 0.95);
+}
+
+.tooltip-unavailable.status-maintenance::after {
+    border-top-color: rgba(158, 158, 158, 0.95);
+}
+
 /* ===== PAGINATION ===== */
 .pagination {
     margin-top: 50px;
