@@ -25,6 +25,7 @@ namespace Web_QLKhachSan.Models
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<Booking> Bookings { get; set; }
         public virtual DbSet<ChiTietDatDichVu> ChiTietDatDichVus { get; set; }
         public virtual DbSet<ChiTietDatPhong> ChiTietDatPhongs { get; set; }
         public virtual DbSet<DanhGia> DanhGias { get; set; }
@@ -46,5 +47,6 @@ namespace Web_QLKhachSan.Models
         public virtual DbSet<TienIch> TienIches { get; set; }
         public virtual DbSet<TienNghi> TienNghis { get; set; }
         public virtual DbSet<TokenLogin> TokenLogins { get; set; }
+        public virtual DbSet<VNPAY_Transaction_Logs> VNPAY_Transaction_Logs { get; set; }
     }
 }

@@ -132,7 +132,6 @@ class ImageZoom {
         if (timelineIndex !== -1) {
             this.currentImageIndex = timelineIndex;
             currentCollection = this.timelineImages;
-            collectionName = 'Timeline';
         } else {
             // Kiểm tra nếu là story image
             const storyIndex = this.storyImages.findIndex(img => img.src === imageSrc);

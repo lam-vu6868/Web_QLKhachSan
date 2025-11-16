@@ -18,7 +18,7 @@
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
-    <Use64BitIISExpress />
+    <Use64BitIISExpress>false</Use64BitIISExpress>
     <IISExpressSSLPort>44327</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -209,6 +209,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Booking.cs">
+      <DependentUpon>Contect.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\ChiTietDatDichVu.cs">
       <DependentUpon>Contect.tt</DependentUpon>
     </Compile>
@@ -242,6 +245,7 @@
     <Compile Include="Models\DichVu.cs">
       <DependentUpon>Contect.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\DichVuDatThemViewModel.cs" />
     <Compile Include="Models\DichVuToken.cs" />
     <Compile Include="Models\GiaTheoNgay.cs">
       <DependentUpon>Contect.tt</DependentUpon>
@@ -278,12 +282,14 @@
       <DependentUpon>Contect.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\QuenMatKhau.cs" />
+    <Compile Include="Models\SearchRoomViewModel.cs" />
     <Compile Include="Models\TaiKhoan.cs">
       <DependentUpon>Contect.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ThanhToan.cs">
       <DependentUpon>Contect.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ThongTinDatPhongViewModel.cs" />
     <Compile Include="Models\TienIch.cs">
       <DependentUpon>Contect.tt</DependentUpon>
     </Compile>
@@ -293,7 +299,11 @@
     <Compile Include="Models\TokenLogin.cs">
       <DependentUpon>Contect.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\VNPAY_Transaction_Logs.cs">
+      <DependentUpon>Contect.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\VnPayLibrary.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\Admin\assets\css\baocao-thongke.css" />
@@ -459,7 +469,6 @@
     <Content Include="Views\DatPhong\ThongTinKhachHang.cshtml" />
     <Content Include="Views\DatPhong\DichVuDatThem.cshtml" />
     <Content Include="Views\DatPhong\ThanhToan.cshtml" />
-    <Content Include="Views\DatPhong\XacNhanHoaDon.cshtml" />
     <Content Include="Views\Shared\_CheckoutSteps.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -470,7 +479,6 @@
     <Folder Include="Areas\NhanVienBuongPhong\Data\" />
     <Folder Include="Areas\NhanVienBuongPhong\Views\Shared\" />
     <Folder Include="Areas\NhanVienLeTan\Data\" />
-    <Folder Include="SQL_Scripts\" />
     <Folder Include="Views\CookieTest\" />
   </ItemGroup>
   <ItemGroup>
@@ -521,11 +529,10 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61271</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>https://localhost:44327/</IISUrl>
+          <IISUrl>http://localhost:5002/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>
-          </CustomServerUrl>
+          <CustomServerUrl>http://localhost:5000/</CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>

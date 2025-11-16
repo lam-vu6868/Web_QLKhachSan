@@ -158,6 +158,20 @@ body {
  justify-content: center;
 }
 
+/* Hide native browser password reveal/clear icons so our custom toggle is the only one visible */
+.password-wrapper input::-ms-reveal,
+.password-wrapper input::-ms-clear {
+    display: none;
+}
+
+/* WebKit-based browsers (Chrome, Safari) - attempt to hide native reveal button */
+.password-wrapper input::-webkit-textfield-decoration-container,
+.password-wrapper input::-webkit-password-reveal-button,
+.password-wrapper input::-webkit-clear-button {
+    display: none !important;
+    -webkit-appearance: none !important;
+}
+
 /* Validation message cho password - có margin-bottom */
 .password-wrapper + .text-danger,
 .password-wrapper .text-danger {

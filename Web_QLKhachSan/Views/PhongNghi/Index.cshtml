@@ -216,7 +216,7 @@
                                 <div class="room-actions">
                                     <a href="@Url.Action("Index", "ChiTietPhong", new { id = phong.PhongId })" class="cta-button">Xem Chi Tiết</a>
                                     <div class="booking-btn-wrapper">
-                                        <a href="@Url.Action("Index", "ThongTin", new { phongId = phong.PhongId })" class="btn-booking"></a>
+                                        <a href="@Url.Action("ThongTinKhachHang", "DatPhong", new { phongId = phong.PhongId })" class="btn-booking"></a>
                                         <span class="tooltip">Đặt Phòng Ngay</span>
                                     </div>
                                 </div>
@@ -240,6 +240,27 @@
                         Func<int, string> buildPaginationUrl = (pageNum) =>
                         {
                             var url = Url.Action("Index") + "?page=" + pageNum;
+                            
+                            // Giữ lại tham số tìm kiếm từ trang chủ
+                            if (ViewBag.SearchCheckin != null)
+                            {
+                                url += "&checkin=" + ViewBag.SearchCheckin;
+                            }
+                            
+                            if (ViewBag.SearchCheckout != null)
+                            {
+                                url += "&checkout=" + ViewBag.SearchCheckout;
+                            }
+                            
+                            if (ViewBag.SearchGuests != null)
+                            {
+                                url += "&guests=" + ViewBag.SearchGuests;
+                            }
+                            
+                            if (ViewBag.SearchRoomType != null)
+                            {
+                                url += "&roomtype=" + ViewBag.SearchRoomType;
+                            }
                             
                             if (ViewBag.CurrentSort != null && ViewBag.CurrentSort != "default")
                             {

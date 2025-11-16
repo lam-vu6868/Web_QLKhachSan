@@ -1,4 +1,5 @@
-﻿@{
+﻿@model Web_QLKhachSan.Models.HomeIndexViewModel
+@{
     ViewBag.Title = "Home Page";
 }
 <link rel="stylesheet" href="~/assets/css/index.css" />
@@ -42,21 +43,21 @@
             <div class="hero-stat-item">
                 <i class="fas fa-hotel"></i>
                 <div class="hero-stat-content">
-                    <span class="hero-stat-number">150+</span>
+                    <span class="hero-stat-number">@(ViewBag.TotalRooms ?? 0)+</span>
                     <span class="hero-stat-label">Phòng Luxury</span>
                 </div>
             </div>
             <div class="hero-stat-item">
                 <i class="fas fa-star"></i>
                 <div class="hero-stat-content">
-                    <span class="hero-stat-number">4.9</span>
+                    <span class="hero-stat-number">@(ViewBag.AverageRating ?? 0)</span>
                     <span class="hero-stat-label">Đánh Giá</span>
                 </div>
             </div>
             <div class="hero-stat-item">
                 <i class="fas fa-users"></i>
                 <div class="hero-stat-content">
-                    <span class="hero-stat-number">10K+</span>
+                    <span class="hero-stat-number">@(ViewBag.TotalCustomers ?? 0)+</span>
                     <span class="hero-stat-label">Khách Hài Lòng</span>
                 </div>
             </div>
@@ -65,48 +66,61 @@
         <!-- Hero Search Bar -->
         <div class="hero-search-container" data-aos="fade-up" data-aos-delay="600">
             <div class="hero-search-box">
-                <div class="search-form-compact">
+                @using (Html.BeginForm("SearchRooms", "Home", FormMethod.Post, new { @class = "search-form-compact" }))
+                {
+                    @Html.AntiForgeryToken()
+                    
                     <div class="search-fields-row">
                         <div class="search-field-compact">
                             <label><i class="fas fa-calendar-alt"></i> Check-in</label>
-                            <input type="date" id="checkin-date" class="search-input-compact">
+                            <input type="date" 
+                                   name="checkInDate" 
+                                   id="checkin-date" 
+                                   class="search-input-compact"
+                                   value="@DateTime.Now.ToString("yyyy-MM-dd")"
+                                   min="@DateTime.Now.ToString("yyyy-MM-dd")" />
                         </div>
                         
                         <div class="search-field-compact">
                             <label><i class="fas fa-calendar-check"></i> Check-out</label>
-                            <input type="date" id="checkout-date" class="search-input-compact">
+                            <input type="date" 
+                                   name="checkOutDate" 
+                                   id="checkout-date" 
+                                   class="search-input-compact"
+                                   value="@DateTime.Now.AddDays(1).ToString("yyyy-MM-dd")"
+                                   min="@DateTime.Now.AddDays(1).ToString("yyyy-MM-dd")" />
                         </div>
                         
                         <div class="search-field-compact">
                             <label><i class="fas fa-users"></i> Khách</label>
-                            <select id="guest-count" class="search-input-compact">
+                            <select name="guestCount" id="guest-count" class="search-input-compact">
+                                <option value="" selected>Chọn số khách</option>
                                 <option value="1">1 khách</option>
-                                <option value="2" selected>2 khách</option>
+                                <option value="2">2 khách</option>
                                 <option value="3">3 khách</option>
                                 <option value="4">4 khách</option>
-                                <option value="5+">5+ khách</option>
                             </select>
                         </div>
                         
                         <div class="search-field-compact">
                             <label><i class="fas fa-bed"></i> Loại phòng</label>
-                            <select id="room-type" class="search-input-compact">
-                                <option value="">Tất cả</option>
-                                <option value="deluxe">Deluxe</option>
-                                <option value="premium">Premium</option>
-                                <option value="executive">Executive</option>
-                                <option value="family">Family</option>
+                            <select name="roomTypeId" id="room-type" class="search-input-compact">
+                                <option value="">Chọn loại phòng</option>
+                                @foreach (var loaiPhong in Model.SearchModel.RoomTypes)
+                                {
+                                    <option value="@loaiPhong.LoaiPhongId">@loaiPhong.TenLoai</option>
+                                }
                             </select>
                         </div>
                         
                         <div class="search-action-compact">
-                            <button type="button" class="search-btn-compact" id="search-rooms">
+                            <button type="submit" class="search-btn-compact" id="search-rooms">
                                 <i class="fas fa-search"></i>
                                 <span>Tìm Kiếm</span>
                             </button>
                         </div>
                     </div>
-                </div>
+                }
             </div>
         </div>
 
@@ -305,43 +319,6 @@
                 </div>
             </div>
 
-            <div class="room-card-modern" data-aos="fade-up" data-aos-delay="400">
-                <div class="room-card-image">
-                    <img src="https://images.unsplash.com/photo-1590490359853-392194450893?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80"
-                         alt="Family Bungalow" />
-                    <div class="room-overlay"></div>
-                    <div class="room-badge room-badge-family">
-                        <i class="fas fa-home"></i>
-                        <span>Gia Đình</span>
-                    </div>
-                    <div class="room-quick-view">
-                        <i class="fas fa-eye"></i>
-                        <span>Xem nhanh</span>
-                    </div>
-                </div>
-                <div class="room-card-content">
-                    <div class="room-header">
-                        <h3>Family Bungalow</h3>
-                        <div class="room-rating">
-                            <i class="fas fa-star"></i>
-                            <span>4.7</span>
-                        </div>
-                    </div>
-                    <div class="amenities">
-                        <span><i class="fas fa-wifi"></i> Wifi</span>
-                        <span><i class="fas fa-tree"></i> Gần gũi</span>
-                        <span><i class="fas fa-utensils"></i> Bếp nhỏ</span>
-                    </div>
-                    <p class="room-description">Bungalow ấm cúng hoàn hảo cho gia đình</p>
-                    <div class="room-footer">
-                        <p class="price">Từ <strong>$320</strong> <span>/đêm</span></p>
-                        <a href="@Url.Action("Index", "ChiTietPhong")" class="room-btn-explore">
-                            <span>Khám Phá</span>
-                            <i class="fas fa-arrow-right"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
         </div>
         <div class="section-cta" data-aos="fade-up" data-aos-delay="500">
             <a href="@Url.Action("Index", "PhongNghi")" class="view-all-btn">
@@ -363,10 +340,10 @@
             <p class="section-subtitle">Trải nghiệm đẳng cấp 5 sao với đa dạng tiện ích</p>
         </div>
         <div class="services-grid-modern">
-            @if (ViewBag.LoaiDichVus != null && ((List<Web_QLKhachSan.Models.LoaiDichVu>)ViewBag.LoaiDichVus).Any())
+            @if (Model.LoaiDichVus != null && Model.LoaiDichVus.Any())
             {
                 int delayIndex = 1;
-                foreach (var loaiDichVu in (List<Web_QLKhachSan.Models.LoaiDichVu>)ViewBag.LoaiDichVus)
+                foreach (var loaiDichVu in Model.LoaiDichVus)
                 {
                     var serviceImage = !string.IsNullOrEmpty(loaiDichVu.HinhAnh)
                         ? loaiDichVu.HinhAnh
@@ -700,3 +677,54 @@
         </div>
     </div>
 </section>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Set default values
+            var today = new Date();
+            var tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            
+            var todayStr = today.toISOString().split('T')[0];
+            var tomorrowStr = tomorrow.toISOString().split('T')[0];
+            
+            // Set minimum dates
+            $('#checkin-date').attr('min', todayStr);
+            $('#checkout-date').attr('min', tomorrowStr);
+            
+            // Update checkout minimum when checkin changes
+            $('#checkin-date').on('change', function() {
+                var checkinDate = new Date($(this).val());
+                var nextDay = new Date(checkinDate);
+                nextDay.setDate(nextDay.getDate() + 1);
+                
+                var nextDayStr = nextDay.toISOString().split('T')[0];
+                $('#checkout-date').attr('min', nextDayStr);
+                
+                // If checkout is before or equal to checkin, update it
+                if ($('#checkout-date').val() <= $(this).val()) {
+                    $('#checkout-date').val(nextDayStr);
+                }
+            });
+            
+            // Validate form submission
+            $('form').on('submit', function(e) {
+                var checkin = $('#checkin-date').val();
+                var checkout = $('#checkout-date').val();
+                
+                if (!checkin || !checkout) {
+                    e.preventDefault();
+                    alert('Vui lòng chọn ngày nhận và trả phòng!');
+                    return false;
+                }
+                
+                if (new Date(checkout) <= new Date(checkin)) {
+                    e.preventDefault();
+                    alert('Ngày trả phòng phải sau ngày nhận phòng!');
+                    return false;
+                }
+            });
+        });
+    </script>
+}
