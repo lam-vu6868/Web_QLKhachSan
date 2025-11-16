@@ -287,10 +287,30 @@ function handleSortChange(select) {
   const loaiPhong = urlParams.getAll('loaiPhong');
   const tienIch = urlParams.getAll('tienIch');
   
+  // Lấy các tham số tìm kiếm từ trang Home
+  const checkin = urlParams.get('checkin');
+  const checkout = urlParams.get('checkout');
+  const guests = urlParams.get('guests');
+  const roomtype = urlParams.get('roomtype');
+  
   // Tạo URL mới giữ lại tất cả filter
   const newParams = new URLSearchParams();
   newParams.set('sort', sortValue);
   newParams.set('page', currentPage);
+  
+  // Giữ lại tham số tìm kiếm từ trang Home
+  if (checkin) {
+    newParams.set('checkin', checkin);
+  }
+  if (checkout) {
+    newParams.set('checkout', checkout);
+  }
+  if (guests) {
+    newParams.set('guests', guests);
+  }
+  if (roomtype) {
+    newParams.set('roomtype', roomtype);
+  }
   
   if (priceLevel) {
     newParams.set('priceLevel', priceLevel);

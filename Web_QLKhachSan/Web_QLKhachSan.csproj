@@ -281,6 +281,7 @@
       <DependentUpon>Contect.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\QuenMatKhau.cs" />
+    <Compile Include="Models\SearchRoomViewModel.cs" />
     <Compile Include="Models\TaiKhoan.cs">
       <DependentUpon>Contect.tt</DependentUpon>
     </Compile>

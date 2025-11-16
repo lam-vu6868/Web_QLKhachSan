@@ -47,43 +47,58 @@ class BookingValidator {
         const servicesTotal = document.getElementById('services-total');
         const summaryTotal = document.getElementById('summary-total');
         
-        // Clear existing services được tạo từ JavaScript (không xóa server services)
+        // Lấy danh sách services từ server (đã được chọn trước đó)
+        const serverServices = document.querySelectorAll('.service-item:not(.js-created-service)');
+        const serverServiceIds = [];
+        serverServices.forEach(item => {
+            const serviceId = item.getAttribute('data-service-id');
+            if (serviceId) serverServiceIds.push(serviceId);
+        });
+        
+        // Clear only JS-created services, keep server services
         if (selectedServicesList) {
             const jsCreatedServices = selectedServicesList.querySelectorAll('.js-created-service');
             jsCreatedServices.forEach(service => service.remove());
         }
         
-        let totalServicePrice = 0;
-        
-        // Tính tổng từ server services trước (từ session/database)
-        const serverServices = document.querySelectorAll('.service-item:not(.js-created-service)');
+        // Hide server services that are unchecked
         serverServices.forEach(serviceItem => {
-            const priceText = serviceItem.querySelector('span:last-child').textContent;
-            const price = parseFloat(priceText.replace(/[đ,\.]/g, '')) || 0;
-            totalServicePrice += price;
+            const serviceId = serviceItem.getAttribute('data-service-id');
+            const checkbox = document.querySelector(`input[name="services"][value="${serviceId}"]`);
+            
+            if (checkbox && !checkbox.checked) {
+                serviceItem.style.display = 'none'; // Hide instead of remove
+            } else {
+                serviceItem.style.display = 'flex'; // Show if checked
+            }
         });
         
-        // Add each selected service từ checkbox
+        let totalServicePrice = 0;
+        
+        // Calculate total from visible server services
+        serverServices.forEach(serviceItem => {
+            if (serviceItem.style.display !== 'none') {
+                const priceText = serviceItem.querySelector('span:last-child').textContent;
+                const price = parseFloat(priceText.replace(/[đ,\.]/g, '')) || 0;
+                totalServicePrice += price;
+            }
+        });
+        
+        // Add new selected services that aren't from server
         selectedServices.forEach(service => {
+            const serviceId = service.value;
             const price = parseFloat(service.dataset.price) || 0;
             const name = service.dataset.name || 'Dịch vụ';
             
-            // Chỉ thêm vào total nếu không có trong server services
-            const existsInServer = Array.from(serverServices).some(serverItem => 
-                serverItem.getAttribute('data-service-id') === service.value
-            );
-            
-            if (!existsInServer) {
+            // Only add if not already in server services
+            if (!serverServiceIds.includes(serviceId)) {
                 totalServicePrice += price;
                 
                 // Add service to list
                 if (selectedServicesList) {
                     const serviceElement = document.createElement('div');
                     serviceElement.className = 'summary-line service-item js-created-service';
-                    serviceElement.setAttribute('data-service-id', service.value);
-                    serviceElement.style.fontSize = '14px';
-                    serviceElement.style.color = '#666';
-                    serviceElement.style.paddingLeft = '10px';
+                    serviceElement.setAttribute('data-service-id', serviceId);
                     serviceElement.innerHTML = `
                         <span>${name}</span>
                         <span>${price.toLocaleString('vi-VN')}đ</span>
@@ -95,7 +110,13 @@ class BookingValidator {
         
         // Show/hide services section
         if (selectedServicesSection) {
-            if (selectedServices.length > 0 || serverServices.length > 0) {
+            const visibleServices = document.querySelectorAll('.service-item[style*="flex"], .service-item:not([style*="none"])');
+            const hasVisibleServices = visibleServices.length > 0 && Array.from(visibleServices).some(item => 
+                item.style.display !== 'none' && !item.classList.contains('js-created-service') || 
+                item.classList.contains('js-created-service')
+            );
+            
+            if (selectedServices.length > 0 || hasVisibleServices) {
                 selectedServicesSection.style.display = 'block';
             } else {
                 selectedServicesSection.style.display = 'none';

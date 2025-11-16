@@ -176,12 +176,26 @@ namespace Web_QLKhachSan.Controllers
         // GET: DatPhong/DichVuDatThem
         public ActionResult DichVuDatThem(int? phongId)
         {
-            // Kiểm tra nếu chưa có thông tin đặt phòng trong Session
-            // hoặc nếu có phongId và khác với session (đặt phòng mới)
-            var existingModel = Session["ThongTinDatPhong"] as ThongTinDatPhongViewModel;
-            bool isNewBooking = phongId.HasValue && (existingModel == null || phongId.Value != existingModel.PhongId);
+            // Ngăn browser cache trang này
+            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            Response.Cache.SetNoStore();
+            Response.Cache.SetExpires(DateTime.MinValue);
             
-            if (existingModel == null || isNewBooking)
+            // Kiểm tra thông tin đặt phòng trong Session
+            var existingModel = Session["ThongTinDatPhong"] as ThongTinDatPhongViewModel;
+            
+            // Kiểm tra xem có phải đặt phòng mới không
+            bool isNewBooking = phongId.HasValue && 
+                               (existingModel == null || existingModel.PhongId != phongId.Value);
+            
+            // QUAN TRỌNG: Reset hoàn toàn session khi đặt phòng mới
+            if (isNewBooking)
+            {
+                Session.Remove("ThongTinDatPhong");
+                existingModel = null;
+            }
+            
+            if (existingModel == null)
             {
                 if (phongId.HasValue)
                 {

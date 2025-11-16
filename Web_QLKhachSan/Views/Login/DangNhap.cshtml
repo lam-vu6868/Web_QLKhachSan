@@ -41,8 +41,8 @@
                 autocomplete = "current-password",
                 id = "passwordInput"
             })
-            <button type="button" class="toggle-password" onclick="togglePassword()" tabindex="-1">
-                <i class="fas fa-eye" id="toggleIcon"></i>
+            <button type="button" class="toggle-password" onclick="togglePassword()" tabindex="-1" aria-label="Hiển thị mật khẩu">
+                <i id="toggleIcon" class="fas fa-eye" aria-hidden="true"></i>
             </button>
         </div>
         @Html.ValidationMessageFor(m => m.MatKhau, "", new { @class = "text-danger" })
@@ -84,6 +84,7 @@
         function togglePassword() {
             const passwordInput = document.getElementById('passwordInput');
             const toggleIcon = document.getElementById('toggleIcon');
+            if (!passwordInput || !toggleIcon) return;
 
             if (passwordInput.type === 'password') {
                 passwordInput.type = 'text';

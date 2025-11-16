@@ -241,6 +241,27 @@
                         {
                             var url = Url.Action("Index") + "?page=" + pageNum;
                             
+                            // Giữ lại tham số tìm kiếm từ trang chủ
+                            if (ViewBag.SearchCheckin != null)
+                            {
+                                url += "&checkin=" + ViewBag.SearchCheckin;
+                            }
+                            
+                            if (ViewBag.SearchCheckout != null)
+                            {
+                                url += "&checkout=" + ViewBag.SearchCheckout;
+                            }
+                            
+                            if (ViewBag.SearchGuests != null)
+                            {
+                                url += "&guests=" + ViewBag.SearchGuests;
+                            }
+                            
+                            if (ViewBag.SearchRoomType != null)
+                            {
+                                url += "&roomtype=" + ViewBag.SearchRoomType;
+                            }
+                            
                             if (ViewBag.CurrentSort != null && ViewBag.CurrentSort != "default")
                             {
                                 url += "&sort=" + ViewBag.CurrentSort;

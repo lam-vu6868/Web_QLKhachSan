@@ -179,6 +179,9 @@
                     if (data.soNguoi) {
                         $('#SoNguoi').val(data.soNguoi);
                     }
+                    
+                    // Cập nhật summary sau khi khôi phục từ localStorage
+                    updateSummaryDates();
                 } catch (e) {
                     console.log('Không thể khôi phục dữ liệu:', e);
                 }
@@ -196,9 +199,29 @@
                 localStorage.setItem(storageKey, JSON.stringify(data));
             }
 
+            // Cập nhật tóm tắt đơn hàng với ngày đã chọn
+            function updateSummaryDates() {
+                var checkinDate = $('#checkin-date').val();
+                var checkoutDate = $('#checkout-date').val();
+                
+                if (checkinDate && checkoutDate) {
+                    var checkin = new Date(checkinDate);
+                    var checkout = new Date(checkoutDate);
+                    
+                    // Cập nhật hiển thị ngày trong summary
+                    $('#summary-checkin').text(checkin.toLocaleDateString('vi-VN'));
+                    $('#summary-checkout').text(checkout.toLocaleDateString('vi-VN'));
+                }
+            }
+
             // Lắng nghe sự kiện thay đổi
             $('#SoDienThoai, #MaKhuyenMai, #checkin-date, #checkout-date, #SoNguoi').on('change input', function() {
                 saveToLocalStorage();
+                
+                // Cập nhật summary khi thay đổi ngày
+                if ($(this).attr('id') === 'checkin-date' || $(this).attr('id') === 'checkout-date') {
+                    updateSummaryDates();
+                }
             });
 
             // Xóa localStorage sau khi submit thành công (tùy chọn)
