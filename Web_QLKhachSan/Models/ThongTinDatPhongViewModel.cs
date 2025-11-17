@@ -46,6 +46,10 @@ namespace Web_QLKhachSan.Models
         [Display(Name = "Mã khuyến mãi")]
         public string MaKhuyenMai { get; set; }
 
+        [Display(Name = "Ghi chú")]
+        [StringLength(500, ErrorMessage = "Ghi chú không được vượt quá 500 ký tự")]
+        public string GhiChu { get; set; }
+
         // Dịch vụ đã chọn
         public List<DichVuDaChon> DichVuDaChon { get; set; }
 

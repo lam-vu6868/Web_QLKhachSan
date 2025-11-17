@@ -471,6 +471,14 @@ input.error, input:invalid {
   height: 48px;
 }
 
+.form-group textarea.form-control {
+  height: auto;
+  resize: vertical;
+  min-height: 80px;
+  line-height: 1.5;
+  padding: 12px 15px;
+}
+
 .form-group input:focus,
 .form-group .form-control:focus {
   border-color: var(--gold);

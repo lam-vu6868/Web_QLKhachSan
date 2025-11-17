@@ -127,6 +127,21 @@
                     </div>
                 </div>
 
+                @* Row 5: Ghi chú (full width) *@
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        @Html.LabelFor(m => m.GhiChu, new { @class = "control-label" })
+                        @Html.TextAreaFor(m => m.GhiChu, new { 
+                            @class = "form-control", 
+                            placeholder = "Nhập ghi chú của bạn (nếu có)...",
+                            rows = 3,
+                            maxlength = 500
+                        })
+                        @Html.ValidationMessageFor(m => m.GhiChu, "", new { @class = "text-danger" })
+                        <small class="date-hint">Tối đa 500 ký tự</small>
+                    </div>
+                </div>
+
                 @* Legacy form row for backward compatibility *@
                 <div class="form-row" style="display: none;"></div>
 
@@ -180,6 +195,10 @@
                         $('#SoNguoi').val(data.soNguoi);
                     }
                     
+                    if (data.ghiChu) {
+                        $('#GhiChu').val(data.ghiChu);
+                    }
+                    
                     // Cập nhật summary sau khi khôi phục từ localStorage
                     updateSummaryDates();
                 } catch (e) {
@@ -194,7 +213,8 @@
                     maKhuyenMai: $('#MaKhuyenMai').val(),
                     ngayNhan: $('#checkin-date').val(),
                     ngayTra: $('#checkout-date').val(),
-                    soNguoi: $('#SoNguoi').val()
+                    soNguoi: $('#SoNguoi').val(),
+                    ghiChu: $('#GhiChu').val()
                 };
                 localStorage.setItem(storageKey, JSON.stringify(data));
             }
@@ -215,7 +235,7 @@
             }
 
             // Lắng nghe sự kiện thay đổi
-            $('#SoDienThoai, #MaKhuyenMai, #checkin-date, #checkout-date, #SoNguoi').on('change input', function() {
+            $('#SoDienThoai, #MaKhuyenMai, #checkin-date, #checkout-date, #SoNguoi, #GhiChu').on('change input', function() {
                 saveToLocalStorage();
                 
                 // Cập nhật summary khi thay đổi ngày

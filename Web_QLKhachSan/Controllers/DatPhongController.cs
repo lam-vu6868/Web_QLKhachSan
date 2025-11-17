@@ -391,6 +391,7 @@ namespace Web_QLKhachSan.Controllers
                     OnlinePaymentStatus = "PAID",
                     TotalAmount = thongTinDatPhong.TongCong,
                     CustomerName = "Nguyen Van A", // Tên người chuyển khoản
+                    GhiChu = thongTinDatPhong.GhiChu,
                     NgayTao = DateTime.Now
                 };
 
@@ -454,6 +455,7 @@ namespace Web_QLKhachSan.Controllers
                 PaymentMethod = "VNPAY",
                 OnlinePaymentStatus = "PENDING",
                 TotalAmount = thongTinDatPhong.TongCong,
+                GhiChu = thongTinDatPhong.GhiChu,
                 NgayTao = DateTime.Now
             };
 
