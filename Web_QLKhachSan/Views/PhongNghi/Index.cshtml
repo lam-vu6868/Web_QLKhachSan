@@ -216,8 +216,41 @@
                                 <div class="room-actions">
                                     <a href="@Url.Action("Index", "ChiTietPhong", new { id = phong.PhongId })" class="cta-button">Xem Chi Tiết</a>
                                     <div class="booking-btn-wrapper">
-                                        <a href="@Url.Action("ThongTinKhachHang", "DatPhong", new { phongId = phong.PhongId })" class="btn-booking"></a>
-                                        <span class="tooltip">Đặt Phòng Ngay</span>
+                                        @if (phong.TrangThaiPhong == 0)
+                                        {
+                                            <a href="@Url.Action("ThongTinKhachHang", "DatPhong", new { phongId = phong.PhongId })" class="btn-booking"></a>
+                                            <span class="tooltip">Đặt Phòng Ngay</span>
+                                        }
+                                        else
+                                        {
+                                            string tooltipMessage = "";
+                                            string statusColorClass = "";
+                                            switch (phong.TrangThaiPhong)
+                                            {
+                                                case 1:
+                                                    tooltipMessage = "Đã Đặt Trước";
+                                                    statusColorClass = "status-booked";
+                                                    break;
+                                                case 2:
+                                                    tooltipMessage = "Đang Có Khách";
+                                                    statusColorClass = "status-occupied";
+                                                    break;
+                                                case 3:
+                                                    tooltipMessage = "Đang Dọn Dẹp";
+                                                    statusColorClass = "status-cleaning";
+                                                    break;
+                                                case 4:
+                                                    tooltipMessage = "Đang Bảo Trì";
+                                                    statusColorClass = "status-maintenance";
+                                                    break;
+                                                default:
+                                                    tooltipMessage = "Không Khả Dụng";
+                                                    statusColorClass = "";
+                                                    break;
+                                            }
+                                            <span class="btn-booking-disabled @statusColorClass"></span>
+                                            <span class="tooltip tooltip-unavailable @statusColorClass">@tooltipMessage</span>
+                                        }
                                     </div>
                                 </div>
                             </div>

@@ -51,33 +51,6 @@
                     </div>
                 </div>
 
-            <!-- QR Code Payment -->
-            <div class="payment-details" id="qr-payment" style="display: block;">
-                <div class="qr-section">
-                    <h3><i class="fas fa-qrcode"></i> Quét mã QR để thanh toán</h3>
-                    <div class="qr-container">
-                        <div class="qr-code">
-                            <div id="qr-code-container"></div>
-                            <p class="qr-note">Quét mã QR bằng ứng dụng ngân hàng của bạn</p>
-                        </div>
-                        <div class="bank-info">
-                            <h4>Thông tin chuyển khoản</h4>
-                            <div class="bank-details-info">
-                                <p><strong>Ngân hàng:</strong> NCB</p>
-                                <p><strong>Số tài khoản:</strong> 9704198526191432198</p>
-                                <p><strong>Chủ tài khoản:</strong> NGUYEN VAN A</p>
-                                <p><strong>Số tiền:</strong> <span class="amount">@Model.TongCong.ToString("#,##0")đ</span></p>
-                                <p><strong>Nội dung:</strong> <span class="transfer-note">@ViewBag.BookingRef</span></p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="qr-warning">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        <span>Vui lòng chuyển đúng số tiền và nội dung để được xử lý tự động</span>
-                    </div>
-                </div>
-            </div>
-
             <!-- Delayed Payment -->
             <div class="payment-details" id="delayed-payment" style="display: none;">
                 <div class="delayed-section">
@@ -180,7 +153,7 @@
                         <i class="fas fa-arrow-left"></i> Quay Lại
                     </a>
                     <button type="submit" class="cta-button">
-                        <i class="fas fa-check"></i> Xác Nhận Thanh Toán
+                        <i class="fas fa-check"></i> Thanh Toán Tại Đây
                     </button>
                 </div>
             }
@@ -191,48 +164,4 @@
 </main>
 
 <script src="~/assets/js/dat-phong.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Tạo QR code tự động
-    const bankInfo = {
-        bank: 'NCB',
-        accountNumber: '9704198526191432198',
-        accountName: 'NGUYEN VAN A',
-        amount: '@Model.TongCong',
-        content: '@ViewBag.BookingRef'
-    };
-    
-    // Tạo nội dung QR theo định dạng VietQR hoặc đơn giản
-    const qrContent = `Bank: ${bankInfo.bank}
-Account: ${bankInfo.accountNumber}
-Name: ${bankInfo.accountName}
-Amount: ${bankInfo.amount}
-Content: ${bankInfo.content}`;
-    
-    // Tạo QR code
-    const qr = new QRious({
-        element: document.getElementById('qr-code-container'),
-        value: qrContent,
-        size: 200,
-        foreground: '#000',
-        background: '#fff'
-    });
-    
-    // Tạo element canvas cho QR code
-    const canvas = document.createElement('canvas');
-    canvas.width = 200;
-    canvas.height = 200;
-    
-    const qrCode = new QRious({
-        element: canvas,
-        value: qrContent,
-        size: 200,
-        foreground: '#000',
-        background: '#fff'
-    });
-    
-    document.getElementById('qr-code-container').appendChild(canvas);
-});
-</script>
 

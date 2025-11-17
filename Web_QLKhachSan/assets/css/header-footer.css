@@ -80,6 +80,9 @@ body.menu-open {
 .main-header.scrolled .navbar-logo {
   color: var(--deep-navy);
 }
+.navbar-logo span{
+  color: var(--white);
+}
 
 /* MENU DESKTOP */
 .navbar-links {

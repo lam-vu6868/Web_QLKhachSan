@@ -304,27 +304,29 @@ function updateSummaryDisplay() {
 function setupPaymentToggle() {
     const instantRadio = document.getElementById('instant-transfer');
     const delayedRadio = document.getElementById('delayed-transfer');
-    const qrPayment = document.getElementById('qr-payment');
     const delayedPayment = document.getElementById('delayed-payment');
     const paymentOptions = document.querySelectorAll('.payment-option');
+    
+    if (!delayedRadio || !delayedPayment) return;
     
     function togglePaymentMethod() {
         // Remove selected class from all options
         paymentOptions.forEach(option => option.classList.remove('selected'));
         
-        if (instantRadio.checked) {
-            qrPayment.style.display = 'block';
-            delayedPayment.style.display = 'none';
-            instantRadio.closest('.payment-option').classList.add('selected');
-        } else {
-            qrPayment.style.display = 'none';
+        if (delayedRadio && delayedRadio.checked) {
             delayedPayment.style.display = 'block';
             delayedRadio.closest('.payment-option').classList.add('selected');
+        } else {
+            delayedPayment.style.display = 'none';
         }
     }
     
-    instantRadio.addEventListener('change', togglePaymentMethod);
-    delayedRadio.addEventListener('change', togglePaymentMethod);
+    if (instantRadio) {
+        instantRadio.addEventListener('change', togglePaymentMethod);
+    }
+    if (delayedRadio) {
+        delayedRadio.addEventListener('change', togglePaymentMethod);
+    }
     
     // Set initial state
     togglePaymentMethod();

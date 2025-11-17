@@ -990,6 +990,10 @@
     .container {
         padding: 0 15px;
     }
+    .room-header {
+        padding: 25px;
+        flex-direction: column;
+    }
     
     .page-header {
         padding: 100px 0 40px;

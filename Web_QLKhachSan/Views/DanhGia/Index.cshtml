@@ -1,4 +1,5 @@
-﻿@{
+﻿@model Web_QLKhachSan.Models.DanhGiaIndexViewModel
+@{
     ViewBag.Title = "Đánh Giá Khách Hàng";
 }
 <link rel="stylesheet" href="~/assets/css/danh-gia.css" />
@@ -12,15 +13,15 @@
                     <p>Khám phá những câu chuyện và cảm nhận chân thực từ các vị khách đã trải nghiệm dịch vụ tại The Serene Horizon</p>
                     <div class="hero-stats">
                         <div class="stat-item">
-                            <span class="stat-number" data-count="1248">0</span>
+                            <span class="stat-number" data-count="@Model.SoDanhGia">0</span>
                             <span class="stat-label">Đánh giá</span>
                         </div>
                         <div class="stat-item">
-                            <span class="stat-number" data-count="4.7">0</span>
+                            <span class="stat-number" data-count="@Model.TongDiem">0</span>
                             <span class="stat-label">Điểm trung bình</span>
                         </div>
                         <div class="stat-item">
-                            <span class="stat-number" data-count="96">0</span>
+                            <span class="stat-number" data-count="@Model.PhanTramHaiLong">0</span>
                             <span class="stat-label">% Hài lòng</span>
                         </div>
                     </div>
@@ -46,55 +47,34 @@
     <section class="rating-summary">
         <div class="summary-grid">
             <div class="overall-card" data-aos="fade-right">
-                <div class="overall-score">
-                    <div class="score-badge" style="--score: 94">
-                        <span>4.7</span>
+                <div class="overall-score-center">
+                    <div class="score-badge-large" style="--score: @((Model.TongDiem / 5.0) * 100)">
+                        <span>@Model.TongDiem</span>
                     </div>
-                    <div>
-                        <h2 class="section-heading" style="margin: 0 0 6px 0">
-                            Tổng Điểm Hài Lòng
-                        </h2>
-                        <div class="star-row">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                        </div>
-                        <div class="score-note">
-                            Dựa trên 1.248 đánh giá đã xác minh
-                        </div>
+                    <h2 class="section-heading">
+                        Tổng Điểm Hài Lòng
+                    </h2>
+                    <div class="star-row">
+                        @{
+                            var fullStars = (int)Math.Floor(Model.TongDiem);
+                            var hasHalfStar = (Model.TongDiem - fullStars) >= 0.5;
+                            
+                            for (int i = 0; i < fullStars; i++)
+                            {
+                                <i class="fas fa-star"></i>
+                            }
+                            if (hasHalfStar)
+                            {
+                                <i class="fas fa-star-half-alt"></i>
+                            }
+                            for (int i = fullStars + (hasHalfStar ? 1 : 0); i < 5; i++)
+                            {
+                                <i class="far fa-star" style="color: #e2e8f0;"></i>
+                            }
+                        }
                     </div>
-                </div>
-
-                <div class="criteria-list">
-                    <div class="criteria-item">
-                        <div>Dịch vụ</div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" data-value="92"></div>
-                        </div>
-                        <div>4.6</div>
-                    </div>
-                    <div class="criteria-item">
-                        <div>Vệ sinh</div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" data-value="96"></div>
-                        </div>
-                        <div>4.8</div>
-                    </div>
-                    <div class="criteria-item">
-                        <div>Tiện nghi</div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" data-value="90"></div>
-                        </div>
-                        <div>4.5</div>
-                    </div>
-                    <div class="criteria-item">
-                        <div>Vị trí</div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" data-value="88"></div>
-                        </div>
-                        <div>4.4</div>
+                    <div class="score-note">
+                        Dựa trên @Model.SoDanhGia.ToString("#,##0") đánh giá đã xác minh
                     </div>
                 </div>
             </div>
@@ -131,7 +111,7 @@
         </div>
     </section>
 
-    <section class="reviews-section" data-current-user-email="@(Session["Email"] ?? String.Empty)" data-current-user-name="@(Session["HoVaTen"] ?? String.Empty)">
+    <section class="reviews-section" data-current-user-email="@Model.EmailKhachHang" data-current-user-name="@Model.TenKhachHang">
         <div class="container">
             <div class="section-header" data-aos="fade-up">
                 <h2>Khách Hàng Nói Gì Về Chúng Tôi</h2>
@@ -146,13 +126,80 @@
             </div>
 
             <div class="reviews-grid" data-aos="fade-up" data-aos-delay="200">
-                <!-- Review cards sẽ được tạo bởi JavaScript -->
+                @foreach (var danhGia in Model.DanhSachDanhGia)
+                {
+                    var khachHang = danhGia.KhachHang;
+                    var avatarUrl = string.IsNullOrEmpty(khachHang.AnhDaiDienUrl) 
+                        ? "https://www.gravatar.com/avatar/?d=mp&s=150" + (khachHang.MaKhachHang % 70 + 1) 
+                        : khachHang.AnhDaiDienUrl;
+                    var ngayDanhGia = (DateTime.Now - danhGia.NgayTao).Days;
+                    var timeAgo = ngayDanhGia == 0 ? "Hôm nay" : 
+                                  ngayDanhGia == 1 ? "1 ngày trước" : 
+                                  ngayDanhGia < 7 ? ngayDanhGia + " ngày trước" :
+                                  ngayDanhGia < 30 ? (ngayDanhGia / 7) + " tuần trước" :
+                                  (ngayDanhGia / 30) + " tháng trước";
+                    
+                    <div class="review-card" data-email="@khachHang.Email">
+                        <div class="review-header">
+                            <div class="reviewer-avatar">
+                                <img src="@avatarUrl" alt="@khachHang.HoVaTen">
+                            </div>
+                            <div class="reviewer-info">
+                                <h4>@khachHang.HoVaTen</h4>
+                                <div class="review-date">@timeAgo</div>
+                            </div>
+                        </div>
+                        <div class="review-rating">
+                            <div class="stars">
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    if (i <= danhGia.Diem)
+                                    {
+                                        <i class="fas fa-star"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="fas fa-star" style="color: #e2e8f0;"></i>
+                                    }
+                                }
+                            </div>
+                            <span class="rating-score">@danhGia.Diem/5</span>
+                        </div>
+                        <div class="review-content">@danhGia.BinhLuan</div>
+                        @if (danhGia.DanhGiaHinhAnhs != null && danhGia.DanhGiaHinhAnhs.Any())
+                        {
+                            <div class="review-images">
+                                @foreach (var img in danhGia.DanhGiaHinhAnhs)
+                                {
+                                    <div class="review-image-item">
+                                        <img src="@img.DuongDanAnh" alt="Review image">
+                                    </div>
+                                }
+                            </div>
+                        }
+                        <div class="review-service">@danhGia.Phong.TenPhong</div>
+                    </div>
+                }
             </div>
 
-            <button class="load-more-btn" id="loadMoreReviews">
-                <span class="btn-text">Xem thêm đánh giá</span>
-                <i class="fas fa-chevron-down btn-icon"></i>
-            </button>
+            <!-- Pagination -->
+            <div class="pagination-wrapper" data-aos="fade-up" data-aos-delay="300">
+                <button class="pagination-btn pagination-prev" disabled>
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                
+                <div class="pagination-numbers">
+                    <button class="pagination-number">1</button>
+                    <button class="pagination-number active">2</button>
+                    <button class="pagination-number">3</button>
+                    <span class="pagination-dots">...</span>
+                    <button class="pagination-number">8</button>
+                </div>
+                
+                <button class="pagination-btn pagination-next">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
         </div>
     </section>
 
@@ -164,115 +211,59 @@
                     <p>Đánh giá của bạn sẽ giúp chúng tôi cải thiện dịch vụ và hỗ trợ khách hàng khác đưa ra quyết định tốt hơn</p>
                 </div>
 
-                <form class="modern-review-form" id="reviewForm">
-                    <div class="form-row">
+                @using (Html.BeginForm("ThemDanhGia", "DanhGia", FormMethod.Post, new { @class = "modern-review-form", id = "reviewForm" }))
+                {
+                    @Html.AntiForgeryToken()
+                    
+                    <div class="form-row-grid">
                         <div class="form-group">
                             <label for="reviewerName">
                                 <i class="fas fa-user"></i>
-                                Họ và tên
+                                Tên Khách hàng
                             </label>
-                            <input type="text" id="reviewerName" required placeholder="Nhập họ và tên của bạn">
+                            <input type="text" id="reviewerName" readonly value="@Model.TenKhachHang" placeholder="Vui lòng đăng nhập">
                         </div>
-                        <div class="form-group">
-                            <label for="reviewerEmail">
-                                <i class="fas fa-envelope"></i>
-                                Email (không bắt buộc)
-                            </label>
-                            <input type="email" id="reviewerEmail" placeholder="email@example.com">
-                        </div>
-                    </div>
 
-                    <div class="form-row">
                         <div class="form-group">
-                            <label for="serviceType">
+                            <label for="PhongId">
                                 <i class="fas fa-bed"></i>
-                                Loại dịch vụ đã sử dụng
+                                Chọn phòng đã đặt
                             </label>
-                            <select id="serviceType" required>
-                                <option value="">Chọn dịch vụ</option>
-                                <option value="deluxe">Phòng Deluxe</option>
-                                <option value="suite">Phòng Suite</option>
-                                <option value="presidential">Phòng Presidential</option>
-                                <option value="spa">Dịch vụ Spa</option>
-                                <option value="restaurant">Nhà hàng</option>
-                                <option value="events">Tổ chức sự kiện</option>
-                            </select>
+                            @Html.DropDownList("PhongId", Model.DanhSachPhong, "-- Chọn phòng --", new { @class = "form-control"})
+                            @Html.ValidationMessage("PhongId", "", new { @class = "text-danger" })
                         </div>
+                    </div>
+
+                    <div class="form-row-grid">
                         <div class="form-group">
-                            <label for="visitDate">
-                                <i class="fas fa-calendar"></i>
-                                Ngày sử dụng dịch vụ
+                            <label for="BinhLuan">
+                                <i class="fas fa-edit"></i>
+                                Nội dung Bình luận
                             </label>
-                            <input type="date" id="visitDate" required>
+                            @Html.TextArea("BinhLuan", "", 4, 0, new { @class = "form-control", placeholder = "Hãy chia sẻ chi tiết về trải nghiệm của bạn tại The Serene Horizon..." })
+                            @Html.ValidationMessage("BinhLuan", "", new { @class = "text-danger" })
                         </div>
-                    </div>
 
-                    <div class="rating-section">
-                        <h4>Đánh giá chi tiết</h4>
-                        <div class="rating-grid">
-                            <div class="rating-item">
-                                <label>Chất lượng dịch vụ</label>
-                                <div class="star-rating" data-category="service">
-                                    <i class="fas fa-star" data-value="1"></i>
-                                    <i class="fas fa-star" data-value="2"></i>
-                                    <i class="fas fa-star" data-value="3"></i>
-                                    <i class="fas fa-star" data-value="4"></i>
-                                    <i class="fas fa-star" data-value="5"></i>
-                                </div>
-                                <span class="rating-text">Chọn số sao</span>
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-star"></i>
+                                Điểm (Sao)
+                            </label>
+                            <input type="hidden" id="Diem" name="Diem" value="0"/>
+                            <div class="star-rating" data-category="overall">
+                                <i class="fas fa-star" data-value="1"></i>
+                                <i class="fas fa-star" data-value="2"></i>
+                                <i class="fas fa-star" data-value="3"></i>
+                                <i class="fas fa-star" data-value="4"></i>
+                                <i class="fas fa-star" data-value="5"></i>
                             </div>
-                            <div class="rating-item">
-                                <label>Độ sạch sẽ</label>
-                                <div class="star-rating" data-category="cleanliness">
-                                    <i class="fas fa-star" data-value="1"></i>
-                                    <i class="fas fa-star" data-value="2"></i>
-                                    <i class="fas fa-star" data-value="3"></i>
-                                    <i class="fas fa-star" data-value="4"></i>
-                                    <i class="fas fa-star" data-value="5"></i>
-                                </div>
-                                <span class="rating-text">Chọn số sao</span>
-                            </div>
-                            <div class="rating-item">
-                                <label>Tiện nghi & Cơ sở vật chất</label>
-                                <div class="star-rating" data-category="amenities">
-                                    <i class="fas fa-star" data-value="1"></i>
-                                    <i class="fas fa-star" data-value="2"></i>
-                                    <i class="fas fa-star" data-value="3"></i>
-                                    <i class="fas fa-star" data-value="4"></i>
-                                    <i class="fas fa-star" data-value="5"></i>
-                                </div>
-                                <span class="rating-text">Chọn số sao</span>
-                            </div>
-                            <div class="rating-item">
-                                <label>Vị trí & Giao thông</label>
-                                <div class="star-rating" data-category="location">
-                                    <i class="fas fa-star" data-value="1"></i>
-                                    <i class="fas fa-star" data-value="2"></i>
-                                    <i class="fas fa-star" data-value="3"></i>
-                                    <i class="fas fa-star" data-value="4"></i>
-                                    <i class="fas fa-star" data-value="5"></i>
-                                </div>
-                                <span class="rating-text">Chọn số sao</span>
-                            </div>
+                            <span class="rating-text">Chọn số sao</span>
+                            @Html.ValidationMessage("Diem", "", new { @class = "text-danger" })
                         </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="reviewContent">
-                            <i class="fas fa-edit"></i>
-                            Chia sẻ trải nghiệm của bạn
-                        </label>
-                        <textarea id="reviewContent" rows="6" required 
-                                  placeholder="Hãy chia sẻ chi tiết về trải nghiệm của bạn tại The Serene Horizon. Điều gì khiến bạn ấn tượng nhất? Bạn có muốn giới thiệu cho bạn bè không?"></textarea>
-                        <div class="char-counter">
-                            <span id="charCount">0</span>/500 ký tự
-                        </div>
-                    </div>
-
-                    <div class="form-group photo-upload">
+                    </div>                    <div class="form-group photo-upload">
                         <label>
                             <i class="fas fa-camera"></i>
-                            Thêm hình ảnh (tùy chọn)
+                            Ảnh đính kèm (nếu có)
                         </label>
                         <div class="upload-area" id="uploadArea">
                             <div class="upload-placeholder">
@@ -295,7 +286,7 @@
                             Gửi đánh giá
                         </button>
                     </div>
-                </form>
+                }
             </div>
         </div>
     </section>

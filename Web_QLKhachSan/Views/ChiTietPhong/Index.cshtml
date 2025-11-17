@@ -158,14 +158,47 @@
                     <!-- Booking Section -->
                     <div class="booking-section" data-aos="fade-up">
                         <div class="booking-container">
-                            <div class="booking-info">
-                                <h3>Sẵn sàng đặt phòng?</h3>
-                                <p>Trải nghiệm kỳ nghỉ tuyệt vời với dịch vụ 5 sao và tầm nhìn đại dương tuyệt đẹp</p>
-                            </div>
-                            <a href="@Url.Action("ThongTinKhachHang", "DatPhong", new { phongId = Model.PhongId })" class="btn-book-now-main">
-                                <i class="fas fa-calendar-check"></i>
-                                Đặt Phòng Ngay
-                            </a>
+                            @if (Model.TrangThaiPhong == 0)
+                            {
+                                <div class="booking-info">
+                                    <h3>Sẵn sàng đặt phòng?</h3>
+                                    <p>Trải nghiệm kỳ nghỉ tuyệt vời với dịch vụ 5 sao và tầm nhìn đại dương tuyệt đẹp</p>
+                                </div>
+                                <a href="@Url.Action("ThongTinKhachHang", "DatPhong", new { phongId = Model.PhongId })" class="btn-book-now-main">
+                                    <i class="fas fa-calendar-check"></i>
+                                    Đặt Phòng Ngay
+                                </a>
+                            }
+                            else
+                            {
+                                <div class="booking-info">
+                                    <h3 style="color: #dc3545;">Phòng không khả dụng</h3>
+                                    <p>
+                                        @switch (Model.TrangThaiPhong)
+                                        {
+                                            case 1:
+                                                <span>Phòng này đã được đặt trước. Vui lòng chọn phòng khác.</span>
+                                                break;
+                                            case 2:
+                                                <span>Phòng đang có khách lưu trú. Vui lòng chọn phòng khác.</span>
+                                                break;
+                                            case 3:
+                                                <span>Phòng đang trong quá trình vệ sinh. Vui lòng quay lại sau.</span>
+                                                break;
+                                            case 4:
+                                                <span>Phòng đang được bảo trì. Vui lòng chọn phòng khác.</span>
+                                                break;
+                                            default:
+                                                <span>Phòng hiện không khả dụng. Vui lòng chọn phòng khác.</span>
+                                                break;
+                                        }
+                                    </p>
+                                </div>
+                                <button class="btn-book-now-main" style="background: #6c757d; cursor: not-allowed;" disabled>
+                                    <i class="fas fa-ban"></i>
+                                    Không Thể Đặt
+                                </button>
+                            }
                         </div>
                     </div>
 
