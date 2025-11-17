@@ -25,10 +25,10 @@ namespace Web_QLKhachSan.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Booking> Bookings { get; set; }
         public virtual DbSet<ChiTietDatDichVu> ChiTietDatDichVus { get; set; }
         public virtual DbSet<ChiTietDatPhong> ChiTietDatPhongs { get; set; }
         public virtual DbSet<DanhGia> DanhGias { get; set; }
+        public virtual DbSet<DanhGiaHinhAnh> DanhGiaHinhAnhs { get; set; }
         public virtual DbSet<DatPhong> DatPhongs { get; set; }
         public virtual DbSet<DichVu> DichVus { get; set; }
         public virtual DbSet<GiaTheoNgay> GiaTheoNgays { get; set; }

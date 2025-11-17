@@ -12,15 +12,12 @@ namespace Web_QLKhachSan.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Booking
+    public partial class DanhGiaHinhAnh
     {
-        public int booking_id { get; set; }
-        public string customer_name { get; set; }
-        public System.DateTime check_in_date { get; set; }
-        public decimal total_amount { get; set; }
-        public Nullable<decimal> deposit_amount { get; set; }
-        public string payment_ref_id { get; set; }
-        public string payment_status { get; set; }
-        public Nullable<System.DateTime> created_at { get; set; }
+        public int HinhAnhId { get; set; }
+        public int DanhGiaId { get; set; }
+        public string DuongDanAnh { get; set; }
+    
+        public virtual DanhGia DanhGia { get; set; }
     }
 }

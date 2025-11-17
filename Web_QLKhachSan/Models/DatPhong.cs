@@ -20,6 +20,7 @@ namespace Web_QLKhachSan.Models
             this.ChiTietDatDichVus = new HashSet<ChiTietDatDichVu>();
             this.ChiTietDatPhongs = new HashSet<ChiTietDatPhong>();
             this.HoaDons = new HashSet<HoaDon>();
+            this.VNPAY_Transaction_Logs = new HashSet<VNPAY_Transaction_Logs>();
         }
     
         public int DatPhongId { get; set; }
@@ -39,6 +40,11 @@ namespace Web_QLKhachSan.Models
         public string GhiChu { get; set; }
         public System.DateTime NgayTao { get; set; }
         public Nullable<System.DateTime> NgayCapNhat { get; set; }
+        public string PaymentRefId { get; set; }
+        public string PaymentMethod { get; set; }
+        public string OnlinePaymentStatus { get; set; }
+        public Nullable<decimal> TotalAmount { get; set; }
+        public string CustomerName { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ChiTietDatDichVu> ChiTietDatDichVus { get; set; }
@@ -47,5 +53,7 @@ namespace Web_QLKhachSan.Models
         public virtual KhachHang KhachHang { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<HoaDon> HoaDons { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<VNPAY_Transaction_Logs> VNPAY_Transaction_Logs { get; set; }
     }
 }

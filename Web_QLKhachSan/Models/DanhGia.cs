@@ -14,6 +14,12 @@ namespace Web_QLKhachSan.Models
     
     public partial class DanhGia
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public DanhGia()
+        {
+            this.DanhGiaHinhAnhs = new HashSet<DanhGiaHinhAnh>();
+        }
+    
         public int DanhGiaId { get; set; }
         public int PhongId { get; set; }
         public int MaKhachHang { get; set; }
@@ -23,5 +29,7 @@ namespace Web_QLKhachSan.Models
     
         public virtual KhachHang KhachHang { get; set; }
         public virtual Phong Phong { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DanhGiaHinhAnh> DanhGiaHinhAnhs { get; set; }
     }
 }

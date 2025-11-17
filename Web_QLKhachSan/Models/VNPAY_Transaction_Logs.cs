@@ -15,12 +15,14 @@ namespace Web_QLKhachSan.Models
     public partial class VNPAY_Transaction_Logs
     {
         public int log_id { get; set; }
-        public string booking_ref_id { get; set; }
+        public Nullable<int> DatPhongId { get; set; }
         public string vnp_txn_ref { get; set; }
         public decimal vnp_amount { get; set; }
         public string vnp_response_code { get; set; }
         public string vnp_transaction_status { get; set; }
         public string log_details { get; set; }
         public Nullable<System.DateTime> log_time { get; set; }
+    
+        public virtual DatPhong DatPhong { get; set; }
     }
 }
