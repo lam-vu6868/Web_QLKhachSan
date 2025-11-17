@@ -72,35 +72,6 @@ namespace Web_QLKhachSan.Controllers
                 return RedirectToAction("Index");
             }
 
-            // Kiểm tra ModelState - dựa vào validation từ Model
-            if (!ModelState.IsValid)
-            {
-                // Tái tạo dữ liệu cho View
-                var viewModel = new DanhGiaIndexViewModel
-                {
-                    DanhSachDanhGia = db.DanhGias
-                        .Include("KhachHang")
-                        .Include("Phong")
-                        .OrderByDescending(d => d.NgayTao)
-                        .ToList(),
-                    DanhSachPhong = db.Phongs
-                        .Where(p => p.DaHoatDong)
-                        .Select(p => new SelectListItem
-                        {
-                            Value = p.PhongId.ToString(),
-                            Text = p.TenPhong
-                        })
-                        .ToList(),
-                    TenKhachHang = Session["HoVaTen"]?.ToString(),
-                    EmailKhachHang = email,
-                    TongDiem = db.DanhGias.Any() ? Math.Round(db.DanhGias.Average(d => d.Diem), 1) : 0,
-                    SoDanhGia = db.DanhGias.Count(),
-                    PhanTramHaiLong = db.DanhGias.Any() ? Math.Round((db.DanhGias.Count(d => d.Diem >= 4) * 100.0 / db.DanhGias.Count()), 0) : 0
-                };
-
-                return View("Index", viewModel);
-            }
-
             try
             {
                 // Tạo đánh giá mới

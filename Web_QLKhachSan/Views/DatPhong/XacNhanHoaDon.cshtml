@@ -1,0 +1,92 @@
+@model Web_QLKhachSan.Models.ThongTinDatPhongViewModel
+@{
+    ViewBag.Title = "Xác Nhận Thanh Toán";
+}
+<link rel="stylesheet" href="~/assets/css/dat-phong.css" />
+
+<section class="page-header">
+    <div class="container">
+        <h1 data-aos="fade-right">Hoàn Tất Đặt Chỗ</h1>
+        <p data-aos="fade-left">Quá trình thanh toán của bạn được bảo mật tuyệt đối</p>
+    </div>
+</section>
+
+<main class="main-content-area">
+    <div class="container checkout-layout">
+        <div class="checkout-form-area">
+            @{ ViewBag.CurrentStep = 4; }
+            @Html.Partial("_CheckoutSteps")
+            
+            <div class="confirmation-box">
+            
+            @if (TempData["PaymentSuccess"] != null && (bool)TempData["PaymentSuccess"])
+            {
+                <div class="confirmation-header success">
+                    <div class="confirmation-icon-circle success">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <h2 class="confirmation-title success">✅ Thanh Toán Thành Công!</h2>
+                    <p class="confirmation-subtitle">Đặt phòng của bạn đã được xác nhận</p>
+                </div>
+
+                <div class="transaction-info-box">
+                    <h3 class="transaction-title">📋 Thông tin giao dịch</h3>
+                    <table class="transaction-table">
+                        <tr>
+                            <td class="transaction-label">Mã đặt phòng:</td>
+                            <td class="transaction-value">@TempData["BookingRef"]</td>
+                        </tr>
+                        <tr>
+                            <td class="transaction-label">Số tiền:</td>
+                            <td class="transaction-value amount">@string.Format("{0:N0}đ", TempData["Amount"])</td>
+                        </tr>
+                        <tr>
+                            <td class="transaction-label">Mã giao dịch:</td>
+                            <td class="transaction-value">@TempData["TransactionNo"]</td>
+                        </tr>
+                        <tr>
+                            <td class="transaction-label">Ngân hàng:</td>
+                            <td class="transaction-value">@TempData["BankCode"]</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="alert-box info">
+                    <p>
+                        <i class="fas fa-info-circle"></i> 
+                        <strong>Lưu ý:</strong> Thông tin chi tiết đặt phòng đã được gửi đến email của bạn.
+                    </p>
+                </div>
+            }
+            else
+            {
+                <div class="confirmation-header error">
+                    <div class="confirmation-icon-circle error">
+                        <i class="fas fa-times"></i>
+                    </div>
+                    <h2 class="confirmation-title error">❌ Thanh Toán Thất Bại</h2>
+                    <p class="confirmation-subtitle">@TempData["ErrorMessage"]</p>
+                </div>
+
+                <div class="alert-box warning">
+                    <p>
+                        <i class="fas fa-exclamation-triangle"></i> 
+                        <strong>Vui lòng:</strong> Thử lại hoặc liên hệ với chúng tôi để được hỗ trợ.
+                    </p>
+                </div>
+            }
+
+            <div class="confirmation-actions">
+                <a href="@Url.Action("Index", "Home")" class="btn-confirmation primary">
+                    <i class="fas fa-home"></i> Về Trang Chủ
+                </a>
+                @if (TempData["PaymentSuccess"] != null && (bool)TempData["PaymentSuccess"])
+                {
+                    <a href="@Url.Action("Index", "PhongNghi")" class="btn-confirmation success">
+                        <i class="fas fa-bed"></i> Đặt Phòng Tiếp
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
+</main>

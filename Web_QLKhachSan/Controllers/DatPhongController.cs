@@ -339,6 +339,22 @@ namespace Web_QLKhachSan.Controllers
             return View(thongTinDatPhong);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ThanhToan(string paymentMethod)
+        {
+            // Lấy thông tin đặt phòng từ Session
+            var thongTinDatPhong = Session["ThongTinDatPhong"] as ThongTinDatPhongViewModel;
+            if (thongTinDatPhong == null)
+            {
+                TempData["ErrorMessage"] = "Thông tin đặt phòng không hợp lệ!";
+                return RedirectToAction("ThongTinKhachHang");
+            }
+
+            // Chuyển sang VNPay để thanh toán
+            return ProcessVNPayPayment(thongTinDatPhong);
+        }
+
 
 
         // API giả lập chuyển khoản thành công - Tạo đặt phòng KHI QUÉT MÃ
@@ -466,19 +482,19 @@ namespace Web_QLKhachSan.Controllers
             // Build URL for VNPay
             VnPayLibrary vnpay = new VnPayLibrary();
 
-            vnpay.AddRequestData("vnp_Version", VnPayLibrary.VERSION);
+            vnpay.AddRequestData("vnp_Version", "2.1.0");
             vnpay.AddRequestData("vnp_Command", "pay");
             vnpay.AddRequestData("vnp_TmnCode", vnp_TmnCode);
-            vnpay.AddRequestData("vnp_Amount", (thongTinDatPhong.TongCong * 100).ToString()); // VNPay yêu cầu nhân 100
-            vnpay.AddRequestData("vnp_BankCode", "VNPAYQR"); // Mặc định dùng QR
+            vnpay.AddRequestData("vnp_Amount", ((long)(thongTinDatPhong.TongCong * 100)).ToString()); // VNPay yêu cầu nhân 100
             vnpay.AddRequestData("vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss"));
             vnpay.AddRequestData("vnp_CurrCode", "VND");
             vnpay.AddRequestData("vnp_IpAddr", VnPayUtils.GetIpAddress());
             vnpay.AddRequestData("vnp_Locale", "vn");
-            vnpay.AddRequestData("vnp_OrderInfo", $"Thanh toan dat phong {bookingRef} - {thongTinDatPhong.HoVaTen}");
+            vnpay.AddRequestData("vnp_OrderInfo", "Thanh toan dat phong " + bookingRef);
             vnpay.AddRequestData("vnp_OrderType", "other");
             vnpay.AddRequestData("vnp_ReturnUrl", vnp_Returnurl);
             vnpay.AddRequestData("vnp_TxnRef", vnpTxnRef.ToString());
+            vnpay.AddRequestData("vnp_ExpireDate", DateTime.Now.AddMinutes(15).ToString("yyyyMMddHHmmss"));
 
             string paymentUrl = vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);
             
@@ -556,6 +572,7 @@ namespace Web_QLKhachSan.Controllers
                                 datPhong.OnlinePaymentStatus = "PAID";
                                 datPhong.TrangThaiThanhToan = 1; // Đã thanh toán
                                 datPhong.PaymentMethod = "VNPAY";
+                                datPhong.CustomerName = datPhong.KhachHang?.HoVaTen ?? "Khách hàng"; // Lấy tên từ bảng KhachHang
                                 db.SaveChanges();
                             }
                         }

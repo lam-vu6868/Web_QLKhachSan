@@ -18,6 +18,7 @@ class ReviewSystem {
         this.setupPhotoUpload();
         this.setupStarRatings();
         this.setupFormReset();
+        this.setupFormValidation();
     }
 
     // ========== UPDATE SCORE BADGE ==========
@@ -331,7 +332,99 @@ class ReviewSystem {
                 uploadArea.style.opacity = '1';
                 uploadArea.style.pointerEvents = 'auto';
             }
+
+            // Xóa lỗi validation
+            this.clearValidationErrors();
         });
+    }
+
+    // ========== FORM VALIDATION ==========
+    setupFormValidation() {
+        const form = document.getElementById('reviewForm');
+        if (!form) return;
+
+        const phongSelect = document.getElementById('PhongId');
+        const diemInput = document.getElementById('Diem');
+
+        // Auto clear error when user selects room
+        if (phongSelect) {
+            phongSelect.addEventListener('change', () => {
+                if (phongSelect.value && phongSelect.value !== '') {
+                    this.clearFieldValidationError('PhongId');
+                }
+            });
+        }
+
+        // Auto clear error when user selects star rating
+        if (diemInput) {
+            const starContainer = document.querySelector('.star-rating[data-category="overall"]');
+            if (starContainer) {
+                const stars = starContainer.querySelectorAll('i');
+                stars.forEach(star => {
+                    star.addEventListener('click', () => {
+                        const diemValue = parseInt(diemInput.value);
+                        if (diemValue >= 1 && diemValue <= 5) {
+                            this.clearFieldValidationError('Diem');
+                        }
+                    });
+                });
+            }
+        }
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Clear previous errors
+            this.clearValidationErrors();
+            
+            let isValid = true;
+            
+            // Validate PhongId
+            if (!phongSelect || !phongSelect.value || phongSelect.value === '') {
+                this.showValidationError('PhongId', 'Vui lòng chọn phòng');
+                isValid = false;
+            }
+            
+            // Validate Diem
+            const diemValue = diemInput ? parseInt(diemInput.value) : 0;
+            if (!diemInput || diemValue < 1 || diemValue > 5) {
+                this.showValidationError('Diem', 'Vui lòng chọn số sao đánh giá');
+                isValid = false;
+            }
+            
+            // If valid, submit form
+            if (isValid) {
+                form.submit();
+            }
+        });
+    }
+
+    clearFieldValidationError(fieldName) {
+        const validationSpan = document.querySelector(`span[data-valmsg-for="${fieldName}"]`);
+        if (validationSpan) {
+            validationSpan.textContent = '';
+            validationSpan.style.display = 'none';
+        }
+    }
+
+    clearValidationErrors() {
+        const errorElements = document.querySelectorAll('.text-danger');
+        errorElements.forEach(el => {
+            el.textContent = '';
+            el.style.display = 'none';
+        });
+    }
+
+    showValidationError(fieldName, message) {
+        // Tìm element validation message
+        const validationSpan = document.querySelector(`span[data-valmsg-for="${fieldName}"]`);
+        if (validationSpan) {
+            validationSpan.textContent = message;
+            validationSpan.style.display = 'block';
+            validationSpan.style.color = '#dc3545';
+            validationSpan.style.fontSize = '0.875rem';
+            validationSpan.style.marginTop = '0.25rem';
+        }
     }
 
     // ========== PHOTO UPLOAD ==========
