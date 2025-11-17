@@ -40,7 +40,7 @@
                 <li>@Html.ActionLink("Dịch Vụ ", "Index", "DichVu", new { area = "" }, new { @class = currentController == "DichVu" ? "nav active-link" : "nav" })</li>
                 <li>@Html.ActionLink("Giới Thiệu", "Index", "GioiThieu", new { area = "" }, new { @class = currentController == "GioiThieu" ? "nav active-link" : "nav" })</li>
                 <li>@Html.ActionLink("Đánh Giá", "Index", "DanhGia", new { area = "" }, new { @class = currentController == "DanhGia" ? "nav active-link" : "nav" })</li>
-                <li>@Html.ActionLink("Cấp Độ", "Index", "CapDoKhachHang", new { area = "" }, new { @class = currentController == "CapDoKhachHang" ? "nav active-link" : "nav" })</li>
+                <li>@Html.ActionLink("Hỗ Trợ", "Index", "HoTroKhachHang", new { area = "" }, new { @class = currentController == "HoTroKhachHang" ? "nav active-link" : "nav" })</li>
             </nav>
 
             <div class="navbar-right">
@@ -58,6 +58,9 @@
                             </a>
                             <a href="@Url.Action("Index", "DashboardKhachHang")#history" class="dropdown-item" data-section="history">
                                 <i class="fas fa-history"></i> Lịch Sử
+                            </a>
+                            <a href="@Url.Action("Index", "CapDoKhachHang")" class="dropdown-item">
+                                <i class="fas fa-medal"></i> Cấp Độ
                             </a>
                             <a href="@Url.Action("DangXuat", "Login")" class="dropdown-item">
                                 <i class="fas fa-sign-out-alt"></i> Đăng Xuất
@@ -143,9 +146,9 @@
                             </a>
                         </li>
                         <li>
-                            <a href="@Url.Action("Index", "CapDoKhachHang")" class="@(currentController == "CapDoKhachHang" ? "active-link" : "")">
-                                <i class="fas fa-medal"></i>
-                                <span>Cấp Độ</span>
+                            <a href="@Url.Action("Index", "HoTroKhachHang")" class="@(currentController == "HoTroKhachHang" ? "active-link" : "")">
+                                <i class="fas fa-headset"></i>
+                                <span>Hỗ Trợ</span>
                                 <i class="fas fa-chevron-right"></i>
                             </a>
                         </li>
@@ -168,6 +171,13 @@
                                 <a href="@Url.Action("Index", "DashboardKhachHang")#history" data-section="history">
                                     <i class="fas fa-history"></i>
                                     <span>Lịch Sử</span>
+                                    <i class="fas fa-chevron-right"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index", "CapDoKhachHang")">
+                                    <i class="fas fa-medal"></i>
+                                    <span>Cấp Độ</span>
                                     <i class="fas fa-chevron-right"></i>
                                 </a>
                             </li>
@@ -315,7 +325,6 @@
                 <div class="footer-links">
                     <a href="@Url.Action("ChinhSach", "ChinhSachVaDieuKhoan")">Chính sách bảo mật</a>
                     <a href="@Url.Action("DieuKhoan", "ChinhSachVaDieuKhoan")">Điều khoản sử dụng</a>
-                    <a href="@Url.Action("Index", "HoTroKhachHang")">Hỗ Trợ</a>
                 </div>
             </div>
         </div>

@@ -1055,6 +1055,9 @@ input.error, input:invalid {
   display: flex;
   justify-content: space-between;
 }
+.bank-details-info p strong {
+  white-space: nowrap;
+}
 
 .bank-details-info .amount {
   color: var(--gold);
@@ -1064,7 +1067,7 @@ input.error, input:invalid {
 
 .transfer-note {
   color: var(--deep-navy);
-  font-weight: 500;
+  display:	inline-block;
 }
 
 .qr-warning {

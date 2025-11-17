@@ -209,9 +209,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Booking.cs">
-      <DependentUpon>Contect.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\ChiTietDatDichVu.cs">
       <DependentUpon>Contect.tt</DependentUpon>
     </Compile>
@@ -238,6 +235,10 @@
     <Compile Include="Models\DanhGia.cs">
       <DependentUpon>Contect.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\DanhGiaHinhAnh.cs">
+      <DependentUpon>Contect.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DanhGiaViewModel.cs" />
     <Compile Include="Models\DatLaiMatKhau.cs" />
     <Compile Include="Models\DatPhong.cs">
       <DependentUpon>Contect.tt</DependentUpon>

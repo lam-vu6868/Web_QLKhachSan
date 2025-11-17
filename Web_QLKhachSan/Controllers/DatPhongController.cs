@@ -327,8 +327,9 @@ namespace Web_QLKhachSan.Controllers
                 return RedirectToAction("ThongTinKhachHang");
             }
 
-            // Tự động tạo booking và lưu vào database khi vào trang thanh toán
-            string bookingRef = CreateBookingRecord(thongTinDatPhong);
+            // Tạo booking ref để hiển thị (chưa lưu vào database)
+            string bookingRef = "BOOKING_" + DateTime.Now.Ticks;
+            Session["PendingBookingRef"] = bookingRef; // Lưu vào session để dùng khi quét mã
             ViewBag.BookingRef = bookingRef;
 
             // Thêm logic để kiểm tra số đêm cho tùy chọn gia hạn
@@ -338,81 +339,64 @@ namespace Web_QLKhachSan.Controllers
             return View(thongTinDatPhong);
         }
 
-        private string CreateBookingRecord(ThongTinDatPhongViewModel thongTinDatPhong)
+
+
+        // API giả lập chuyển khoản thành công - Tạo đặt phòng KHI QUÉT MÃ
+        public ActionResult SimulatePayment(string bookingRef)
         {
             try
             {
-                string bookingRef = "BOOKING_" + DateTime.Now.Ticks;
-
-                // Lưu booking vào database
-                var booking = new Booking
+                // Lấy thông tin đặt phòng từ Session
+                var thongTinDatPhong = Session["ThongTinDatPhong"] as ThongTinDatPhongViewModel;
+                if (thongTinDatPhong == null)
                 {
-                    customer_name = thongTinDatPhong.HoVaTen,
-                    check_in_date = thongTinDatPhong.NgayNhan,
-                    total_amount = thongTinDatPhong.TongCong,
-                    deposit_amount = thongTinDatPhong.TongCong,
-                    payment_ref_id = bookingRef,
-                    payment_status = "PENDING",
-                    created_at = DateTime.Now
+                    return Json(new { success = false, message = "Thông tin đặt phòng không hợp lệ!" }, JsonRequestBehavior.AllowGet);
+                }
+
+                int maKhachHang = Convert.ToInt32(Session["MaKhachHang"]);
+                string maDatPhong = "DP" + DateTime.Now.ToString("yyyyMMddHHmmss");
+
+                // Tạo đặt phòng MỚI khi quét mã
+                var datPhong = new DatPhong
+                {
+                    MaDatPhong = maDatPhong,
+                    MaKhachHang = maKhachHang,
+                    NgayDat = DateTime.Now,
+                    NgayNhan = thongTinDatPhong.NgayNhan,
+                    NgayTra = thongTinDatPhong.NgayTra,
+                    SoDem = thongTinDatPhong.SoDem,
+                    SoLuongKhach = thongTinDatPhong.SoNguoi,
+                    TrangThaiDatPhong = 0,
+                    TrangThaiThanhToan = 1, // Đã thanh toán
+                    TongTien = thongTinDatPhong.TongCong,
+                    HinhThucThanhToan = 1,
+                    PaymentRefId = bookingRef,
+                    PaymentMethod = "BANK_TRANSFER",
+                    OnlinePaymentStatus = "PAID",
+                    TotalAmount = thongTinDatPhong.TongCong,
+                    CustomerName = "Nguyen Van A", // Tên người chuyển khoản
+                    NgayTao = DateTime.Now
                 };
 
-                db.Bookings.Add(booking);
+                db.DatPhongs.Add(datPhong);
                 db.SaveChanges();
 
-                // Lưu log VNPay
+                // Lưu log thành công
                 var vnpayLog = new VNPAY_Transaction_Logs
                 {
-                    booking_ref_id = bookingRef,
+                    DatPhongId = datPhong.DatPhongId,
                     vnp_txn_ref = DateTime.Now.Ticks.ToString(),
-                    vnp_amount = thongTinDatPhong.TongCong,
-                    vnp_response_code = "WAITING",
-                    vnp_transaction_status = "WAITING",
-                    log_details = $"Tạo booking {bookingRef} - Khách hàng: {thongTinDatPhong.HoVaTen} - Số tiền: {thongTinDatPhong.TongCong:N0}đ",
+                    vnp_amount = datPhong.TotalAmount ?? 0,
+                    vnp_response_code = "00",
+                    vnp_transaction_status = "00",
+                    log_details = $"Quét mã và chuyển khoản thành công - Mã đặt phòng: {maDatPhong} - Số tiền: {datPhong.TotalAmount:N0}đ",
                     log_time = DateTime.Now
                 };
 
                 db.VNPAY_Transaction_Logs.Add(vnpayLog);
                 db.SaveChanges();
 
-                return bookingRef;
-            }
-            catch (Exception ex)
-            {
-                return "ERROR_" + DateTime.Now.Ticks;
-            }
-        }
-
-        // API giả lập chuyển khoản thành công
-        public ActionResult SimulatePayment(string bookingRef)
-        {
-            try
-            {
-                // Tìm booking
-                var booking = db.Bookings.FirstOrDefault(b => b.payment_ref_id == bookingRef);
-                if (booking != null)
-                {
-                    // Cập nhật trạng thái thành công
-                    booking.payment_status = "PAID";
-                    
-                    // Lưu log thành công
-                    var vnpayLog = new VNPAY_Transaction_Logs
-                    {
-                        booking_ref_id = bookingRef,
-                        vnp_txn_ref = DateTime.Now.Ticks.ToString(),
-                        vnp_amount = booking.total_amount,
-                        vnp_response_code = "00",
-                        vnp_transaction_status = "00",
-                        log_details = $"GIẢ LẬP chuyển khoản thành công cho booking {bookingRef} - Số tiền: {booking.total_amount:N0}đ",
-                        log_time = DateTime.Now
-                    };
-                    
-                    db.VNPAY_Transaction_Logs.Add(vnpayLog);
-                    db.SaveChanges();
-                    
-                    return Json(new { success = true, message = "Chuyển khoản thành công!" }, JsonRequestBehavior.AllowGet);
-                }
-                
-                return Json(new { success = false, message = "Không tìm thấy booking!" }, JsonRequestBehavior.AllowGet);
+                return Json(new { success = true, message = "Chuyển khoản thành công!" }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -433,39 +417,50 @@ namespace Web_QLKhachSan.Controllers
             // Tạo booking reference ID
             string bookingRef = "BOOKING_" + DateTime.Now.Ticks;
             long vnpTxnRef = DateTime.Now.Ticks;
+            int maKhachHang = Convert.ToInt32(Session["MaKhachHang"]);
+            string maDatPhong = "DP" + DateTime.Now.ToString("yyyyMMddHHmmss");
 
-            // Lưu booking vào database
-            var booking = new Booking
+            // Lưu đặt phòng vào database
+            var datPhong = new DatPhong
             {
-                customer_name = thongTinDatPhong.HoVaTen,
-                check_in_date = thongTinDatPhong.NgayNhan,
-                total_amount = thongTinDatPhong.TongCong,
-                deposit_amount = thongTinDatPhong.TongCong, // Thanh toán toàn bộ
-                payment_ref_id = bookingRef,
-                payment_status = "PENDING",
-                created_at = DateTime.Now
+                MaDatPhong = maDatPhong,
+                MaKhachHang = maKhachHang,
+                NgayDat = DateTime.Now,
+                NgayNhan = thongTinDatPhong.NgayNhan,
+                NgayTra = thongTinDatPhong.NgayTra,
+                SoDem = thongTinDatPhong.SoDem,
+                SoLuongKhach = thongTinDatPhong.SoNguoi,
+                TrangThaiDatPhong = 0, // Chờ xác nhận
+                TrangThaiThanhToan = 0, // Chưa thanh toán
+                TongTien = thongTinDatPhong.TongCong,
+                HinhThucThanhToan = 1, // 1 = Online/VNPAY
+                PaymentRefId = bookingRef,
+                PaymentMethod = "VNPAY",
+                OnlinePaymentStatus = "PENDING",
+                TotalAmount = thongTinDatPhong.TongCong,
+                NgayTao = DateTime.Now
             };
 
-            db.Bookings.Add(booking);
+            db.DatPhongs.Add(datPhong);
             db.SaveChanges();
 
             // Lưu thông tin VNPay transaction log
             var vnpayLog = new VNPAY_Transaction_Logs
             {
-                booking_ref_id = bookingRef,
+                DatPhongId = datPhong.DatPhongId,
                 vnp_txn_ref = vnpTxnRef.ToString(),
                 vnp_amount = thongTinDatPhong.TongCong,
                 vnp_response_code = "PENDING",
                 vnp_transaction_status = "PENDING",
-                log_details = $"Khởi tạo thanh toán cho booking {bookingRef} - Khách hàng: {thongTinDatPhong.HoVaTen}",
+                log_details = $"Khởi tạo thanh toán cho đặt phòng {bookingRef} - Khách hàng: {thongTinDatPhong.HoVaTen}",
                 log_time = DateTime.Now
             };
 
             db.VNPAY_Transaction_Logs.Add(vnpayLog);
             db.SaveChanges();
 
-            // Lưu booking ID vào session để dùng khi return
-            Session["CurrentBookingId"] = booking.booking_id;
+            // Lưu DatPhongId vào session để dùng khi return
+            Session["CurrentBookingId"] = datPhong.DatPhongId;
             Session["CurrentBookingRef"] = bookingRef;
 
             // Build URL for VNPay
@@ -490,7 +485,7 @@ namespace Web_QLKhachSan.Controllers
             // Ghi log
             var successLog = new VNPAY_Transaction_Logs
             {
-                booking_ref_id = bookingRef,
+                DatPhongId = datPhong.DatPhongId,
                 vnp_txn_ref = vnpTxnRef.ToString(),
                 vnp_amount = thongTinDatPhong.TongCong,
                 vnp_response_code = "REDIRECT",
@@ -540,7 +535,7 @@ namespace Web_QLKhachSan.Controllers
                     // Log transaction result
                     var vnpayLog = new VNPAY_Transaction_Logs
                     {
-                        booking_ref_id = bookingRef ?? "UNKNOWN",
+                        DatPhongId = bookingId,
                         vnp_txn_ref = vnp_TxnRef,
                         vnp_amount = vnp_Amount,
                         vnp_response_code = vnp_ResponseCode,
@@ -555,10 +550,12 @@ namespace Web_QLKhachSan.Controllers
                         // Thanh toán thành công
                         if (bookingId.HasValue)
                         {
-                            var booking = db.Bookings.Find(bookingId.Value);
-                            if (booking != null)
+                            var datPhong = db.DatPhongs.Find(bookingId.Value);
+                            if (datPhong != null)
                             {
-                                booking.payment_status = "PAID";
+                                datPhong.OnlinePaymentStatus = "PAID";
+                                datPhong.TrangThaiThanhToan = 1; // Đã thanh toán
+                                datPhong.PaymentMethod = "VNPAY";
                                 db.SaveChanges();
                             }
                         }
@@ -574,10 +571,10 @@ namespace Web_QLKhachSan.Controllers
                         // Thanh toán thất bại
                         if (bookingId.HasValue)
                         {
-                            var booking = db.Bookings.Find(bookingId.Value);
-                            if (booking != null)
+                            var datPhong = db.DatPhongs.Find(bookingId.Value);
+                            if (datPhong != null)
                             {
-                                booking.payment_status = "FAILED";
+                                datPhong.OnlinePaymentStatus = "FAILED";
                                 db.SaveChanges();
                             }
                         }
@@ -593,7 +590,7 @@ namespace Web_QLKhachSan.Controllers
                     // Invalid signature
                     var errorLog = new VNPAY_Transaction_Logs
                     {
-                        booking_ref_id = bookingRef ?? "UNKNOWN",
+                        DatPhongId = bookingId,
                         vnp_txn_ref = vnp_TxnRef,
                         vnp_amount = vnp_Amount,
                         vnp_response_code = "INVALID_SIGNATURE",
