@@ -67,7 +67,7 @@
                             <!-- Form Họ và Tên -->
                             <div class="form-section">
                                 <div class="form-group-inline">
-                                    <label for="fullName">Họ và Tên</label>
+                                    <label for="fullName"><i class="fa-solid fa-user"></i> Họ và Tên</label>
                                     <div class="input-with-button">
                                         <input type="text" id="fullName" value="@(Session["HoVaTen"])" readonly />
                                         <button type="button" class="btn-edit" onclick="editField('fullName')">
@@ -77,23 +77,10 @@
                                 </div>
                             </div>
 
-                            <!-- Form Email -->
-                            <div class="form-section">
-                                <div class="form-group-inline">
-                                    <label for="email">Email</label>
-                                    <div class="input-with-button">
-                                        <input type="email" id="email" value="@(Session["Email"])" readonly />
-                                        <button type="button" class="btn-edit" onclick="editField('email')">
-                                            <i class="fas fa-envelope"></i> Đổi Email
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
                             <!-- Form Số Điện Thoại -->
                             <div class="form-section">
                                 <div class="form-group-inline">
-                                    <label for="phone">Số Điện Thoại</label>
+                                    <label for="phone"><i class="fa-solid fa-phone"></i> Số Điện Thoại</label>
                                     <div class="input-with-button">
                                         <input type="tel" id="phone" value="" placeholder="Chưa có số điện thoại" readonly />
                                         <button type="button" class="btn-edit" onclick="editField('phone')">
@@ -106,7 +93,7 @@
                             <!-- Form Ngày Sinh -->
                             <div class="form-section">
                                 <div class="form-group-inline">
-                                    <label for="birthdate">Ngày Sinh</label>
+                                    <label for="birthdate"><i class="fa-solid fa-calendar"></i> Ngày Sinh</label>
                                     <div class="input-with-button">
                                         <input type="date"
                                                id="birthdate"
@@ -122,7 +109,7 @@
                             <!-- Form Địa Chỉ -->
                             <div class="form-section">
                                 <div class="form-group-inline">
-                                    <label for="address">Địa Chỉ</label>
+                                    <label for="address"><i class="fa-solid fa-location-dot"></i> Địa Chỉ</label>
                                     <div class="input-with-button">
                                         <textarea id="address" rows="3" placeholder="Chưa có địa chỉ" readonly></textarea>
                                         <button type="button" class="btn-edit" onclick="editField('address')">

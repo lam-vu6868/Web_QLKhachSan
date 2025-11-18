@@ -334,10 +334,6 @@ GiaPhong = phong.Gia ?? phong.LoaiPhong.GiaCoBan ?? 0,
            return RedirectToAction("ThongTinKhachHang");
     }
 
-     // ✅ Tạo đơn đặt phòng trong bảng DatPhong (thay vì Booking)
-            string paymentRefId = CreateDatPhongRecord(thongTinDatPhong);
-       ViewBag.BookingRef = paymentRefId;
-
         // Thêm logic để kiểm tra số đêm cho tùy chọn gia hạn
    ViewBag.CanUseCustomDelay = thongTinDatPhong.SoDem >= 2;
     ViewBag.MaxDelayDate = thongTinDatPhong.NgayTra.AddDays(-1);
@@ -360,17 +356,16 @@ GiaPhong = phong.Gia ?? phong.LoaiPhong.GiaCoBan ?? 0,
                     ? (int?)Convert.ToInt32(Session["MaKhachHang"]) 
    : null;
 
-     // ✅ Tạo đơn đặt phòng trong bảng DatPhong
+      // ✅ Tạo đơn đặt phòng trong bảng DatPhong
          var datPhong = new DatPhong
        {
            // Thông tin online payment
+           MaDatPhong = "DP" + DateTime.Now.ToString("yyyyMMddHHmmss"),
                  PaymentRefId = paymentRefId,
          PaymentMethod = "VNPAY",
        OnlinePaymentStatus = "PENDING",
 CustomerName = thongTinDatPhong.HoVaTen,
-    TotalAmount = thongTinDatPhong.TongCong,
-        
-    // Thông tin đặt phòng
+    TotalAmount = thongTinDatPhong.TongCong,    // Thông tin đặt phòng
 MaKhachHang = maKhachHang,
           NgayDat = DateTime.Now,
          NgayNhan = thongTinDatPhong.NgayNhan,
@@ -471,6 +466,77 @@ var phong = db.Phongs
         }
 
         /// <summary>
+        /// POST: Xử lý thanh toán - Chuyển đến VNPay
+        /// </summary>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ThanhToan(FormCollection form)
+        {
+            // Lấy thông tin đặt phòng từ Session
+            var thongTinDatPhong = Session["ThongTinDatPhong"] as ThongTinDatPhongViewModel;
+            if (thongTinDatPhong == null)
+            {
+                TempData["ErrorMessage"] = "Thông tin đặt phòng không hợp lệ!";
+                return RedirectToAction("ThongTinKhachHang");
+            }
+
+            // Lấy phương thức thanh toán
+            string paymentMethod = form["payment"];
+            
+            if (paymentMethod == "instant-transfer")
+            {
+                // Chuyển khoản ngay - Redirect đến VNPay
+                return ProcessVNPayPayment(thongTinDatPhong);
+            }
+            else if (paymentMethod == "delayed-transfer")
+            {
+                // Gia hạn thanh toán - Tạo đơn và thông báo
+                string delayTime = form["delay-time"];
+                
+                if (string.IsNullOrEmpty(delayTime))
+                {
+                    TempData["ErrorMessage"] = "Vui lòng chọn thời gian gia hạn!";
+                    return RedirectToAction("ThanhToan");
+                }
+
+                // Tạo đơn đặt phòng
+                string paymentRefId = CreateDatPhongRecord(thongTinDatPhong);
+                
+                // Tính thời gian hết hạn
+                DateTime deadline;
+                if (delayTime == "custom")
+                {
+                    string customDate = form["customDate"];
+                    string customTime = form["customTime"];
+                    
+                    if (string.IsNullOrEmpty(customDate) || string.IsNullOrEmpty(customTime))
+                    {
+                        TempData["ErrorMessage"] = "Vui lòng chọn ngày giờ thanh toán!";
+                        return RedirectToAction("ThanhToan");
+                    }
+                    
+                    deadline = DateTime.Parse($"{customDate} {customTime}");
+                }
+                else
+                {
+                    int hours = int.Parse(delayTime);
+                    deadline = DateTime.Now.AddHours(hours);
+                }
+
+                // TODO: Gửi email thông báo với thông tin thanh toán
+                
+                TempData["SuccessMessage"] = $"Đặt phòng thành công! Vui lòng thanh toán trước {deadline:HH:mm dd/MM/yyyy}. Thông tin chi tiết đã được gửi qua email {thongTinDatPhong.Email}.";
+                TempData["PaymentDeadline"] = deadline;
+                TempData["PaymentRefId"] = paymentRefId;
+                
+                return RedirectToAction("XacNhanHoaDon");
+            }
+
+            TempData["ErrorMessage"] = "Vui lòng chọn phương thức thanh toán!";
+            return RedirectToAction("ThanhToan");
+        }
+
+        /// <summary>
         /// API giả lập chuyển khoản thành công
         /// </summary>
         public ActionResult SimulatePayment(string paymentRefId)
@@ -536,6 +602,7 @@ var phong = db.Phongs
 // ✅ Lưu đơn đặt phòng vào database (thay vì Booking)
  var datPhong = new DatPhong
   {
+  MaDatPhong = "DP" + DateTime.Now.ToString("yyyyMMddHHmmss"),
   PaymentRefId = paymentRefId,
            PaymentMethod = "VNPAY",
        OnlinePaymentStatus = "PENDING",
@@ -559,6 +626,52 @@ var phong = db.Phongs
             };
 
             db.DatPhongs.Add(datPhong);
+            db.SaveChanges();
+
+            // ✅ Tạo ChiTietDatPhong cho phòng đã đặt
+            if (thongTinDatPhong.PhongId.HasValue)
+            {
+                var phong = db.Phongs.Include(p => p.LoaiPhong).FirstOrDefault(p => p.PhongId == thongTinDatPhong.PhongId.Value);
+                if (phong != null)
+                {
+                    var chiTietDatPhong = new ChiTietDatPhong
+                    {
+                        DatPhongId = datPhong.DatPhongId,
+                        PhongId = phong.PhongId,
+                        LoaiPhongId = phong.LoaiPhongId,
+                        DonGia = thongTinDatPhong.GiaPhong,
+                        SoLuong = 1,
+                        NgayDen = thongTinDatPhong.NgayNhan,
+                        NgayDi = thongTinDatPhong.NgayTra,
+                        GiamGia = 0,
+                        ThanhTien = thongTinDatPhong.TongTienPhong,
+                        TrangThaiPhong = 0, // 0 = Chưa nhận phòng
+                        GhiChu = "Đặt phòng online",
+                        NgayCapNhat = DateTime.Now
+                    };
+                    db.ChiTietDatPhongs.Add(chiTietDatPhong);
+                }
+            }
+
+            // ✅ Tạo ChiTietDatDichVu cho các dịch vụ đã chọn
+            if (thongTinDatPhong.DichVuDaChon != null && thongTinDatPhong.DichVuDaChon.Count > 0)
+            {
+                foreach (var dichVu in thongTinDatPhong.DichVuDaChon)
+                {
+                    var chiTietDichVu = new ChiTietDatDichVu
+                    {
+                        DatPhongId = datPhong.DatPhongId,
+                        DichVuId = dichVu.DichVuId,
+                        SoLuong = 1,
+                        DonGia = dichVu.Gia,
+                        ThanhTien = dichVu.Gia,
+                        NgaySuDung = thongTinDatPhong.NgayNhan,
+                        GhiChu = "Dịch vụ đặt trước online"
+                    };
+                    db.ChiTietDatDichVus.Add(chiTietDichVu);
+                }
+            }
+
             db.SaveChanges();
 
   // Lưu thông tin VNPay transaction log
@@ -586,13 +699,16 @@ var phong = db.Phongs
         vnpay.AddRequestData("vnp_Version", VnPayLibrary.VERSION);
         vnpay.AddRequestData("vnp_Command", "pay");
         vnpay.AddRequestData("vnp_TmnCode", vnp_TmnCode);
-     vnpay.AddRequestData("vnp_Amount", (thongTinDatPhong.TongCong * 100).ToString());
-  vnpay.AddRequestData("vnp_BankCode", "VNPAYQR");
+     
+     // Chuyển đổi số tiền sang số nguyên (VNPay yêu cầu số tiền * 100)
+     long amount = (long)(thongTinDatPhong.TongCong * 100);
+     vnpay.AddRequestData("vnp_Amount", amount.ToString());
+     
             vnpay.AddRequestData("vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss"));
  vnpay.AddRequestData("vnp_CurrCode", "VND");
             vnpay.AddRequestData("vnp_IpAddr", VnPayUtils.GetIpAddress());
           vnpay.AddRequestData("vnp_Locale", "vn");
-            vnpay.AddRequestData("vnp_OrderInfo", $"Thanh toan dat phong {paymentRefId} - {thongTinDatPhong.HoVaTen}");
+            vnpay.AddRequestData("vnp_OrderInfo", $"Thanh toan dat phong {paymentRefId}");
          vnpay.AddRequestData("vnp_OrderType", "other");
          vnpay.AddRequestData("vnp_ReturnUrl", vnp_Returnurl);
   vnpay.AddRequestData("vnp_TxnRef", vnpTxnRef.ToString());

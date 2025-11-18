@@ -14,15 +14,23 @@ namespace Web_QLKhachSan.Models
     
     public partial class KhuyenMai
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public KhuyenMai()
+        {
+            this.DatPhongs = new HashSet<DatPhong>();
+        }
+    
         public int KhuyenMaiId { get; set; }
         public string MaKhuyenMai { get; set; }
         public string TenKhuyenMai { get; set; }
-        public Nullable<byte> LoaiKhuyenMai { get; set; }
         public Nullable<decimal> GiaTri { get; set; }
         public Nullable<System.DateTime> NgayBatDau { get; set; }
         public Nullable<System.DateTime> NgayKetThuc { get; set; }
         public string DieuKienApDung { get; set; }
         public Nullable<int> SoLanSuDungToiDa { get; set; }
         public bool DaHoatDong { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DatPhong> DatPhongs { get; set; }
     }
 }

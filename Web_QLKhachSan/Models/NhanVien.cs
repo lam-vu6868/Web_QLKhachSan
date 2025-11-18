@@ -17,6 +17,7 @@ namespace Web_QLKhachSan.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public NhanVien()
         {
+            this.DatPhongs = new HashSet<DatPhong>();
             this.TaiKhoans = new HashSet<TaiKhoan>();
         }
     
@@ -34,6 +35,8 @@ namespace Web_QLKhachSan.Models
         public string DiaChi { get; set; }
         public bool DaHoatDong { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DatPhong> DatPhongs { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TaiKhoan> TaiKhoans { get; set; }
     }

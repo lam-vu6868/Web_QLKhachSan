@@ -10,6 +10,7 @@
     --transition-smooth: all 0.3s ease-in-out;
     --header-height: 80px;
     --border-color: #e0e0e0;
+    --danger-red: #e74c3c;
 }
 
 * {

@@ -98,6 +98,8 @@ namespace Web_QLKhachSan.Controllers
                 Session["HoVaTen"] = khachHang.HoVaTen;
                 Session["Email"] = khachHang.Email;
                 Session["TenDangNhap"] = khachHang.TenDangNhap;
+                Session["NgayTao"] = khachHang.NgayTao;
+                Session["NgaySinh"] = khachHang.NgaySinh;
 
                 // xem người dùng này là ai
                 if (taiKhoan.LoaiTaiKhoan == 1)
