@@ -1,8 +1,9 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace Web_QLKhachSan.Models
 {
@@ -28,7 +29,7 @@ namespace Web_QLKhachSan.Models
     public class DanhGiaIndexViewModel
     {
         public List<DanhGia> DanhSachDanhGia { get; set; }
-        public List<System.Web.Mvc.SelectListItem> DanhSachPhong { get; set; }
+        public List<SelectListItem> DanhSachPhong { get; set; }
         public string TenKhachHang { get; set; }
         public string EmailKhachHang { get; set; }
         
