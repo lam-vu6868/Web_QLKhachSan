@@ -1,6 +1,6 @@
 ﻿@model Web_QLKhachSan.Areas.NhanVienLeTan.ViewModels.DatPhong.DatPhongCreateViewModel
 @{
-    ViewBag.Title = "Tạo Đơn Đặt Phòng Mới";
+    ViewBag.Title = "Tạo Đơn Đặt Phòng";
     Layout = "~/Areas/NhanVienLeTan/Views/Shared/_LayoutNVLT.cshtml";
 }
 
@@ -9,296 +9,393 @@
 }
 
 <div class="container-fluid">
-    @* ==== HEADER ==== *@
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">
-            <i class="fas fa-plus-circle"></i> Tạo Đơn Đặt Phòng Mới
-        </h1>
-      <a href="@Url.Action("Index", "DatPhong")" class="btn btn-secondary btn-icon-split shadow-sm">
-            <span class="icon text-white-50">
-     <i class="fas fa-arrow-left"></i>
-      </span>
-            <span class="text">Quay lại</span>
-        </a>
+  @* ========== HEADER ========== *@
+    <div class="page-header mb-4">
+        <div class="d-flex justify-content-between align-items-center">
+    <div>
+      <h1 class="h3 mb-1 text-gray-800">
+              <i class="fas fa-plus-circle text-primary"></i> Tạo Đơn Đặt Phòng Mới
+    </h1>
+            <p class="text-muted mb-0">Nhập thông tin khách hàng và chọn phòng</p>
+ </div>
+   <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
+    <i class="fas fa-arrow-left"></i> Quay lại
+            </a>
+        </div>
     </div>
 
-    @* ==== FORM ==== *@
-    @using (Html.BeginForm("Create", "DatPhong", FormMethod.Post, new { @class = "needs-validation", novalidate = "novalidate" }))
+    @* ========== FORM ========== *@
+    @using (Html.BeginForm("Create", "DatPhong", FormMethod.Post, new { @class = "booking-form", id = "formCreateBooking" }))
     {
-        @Html.AntiForgeryToken()
+     @Html.AntiForgeryToken()
+        
+        @* Alert Messages *@
+        <div id="alertContainer"></div>
+        
         @Html.ValidationSummary(false, "", new { @class = "alert alert-danger" })
 
         <div class="row">
-  @* ==== LEFT COLUMN ==== *@
-            <div class="col-lg-8">
-     @* ===== SECTION 1: THÔNG TIN KHÁCH HÀNG ===== *@
-      <div class="card shadow mb-4">
-                <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">
-     <i class="fas fa-user"></i> Thông tin khách hàng
-           </h6>
-   </div>
-     <div class="card-body">
-     <div class="row">
-         <div class="col-md-4">
-   <div class="form-group">
-         @Html.LabelFor(m => m.SoDienThoai, new { @class = "font-weight-bold" })
-   <span class="text-danger">*</span>
-          <div class="input-group">
-              @Html.TextBoxFor(m => m.SoDienThoai, new { @class = "form-control", placeholder = "0123456789", id = "txtSoDienThoai" })
-      <div class="input-group-append">
-           <button type="button" class="btn btn-primary" id="btnTimKhach">
-    <i class="fas fa-search"></i>
-        </button>
-     </div>
-   </div>
-          @Html.ValidationMessageFor(m => m.SoDienThoai, "", new { @class = "text-danger small" })
-           <small class="form-text text-muted">Nhấn tìm để kiểm tra khách cũ</small>
+    @* ========== LEFT COLUMN (8) ========== *@
+        <div class="col-lg-8">
+              
+                @* === STEP 1: KHÁCH HÀNG === *@
+        <div class="card shadow-sm mb-4 create-card">
+    <div class="card-header create-card-header">
+          <div class="d-flex align-items-center">
+       <div class="step-number">1</div>
+     <div class="ml-3">
+       <h5 class="mb-0"><i class="fas fa-user"></i> Thông tin khách hàng</h5>
+    <small class="text-white-50">Nhập số điện thoại để tìm khách cũ</small>
             </div>
-    </div>
-
-     <div class="col-md-8">
-    <div class="form-group">
-     @Html.LabelFor(m => m.HoVaTen, new { @class = "font-weight-bold" })
-        <span class="text-danger">*</span>
-         @Html.TextBoxFor(m => m.HoVaTen, new { @class = "form-control", placeholder = "Nguyễn Văn A", id = "txtHoVaTen" })
-       @Html.ValidationMessageFor(m => m.HoVaTen, "", new { @class = "text-danger small" })
           </div>
+       </div>
+     <div class="card-body">
+    <div class="row">
+          <div class="col-md-4">
+           <div class="form-group">
+      <label class="font-weight-bold">
+                  Số điện thoại <span class="text-danger">*</span>
+      </label>
+    <div class="input-group">
+     @Html.TextBoxFor(m => m.SoDienThoai, new { 
+         @class = "form-control", 
+       placeholder = "0123456789", 
+                  id = "txtSoDienThoai",
+           maxlength = "15"
+ })
+     <div class="input-group-append">
+  <button type="button" class="btn btn-primary" id="btnTimKhach" title="Tìm khách hàng">
+      <i class="fas fa-search"></i>
+          </button>
+   </div>
+         </div>
+                @Html.ValidationMessageFor(m => m.SoDienThoai, "", new { @class = "text-danger small" })
+          <small class="form-text text-muted">Nhấn tìm để kiểm tra khách cũ</small>
+   </div>
+          </div>
+
+        <div class="col-md-8">
+        <div class="form-group">
+  <label class="font-weight-bold">
+     Họ và tên <span class="text-danger">*</span>
+    </label>
+     @Html.TextBoxFor(m => m.HoVaTen, new { 
+    @class = "form-control", 
+      placeholder = "Nguyễn Văn A", 
+           id = "txtHoVaTen"
+})
+               @Html.ValidationMessageFor(m => m.HoVaTen, "", new { @class = "text-danger small" })
+   </div>
     </div>
-            </div>
+   </div>
 
    <div class="row">
-    <div class="col-md-6">
-   <div class="form-group">
-          @Html.LabelFor(m => m.Email, new { @class = "font-weight-bold" })
-        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "email@example.com", type = "email", id = "txtEmail" })
-         @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger small" })
- </div>
-           </div>
-
-            <div class="col-md-6">
-     <div class="form-group">
-  @Html.LabelFor(m => m.DiaChi, new { @class = "font-weight-bold" })
-                 @Html.TextBoxFor(m => m.DiaChi, new { @class = "form-control", placeholder = "Địa chỉ", id = "txtDiaChi" })
-</div>
-         </div>
-  </div>
-
-     <div class="row">
       <div class="col-md-6">
-            <div class="form-group">
-       <label class="font-weight-bold">Giới tính</label><br />
-            <div class="form-check form-check-inline">
-       @Html.RadioButtonFor(m => m.GioiTinh, 0, new { @class = "form-check-input", id = "gioiTinhNam" })
-<label class="form-check-label" for="gioiTinhNam">Nam</label>
-          </div>
-    <div class="form-check form-check-inline">
-             @Html.RadioButtonFor(m => m.GioiTinh, 1, new { @class = "form-check-input", id = "gioiTinhNu" })
-       <label class="form-check-label" for="gioiTinhNu">Nữ</label>
-       </div>
-     <div class="form-check form-check-inline">
-    @Html.RadioButtonFor(m => m.GioiTinh, 2, new { @class = "form-check-input", id = "gioiTinhKhac" })
-       <label class="form-check-label" for="gioiTinhKhac">Khác</label>
-           </div>
-       </div>
-        </div>
-       </div>
-    </div>
-       </div>
-
-     @* ===== SECTION 2: THÔNG TIN ĐẶT PHÒNG ===== *@
-    <div class="card shadow mb-4">
-          <div class="card-header py-3">
-          <h6 class="m-0 font-weight-bold text-primary">
-   <i class="fas fa-calendar-alt"></i> Thông tin đặt phòng
-</h6>
+  <div class="form-group">
+          <label class="font-weight-bold">Email</label>
+@Html.TextBoxFor(m => m.Email, new { 
+          @class = "form-control", 
+        placeholder = "email@example.com", 
+        type = "email",
+     id = "txtEmail"
+       })
+      @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger small" })
+         </div>
    </div>
-        <div class="card-body">
-         <div class="row">
-      <div class="col-md-4">
-            <div class="form-group">
-         @Html.LabelFor(m => m.NgayNhan, new { @class = "font-weight-bold" })
-    <span class="text-danger">*</span>
-                @Html.TextBoxFor(m => m.NgayNhan, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", id = "txtNgayNhan" })
-     @Html.ValidationMessageFor(m => m.NgayNhan, "", new { @class = "text-danger small" })
-      </div>
-     </div>
 
-       <div class="col-md-4">
-    <div class="form-group">
-         @Html.LabelFor(m => m.NgayTra, new { @class = "font-weight-bold" })
-          <span class="text-danger">*</span>
-            @Html.TextBoxFor(m => m.NgayTra, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", id = "txtNgayTra" })
-          @Html.ValidationMessageFor(m => m.NgayTra, "", new { @class = "text-danger small" })
+       <div class="col-md-6">
+      <div class="form-group">
+        <label class="font-weight-bold">Địa chỉ</label>
+       @Html.TextBoxFor(m => m.DiaChi, new { 
+             @class = "form-control", 
+            placeholder = "Địa chỉ",
+   id = "txtDiaChi"
+        })
+       </div>
+       </div>
         </div>
-                   </div>
+
+            <div class="row">
+  <div class="col-md-12">
+             <label class="font-weight-bold d-block">Giới tính</label>
+              <div class="custom-control custom-radio custom-control-inline">
+          @Html.RadioButtonFor(m => m.GioiTinh, 0, new { @class = "custom-control-input", id = "gioiTinhNam", @checked = "checked" })
+        <label class="custom-control-label" for="gioiTinhNam">
+      <i class="fas fa-mars text-primary"></i> Nam
+        </label>
+     </div>
+          <div class="custom-control custom-radio custom-control-inline">
+     @Html.RadioButtonFor(m => m.GioiTinh, 1, new { @class = "custom-control-input", id = "gioiTinhNu" })
+ <label class="custom-control-label" for="gioiTinhNu">
+<i class="fas fa-venus text-danger"></i> Nữ
+              </label>
+         </div>
+             <div class="custom-control custom-radio custom-control-inline">
+       @Html.RadioButtonFor(m => m.GioiTinh, 2, new { @class = "custom-control-input", id = "gioiTinhKhac" })
+         <label class="custom-control-label" for="gioiTinhKhac">
+          <i class="fas fa-genderless text-secondary"></i> Khác
+  </label>
+       </div>
+      </div>
+       </div>
+ </div>
+ </div>
+
+      @* === STEP 2: THỜI GIAN === *@
+     <div class="card shadow-sm mb-4 create-card">
+    <div class="card-header create-card-header">
+  <div class="d-flex align-items-center">
+  <div class="step-number">2</div>
+   <div class="ml-3">
+   <h5 class="mb-0"><i class="fas fa-calendar-alt"></i> Thời gian đặt phòng</h5>
+            <small class="text-white-50">Chọn ngày nhận và trả phòng</small>
+       </div>
+            </div>
+        </div>
+     <div class="card-body">
+           <div class="row">
+    <div class="col-md-4">
+       <div class="form-group">
+       <label class="font-weight-bold">
+         Ngày nhận <span class="text-danger">*</span>
+             </label>
+    @Html.TextBoxFor(m => m.NgayNhan, "{0:yyyy-MM-dd}", new { 
+       @class = "form-control", 
+            type = "date", 
+       id = "txtNgayNhan"
+                 })
+                  @Html.ValidationMessageFor(m => m.NgayNhan, "", new { @class = "text-danger small" })
+       </div>
+      </div>
 
         <div class="col-md-4">
-        <div class="form-group">
-            <label class="font-weight-bold">Số đêm</label>
-             <input type="text" class="form-control" id="txtSoDem" value="@Model.SoDem" readonly />
-       </div>
-       </div>
- </div>
-
-<div class="row">
-         <div class="col-md-6">
-    <div class="form-group">
-              @Html.LabelFor(m => m.SoLuongKhach, new { @class = "font-weight-bold" })
-        <span class="text-danger">*</span>
-      @Html.TextBoxFor(m => m.SoLuongKhach, new { @class = "form-control", type = "number", min = "1", max = "50" })
-                @Html.ValidationMessageFor(m => m.SoLuongKhach, "", new { @class = "text-danger small" })
-    </div>
-      </div>
-
-   <div class="col-md-6">
-   <div class="form-group">
-        @Html.LabelFor(m => m.GhiChu, new { @class = "font-weight-bold" })
-         @Html.TextAreaFor(m => m.GhiChu, new { @class = "form-control", rows = "3", placeholder = "Ghi chú đặc biệt..." })
-       </div>
-         </div>
+              <div class="form-group">
+             <label class="font-weight-bold">
+       Ngày trả <span class="text-danger">*</span>
+                   </label>
+           @Html.TextBoxFor(m => m.NgayTra, "{0:yyyy-MM-dd}", new { 
+  @class = "form-control", 
+  type = "date", 
+ id = "txtNgayTra"
+       })
+           @Html.ValidationMessageFor(m => m.NgayTra, "", new { @class = "text-danger small" })
              </div>
-                </div>
-       </div>
-
-                @* ===== SECTION 3: CHỌN PHÒNG ===== *@
-                <div class="card shadow mb-4">
-      <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">
-       <i class="fas fa-bed"></i> Chọn phòng
-           </h6>
-      </div>
-       <div class="card-body">
- <table class="table table-bordered table-hover" id="tableChonPhong">
-      <thead class="thead-light">
-                <tr>
-            <th>Loại phòng</th>
-           <th width="100">Số lượng</th>
-       <th width="120">Tầng ưu tiên</th>
-            <th width="150">Đơn giá/đêm</th>
-         <th width="100">Giảm giá (%)</th>
-       <th width="150">Thành tiền</th>
-   </tr>
-          </thead>
-<tbody>
-@for (int i = 0; i < Model.DanhSachPhongDat.Count; i++)
-    {
-          <tr>
-              <td>
-   @Html.HiddenFor(m => m.DanhSachPhongDat[i].LoaiPhongId)
-   @Html.HiddenFor(m => m.DanhSachPhongDat[i].DonGia)
-       <strong>@Model.DanhSachPhongDat[i].TenLoaiPhong</strong><br />
-        <small class="text-muted">@Model.DanhSachPhongDat[i].MoTa</small><br />
-          <small class="text-info">
-       <i class="fas fa-users"></i> @Model.DanhSachPhongDat[i].SoNguoiToiDa người |
-           <i class="fas fa-expand-arrows-alt"></i> @Model.DanhSachPhongDat[i].DienTich m²
- </small><br />
-           <small class="text-success">
-            <i class="fas fa-door-open"></i> Còn @Model.DanhSachPhongDat[i].SoPhongTrong phòng trống
-              </small>
-           </td>
-   <td>
-           @Html.TextBoxFor(m => m.DanhSachPhongDat[i].SoLuong, new { @class = "form-control text-center input-so-luong", type = "number", min = "0", max = Model.DanhSachPhongDat[i].SoPhongTrong, data_index = i })
-    </td>
-       <td>
-        <select name="DanhSachPhongDat[@i].Tang" class="form-control select-tang" data-loaiphongid="@Model.DanhSachPhongDat[i].LoaiPhongId" data-index="@i">
-<option value="">-- Chọn tầng --</option>
-        </select>
-           </td>
-       <td class="text-right">
- <strong class="text-primary">@Model.DanhSachPhongDat[i].DonGia.ToString("N0")đ</strong>
-            </td>
-            <td>
-           @Html.TextBoxFor(m => m.DanhSachPhongDat[i].GiamGia, new { @class = "form-control text-center input-giam-gia", type = "number", min = "0", max = "100", step = "0.1", data_index = i })
-   </td>
-<td class="text-right">
-      <strong class="text-danger thanh-tien" data-index="@i">0đ</strong>
-    </td>
-           </tr>
-    }
-          </tbody>
-</table>
-     </div>
-           </div>
             </div>
-            @* ✅ ĐÓNG .col-lg-8 *@
 
-      @* ==== RIGHT COLUMN - SUMMARY ==== *@
-            <div class="col-lg-4">
-    <div class="card shadow mb-4 sticky-top" style="top: 20px;">
-               <div class="card-header py-3 bg-primary text-white">
-    <h6 class="m-0 font-weight-bold">
-           <i class="fas fa-money-bill-wave"></i> Tổng quan thanh toán
-     </h6>
-        </div>
-       <div class="card-body">
-          <div class="price-summary">
-      <div class="d-flex justify-content-between mb-2">
-            <span>Tổng tiền phòng:</span>
-            <strong id="tongTienPhong">0đ</strong>
-         </div>
-    <div class="d-flex justify-content-between mb-2">
-           <span>Giảm giá:</span>
-        <strong class="text-success" id="tongGiamGia">0đ</strong>
-        </div>
- <hr />
-       <div class="d-flex justify-content-between mb-3">
-           <h5 class="font-weight-bold">TỔNG CỘNG:</h5>
-            <h5 class="font-weight-bold text-danger" id="tongCong">0đ</h5>
+         <div class="col-md-4">
+   <div class="form-group">
+       <label class="font-weight-bold">Số đêm</label>
+     <input type="text" class="form-control bg-light" id="txtSoDem" value="@Model.SoDem" readonly />
+</div>
+          </div>
      </div>
 
-      <div class="form-group">
-     <label class="font-weight-bold">Hình thức thanh toán</label>
- <div class="custom-control custom-radio">
-     @Html.RadioButtonFor(m => m.HinhThucThanhToan, 0, new { @class = "custom-control-input", id = "htTienMat", @checked = "checked" })
-          <label class="custom-control-label" for="htTienMat">
-           <i class="fas fa-money-bill-wave text-success"></i> Tiền mặt
-          </label>
-           </div>
-         <div class="custom-control custom-radio">
-         @Html.RadioButtonFor(m => m.HinhThucThanhToan, 1, new { @class = "custom-control-input", id = "htChuyenKhoan" })
-    <label class="custom-control-label" for="htChuyenKhoan">
- <i class="fas fa-university text-primary"></i> Chuyển khoản
-      </label>
-         </div>
+       <div class="row">
+       <div class="col-md-6">
+       <div class="form-group">
+         <label class="font-weight-bold">
+            Số lượng khách <span class="text-danger">*</span>
+             </label>
+            @Html.TextBoxFor(m => m.SoLuongKhach, new { 
+      @class = "form-control", 
+     type = "number", 
+      min = "1", 
+       max = "50",
+    value = "1"
+              })
+            @Html.ValidationMessageFor(m => m.SoLuongKhach, "", new { @class = "text-danger small" })
+    </div>
  </div>
 
- <div class="form-group">
-     @Html.LabelFor(m => m.TienDatCoc, new { @class = "font-weight-bold" })
-        <div class="input-group">
-  <div class="input-group-prepend">
-       <span class="input-group-text"><i class="fas fa-coins"></i></span>
-               </div>
-     @Html.TextBoxFor(m => m.TienDatCoc, new { @class = "form-control", type = "number", min = "0", step = "1000", placeholder = "0" })
-           <div class="input-group-append">
-  <span class="input-group-text">đ</span>
-          </div>
-     </div>
-        <small class="form-text text-muted">Để trống nếu không cọc</small>
-             </div>
-          </div>
-
-      <hr />
-
-                  <div class="d-grid gap-2">
-      <button type="submit" class="btn btn-primary btn-lg btn-block">
-            <i class="fas fa-check"></i> Tạo đơn đặt phòng
-            </button>
-       <a href="@Url.Action("Index")" class="btn btn-secondary btn-block">
-  <i class="fas fa-times"></i> Hủy
-  </a>
-         </div>
-     </div>
+      <div class="col-md-6">
+       <div class="form-group">
+     <label class="font-weight-bold">Ghi chú</label>
+      @Html.TextAreaFor(m => m.GhiChu, new { 
+         @class = "form-control", 
+              rows = "1", 
+   placeholder = "Ghi chú đặc biệt..."
+     })
+ </div>
+      </div>
   </div>
+    </div>
+  </div>
+
+        @* === STEP 3: CHỌN PHÒNG === *@
+         <div class="card shadow-sm mb-4 create-card">
+     <div class="card-header create-card-header">
+           <div class="d-flex align-items-center">
+                 <div class="step-number">3</div>
+  <div class="ml-3">
+       <h5 class="mb-0"><i class="fas fa-bed"></i> Chọn phòng</h5>
+<small class="text-white-50">Chọn loại phòng và số lượng</small>
+            </div>
+       </div>
    </div>
-         @* ✅ ĐÓNG .col-lg-4 *@
+       <div class="card-body p-0">
+       <div class="table-responsive">
+      <table class="table table-hover mb-0" id="tableChonPhong">
+         <thead class="thead-light">
+                <tr>
+         <th width="35%">Loại phòng</th>
+        <th width="12%" class="text-center">Số lượng</th>
+           <th width="15%">Tầng</th>
+     <th width="13%" class="text-right">Đơn giá/đêm</th>
+         <th width="12%" class="text-center">Giảm giá %</th>
+    <th width="13%" class="text-right">Thành tiền</th>
+  </tr>
+   </thead>
+             <tbody>
+           @for (int i = 0; i < Model.DanhSachPhongDat.Count; i++)
+  {
+      <tr>
+        <td>
+            @Html.HiddenFor(m => m.DanhSachPhongDat[i].LoaiPhongId)
+     @Html.HiddenFor(m => m.DanhSachPhongDat[i].DonGia)
+                
+ <div class="room-info">
+     <strong class="room-name">@Model.DanhSachPhongDat[i].TenLoaiPhong</strong>
+           <p class="room-desc mb-1">@Model.DanhSachPhongDat[i].MoTa</p>
+            <div class="room-meta">
+              <span class="badge badge-info mr-1">
+        <i class="fas fa-users"></i> @Model.DanhSachPhongDat[i].SoNguoiToiDa người
+           </span>
+      <span class="badge badge-secondary mr-1">
+             <i class="fas fa-expand-arrows-alt"></i> @Model.DanhSachPhongDat[i].DienTich m²
+</span>
+<span class="badge badge-success">
+     <i class="fas fa-door-open"></i> @Model.DanhSachPhongDat[i].SoPhongTrong trống
+       </span>
+          </div>
+       </div>
+      </td>
+     <td class="text-center align-middle">
+        @Html.TextBoxFor(m => m.DanhSachPhongDat[i].SoLuong, new { 
+        @class = "form-control text-center input-so-luong", 
+        type = "number", 
+         min = "0", 
+   max = Model.DanhSachPhongDat[i].SoPhongTrong,
+ data_index = i,
+        value = "0"
+        })
+                  </td>
+             <td class="align-middle">
+    <select name="DanhSachPhongDat[@i].Tang" 
+      class="form-control form-control-sm select-tang" 
+      data-loaiphongid="@Model.DanhSachPhongDat[i].LoaiPhongId" 
+        data-index="@i">
+   <option value="">-- Chọn tầng --</option>
+     </select>
+              </td>
+       <td class="text-right align-middle">
+      <strong class="text-primary">
+    @Model.DanhSachPhongDat[i].DonGia.ToString("N0")đ
+     </strong>
+  </td>
+      <td class="text-center align-middle">
+ @Html.TextBoxFor(m => m.DanhSachPhongDat[i].GiamGia, new { 
+   @class = "form-control text-center input-giam-gia", 
+    type = "number", 
+   min = "0", 
+       max = "100", 
+     step = "0.1",
+ data_index = i,
+       value = "0"
+            })
+      </td>
+ <td class="text-right align-middle">
+         <strong class="text-danger thanh-tien" data-index="@i">0đ</strong>
+         </td>
+     </tr>
+        }
+    </tbody>
+          </table>
+</div>
+              </div>
+         </div>
+
+  </div>
+            @* ========== END LEFT COLUMN ========== *@
+
+      @* ========== RIGHT COLUMN (4) - SUMMARY ========== *@
+      <div class="col-lg-4">
+     <div class="sticky-summary">
+         
+  @* Summary Card *@
+      <div class="card shadow-sm mb-3 summary-card">
+ <div class="card-header bg-gradient-primary text-white">
+          <h5 class="mb-0">
+      <i class="fas fa-file-invoice-dollar"></i> Tổng quan
+      </h5>
+          </div>
+     <div class="card-body">
+    <div class="summary-item">
+<span>Tổng tiền phòng:</span>
+     <strong id="tongTienPhong">0đ</strong>
         </div>
-        @* ✅ ĐÓNG .row *@
+      <div class="summary-item">
+      <span>Giảm giá:</span>
+       <strong class="text-success" id="tongGiamGia">0đ</strong>
+      </div>
+      <hr />
+    <div class="summary-total">
+   <span>TỔNG CỘNG:</span>
+ <strong class="text-danger" id="tongCong">0đ</strong>
+   </div>
+
+     <hr />
+
+        @* Mã Khuyến Mãi *@
+    <div class="form-group">
+ <label class="font-weight-bold">
+         <i class="fas fa-tag"></i> Mã khuyến mãi
+   </label>
+    @Html.DropDownListFor(m => m.MaKhuyenMaiId, 
+   new SelectList(Enumerable.Empty<SelectListItem>()),
+      "-- Không sử dụng --",
+       new { @class = "form-control", id = "ddlKhuyenMai" })
+  <small class="form-text text-muted">Chọn mã để giảm thêm</small>
+    </div>
+
+      @* Hình thức thanh toán *@
+     <div class="form-group">
+ <label class="font-weight-bold">Hình thức thanh toán</label>
+          <div class="custom-control custom-radio">
+       @Html.RadioButtonFor(m => m.HinhThucThanhToan, 0, new { @class = "custom-control-input", id = "htTienMat", @checked = "checked" })
+         <label class="custom-control-label" for="htTienMat">
+    <i class="fas fa-money-bill-wave text-success"></i> Tiền mặt
+           </label>
+     </div>
+      <div class="custom-control custom-radio">
+    @Html.RadioButtonFor(m => m.HinhThucThanhToan, 1, new { @class = "custom-control-input", id = "htChuyenKhoan" })
+ <label class="custom-control-label" for="htChuyenKhoan">
+          <i class="fas fa-university text-primary"></i> Chuyển khoản
+   </label>
+ </div>
+   </div>
+      </div>
+ </div>
+         @* Action Buttons *@
+        <div class="card shadow-sm">
+     <div class="card-body">
+      <button type="submit" class="btn btn-primary btn-lg btn-block">
+                    <i class="fas fa-check-circle"></i> Tạo đơn đặt phòng
+    </button>
+ <a href="@Url.Action("Index")" class="btn btn-secondary btn-block">
+       <i class="fas fa-times"></i> Hủy bỏ
+         </a>
+         </div>
+  </div>
+
+       </div>
+ </div>
+       @* ========== END RIGHT COLUMN ========== *@
+
+        </div>
     }
-    @* ✅ ĐÓNG @using *@
 </div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-    <script src="@Url.Content("~/Areas/NhanVienLeTan/assets/js/datPhong.js")"></script>
+  <script src="@Url.Content("~/Areas/NhanVienLeTan/assets/js/datPhong.js")"></script>
 }

@@ -26,18 +26,18 @@ namespace Web_QLKhachSan.Areas.NhanVienLeTan.Controllers
  // GET: Index
         public ActionResult Index(DatPhongFilterViewModel filter)
         {
-     try
-            {
+  try
+   {
     if (!CheckRole())
                 {
-            TempData["ErrorMessage"] = "Bạn không có quyền truy cập!";
-    return RedirectToAction("DangNhap", "DangNhapNV", new { area = "DangNhapNV" });
-                }
+     TempData["ErrorMessage"] = "Bạn không có quyền truy cập!";
+ return RedirectToAction("DangNhap", "DangNhapNV", new { area = "DangNhapNV" });
+      }
 
-       var viewModel = new DatPhongListViewModel();
+   var viewModel = new DatPhongListViewModel();
     viewModel.Filter = filter ?? new DatPhongFilterViewModel();
 
-        var query = db.DatPhongs.AsQueryable();
+    var query = db.DatPhongs.AsQueryable();
 
  // Filters
      if (!string.IsNullOrWhiteSpace(filter.TimKiem))
@@ -46,17 +46,17 @@ namespace Web_QLKhachSan.Areas.NhanVienLeTan.Controllers
         query = query.Where(dp =>
         dp.MaDatPhong.ToLower().Contains(searchTerm) ||
   dp.KhachHang.HoVaTen.ToLower().Contains(searchTerm) ||
-            dp.KhachHang.SoDienThoai.Contains(searchTerm));
-           }
+ dp.KhachHang.SoDienThoai.Contains(searchTerm));
+  }
 
-                if (filter.TrangThaiDatPhong.HasValue)
+         if (filter.TrangThaiDatPhong.HasValue)
         query = query.Where(dp => dp.TrangThaiDatPhong == filter.TrangThaiDatPhong.Value);
 
 if (filter.TrangThaiThanhToan.HasValue)
     query = query.Where(dp => dp.TrangThaiThanhToan == filter.TrangThaiThanhToan.Value);
 
          if (filter.TuNgay.HasValue)
-      query = query.Where(dp => dp.NgayNhan >= filter.TuNgay.Value);
+query = query.Where(dp => dp.NgayNhan >= filter.TuNgay.Value);
 
       if (filter.DenNgay.HasValue)
    query = query.Where(dp => dp.NgayNhan <= filter.DenNgay.Value);
@@ -70,12 +70,12 @@ if (filter.TrangThaiThanhToan.HasValue)
   TongDonDat = db.DatPhongs.Count(),
     ChoXacNhan = db.DatPhongs.Count(dp => dp.TrangThaiDatPhong == 0),
        DaXacNhan = db.DatPhongs.Count(dp => dp.TrangThaiDatPhong == 1),
-          DaCheckIn = db.DatPhongs.Count(dp => dp.TrangThaiDatPhong == 2),
+        DaCheckIn = db.DatPhongs.Count(dp => dp.TrangThaiDatPhong == 2),
         DaCheckOut = db.DatPhongs.Count(dp => dp.TrangThaiDatPhong == 3),
        DaHuy = db.DatPhongs.Count(dp => dp.TrangThaiDatPhong == 4),
-        DoanhThuDuKien = db.DatPhongs.Where(dp => dp.TrangThaiDatPhong < 3).Sum(dp => (decimal?)dp.TongTien) ?? 0,
+DoanhThuDuKien = db.DatPhongs.Where(dp => dp.TrangThaiDatPhong < 3).Sum(dp => (decimal?)dp.TongTien) ?? 0,
              DaThanhToan = db.DatPhongs.Where(dp => dp.TrangThaiThanhToan == 2).Sum(dp => (decimal?)dp.TongTien) ?? 0
-         };
+};
 
     // Pagination
        int totalRecords = query.Count();
@@ -84,28 +84,30 @@ int currentPage = filter.CurrentPage > 0 ? filter.CurrentPage : 1;
  int totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
 
       viewModel.TotalRecords = totalRecords;
-          viewModel.PageSize = pageSize;
+     viewModel.PageSize = pageSize;
   viewModel.CurrentPage = currentPage;
-        viewModel.TotalPages = totalPages;
+    viewModel.TotalPages = totalPages;
 
      var datPhongs = query
-       .Include(dp => dp.KhachHang)
+ .Include(dp => dp.KhachHang)
      .Include(dp => dp.ChiTietDatPhongs.Select(ct => ct.LoaiPhong))
      .Include(dp => dp.ChiTietDatPhongs.Select(ct => ct.Phong))
-         .OrderByDescending(dp => dp.NgayTao)
+     .Include(dp => dp.NhanVien)    // ✅ THÊM MỚI: Load thông tin nhân viên
+     .Include(dp => dp.KhuyenMai)   // ✅ THÊM MỚI: Load thông tin khuyến mãi
+    .OrderByDescending(dp => dp.NgayTao)
        .Skip((currentPage - 1) * pageSize)
     .Take(pageSize)
-            .ToList();
+         .ToList();
 
-              viewModel.DanhSachDatPhong = datPhongs.Select(dp => MapToDatPhongItemViewModel(dp)).ToList();
+   viewModel.DanhSachDatPhong = datPhongs.Select(dp => MapToDatPhongItemViewModel(dp)).ToList();
 
-          return View(viewModel);
-            }
-            catch (Exception ex)
+     return View(viewModel);
+   }
+        catch (Exception ex)
       {
          System.Diagnostics.Debug.WriteLine($"[ERROR - DatPhong/Index] {ex.Message}");
-                TempData["ErrorMessage"] = "Có lỗi xảy ra khi tải danh sách đơn đặt phòng!";
-         return View(new DatPhongListViewModel());
+     TempData["ErrorMessage"] = "Có lỗi xảy ra khi tải danh sách đơn đặt phòng!";
+return View(new DatPhongListViewModel());
             }
   }
 
@@ -184,12 +186,12 @@ public ActionResult Create(DatPhongCreateViewModel model)
      NgayTra = model.NgayTra,
     SoDem = model.SoDem,
    SoLuongKhach = model.SoLuongKhach,
-                TrangThaiDatPhong = 0,
-        TrangThaiThanhToan = model.TienDatCoc.HasValue && model.TienDatCoc.Value > 0 ? (byte)1 : (byte)0,
-                 TongTien = model.TongCong,
+     TrangThaiDatPhong = 0,
+    TrangThaiThanhToan = 0, // Chưa thanh toán
+      TongTien = model.TongCong,
           HinhThucThanhToan = model.HinhThucThanhToan,
   MaKhuyenMai = model.MaKhuyenMaiId,
-                GhiChu = BuildGhiChu(model),
+      GhiChu = BuildGhiChu(model),
     NgayTao = DateTime.Now
       };
 
@@ -318,17 +320,17 @@ public ActionResult Create(DatPhongCreateViewModel model)
     MaDatPhong = datPhong.MaDatPhong,
      NgayDat = datPhong.NgayDat,
         NgayNhan = datPhong.NgayNhan ?? DateTime.Now,
-       NgayTra = datPhong.NgayTra ?? DateTime.Now.AddDays(1),
-          SoDem = datPhong.SoDem ?? 0,
-                MaKhachHang = datPhong.MaKhachHang,
+     NgayTra = datPhong.NgayTra ?? DateTime.Now.AddDays(1),
+  SoDem = datPhong.SoDem ?? 0,
+    MaKhachHang = datPhong.MaKhachHang,
     TenKhachHang = datPhong.KhachHang?.HoVaTen ?? "N/A",
-                SoDienThoai = datPhong.KhachHang?.SoDienThoai,
+     SoDienThoai = datPhong.KhachHang?.SoDienThoai,
      Email = datPhong.KhachHang?.Email,
          CustomerName = datPhong.CustomerName,
      SoLuongPhong = chiTietPhongs.Sum(ct => ct.SoLuong),
-          DanhSachLoaiPhong = string.Join(", ", chiTietPhongs.GroupBy(ct => ct.LoaiPhong?.TenLoai).Select(g => $"{g.Key} x{g.Sum(ct => ct.SoLuong)}")),
+      DanhSachLoaiPhong = string.Join(", ", chiTietPhongs.GroupBy(ct => ct.LoaiPhong?.TenLoai).Select(g => $"{g.Key} x{g.Sum(ct => ct.SoLuong)}")),
     DanhSachPhong = chiTietPhongs.Any(ct => ct.PhongId.HasValue) ? string.Join(", ", chiTietPhongs.Where(ct => ct.Phong != null).Select(ct => ct.Phong.MaPhong)) : "Chưa gán",
-        SoLuongKhach = datPhong.SoLuongKhach,
+    SoLuongKhach = datPhong.SoLuongKhach,
                 TrangThaiDatPhong = datPhong.TrangThaiDatPhong,
              TrangThaiDatPhongText = GetTrangThaiDatPhongText(datPhong.TrangThaiDatPhong),
       TrangThaiDatPhongColor = GetTrangThaiDatPhongColor(datPhong.TrangThaiDatPhong),
@@ -344,9 +346,14 @@ MaKhuyenMai = datPhong.MaKhuyenMai,
       TotalAmount = datPhong.TotalAmount,
 GhiChu = datPhong.GhiChu,
   NgayTao = datPhong.NgayTao,
-        NgayCapNhat = datPhong.NgayCapNhat,
-        NhanVienId = datPhong.NhanVienId
-       };
+    NgayCapNhat = datPhong.NgayCapNhat,
+        NhanVienId = datPhong.NhanVienId,
+        // ✅ THÊM MỚI: Sử dụng Navigation Property
+        TenNhanVien = datPhong.NhanVien?.HoVaTen,
+ TenKhuyenMai = datPhong.KhuyenMai?.TenKhuyenMai,
+        MaKhuyenMaiCode = datPhong.KhuyenMai?.MaKhuyenMai,
+        GiaTriKhuyenMai = datPhong.KhuyenMai?.GiaTri
+};
         }
 
         private string GetTrangThaiDatPhongText(byte trangThai)

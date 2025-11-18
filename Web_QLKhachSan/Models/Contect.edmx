@@ -159,7 +159,6 @@
           <Property Name="KhuyenMaiId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="MaKhuyenMai" Type="nvarchar" MaxLength="50" />
           <Property Name="TenKhuyenMai" Type="nvarchar" MaxLength="200" Nullable="false" />
-          <Property Name="LoaiKhuyenMai" Type="tinyint" />
           <Property Name="GiaTri" Type="decimal" Precision="18" Scale="2" />
           <Property Name="NgayBatDau" Type="date" />
           <Property Name="NgayKetThuc" Type="date" />
@@ -544,6 +543,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_DatPhong_KhuyenMai">
+          <End Role="KhuyenMai" Type="Self.KhuyenMai" Multiplicity="0..1" />
+          <End Role="DatPhong" Type="Self.DatPhong" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="KhuyenMai">
+              <PropertyRef Name="KhuyenMaiId" />
+            </Principal>
+            <Dependent Role="DatPhong">
+              <PropertyRef Name="MaKhuyenMai" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DatPhong_NhanVien">
+          <End Role="NhanVien" Type="Self.NhanVien" Multiplicity="0..1" />
+          <End Role="DatPhong" Type="Self.DatPhong" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="NhanVien">
+              <PropertyRef Name="NhanVienId" />
+            </Principal>
+            <Dependent Role="DatPhong">
+              <PropertyRef Name="NhanVienId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_DichVu_LoaiDichVu">
           <End Role="LoaiDichVu" Type="Self.LoaiDichVu" Multiplicity="0..1" />
           <End Role="DichVu" Type="Self.DichVu" Multiplicity="*" />
@@ -766,6 +789,14 @@
             <End Role="KhachHang" EntitySet="KhachHang" />
             <End Role="DatPhong" EntitySet="DatPhong" />
           </AssociationSet>
+          <AssociationSet Name="FK_DatPhong_KhuyenMai" Association="Self.FK_DatPhong_KhuyenMai">
+            <End Role="KhuyenMai" EntitySet="KhuyenMai" />
+            <End Role="DatPhong" EntitySet="DatPhong" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DatPhong_NhanVien" Association="Self.FK_DatPhong_NhanVien">
+            <End Role="NhanVien" EntitySet="NhanVien" />
+            <End Role="DatPhong" EntitySet="DatPhong" />
+          </AssociationSet>
           <AssociationSet Name="FK_DichVu_LoaiDichVu" Association="Self.FK_DichVu_LoaiDichVu">
             <End Role="LoaiDichVu" EntitySet="LoaiDichVu" />
             <End Role="DichVu" EntitySet="DichVu" />
@@ -873,6 +904,14 @@
           </AssociationSet>
           <AssociationSet Name="FK_DatPhong_KhachHang" Association="DB_QLKhachSanModel.FK_DatPhong_KhachHang">
             <End Role="KhachHang" EntitySet="KhachHangs" />
+            <End Role="DatPhong" EntitySet="DatPhongs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DatPhong_KhuyenMai" Association="DB_QLKhachSanModel.FK_DatPhong_KhuyenMai">
+            <End Role="KhuyenMai" EntitySet="KhuyenMais" />
+            <End Role="DatPhong" EntitySet="DatPhongs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DatPhong_NhanVien" Association="DB_QLKhachSanModel.FK_DatPhong_NhanVien">
+            <End Role="NhanVien" EntitySet="NhanViens" />
             <End Role="DatPhong" EntitySet="DatPhongs" />
           </AssociationSet>
           <AssociationSet Name="FK_HoaDon_DatPhong" Association="DB_QLKhachSanModel.FK_HoaDon_DatPhong">
@@ -1024,6 +1063,8 @@
           <NavigationProperty Name="ChiTietDatDichVus" Relationship="DB_QLKhachSanModel.FK_ChiTietDatDichVu_DatPhong" FromRole="DatPhong" ToRole="ChiTietDatDichVu" />
           <NavigationProperty Name="ChiTietDatPhongs" Relationship="DB_QLKhachSanModel.FK_ChiTietDatPhong_DatPhong" FromRole="DatPhong" ToRole="ChiTietDatPhong" />
           <NavigationProperty Name="KhachHang" Relationship="DB_QLKhachSanModel.FK_DatPhong_KhachHang" FromRole="DatPhong" ToRole="KhachHang" />
+          <NavigationProperty Name="KhuyenMai" Relationship="DB_QLKhachSanModel.FK_DatPhong_KhuyenMai" FromRole="DatPhong" ToRole="KhuyenMai" />
+          <NavigationProperty Name="NhanVien" Relationship="DB_QLKhachSanModel.FK_DatPhong_NhanVien" FromRole="DatPhong" ToRole="NhanVien" />
           <NavigationProperty Name="HoaDons" Relationship="DB_QLKhachSanModel.FK_HoaDon_DatPhong" FromRole="DatPhong" ToRole="HoaDon" />
           <NavigationProperty Name="VNPAY_Transaction_Logs" Relationship="DB_QLKhachSanModel.FK_VNPAY_DatPhong" FromRole="DatPhong" ToRole="VNPAY_Transaction_Logs" />
         </EntityType>
@@ -1114,13 +1155,13 @@
           <Property Name="KhuyenMaiId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="MaKhuyenMai" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="TenKhuyenMai" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="LoaiKhuyenMai" Type="Byte" />
           <Property Name="GiaTri" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="NgayBatDau" Type="DateTime" Precision="0" />
           <Property Name="NgayKetThuc" Type="DateTime" Precision="0" />
           <Property Name="DieuKienApDung" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="SoLanSuDungToiDa" Type="Int32" />
           <Property Name="DaHoatDong" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="DatPhongs" Relationship="DB_QLKhachSanModel.FK_DatPhong_KhuyenMai" FromRole="KhuyenMai" ToRole="DatPhong" />
         </EntityType>
         <EntityType Name="LoaiDichVu">
           <Key>
@@ -1196,6 +1237,7 @@
           <Property Name="HinhAnh" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
           <Property Name="DiaChi" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="DaHoatDong" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="DatPhongs" Relationship="DB_QLKhachSanModel.FK_DatPhong_NhanVien" FromRole="NhanVien" ToRole="DatPhong" />
           <NavigationProperty Name="TaiKhoans" Relationship="DB_QLKhachSanModel.FK_TaiKhoan_NhanVien" FromRole="NhanVien" ToRole="TaiKhoan" />
         </EntityType>
         <EntityType Name="Phong">
@@ -1424,6 +1466,30 @@
             </Principal>
             <Dependent Role="DatPhong">
               <PropertyRef Name="MaKhachHang" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DatPhong_KhuyenMai">
+          <End Type="DB_QLKhachSanModel.KhuyenMai" Role="KhuyenMai" Multiplicity="0..1" />
+          <End Type="DB_QLKhachSanModel.DatPhong" Role="DatPhong" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="KhuyenMai">
+              <PropertyRef Name="KhuyenMaiId" />
+            </Principal>
+            <Dependent Role="DatPhong">
+              <PropertyRef Name="MaKhuyenMai" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DatPhong_NhanVien">
+          <End Type="DB_QLKhachSanModel.NhanVien" Role="NhanVien" Multiplicity="0..1" />
+          <End Type="DB_QLKhachSanModel.DatPhong" Role="DatPhong" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="NhanVien">
+              <PropertyRef Name="NhanVienId" />
+            </Principal>
+            <Dependent Role="DatPhong">
+              <PropertyRef Name="NhanVienId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1766,7 +1832,6 @@
                 <ScalarProperty Name="NgayKetThuc" ColumnName="NgayKetThuc" />
                 <ScalarProperty Name="NgayBatDau" ColumnName="NgayBatDau" />
                 <ScalarProperty Name="GiaTri" ColumnName="GiaTri" />
-                <ScalarProperty Name="LoaiKhuyenMai" ColumnName="LoaiKhuyenMai" />
                 <ScalarProperty Name="TenKhuyenMai" ColumnName="TenKhuyenMai" />
                 <ScalarProperty Name="MaKhuyenMai" ColumnName="MaKhuyenMai" />
                 <ScalarProperty Name="KhuyenMaiId" ColumnName="KhuyenMaiId" />

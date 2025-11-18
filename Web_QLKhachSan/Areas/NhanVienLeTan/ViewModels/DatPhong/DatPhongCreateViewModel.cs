@@ -74,10 +74,6 @@ namespace Web_QLKhachSan.Areas.NhanVienLeTan.ViewModels.DatPhong
         [Display(Name = "Hình thức thanh toán")]
         public byte HinhThucThanhToan { get; set; }
 
-        [Display(Name = "Tiền đặt cọc")]
-        [Range(0, double.MaxValue, ErrorMessage = "Tiền đặt cọc không hợp lệ")]
-        public decimal? TienDatCoc { get; set; }
-
         [Display(Name = "Mã khuyến mãi")]
   public int? MaKhuyenMaiId { get; set; }
 

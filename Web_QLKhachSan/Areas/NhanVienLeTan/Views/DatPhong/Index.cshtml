@@ -106,8 +106,8 @@
         </div>
         </div>
    </div>
+  </div>
     </div>
-      </div>
 
         <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
  <div class="card border-left-danger shadow h-100 py-2 stat-card">
@@ -143,67 +143,101 @@
     </div>
 
     @* ==== BỘ LỌC ==== *@
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
-          <h6 class="m-0 font-weight-bold text-primary">
-   <i class="fas fa-filter"></i> Bộ lọc
-            </h6>
-      </div>
+    <div class="card shadow-sm mb-4">
+      <div class="card-header bg-gradient-primary">
+         <h6 class="m-0 font-weight-bold text-white">
+ <i class="fas fa-filter"></i> Bộ Lọc & Tìm Kiếm
+        </h6>
+        </div>
         <div class="card-body">
-        @using (Html.BeginForm("Index", "DatPhong", FormMethod.Get, new { @class = "form-inline" }))
-   {
-  <div class="form-group mr-3 mb-2">
-            <label class="mr-2">Tìm kiếm:</label>
-  @Html.TextBox("TimKiem", Model.Filter.TimKiem, new { @class = "form-control", placeholder = "Mã đơn, tên khách, SĐT..." })
-           </div>
+       @using (Html.BeginForm("Index", "DatPhong", FormMethod.Get, new { id = "filterForm" }))
+    {
+     <div class="filter-container">
+          @* Row 1: Search - Full Width *@
+       <div class="row mb-3">
+         <div class="col-12">
+        <label class="filter-label">
+             <i class="fas fa-search text-primary"></i> Tìm kiếm
+     </label>
+ @Html.TextBox("TimKiem", Model.Filter.TimKiem, new { 
+            @class = "form-control form-control-lg filter-search-input", 
+    placeholder = "Nhập mã đơn, tên khách hàng, số điện thoại..." 
+     })
+  </div>
+      </div>
 
-    <div class="form-group mr-3 mb-2">
-    <label class="mr-2">Trạng thái đặt:</label>
+  @* Row 2: Filter Fields - Responsive Grid *@
+     <div class="row mb-3">
+             <div class="col-lg-3 col-md-6 col-sm-6 mb-3 mb-lg-0">
+     <label class="filter-label">
+         <i class="fas fa-tasks text-primary"></i> Trạng thái đặt
+   </label>
         @Html.DropDownList("TrangThaiDatPhong",
-      new SelectList(new[]
- {
-         new { Value = (byte)0, Text = "Chờ xác nhận" },
-  new { Value = (byte)1, Text = "Đã xác nhận" },
-      new { Value = (byte)2, Text = "Đã check-in" },
-              new { Value = (byte)3, Text = "Đã check-out" },
-          new { Value = (byte)4, Text = "Đã hủy" }
-               }, "Value", "Text", Model.Filter.TrangThaiDatPhong),
+          new SelectList(new[]
+  {
+      new { Value = (byte)0, Text = "Chờ xác nhận" },
+                new { Value = (byte)1, Text = "Đã xác nhận" },
+   new { Value = (byte)2, Text = "Đã check-in" },
+           new { Value = (byte)3, Text = "Đã check-out" },
+         new { Value = (byte)4, Text = "Đã hủy" }
+           }, "Value", "Text", Model.Filter.TrangThaiDatPhong),
   "-- Tất cả --",
-      new { @class = "form-control" })
+       new { @class = "form-control filter-select" })
              </div>
 
-                <div class="form-group mr-3 mb-2">
-     <label class="mr-2">Thanh toán:</label>
-  @Html.DropDownList("TrangThaiThanhToan",
-        new SelectList(new[]
-               {
-         new { Value = (byte)0, Text = "Chưa thanh toán" },
-       new { Value = (byte)1, Text = "Đã thanh toán 1 phần" },
-         new { Value = (byte)2, Text = "Đã thanh toán đủ" }
-              }, "Value", "Text", Model.Filter.TrangThaiThanhToan),
+        <div class="col-lg-3 col-md-6 col-sm-6 mb-3 mb-lg-0">
+            <label class="filter-label">
+      <i class="fas fa-credit-card text-primary"></i> Thanh toán
+          </label>
+              @Html.DropDownList("TrangThaiThanhToan",
+            new SelectList(new[]
+       {
+        new { Value = (byte)0, Text = "Chưa thanh toán" },
+   new { Value = (byte)1, Text = "TT 1 phần" },
+    new { Value = (byte)2, Text = "Đã thanh toán" }
+        }, "Value", "Text", Model.Filter.TrangThaiThanhToan),
          "-- Tất cả --",
-     new { @class = "form-control" })
- </div>
-
-    <div class="form-group mr-3 mb-2">
-  <label class="mr-2">Từ ngày:</label>
-            @Html.TextBox("TuNgay", Model.Filter.TuNgay?.ToString("yyyy-MM-dd"), new { @class = "form-control", type = "date" })
-      </div>
-
-        <div class="form-group mr-3 mb-2">
-  <label class="mr-2">Đến ngày:</label>
-    @Html.TextBox("DenNgay", Model.Filter.DenNgay?.ToString("yyyy-MM-dd"), new { @class = "form-control", type = "date" })
+        new { @class = "form-control filter-select" })
     </div>
 
-                <button type="submit" class="btn btn-primary mb-2 mr-2">
-   <i class="fas fa-search"></i> Lọc
-            </button>
+  <div class="col-lg-3 col-md-6 col-sm-6 mb-3 mb-md-0">
+    <label class="filter-label">
+     <i class="far fa-calendar-alt text-primary"></i> Từ ngày
+     </label>
+     @Html.TextBox("TuNgay", Model.Filter.TuNgay?.ToString("yyyy-MM-dd"), new { 
+   @class = "form-control filter-date", 
+   type = "date" 
+      })
+          </div>
 
-                <a href="@Url.Action("Index", "DatPhong")" class="btn btn-secondary mb-2">
-               <i class="fas fa-sync-alt"></i> Làm mới
-       </a>
-        }
- </div>
+           <div class="col-lg-3 col-md-6 col-sm-6 mb-3 mb-md-0">
+              <label class="filter-label">
+         <i class="far fa-calendar-alt text-primary"></i> Đến ngày
+              </label>
+         @Html.TextBox("DenNgay", Model.Filter.DenNgay?.ToString("yyyy-MM-dd"), new { 
+            @class = "form-control filter-date", 
+     type = "date" 
+     })
+          </div>
+       </div>
+
+      @* Row 3: Action Buttons *@
+      <div class="row">
+        <div class="col-12">
+  <div class="filter-actions">
+            <button type="submit" class="btn btn-primary btn-filter">
+             <i class="fas fa-search"></i> <span class="d-none d-sm-inline">Tìm kiếm</span>
+       </button>
+    <a href="@Url.Action("Index", "DatPhong")" class="btn btn-secondary btn-filter">
+      <i class="fas fa-redo"></i> <span class="d-none d-sm-inline">Làm mới</span>
+   </a>
+          
+                </div>
+     </div>
+   </div>
+       </div>
+   }
+  </div>
     </div>
 
     @* ==== DANH SÁCH ĐƠN ĐẶT PHÒNG ==== *@
@@ -225,8 +259,10 @@
     <th>Ngày đặt</th>
        <th>Khách hàng</th>
         <th>Phòng</th>
-      <th>Check-in</th>
+   <th>Check-in</th>
    <th>Check-out</th>
+<th>Nhân viên</th>  @* ✅ THÊM CỘT MỚI *@
+   <th>Khuyến mãi</th>  @* ✅ THÊM CỘT MỚI *@
    <th>Tổng tiền</th>
      <th>Trạng thái</th>
      <th>Thanh toán</th>
@@ -236,14 +272,14 @@
      <tbody>
          @foreach (var item in Model.DanhSachDatPhong)
           {
-        <tr>
+<tr>
          <td>
-              <strong>@item.MaDatPhong</strong>
+  <strong>@item.MaDatPhong</strong>
    @if (item.LaDonOnline)
-           {
+{
           <br /><small class="badge badge-info">Online</small>
       }
-              </td>
+   </td>
         <td>
         <small>@item.NgayDat.ToString("dd/MM/yyyy")</small><br />
   <small class="text-muted">@item.NgayDat.ToString("HH:mm")</small>
@@ -258,58 +294,88 @@
   {
   <small class="text-primary">@item.DanhSachPhong</small>
     }
-      else
+  else
       {
          <small class="text-muted">Chưa gán phòng</small>
              }
          </td>
      <td>
      @item.NgayNhan.ToString("dd/MM/yyyy")
-         @if (item.CheckInHomNay)
+@if (item.CheckInHomNay)
  {
          <br /><span class="badge badge-success">Hôm nay</span>
-             }
-          </td>
-         <td>
+     }
+      </td>
+    <td>
    @item.NgayTra.ToString("dd/MM/yyyy")
           @if (item.CheckOutHomNay)
          {
            <br /><span class="badge badge-warning">Hôm nay</span>
        }
      </td>
+    @* ✅ CỘT NHÂN VIÊN MỚI *@
+         <td>
+                @if (!string.IsNullOrEmpty(item.TenNhanVien))
+    {
+               <small class="text-muted">
+           <i class="fas fa-user"></i> @item.TenNhanVien
+      </small>
+   }
+                else
+      {
+        <small class="text-muted">-</small>
+         }
+            </td>
+        @* ✅ CỘT KHUYẾN MÃI MỚI *@
+  <td>
+       @if (!string.IsNullOrEmpty(item.TenKhuyenMai))
+    {
+    <span class="badge badge-success" title="@item.MaKhuyenMaiCode">
+            <i class="fas fa-tag"></i> @item.TenKhuyenMai
+  </span>
+         if (item.GiaTriKhuyenMai.HasValue && item.GiaTriKhuyenMai.Value > 0)
+{
+ <br /><small class="text-success">-@item.GiaTriKhuyenMai%</small>
+      }
+    }
+       else
+         {
+      <small class="text-muted">-</small>
+       }
+   </td>
    <td class="text-right">
-            <strong class="text-danger">@((item.TongTien ?? 0).ToString("N0"))đ</strong>
-      </td>
-                <td>
+         <strong class="text-danger">@((item.TongTien ?? 0).ToString("N0"))đ</strong>
+ </td>
+             <td>
  <span class="badge badge-status" style="background-color: @item.TrangThaiDatPhongColor; color: white;">
      @item.TrangThaiDatPhongText
-          </span>
+       </span>
     </td>
     <td>
-            <span class="badge badge-status" style="background-color: @item.TrangThaiThanhToanColor; color: white;">
+     <span class="badge badge-status" style="background-color: @item.TrangThaiThanhToanColor; color: white;">
    @item.TrangThaiThanhToanText
-       </span>
+    </span>
      </td>
         <td class="action-buttons text-center">
-             <a href="@Url.Action("Details", new { id = item.DatPhongId })" class="btn btn-sm btn-info" title="Xem chi tiết">
-         <i class="fas fa-eye"></i>
+   <a href="@Url.Action("Details", new { id = item.DatPhongId })" class="btn btn-sm btn-info" title="Xem chi tiết">
+       <i class="fas fa-eye"></i>
           </a>
-            @if (item.TrangThaiDatPhong == 0)
+    @if (item.TrangThaiDatPhong == 0)
    {
        <button type="button" class="btn btn-sm btn-success" onclick="xacNhanDon(@item.DatPhongId)" title="Xác nhận">
    <i class="fas fa-check"></i>
   </button>
-              }
-            @if (item.TrangThaiDatPhong < 2)
+    }
+    @if (item.TrangThaiDatPhong < 2)
           {
     <button type="button" class="btn btn-sm btn-danger" onclick="huyDon(@item.DatPhongId)" title="Hủy đơn">
-               <i class="fas fa-times"></i>
+ <i class="fas fa-times"></i>
     </button>
         }
          </td>
-             </tr>
+      </tr>
        }
-              </tbody>
+  </tbody>
      </table>
  </div>
 
@@ -349,14 +415,14 @@
   <a class="page-link" href="@Url.Action("Index", new { 
      TimKiem = Model.Filter.TimKiem,
      TrangThaiDatPhong = Model.Filter.TrangThaiDatPhong,
-       TrangThaiThanhToan = Model.Filter.TrangThaiThanhToan,
+ TrangThaiThanhToan = Model.Filter.TrangThaiThanhToan,
      TuNgay = Model.Filter.TuNgay?.ToString("yyyy-MM-dd"),
-      DenNgay = Model.Filter.DenNgay?.ToString("yyyy-MM-dd"),
-                  CurrentPage = Model.CurrentPage + 1 
+     DenNgay = Model.Filter.DenNgay?.ToString("yyyy-MM-dd"),
+     CurrentPage = Model.CurrentPage + 1 
     })">
-             Sau <i class="fas fa-chevron-right"></i>
-       </a>
-          </li>
+    Sau <i class="fas fa-chevron-right"></i>
+  </a>
+</li>
            </ul>
                     </nav>
 
@@ -514,7 +580,7 @@ $('#btnXacNhanDon').on('click', function() {
      function showNotification(type, message) {
        var alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
     var icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle';
-    
+        
           var alertHtml = `
                 <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
             <i class="fas ${icon}"></i> ${message}

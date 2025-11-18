@@ -113,15 +113,28 @@ public string PaymentMethod { get; set; }
         [Display(Name = "Ghi chú")]
         public string GhiChu { get; set; }
 
-        [Display(Name = "Ngày tạo")]
+      [Display(Name = "Ngày tạo")]
     [DataType(DataType.DateTime)]
         public DateTime? NgayTao { get; set; }
 
    [Display(Name = "Ngày cập nhật")]
-   [DataType(DataType.DateTime)]
+ [DataType(DataType.DateTime)]
  public DateTime? NgayCapNhat { get; set; }
 
   public int? NhanVienId { get; set; }
+
+        // ✅ THÊM MỚI: Thông tin nhân viên và khuyến mãi
+        [Display(Name = "Nhân viên tạo")]
+        public string TenNhanVien { get; set; }
+
+        [Display(Name = "Tên khuyến mãi")]
+      public string TenKhuyenMai { get; set; }
+
+  [Display(Name = "Mã khuyến mãi")]
+public string MaKhuyenMaiCode { get; set; }
+
+        [Display(Name = "Giá trị KM (%)")]
+        public decimal? GiaTriKhuyenMai { get; set; }
 
     // ===== COMPUTED PROPERTIES =====
 

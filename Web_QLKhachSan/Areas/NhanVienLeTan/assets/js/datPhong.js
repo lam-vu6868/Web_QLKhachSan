@@ -197,42 +197,36 @@ function loadAvailableFloors(loaiPhongId, index) {
 // ===== VALIDATION FORM =====
 function validateForm() {
     var isValid = true;
- var errors = [];
 
-  // 1. Kiểm tra số điện thoại
+    // 1. Kiểm tra số điện thoại
     var sdt = $('#txtSoDienThoai').val().trim();
-    if (!sdt) {
-        errors.push('Vui lòng nhập số điện thoại!');
+  if (!sdt) {
         isValid = false;
     }
 
     // 2. Kiểm tra họ tên
     var hoTen = $('#txtHoVaTen').val().trim();
     if (!hoTen) {
-        errors.push('Vui lòng nhập họ tên!');
-   isValid = false;
+  isValid = false;
     }
 
     // 3. Kiểm tra ngày
     var ngayNhan = new Date($('#txtNgayNhan').val());
     var ngayTra = new Date($('#txtNgayTra').val());
- var today = new Date();
+    var today = new Date();
     today.setHours(0, 0, 0, 0);
 
     if (ngayNhan < today) {
-        errors.push('Ngày nhận phòng không được là quá khứ!');
         isValid = false;
     }
 
     if (ngayTra <= ngayNhan) {
-        errors.push('Ngày trả phòng phải sau ngày nhận!');
-    isValid = false;
+ isValid = false;
     }
 
     // 4. Kiểm tra số lượng khách
     var soKhach = parseInt($('#SoLuongKhach').val());
     if (!soKhach || soKhach < 1) {
-        errors.push('Số lượng khách phải >= 1!');
         isValid = false;
     }
 
@@ -240,51 +234,57 @@ function validateForm() {
     var hasRoom = false;
     $('.input-so-luong').each(function () {
         if (parseInt($(this).val()) > 0) {
-        hasRoom = true;
-            return false;
+   hasRoom = true;
+ return false;
         }
-  });
+    });
 
     if (!hasRoom) {
-   errors.push('Vui lòng chọn ít nhất 1 phòng!');
-   isValid = false;
+     isValid = false;
     }
 
-    // Hiển thị lỗi
+    // Hiển thị thông báo chung nếu có lỗi
     if (!isValid) {
-   alert('Lỗi:\n- ' + errors.join('\n- '));
+        showNotification('error', 'Vui lòng nhập đầy đủ thông tin!');
     }
 
     return isValid;
 }
 
-// ===== SHOW NOTIFICATION =====
+// ===== SHOW NOTIFICATION (CẬP NHẬT) =====
 function showNotification(type, message) {
     var alertClass = type === 'success' ? 'alert-success' :
-    type === 'info' ? 'alert-info' :
-  type === 'warning' ? 'alert-warning' : 'alert-danger';
+        type === 'info' ? 'alert-info' :
+        type === 'warning' ? 'alert-warning' : 'alert-danger';
 
     var icon = type === 'success' ? 'fa-check-circle' :
-    type === 'info' ? 'fa-info-circle' :
+        type === 'info' ? 'fa-info-circle' :
         type === 'warning' ? 'fa-exclamation-triangle' : 'fa-times-circle';
 
     var alertHtml = `
-     <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
-      <i class="fas ${icon}"></i> ${message}
+        <div class="alert ${alertClass} alert-dismissible fade show shadow-sm" role="alert">
+        <i class="fas ${icon}"></i> <strong>${message}</strong>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
- </button>
-   </div>
+           <span aria-hidden="true">&times;</span>
+         </button>
+        </div>
     `;
 
-  $('.container-fluid').prepend(alertHtml);
+    // Thêm vào alertContainer
+if ($('#alertContainer').length) {
+        $('#alertContainer').append(alertHtml);
+    } else {
+        $('.container-fluid').prepend(alertHtml);
+    }
 
-    // Auto hide after 5s
+    // Auto hide after 5s with animation
+    var $lastAlert = $('#alertContainer .alert:last-child, .container-fluid .alert:last-child');
     setTimeout(function () {
-        $('.alert').fadeOut('slow', function () {
-       $(this).remove();
-        });
-  }, 5000);
+  $lastAlert.addClass('fade-out');
+  setTimeout(function() {
+            $lastAlert.remove();
+        }, 300); // Wait for animation to complete
+    }, 5000);
 }
 
 // ===== FORMAT CURRENCY =====
