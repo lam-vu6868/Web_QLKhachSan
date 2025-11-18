@@ -5,259 +5,533 @@
 }
 
 @section styles {
-    <link href="@Url.Content("~/Areas/NhanVienLeTan/assets/css/datphong.css")" rel="stylesheet" />
+    <!-- Custom CSS for Quản Lý Đặt Phòng -->
+  <link href="@Url.Content("~/Areas/NhanVienLeTan/assets/css/datPhong.css")" rel="stylesheet" />
 }
 
 <div class="container-fluid">
     @* ==== HEADER ==== *@
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-        <h2 class="mb-0"><i class="fas fa-calendar-alt"></i> Quản Lý Đặt Phòng</h2>
-        <nav aria-label="breadcrumb">
-     <ol class="breadcrumb bg-transparent p-0 mb-0">
-                 <li class="breadcrumb-item"><a href="@Url.Action("Index", "DashboardNVLT")">Dashboard</a></li>
-           <li class="breadcrumb-item active">Đặt Phòng</li>
-       </ol>
-            </nav>
-        </div>
-        <a href="@Url.Action("Create")" class="btn btn-primary btn-lg">
-            <i class="fas fa-plus"></i> Tạo Đơn Mới
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">
+            <i class="fas fa-calendar-check"></i> Quản Lý Đặt Phòng
+        </h1>
+  <a href="@Url.Action("Create", "DatPhong")" class="btn btn-primary btn-icon-split shadow-sm">
+            <span class="icon text-white-50">
+      <i class="fas fa-plus"></i>
+            </span>
+        <span class="text">Tạo Đơn Mới</span>
         </a>
     </div>
 
+    @* ==== THÔNG BÁO ==== *@
+    @if (TempData["SuccessMessage"] != null)
+    {
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]
+<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+       </button>
+    </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle"></i> @TempData["ErrorMessage"]
+     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+       <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+
     @* ==== THỐNG KÊ NHANH ==== *@
     <div class="row mb-4">
-      <div class="col-md-3 mb-3">
-        <div class="stat-card bg-primary">
-                <div class="stat-icon"><i class="fas fa-clipboard-list"></i></div>
-      <div class="stat-content">
-    <div class="stat-value">@Model.ThongKe.TongDonDat</div>
-           <div class="stat-label">Tổng Đơn</div>
-     </div>
-     </div>
+ <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
+<div class="card border-left-primary shadow h-100 py-2 stat-card">
+ <div class="card-body">
+    <div class="row no-gutters align-items-center">
+    <div class="col mr-2">
+        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Tổng đơn</div>
+        <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.ThongKe.TongDonDat</div>
+ </div>
+         <div class="col-auto">
+      <i class="fas fa-list"></i>
+      </div>
     </div>
-        <div class="col-md-3 mb-3">
- <div class="stat-card bg-warning">
-         <div class="stat-icon"><i class="fas fa-clock"></i></div>
-   <div class="stat-content">
-        <div class="stat-value">@Model.ThongKe.ChoXacNhan</div>
-         <div class="stat-label">Chờ Xác Nhận</div>
+      </div>
+  </div>
+      </div>
+
+        <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
+  <div class="card border-left-warning shadow h-100 py-2 stat-card">
+          <div class="card-body">
+    <div class="row no-gutters align-items-center">
+       <div class="col mr-2">
+     <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Chờ xác nhận</div>
+ <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.ThongKe.ChoXacNhan</div>
+         </div>
+           <div class="col-auto">
+<i class="fas fa-clock"></i>
+  </div>
+ </div>
+</div>
+  </div>
+        </div>
+
+        <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
+     <div class="card border-left-info shadow h-100 py-2 stat-card">
+   <div class="card-body">
+     <div class="row no-gutters align-items-center">
+        <div class="col mr-2">
+     <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Đã xác nhận</div>
+    <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.ThongKe.DaXacNhan</div>
+ </div>
+    <div class="col-auto">
+     <i class="fas fa-check-circle"></i>
+      </div>
+  </div>
+   </div>
+  </div>
+    </div>
+
+        <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
+     <div class="card border-left-success shadow h-100 py-2 stat-card">
+     <div class="card-body">
+      <div class="row no-gutters align-items-center">
+  <div class="col mr-2">
+      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Đã check-in</div>
+  <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.ThongKe.DaCheckIn</div>
+   </div>
+    <div class="col-auto">
+  <i class="fas fa-door-open"></i>
+        </div>
+        </div>
+   </div>
+    </div>
+      </div>
+
+        <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
+ <div class="card border-left-danger shadow h-100 py-2 stat-card">
+     <div class="card-body">
+   <div class="row no-gutters align-items-center">
+     <div class="col mr-2">
+  <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Đã hủy</div>
+     <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.ThongKe.DaHuy</div>
+       </div>
+      <div class="col-auto">
+    <i class="fas fa-ban"></i>
     </div>
             </div>
-        </div>
-   <div class="col-md-3 mb-3">
-      <div class="stat-card bg-info">
-     <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
-       <div class="stat-content">
-   <div class="stat-value">@Model.ThongKe.DaXacNhan</div>
-            <div class="stat-label">Đã Xác Nhận</div>
-     </div>
+ </div>
       </div>
+    </div>
+
+        <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
+          <div class="card border-left-secondary shadow h-100 py-2 stat-card">
+         <div class="card-body">
+             <div class="row no-gutters align-items-center">
+      <div class="col mr-2">
+  <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">Doanh thu</div>
+     <div class="h6 mb-0 font-weight-bold text-gray-800">@Model.ThongKe.DoanhThuDuKien.ToString("N0")đ</div>
      </div>
-        <div class="col-md-3 mb-3">
-            <div class="stat-card bg-success">
-         <div class="stat-icon"><i class="fas fa-money-bill-wave"></i></div>
-          <div class="stat-content">
-           <div class="stat-value">@((Model.ThongKe.DoanhThuDuKien / 1000000).ToString("F1"))tr</div>
-          <div class="stat-label">Doanh Thu Dự Kiến</div>
-          </div>
+  <div class="col-auto">
+         <i class="fas fa-dollar-sign"></i>
+   </div>
+ </div>
        </div>
-        </div>
+     </div>
+    </div>
     </div>
 
     @* ==== BỘ LỌC ==== *@
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-filter"></i> Bộ Lọc</h6>
-    </div>
+          <h6 class="m-0 font-weight-bold text-primary">
+   <i class="fas fa-filter"></i> Bộ lọc
+            </h6>
+      </div>
         <div class="card-body">
-      @using (Html.BeginForm("Index", "DatPhong", FormMethod.Get))
-     {
-     <div class="row">
-      <div class="col-md-3 mb-2">
-            @Html.TextBoxFor(m => m.Filter.TimKiem, new { @class = "form-control", placeholder = "Tìm mã đơn, tên khách, SĐT..." })
-  </div>
- <div class="col-md-2 mb-2">
-             @Html.DropDownListFor(m => m.Filter.TrangThaiDatPhong, 
-      new SelectList(new[] {
-            new { Value = "", Text = "-- Tất cả trạng thái --" },
-             new { Value = "0", Text = "Chờ xác nhận" },
-          new { Value = "1", Text = "Đã xác nhận" },
-  new { Value = "2", Text = "Đã check-in" },
-        new { Value = "3", Text = "Đã check-out" },
-          new { Value = "4", Text = "Đã hủy" }
-        }, "Value", "Text"),
-   new { @class = "form-control" })
-       </div>
-      <div class="col-md-2 mb-2">
-     @Html.TextBoxFor(m => m.Filter.TuNgay, new { @class = "form-control", type = "date", placeholder = "Từ ngày" })
-          </div>
-          <div class="col-md-2 mb-2">
-          @Html.TextBoxFor(m => m.Filter.DenNgay, new { @class = "form-control", type = "date", placeholder = "Đến ngày" })
-    </div>
- <div class="col-md-3 mb-2">
-       <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-search"></i> Tìm Kiếm</button>
+        @using (Html.BeginForm("Index", "DatPhong", FormMethod.Get, new { @class = "form-inline" }))
+   {
+  <div class="form-group mr-3 mb-2">
+            <label class="mr-2">Tìm kiếm:</label>
+  @Html.TextBox("TimKiem", Model.Filter.TimKiem, new { @class = "form-control", placeholder = "Mã đơn, tên khách, SĐT..." })
            </div>
-     </div>
-            }
-        </div>
+
+    <div class="form-group mr-3 mb-2">
+    <label class="mr-2">Trạng thái đặt:</label>
+        @Html.DropDownList("TrangThaiDatPhong",
+      new SelectList(new[]
+ {
+         new { Value = (byte)0, Text = "Chờ xác nhận" },
+  new { Value = (byte)1, Text = "Đã xác nhận" },
+      new { Value = (byte)2, Text = "Đã check-in" },
+              new { Value = (byte)3, Text = "Đã check-out" },
+          new { Value = (byte)4, Text = "Đã hủy" }
+               }, "Value", "Text", Model.Filter.TrangThaiDatPhong),
+  "-- Tất cả --",
+      new { @class = "form-control" })
+             </div>
+
+                <div class="form-group mr-3 mb-2">
+     <label class="mr-2">Thanh toán:</label>
+  @Html.DropDownList("TrangThaiThanhToan",
+        new SelectList(new[]
+               {
+         new { Value = (byte)0, Text = "Chưa thanh toán" },
+       new { Value = (byte)1, Text = "Đã thanh toán 1 phần" },
+         new { Value = (byte)2, Text = "Đã thanh toán đủ" }
+              }, "Value", "Text", Model.Filter.TrangThaiThanhToan),
+         "-- Tất cả --",
+     new { @class = "form-control" })
+ </div>
+
+    <div class="form-group mr-3 mb-2">
+  <label class="mr-2">Từ ngày:</label>
+            @Html.TextBox("TuNgay", Model.Filter.TuNgay?.ToString("yyyy-MM-dd"), new { @class = "form-control", type = "date" })
+      </div>
+
+        <div class="form-group mr-3 mb-2">
+  <label class="mr-2">Đến ngày:</label>
+    @Html.TextBox("DenNgay", Model.Filter.DenNgay?.ToString("yyyy-MM-dd"), new { @class = "form-control", type = "date" })
     </div>
 
-    @* ==== DANH SÁCH ĐẶT PHÒNG ==== *@
-    <div class="card shadow">
+                <button type="submit" class="btn btn-primary mb-2 mr-2">
+   <i class="fas fa-search"></i> Lọc
+            </button>
+
+                <a href="@Url.Action("Index", "DatPhong")" class="btn btn-secondary mb-2">
+               <i class="fas fa-sync-alt"></i> Làm mới
+       </a>
+        }
+ </div>
+    </div>
+
+    @* ==== DANH SÁCH ĐƠN ĐẶT PHÒNG ==== *@
+    <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">
-  <i class="fas fa-list"></i> Danh Sách Đơn Đặt Phòng 
-      <span class="badge badge-primary">@Model.TotalRecords đơn</span>
-  </h6>
+ <h6 class="m-0 font-weight-bold text-primary">
+        <i class="fas fa-table"></i> Danh sách đơn đặt phòng
+     <span class="badge badge-primary ml-2">@Model.TotalRecords đơn</span>
+ </h6>
         </div>
-    <div class="card-body p-0">
-       @if (Model.DanhSachDatPhong != null && Model.DanhSachDatPhong.Any())
-    {
-         <div class="table-responsive">
-     <table class="table table-hover mb-0">
-      <thead class="bg-light">
-<tr>
-      <th>Mã Đơn</th>
-              <th>Khách Hàng</th>
-    <th>Ngày Nhận - Trả</th>
-          <th>Phòng</th>
-<th>Tổng Tiền</th>
-        <th>Trạng Thái</th>
-      <th>Thao Tác</th>
-       </tr>
+  <div class="card-body">
+@if (Model.DanhSachDatPhong != null && Model.DanhSachDatPhong.Any())
+            {
+          <div class="table-responsive">
+          <table class="table table-bordered table-hover" width="100%" cellspacing="0">
+       <thead class="thead-light">
+            <tr>
+     <th>Mã đơn</th>
+    <th>Ngày đặt</th>
+       <th>Khách hàng</th>
+        <th>Phòng</th>
+      <th>Check-in</th>
+   <th>Check-out</th>
+   <th>Tổng tiền</th>
+     <th>Trạng thái</th>
+     <th>Thanh toán</th>
+       <th>Thao tác</th>
+      </tr>
      </thead>
-      <tbody>
-     @foreach (var item in Model.DanhSachDatPhong)
-    {
-         <tr>
-     <td>
- <strong>@item.MaDatPhong</strong>
-           <br /><small class="text-muted">@item.NgayDat.ToString("dd/MM/yyyy")</small>
-     </td>
+     <tbody>
+         @foreach (var item in Model.DanhSachDatPhong)
+          {
+        <tr>
          <td>
-       <div>@item.TenKhachHang</div>
-      <small class="text-muted"><i class="fas fa-phone"></i> @item.SoDienThoai</small>
-          </td>
-   <td>
-  <div><i class="fas fa-calendar-check text-success"></i> @(item.NgayNhan.HasValue ? item.NgayNhan.Value.ToString("dd/MM/yyyy") : "N/A")</div>
-<div><i class="fas fa-calendar-times text-danger"></i> @(item.NgayTra.HasValue ? item.NgayTra.Value.ToString("dd/MM/yyyy") : "N/A")</div>
-     <small class="badge badge-secondary">@(item.SoDem ?? 0) đêm</small>
-  </td>
-     <td>
-     <div>@item.DanhSachLoaiPhong</div>
-    <small class="text-muted">@item.DanhSachPhong</small>
+              <strong>@item.MaDatPhong</strong>
+   @if (item.LaDonOnline)
+           {
+          <br /><small class="badge badge-info">Online</small>
+      }
+              </td>
+        <td>
+        <small>@item.NgayDat.ToString("dd/MM/yyyy")</small><br />
+  <small class="text-muted">@item.NgayDat.ToString("HH:mm")</small>
     </td>
-       <td>
-     <strong class="text-primary">@(item.TongTien.HasValue ? item.TongTien.Value.ToString("N0") : "0") đ</strong>
-      </td>
-     <td>
-  <span class="badge badge-custom" style="background-color: @item.TrangThaiDatPhongColor">
-     @item.TrangThaiDatPhongText
-     </span>
-  <br />
-    <small class="badge badge-custom" style="background-color: @item.TrangThaiThanhToanColor">
-       @item.TrangThaiThanhToanText
-    </small>
-</td>
-       <td>
-          <div class="btn-group" role="group">
-          <a href="@Url.Action("Details", new { id = item.DatPhongId })" 
-    class="btn btn-sm btn-info" title="Xem chi tiết">
-   <i class="fas fa-eye"></i>
- </a>
-      @if (item.CanXacNhan)
-   {
-          <button type="button" class="btn btn-sm btn-success" 
-     onclick="xacNhanDon(@item.DatPhongId)" title="Xác nhận">
-    <i class="fas fa-check"></i>
-     </button>
-       }
-          @if (item.CanHuy)
-      {
-    <button type="button" class="btn btn-sm btn-danger" 
-onclick="huyDon(@item.DatPhongId)" title="Hủy">
-    <i class="fas fa-times"></i>
- </button>
- }
-   </div>
-           </td>
-            </tr>
+           <td>
+     <strong>@item.TenKhachHienThi</strong><br />
+       <small class="text-muted">@item.SoDienThoai</small>
+         </td>
+      <td>
+           <small>@item.DanhSachLoaiPhong</small><br />
+  @if (!string.IsNullOrEmpty(item.DanhSachPhong) && item.DanhSachPhong != "Chưa gán")
+  {
+  <small class="text-primary">@item.DanhSachPhong</small>
     }
-  </tbody>
-        </table>
+      else
+      {
+         <small class="text-muted">Chưa gán phòng</small>
+             }
+         </td>
+     <td>
+     @item.NgayNhan.ToString("dd/MM/yyyy")
+         @if (item.CheckInHomNay)
+ {
+         <br /><span class="badge badge-success">Hôm nay</span>
+             }
+          </td>
+         <td>
+   @item.NgayTra.ToString("dd/MM/yyyy")
+          @if (item.CheckOutHomNay)
+         {
+           <br /><span class="badge badge-warning">Hôm nay</span>
+       }
+     </td>
+   <td class="text-right">
+            <strong class="text-danger">@((item.TongTien ?? 0).ToString("N0"))đ</strong>
+      </td>
+                <td>
+ <span class="badge badge-status" style="background-color: @item.TrangThaiDatPhongColor; color: white;">
+     @item.TrangThaiDatPhongText
+          </span>
+    </td>
+    <td>
+            <span class="badge badge-status" style="background-color: @item.TrangThaiThanhToanColor; color: white;">
+   @item.TrangThaiThanhToanText
+       </span>
+     </td>
+        <td class="action-buttons text-center">
+             <a href="@Url.Action("Details", new { id = item.DatPhongId })" class="btn btn-sm btn-info" title="Xem chi tiết">
+         <i class="fas fa-eye"></i>
+          </a>
+            @if (item.TrangThaiDatPhong == 0)
+   {
+       <button type="button" class="btn btn-sm btn-success" onclick="xacNhanDon(@item.DatPhongId)" title="Xác nhận">
+   <i class="fas fa-check"></i>
+  </button>
+              }
+            @if (item.TrangThaiDatPhong < 2)
+          {
+    <button type="button" class="btn btn-sm btn-danger" onclick="huyDon(@item.DatPhongId)" title="Hủy đơn">
+               <i class="fas fa-times"></i>
+    </button>
+        }
+         </td>
+             </tr>
+       }
+              </tbody>
+     </table>
  </div>
 
     @* ==== PAGINATION ==== *@
    if (Model.TotalPages > 1)
-    {
-            <div class="card-footer">
-    <nav>
-                    <ul class="pagination justify-content-center mb-0">
-          @if (Model.HasPreviousPage)
-         {
-    <li class="page-item">
-      <a class="page-link" href="@Url.Action("Index", new { currentPage = Model.CurrentPage - 1 })">Trước</a>
-        </li>
-       }
-         @for (int i = 1; i <= Model.TotalPages; i++)
-        {
-     <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
-         <a class="page-link" href="@Url.Action("Index", new { currentPage = i })">@i</a>
+          {
+        <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+      <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
+     <a class="page-link" href="@Url.Action("Index", new { 
+           TimKiem = Model.Filter.TimKiem,
+     TrangThaiDatPhong = Model.Filter.TrangThaiDatPhong,
+            TrangThaiThanhToan = Model.Filter.TrangThaiThanhToan,
+      TuNgay = Model.Filter.TuNgay?.ToString("yyyy-MM-dd"),
+            DenNgay = Model.Filter.DenNgay?.ToString("yyyy-MM-dd"),
+    CurrentPage = Model.CurrentPage - 1 
+    })">
+   <i class="fas fa-chevron-left"></i> Trước
+      </a>
  </li>
+
+         @for (int i = 1; i <= Model.TotalPages; i++)
+    {
+           <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+           <a class="page-link" href="@Url.Action("Index", new { 
+           TimKiem = Model.Filter.TimKiem,
+          TrangThaiDatPhong = Model.Filter.TrangThaiDatPhong,
+         TrangThaiThanhToan = Model.Filter.TrangThaiThanhToan,
+                    TuNgay = Model.Filter.TuNgay?.ToString("yyyy-MM-dd"),
+      DenNgay = Model.Filter.DenNgay?.ToString("yyyy-MM-dd"),
+    CurrentPage = i 
+      })">@i</a>
+       </li>
      }
-       @if (Model.HasNextPage)
-       {
-          <li class="page-item">
-   <a class="page-link" href="@Url.Action("Index", new { currentPage = Model.CurrentPage + 1 })">Sau</a>
+
+<li class="page-item @(Model.HasNextPage ? "" : "disabled")">
+  <a class="page-link" href="@Url.Action("Index", new { 
+     TimKiem = Model.Filter.TimKiem,
+     TrangThaiDatPhong = Model.Filter.TrangThaiDatPhong,
+       TrangThaiThanhToan = Model.Filter.TrangThaiThanhToan,
+     TuNgay = Model.Filter.TuNgay?.ToString("yyyy-MM-dd"),
+      DenNgay = Model.Filter.DenNgay?.ToString("yyyy-MM-dd"),
+                  CurrentPage = Model.CurrentPage + 1 
+    })">
+             Sau <i class="fas fa-chevron-right"></i>
+       </a>
           </li>
-    }
-             </ul>
-    </nav>
-            </div>
-         }
+           </ul>
+                    </nav>
+
+       <p class="text-center text-muted">
+     Trang @Model.CurrentPage / @Model.TotalPages - Tổng @Model.TotalRecords đơn
+          </p>
+ }
        }
-       else
-       {
-         <div class="empty-state py-5">
-            <i class="fas fa-inbox fa-3x mb-3"></i>
-       <p>Chưa có đơn đặt phòng nào</p>
-              <a href="@Url.Action("Create")" class="btn btn-primary">
-       <i class="fas fa-plus"></i> Tạo Đơn Mới
-     </a>
-        </div>
+   else
+    {
+        <div class="alert alert-info">
+        <i class="fas fa-info-circle"></i> Không có đơn đặt phòng nào phù hợp với điều kiện lọc.
+          </div>
             }
+ </div>
+    </div>
+</div>
+
+@* ==== MODAL XÁC NHẬN ==== *@
+<div class="modal fade" id="modalXacNhan" tabindex="-1" role="dialog" aria-labelledby="modalXacNhanLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-success text-white">
+     <h5 class="modal-title" id="modalXacNhanLabel">
+       <i class="fas fa-check-circle"></i> Xác nhận đơn đặt phòng
+ </h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+     <span aria-hidden="true">&times;</span>
+         </button>
+            </div>
+         <div class="modal-body text-center py-4">
+    <i class="fas fa-question-circle fa-3x text-success mb-3"></i>
+<h5 class="mb-3">Bạn có chắc chắn muốn xác nhận đơn đặt phòng này?</h5>
+      <p class="text-muted">Trạng thái sẽ chuyển sang "Đã xác nhận"</p>
+  </div>
+       <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+    <i class="fas fa-times"></i> Hủy
+      </button>
+       <button type="button" class="btn btn-success" id="btnXacNhanDon">
+ <i class="fas fa-check"></i> Xác nhận
+  </button>
+    </div>
         </div>
+</div>
+</div>
+
+@* ==== MODAL HỦY ĐƠN ==== *@
+<div class="modal fade" id="modalHuyDon" tabindex="-1" role="dialog" aria-labelledby="modalHuyDonLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+   <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+       <h5 class="modal-title" id="modalHuyDonLabel">
+          <i class="fas fa-ban"></i> Hủy đơn đặt phòng
+           </h5>
+        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+       <span aria-hidden="true">&times;</span>
+           </button>
+            </div>
+     <div class="modal-body">
+ <div class="text-center mb-3">
+          <i class="fas fa-exclamation-triangle fa-3x text-warning"></i>
+     <h5 class="mt-3">Bạn có chắc chắn muốn hủy đơn này?</h5>
+        </div>
+  <div class="form-group">
+   <label for="lyDoHuy">Lý do hủy:</label>
+  <textarea class="form-control" id="lyDoHuy" rows="3" placeholder="Nhập lý do hủy đơn..."></textarea>
+                </div>
+            </div>
+         <div class="modal-footer justify-content-center">
+   <button type="button" class="btn btn-secondary" data-dismiss="modal">
+         <i class="fas fa-times"></i> Đóng
+        </button>
+     <button type="button" class="btn btn-danger" id="btnHuyDon">
+    <i class="fas fa-ban"></i> Xác nhận hủy
+     </button>
+  </div>
+ </div>
     </div>
 </div>
 
 @section Scripts {
     <script>
-        function xacNhanDon(id) {
-     if (confirm('Bạn có chắc muốn xác nhận đơn đặt phòng này?')) {
- $.post('@Url.Action("XacNhan")', { id: id }, function(response) {
- if (response.success) {
-       alert(response.message);
-                   location.reload();
-           } else {
-            alert(response.message);
-           }
-    });
-            }
-}
+    var currentDatPhongId = 0;
 
-     function huyDon(id) {
-            var lyDo = prompt('Nhập lý do hủy đơn:');
-      if (lyDo) {
-          $.post('@Url.Action("Huy")', { id: id, lyDo: lyDo }, function(response) {
-          if (response.success) {
-  alert(response.message);
-       location.reload();
-               } else {
-           alert(response.message);
-     }
-         });
-   }
+        // Xác nhận đơn
+        function xacNhanDon(datPhongId) {
+     currentDatPhongId = datPhongId;
+         $('#modalXacNhan').modal('show');
         }
+
+$('#btnXacNhanDon').on('click', function() {
+          $.ajax({
+           url: '@Url.Action("XacNhan", "DatPhong")',
+ type: 'POST',
+       data: { 
+                __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val(),
+   id: currentDatPhongId 
+       },
+         success: function(response) {
+             $('#modalXacNhan').modal('hide');
+    if (response.success) {
+  showNotification('success', response.message || 'Xác nhận đơn thành công!');
+      setTimeout(function() { location.reload(); }, 1500);
+ } else {
+    showNotification('error', response.message || 'Có lỗi xảy ra!');
+        }
+    },
+    error: function() {
+       $('#modalXacNhan').modal('hide');
+        showNotification('error', 'Không thể xác nhận đơn. Vui lòng thử lại!');
+     }
+      });
+        });
+
+        // Hủy đơn
+        function huyDon(datPhongId) {
+     currentDatPhongId = datPhongId;
+            $('#lyDoHuy').val('');
+   $('#modalHuyDon').modal('show');
+        }
+
+        $('#btnHuyDon').on('click', function() {
+       var lyDo = $('#lyDoHuy').val().trim();
+        if (!lyDo) {
+       alert('Vui lòng nhập lý do hủy đơn!');
+      return;
+            }
+
+      $.ajax({
+     url: '@Url.Action("Huy", "DatPhong")',
+                type: 'POST',
+  data: { 
+ __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val(),
+         id: currentDatPhongId,
+     lyDo: lyDo
+             },
+      success: function(response) {
+  $('#modalHuyDon').modal('hide');
+       if (response.success) {
+        showNotification('success', response.message || 'Hủy đơn thành công!');
+           setTimeout(function() { location.reload(); }, 1500);
+               } else {
+         showNotification('error', response.message || 'Có lỗi xảy ra!');
+        }
+     },
+      error: function() {
+   $('#modalHuyDon').modal('hide');
+   showNotification('error', 'Không thể hủy đơn. Vui lòng thử lại!');
+  }
+            });
+        });
+
+        // Hiển thị thông báo
+     function showNotification(type, message) {
+       var alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
+    var icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle';
+    
+          var alertHtml = `
+                <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
+            <i class="fas ${icon}"></i> ${message}
+         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+       </button>
+                </div>
+            `;
+            
+     $('.container-fluid').prepend(alertHtml);
+        }
+
+        // Auto-hide alerts after 5 seconds
+        $(document).ready(function() {
+ setTimeout(function() {
+                $('.alert').fadeOut('slow');
+    }, 5000);
+ });
     </script>
 }

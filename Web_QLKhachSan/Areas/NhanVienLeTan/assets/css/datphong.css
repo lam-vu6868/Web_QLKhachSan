@@ -1,117 +1,488 @@
-﻿/* =============================================
-   DatPhong CSS cho Nhân Viên Lễ Tân
-   File: datphong.css
-============================================= */
+﻿/* ========================================
+   QUẢN LÝ ĐẶT PHÒNG - CUSTOM STYLES
+   ======================================== */
 
-/* ===== STAT CARDS ===== */
+/* ===== STAT CARDS (CHỈ CHO INDEX PAGE) ===== */
 .stat-card {
-    border-radius: 12px;
-    padding: 1.5rem;
-    color: white;
-    display: flex;
-    align-items: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: default;
+    position: relative;
+    overflow: visible;
+    border-radius: 0.75rem;
+ border: none;
 }
 
 .stat-card:hover {
-    transform: translateY(-5px);
-box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.25) !important;
 }
 
-.stat-card .stat-icon {
-    font-size: 3rem;
-    opacity: 0.8;
-    margin-right: 1.5rem;
+.stat-card .card-body {
+ padding: 1.75rem;
+    position: relative;
+    z-index: 2;
 }
 
-.stat-card .stat-content {
-    flex: 1;
+/* Text Styling */
+.stat-card .text-xs {
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  opacity: 0.9;
 }
 
-.stat-card .stat-value {
-    font-size: 2rem;
-    font-weight: 700;
+.stat-card .h5 {
+    font-size: 2.25rem;
+    font-weight: 900;
     margin: 0;
+    line-height: 1;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.stat-card .stat-label {
-    font-size: 0.9rem;
-    opacity: 0.9;
-    margin-top: 0.25rem;
+.stat-card .h6 {
+    font-size: 1.35rem;
+    font-weight: 800;
+    margin: 0;
+    line-height: 1.2;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Stat Card Colors */
-.stat-card.bg-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+/* ===== ICON STYLING - 3D Effect ===== */
+.stat-card .col-auto {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
 }
 
-.stat-card.bg-warning {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+.stat-card .col-auto i {
+    font-size: 3.5rem;
+    opacity: 0.85;
+    transition: all 0.4s ease;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
 }
 
-.stat-card.bg-info {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+/* Icon Colors - Vibrant */
+.stat-card.border-left-primary .col-auto i {
+    color: #4e73df;
 }
 
-.stat-card.bg-success {
- background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+.stat-card.border-left-warning .col-auto i {
+    color: #f6c23e;
 }
 
-/* ===== TABLE ===== */
-.table-hover tbody tr {
+.stat-card.border-left-info .col-auto i {
+    color: #36b9cc;
+}
+
+.stat-card.border-left-success .col-auto i {
+    color: #1cc88a;
+}
+
+.stat-card.border-left-danger .col-auto i {
+    color: #e74a3b;
+}
+
+.stat-card.border-left-secondary .col-auto i {
+    color: #858796;
+}
+
+.stat-card:hover .col-auto i {
+    opacity: 1;
+    transform: scale(1.2) rotate(-10deg);
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.25));
+}
+
+/* Border Left - Thicker & Glowing */
+.border-left-primary {
+    border-left: 0.5rem solid #4e73df !important;
+    box-shadow: inset 4px 0 8px rgba(78, 115, 223, 0.2);
+}
+
+.border-left-success {
+border-left: 0.5rem solid #1cc88a !important;
+    box-shadow: inset 4px 0 8px rgba(28, 200, 138, 0.2);
+}
+
+.border-left-info {
+    border-left: 0.5rem solid #36b9cc !important;
+    box-shadow: inset 4px 0 8px rgba(54, 185, 204, 0.2);
+}
+
+.border-left-warning {
+    border-left: 0.5rem solid #f6c23e !important;
+    box-shadow: inset 4px 0 8px rgba(246, 194, 62, 0.2);
+}
+
+.border-left-danger {
+    border-left: 0.5rem solid #e74a3b !important;
+    box-shadow: inset 4px 0 8px rgba(231, 74, 59, 0.2);
+}
+
+.border-left-secondary {
+    border-left: 0.5rem solid #858796 !important;
+    box-shadow: inset 4px 0 8px rgba(133, 135, 150, 0.2);
+}
+
+/* Gradient Background - More Vibrant */
+.stat-card.border-left-primary {
+    background: linear-gradient(135deg, #ffffff 0%, #f0f4ff 50%, #e6edff 100%);
+}
+
+.stat-card.border-left-primary:hover {
+    background: linear-gradient(135deg, #f0f4ff 0%, #e6edff 50%, #d9e5ff 100%);
+}
+
+.stat-card.border-left-warning {
+    background: linear-gradient(135deg, #ffffff 0%, #fffcf0 50%, #fff8e0 100%);
+}
+
+.stat-card.border-left-warning:hover {
+ background: linear-gradient(135deg, #fffcf0 0%, #fff8e0 50%, #fff3cc 100%);
+}
+
+.stat-card.border-left-info {
+    background: linear-gradient(135deg, #ffffff 0%, #f0fcfd 50%, #e0f8fa 100%);
+}
+
+.stat-card.border-left-info:hover {
+    background: linear-gradient(135deg, #f0fcfd 0%, #e0f8fa 50%, #d0f3f7 100%);
+}
+
+.stat-card.border-left-success {
+    background: linear-gradient(135deg, #ffffff 0%, #f0fdf7 50%, #e0fbef 100%);
+}
+
+.stat-card.border-left-success:hover {
+    background: linear-gradient(135deg, #f0fdf7 0%, #e0fbef 50%, #d0f9e7 100%);
+}
+
+.stat-card.border-left-danger {
+background: linear-gradient(135deg, #ffffff 0%, #fff5f5 50%, #ffebeb 100%);
+}
+
+.stat-card.border-left-danger:hover {
+background: linear-gradient(135deg, #fff5f5 0%, #ffebeb 50%, #ffe0e0 100%);
+}
+
+.stat-card.border-left-secondary {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 50%, #e9ecef 100%);
+}
+
+.stat-card.border-left-secondary:hover {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #dee2e6 100%);
+}
+
+/* Number Animation */
+.stat-card .h5,
+.stat-card .h6 {
+    animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.3) translateY(30px);
+    }
+    50% {
+        opacity: 1;
+      transform: scale(1.05);
+    }
+    70% {
+        transform: scale(0.9);
+    }
+    100% {
+        opacity: 1;
+    transform: scale(1) translateY(0);
+    }
+}
+
+/* Icon Background Circle - Glowing */
+.stat-card .col-auto::before {
+    content: '';
+    position: absolute;
+  width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    top: 50%;
+    right: 5px;
+    transform: translateY(-50%);
+    z-index: 0;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    opacity: 0.12;
+    filter: blur(8px);
+}
+
+/* Background circle colors - Glowing effect */
+.stat-card.border-left-primary .col-auto::before {
+    background: radial-gradient(circle, #4e73df 0%, transparent 70%);
+}
+
+.stat-card.border-left-warning .col-auto::before {
+    background: radial-gradient(circle, #f6c23e 0%, transparent 70%);
+}
+
+.stat-card.border-left-info .col-auto::before {
+    background: radial-gradient(circle, #36b9cc 0%, transparent 70%);
+}
+
+.stat-card.border-left-success .col-auto::before {
+    background: radial-gradient(circle, #1cc88a 0%, transparent 70%);
+}
+
+.stat-card.border-left-danger .col-auto::before {
+    background: radial-gradient(circle, #e74a3b 0%, transparent 70%);
+}
+
+.stat-card.border-left-secondary .col-auto::before {
+    background: radial-gradient(circle, #858796 0%, transparent 70%);
+}
+
+.stat-card:hover .col-auto::before {
+    opacity: 0.25;
+transform: translateY(-50%) scale(1.3);
+    filter: blur(12px);
+}
+
+/* Pulse animation on load */
+.stat-card {
+    animation: pulse 0.5s ease-in-out;
+}
+
+@keyframes pulse {
+ 0% {
+ transform: scale(0.95);
+        box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+    }
+    50% {
+   transform: scale(1.02);
+    }
+    100% {
+      transform: scale(1);
+        box-shadow: 0 0.15rem 1.75rem rgba(58, 59, 69, 0.15);
+    }
+}
+
+.text-xs {
+    font-size: 0.7rem;
+}
+
+/* ========================================
+ FORM CREATE - ENHANCED STYLES
+   ======================================== */
+
+/* ===== FORM CONTROLS ===== */
+.form-control {
+    border-radius: 0.35rem;
+    border: 1px solid #d1d3e2;
+    padding: 0.675rem 0.75rem;
+    font-size: 1rem;
     transition: all 0.2s ease;
 }
 
-.table-hover tbody tr:hover {
-    background-color: #f8f9fc;
-    cursor: pointer;
+.form-control:focus {
+    border-color: #4e73df;
+    box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
 }
 
-.badge-custom {
-    padding: 0.4rem 0.8rem;
-    border-radius: 12px;
+.form-control[readonly] {
+    background-color: #f8f9fc;
+    border-color: #e3e6f0;
+}
+
+/* ===== INPUT GROUP ===== */
+.input-group-text {
+    background-color: #f8f9fc;
+    border: 1px solid #d1d3e2;
+    border-radius: 0.35rem;
+}
+
+.input-group:focus-within .input-group-text {
+    border-color: #4e73df;
+    background-color: #eef2ff;
+}
+
+/* ===== LABELS ===== */
+label.font-weight-bold {
+    color: #5a5c69;
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+    display: inline-block;
+}
+
+/* ========================================
+   🔥 TABLE CHỌN PHÒNG - VIẾT LẠI HOÀN TOÀN
+   ======================================== */
+
+/* Container - ĐƠN GIẢN, KHÔNG PHỨC TẠP */
+#tableChonPhong {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* Header */
+#tableChonPhong thead th {
+    background-color: #f8f9fc;
+    color: #5a5c69;
+    font-weight: 700;
+    text-transform: uppercase;
     font-size: 0.8rem;
-    font-weight: 600;
-    color: white;
+    padding: 0.75rem;
+    border-bottom: 2px solid #e3e6f0;
 }
 
-/* ===== EMPTY STATE ===== */
-.empty-state {
-    text-align: center;
- padding: 3rem;
-    color: #6c757d;
+/* Body rows */
+#tableChonPhong tbody td {
+    padding: 0.75rem;
+    vertical-align: middle;
+    border-bottom: 1px solid #e3e6f0;
 }
 
-.empty-state i {
-    opacity: 0.5;
-}
-
-/* ===== PAGINATION ===== */
-.pagination .page-item.active .page-link {
-    background-color: #667eea;
-    border-color: #667eea;
-}
-
-.pagination .page-link {
-    color: #667eea;
-}
-
-.pagination .page-link:hover {
+#tableChonPhong tbody tr:hover {
     background-color: #f8f9fc;
+}
+
+/* 🎯 DROPDOWN SELECT - GIẢI PHÁP ĐƠN GIẢN */
+.select-tang {
+  width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #d1d3e2;
+    border-radius: 0.25rem;
+    background-color: white;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.select-tang:focus {
+    outline: none;
+    border-color: #4e73df;
+    box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+}
+
+/* Input fields trong table */
+.input-so-luong,
+.input-giam-gia {
+    width: 100%;
+ text-align: center;
+    padding: 0.5rem;
+ border: 1px solid #d1d3e2;
+    border-radius: 0.25rem;
+}
+
+.input-so-luong:focus,
+.input-giam-gia:focus {
+    outline: none;
+    border-color: #4e73df;
+    box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+}
+
+/* Thành tiền */
+.thanh-tien {
+    font-size: 1rem;
+    font-weight: 700;
+ color: #e74a3b;
+}
+
+/* ===== PRICE SUMMARY (SIDEBAR) ===== */
+.price-summary {
+    padding: 1rem;
+}
+
+.price-summary .d-flex {
+    margin-bottom: 0.75rem;
+}
+
+.sticky-top {
+    position: sticky;
+    top: 20px;
+}
+
+/* ===== BUTTONS ===== */
+.btn {
+ border-radius: 0.35rem;
+    font-weight: 600;
+    transition: all 0.15s ease-in-out;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.btn-icon-split .icon {
+    background: rgba(0, 0, 0, 0.15);
+  padding: 0.5rem 0.75rem;
+}
+
+.btn-icon-split .text {
+    padding: 0.5rem 1rem;
+}
+
+/* ===== CARDS (GENERAL) ===== */
+.card {
+    border: none;
+    border-radius: 0.35rem;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+    margin-bottom: 1.5rem;
+}
+
+.card-header {
+    background-color: #f8f9fc;
+  border-bottom: 1px solid #e3e6f0;
+    padding: 0.75rem 1.25rem;
+}
+
+.card-header.bg-primary {
+    background-color: #4e73df !important;
+    border-bottom: none;
+}
+
+.card-header h6 {
+    margin: 0;
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+.card-body {
+    padding: 1.25rem;
 }
 
 /* ===== RESPONSIVE ===== */
+@media (max-width: 991.98px) {
+    .sticky-top {
+        position: relative;
+   top: 0 !important;
+    }
+}
+
 @media (max-width: 768px) {
     .stat-card {
-        margin-bottom: 1rem;
+      margin-bottom: 1rem;
     }
 
-    .btn-group {
-     flex-direction: column;
+    #tableChonPhong {
+        font-size: 0.85rem;
     }
 
-    .btn-group .btn {
-        margin-bottom: 0.25rem;
+    #tableChonPhong thead th,
+    #tableChonPhong tbody td {
+        padding: 0.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .text-xs {
+        font-size: 0.65rem;
+    }
+
+    h1.h3 {
+  font-size: 1.5rem;
+    }
+
+    .card-body {
+padding: 1rem;
     }
 }
