@@ -245,6 +245,159 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
+// ==================== CHANGE PASSWORD MODAL ====================
+function showChangePasswordModal() {
+  const modal = document.getElementById('changePasswordModal');
+  if (modal) {
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    
+    // Reset form
+    const currentPassword = document.getElementById('currentPassword');
+    const newPassword = document.getElementById('newPassword');
+    const confirmPassword = document.getElementById('confirmPassword');
+    
+    if (currentPassword) currentPassword.value = '';
+    if (newPassword) newPassword.value = '';
+    if (confirmPassword) confirmPassword.value = '';
+  }
+}
+
+function closeChangePasswordModal() {
+  const modal = document.getElementById('changePasswordModal');
+  if (modal) {
+    modal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+  }
+}
+
+function submitChangePassword() {
+  // TODO: Implement password change logic
+  showNotification('Chức năng đang được phát triển', 'info');
+}
+
+// ==================== LOGIN ACTIVITY MODAL ====================
+function showLoginActivityModal() {
+  const modal = document.getElementById('loginActivityModal');
+  if (modal) {
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeLoginActivityModal() {
+  const modal = document.getElementById('loginActivityModal');
+  if (modal) {
+    modal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+  }
+}
+
+// ==================== DANGER ZONE ACTIONS ====================
+function confirmDeactivate() {
+  if (confirm('⚠️ Bạn có chắc chắn muốn vô hiệu hóa tài khoản?\n\nTài khoản của bạn sẽ tạm thời bị vô hiệu hóa và bạn sẽ không thể đăng nhập cho đến khi kích hoạt lại.')) {
+    // TODO: Send to server
+    console.log('Deactivating account...');
+    showNotification('Tài khoản đã được vô hiệu hóa', 'warning');
+  }
+}
+
+function confirmDelete() {
+  const confirmation = prompt('⚠️ CẢNH BÁO: Hành động này không thể hoàn tác!\n\nNhập "XOA TAI KHOAN" để xác nhận xóa tài khoản:');
+  
+  if (confirmation === 'XOA TAI KHOAN') {
+    if (confirm('Bạn có hoàn toàn chắc chắn? Tất cả dữ liệu sẽ bị xóa vĩnh viễn.')) {
+      // TODO: Send to server
+      console.log('Deleting account...');
+      showNotification('Đang xử lý yêu cầu xóa tài khoản...', 'error');
+    }
+  } else if (confirmation !== null) {
+    showNotification('Xác nhận không chính xác', 'error');
+  }
+}
+
+// ==================== NOTIFICATION SYSTEM ====================
+function showNotification(message, type = 'info') {
+  const notification = document.createElement('div');
+  notification.className = `notification-toast notification-${type}`;
+  
+  const icons = {
+    success: 'fa-check-circle',
+    error: 'fa-exclamation-circle',
+    warning: 'fa-exclamation-triangle',
+    info: 'fa-info-circle'
+  };
+  
+  const colors = {
+    success: '#28a745',
+    error: '#dc3545',
+    warning: '#ffc107',
+    info: '#17a2b8'
+  };
+  
+  notification.innerHTML = `<i class="fas ${icons[type]}"></i> ${message}`;
+  notification.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: ${colors[type]};
+    color: ${type === 'warning' ? '#1a1a1a' : '#fff'};
+    padding: 16px 24px;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: slideInRight 0.3s ease;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    z-index: 9999;
+  `;
+  
+  document.body.appendChild(notification);
+  
+  setTimeout(() => {
+    notification.style.animation = 'slideOutRight 0.3s ease';
+    setTimeout(() => notification.remove(), 300);
+  }, 3000);
+}
+
+// ==================== BOOKING DETAILS ====================
+function viewBookingDetails(bookingId) {
+  console.log('Viewing booking details for:', bookingId);
+  showNotification('Đang tải chi tiết đơn hàng...', 'info');
+  // TODO: Implement booking details modal or redirect
+}
+
+// ==================== MODAL CLOSE ON OUTSIDE CLICK ====================
+window.addEventListener('click', (e) => {
+  if (e.target.classList.contains('modal-overlay')) {
+    closeChangePasswordModal();
+    closeLoginActivityModal();
+  }
+});
+
+// ==================== KEYBOARD SHORTCUTS ====================
+document.addEventListener('keydown', (e) => {
+  // ESC key to close modals
+  if (e.key === 'Escape') {
+    closeChangePasswordModal();
+    closeLoginActivityModal();
+  }
+  
+  // Enter key to submit password change
+  const passwordModal = document.getElementById('changePasswordModal');
+  if (e.key === 'Enter' && passwordModal && passwordModal.style.display === 'flex') {
+    submitChangePassword();
+  }
+});
+
+
+  
+
+
+
+
 
   
 

@@ -1,7 +1,435 @@
-﻿
-@{
-    ViewBag.Title = "TaiKhoan";
+﻿@{
+    ViewBag.Title = "Quản Lý Tài Khoản";
 }
+<link rel="stylesheet" href="~/assets/css/dashboard-khachhang.css" />
 
-<h2>TaiKhoan</h2>
+<section class="dashboard-hero">
+    <div class="container">
+        <div class="welcome-card">
+            <div class="welcome-content">
+                <h1>Xin Chào, <span id="welcomeName">@(Session["HoVaTen"])</span>! 👋</h1>
+                <p>Chào mừng trở lại với The Serene Horizon Hotel</p>
+            </div>
+            <div class="welcome-actions">
+                <a href="@Url.Action("Index", "PhongNghi")" class="btn-primary">
+                    <i class="fas fa-plus"></i> Đặt Phòng Mới
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
 
+<section class="dashboard-main">
+    <div class="container">
+        <div class="dashboard-layout">
+            <div class="dashboard-content">
+
+                <!-- Dashboard Statistics Section -->
+                <section class="content-section">
+                    <h2 class="section-title">Thống Kê Tổng Quan</h2>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card stat-primary">
+                            <div class="stat-icon">
+                                <i class="fas fa-clipboard-list"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3>5</h3>
+                                <p>Tổng Đơn Đặt Phòng</p>
+                            </div>
+                        </div>
+
+                        <div class="stat-card stat-success">
+                            <div class="stat-icon">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3>2.350.000đ</h3>
+                                <p>Tổng Tiền Đã Chi</p>
+                            </div>
+                        </div>
+
+                        <div class="stat-card stat-warning">
+                            <div class="stat-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3>0</h3>
+                                <p>Phòng Chờ Xác Nhận</p>
+                            </div>
+                        </div>
+
+                        <div class="stat-card stat-info">
+                            <div class="stat-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3>4</h3>
+                                <p>Phòng Đã Hoàn Thành</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Quick Actions Section -->
+                <section class="content-section">
+                    <h2 class="section-title">Thao Tác Nhanh</h2>
+                    
+                    <div class="quick-actions-grid">
+                        <a href="@Url.Action("Index", "PhongNghi")" class="action-card">
+                            <div class="action-icon">
+                                <i class="fas fa-bed"></i>
+                            </div>
+                            <div class="action-content">
+                                <h3>Đặt Phòng Mới</h3>
+                                <p>Đặt phòng yêu thích</p>
+                            </div>
+                            <i class="fas fa-arrow-right action-arrow"></i>
+                        </a>
+
+                        <a href="@Url.Action("LichSu", "DashboardKhachHang")" class="action-card">
+                            <div class="action-icon">
+                                <i class="fas fa-history"></i>
+                            </div>
+                            <div class="action-content">
+                                <h3>Xem Lịch Sử</h3>
+                                <p>Theo dõi đơn đặt phòng</p>
+                            </div>
+                            <i class="fas fa-arrow-right action-arrow"></i>
+                        </a>
+
+                        <a href="@Url.Action("HoSo", "DashboardKhachHang")" class="action-card">
+                            <div class="action-icon">
+                                <i class="fas fa-user-edit"></i>
+                            </div>
+                            <div class="action-content">
+                                <h3>Cập Nhật Hồ Sơ</h3>
+                                <p>Chỉnh sửa thông tin</p>
+                            </div>
+                            <i class="fas fa-arrow-right action-arrow"></i>
+                        </a>
+
+                        <a href="@Url.Action("Index", "CapDoKhachHang")" class="action-card">
+                            <div class="action-icon">
+                                <i class="fas fa-medal"></i>
+                            </div>
+                            <div class="action-content">
+                                <h3>Cấp Độ Thành Viên</h3>
+                                <p>Xem quyền lợi và ưu đãi</p>
+                            </div>
+                            <i class="fas fa-arrow-right action-arrow"></i>
+                        </a>
+                    </div>
+                </section>
+
+                <!-- Recent Activity Section -->
+                <section class="content-section">
+                    <h2 class="section-title">Hoạt Động Gần Đây</h2>
+                    
+                    <div class="recent-activity-list">
+                        <div class="activity-timeline-item">
+                            <div class="timeline-dot success"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-header">
+                                    <h4>Đặt phòng thành công</h4>
+                                    <span class="timeline-time">2 giờ trước</span>
+                                </div>
+                                <p>Bạn đã đặt phòng Deluxe Ocean View từ 20/11 - 25/11/2025</p>
+                            </div>
+                        </div>
+
+                        <div class="activity-timeline-item">
+                            <div class="timeline-dot info"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-header">
+                                    <h4>Thanh toán thành công</h4>
+                                    <span class="timeline-time">1 ngày trước</span>
+                                </div>
+                                <p>Thanh toán 2.350.000đ cho đơn hàng #BK20251115001</p>
+                            </div>
+                        </div>
+
+                        <div class="activity-timeline-item">
+                            <div class="timeline-dot warning"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-header">
+                                    <h4>Cập nhật thông tin</h4>
+                                    <span class="timeline-time">3 ngày trước</span>
+                                </div>
+                                <p>Bạn đã cập nhật số điện thoại và địa chỉ</p>
+                            </div>
+                        </div>
+
+                        <div class="activity-timeline-item">
+                            <div class="timeline-dot success"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-header">
+                                    <h4>Hoàn thành đặt phòng</h4>
+                                    <span class="timeline-time">1 tuần trước</span>
+                                </div>
+                                <p>Bạn đã hoàn thành lưu trú tại Family Suite</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Account Security Section -->
+                <section class="content-section">
+                    <h2 class="section-title">Bảo Mật Tài Khoản</h2>
+                    
+                    <div class="security-cards-grid">
+                        <!-- Password Card -->
+                        <div class="security-card">
+                            <div class="security-card-icon">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                            <div class="security-card-content">
+                                <h3>Mật Khẩu</h3>
+                                <p>Thay đổi mật khẩu định kỳ để bảo vệ tài khoản</p>
+                                <p class="last-changed">Thay đổi lần cuối: 15/10/2025</p>
+                            </div>
+                            <button class="btn-security" onclick="showChangePasswordModal()">
+                                <i class="fas fa-key"></i> Đổi Mật Khẩu
+                            </button>
+                        </div>
+
+                        <!-- Two Factor Authentication Card -->
+                        <div class="security-card">
+                            <div class="security-card-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="security-card-content">
+                                <h3>Xác Thực Hai Yếu Tố</h3>
+                                <p>Thêm lớp bảo mật cho tài khoản của bạn</p>
+                                <p class="status-inactive">
+                                    <i class="fas fa-circle"></i> Chưa kích hoạt
+                                </p>
+                            </div>
+                            <button class="btn-security btn-enable">
+                                <i class="fas fa-toggle-on"></i> Kích Hoạt
+                            </button>
+                        </div>
+
+                        <!-- Login Activity Card -->
+                        <div class="security-card">
+                            <div class="security-card-icon">
+                                <i class="fas fa-history"></i>
+                            </div>
+                            <div class="security-card-content">
+                                <h3>Hoạt Động Đăng Nhập</h3>
+                                <p>Theo dõi lịch sử đăng nhập tài khoản</p>
+                                <p class="last-login">
+                                    Đăng nhập gần nhất: @DateTime.Now.ToString("dd/MM/yyyy HH:mm")
+                                </p>
+                            </div>
+                            <button class="btn-security" onclick="showLoginActivityModal()">
+                                <i class="fas fa-list"></i> Xem Lịch Sử
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Account Information Section -->
+                <section class="content-section">
+                    <h2 class="section-title">Thông Tin Tài Khoản</h2>
+                    
+                    <div class="account-info-card">
+                        <div class="info-row">
+                            <div class="info-label">
+                                <i class="fas fa-envelope"></i>
+                                <span>Email đăng nhập</span>
+                            </div>
+                            <div class="info-value">@(Session["Email"])</div>
+                        </div>
+
+                        <div class="info-row">
+                            <div class="info-label">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span>Ngày tạo tài khoản</span>
+                            </div>
+                            <div class="info-value">
+                                @(Session["NgayTao"] != null ? ((DateTime)Session["NgayTao"]).ToString("dd/MM/yyyy") : "N/A")
+                            </div>
+                        </div>
+
+                        <div class="info-row">
+                            <div class="info-label">
+                                <i class="fas fa-id-card"></i>
+                                <span>Mã khách hàng</span>
+                            </div>
+                            <div class="info-value">#KH@(Session["MaKhachHang"])</div>
+                        </div>
+
+                        <div class="info-row">
+                            <div class="info-label">
+                                <i class="fas fa-user-check"></i>
+                                <span>Trạng thái tài khoản</span>
+                            </div>
+                            <div class="info-value">
+                                <span class="account-status active">
+                                    <i class="fas fa-check-circle"></i> Đang hoạt động
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Danger Zone Section -->
+                <section class="content-section">
+                    <h2 class="section-title danger-title">Vùng Nguy Hiểm</h2>
+                    
+                    <div class="danger-zone-card">
+                        <div class="danger-item">
+                            <div class="danger-info">
+                                <h3><i class="fas fa-user-times"></i> Vô Hiệu Hóa Tài Khoản</h3>
+                                <p>Tạm thời vô hiệu hóa tài khoản của bạn. Bạn có thể kích hoạt lại bất cứ lúc nào.</p>
+                            </div>
+                            <button class="btn-danger-outline" onclick="confirmDeactivate()">
+                                Vô Hiệu Hóa
+                            </button>
+                        </div>
+
+                        <div class="danger-divider"></div>
+
+                        <div class="danger-item">
+                            <div class="danger-info">
+                                <h3><i class="fas fa-trash-alt"></i> Xóa Tài Khoản</h3>
+                                <p>Xóa vĩnh viễn tài khoản và tất cả dữ liệu liên quan. Hành động này không thể hoàn tác.</p>
+                            </div>
+                            <button class="btn-danger-solid" onclick="confirmDelete()">
+                                Xóa Tài Khoản
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Change Password Modal -->
+<div id="changePasswordModal" class="modal-overlay" style="display: none;">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h3><i class="fas fa-key"></i> Đổi Mật Khẩu</h3>
+            <button class="modal-close" onclick="closeChangePasswordModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="currentPassword">
+                    <i class="fas fa-lock"></i> Mật khẩu hiện tại
+                </label>
+                <input type="password" id="currentPassword" placeholder="Nhập mật khẩu hiện tại" />
+            </div>
+
+            <div class="form-group">
+                <label for="newPassword">
+                    <i class="fas fa-key"></i> Mật khẩu mới
+                </label>
+                <input type="password" id="newPassword" placeholder="Nhập mật khẩu mới" />
+                <small class="password-hint">Tối thiểu 8 ký tự, bao gồm chữ hoa, chữ thường và số</small>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword">
+                    <i class="fas fa-check-circle"></i> Xác nhận mật khẩu
+                </label>
+                <input type="password" id="confirmPassword" placeholder="Nhập lại mật khẩu mới" />
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-secondary" onclick="closeChangePasswordModal()">
+                Hủy
+            </button>
+            <button class="btn-primary" onclick="submitChangePassword()">
+                <i class="fas fa-key"></i> Đổi Mật Khẩu
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Login Activity Modal -->
+<div id="loginActivityModal" class="modal-overlay" style="display: none;">
+    <div class="modal-container modal-large">
+        <div class="modal-header">
+            <h3><i class="fas fa-history"></i> Lịch Sử Đăng Nhập</h3>
+            <button class="modal-close" onclick="closeLoginActivityModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="activity-list">
+                <div class="activity-item current">
+                    <div class="activity-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="activity-details">
+                        <h4>Đăng nhập thành công</h4>
+                        <p class="activity-device">
+                            <i class="fas fa-laptop"></i> Windows 11 - Chrome 120.0
+                        </p>
+                        <p class="activity-location">
+                            <i class="fas fa-map-marker-alt"></i> TP. Hồ Chí Minh, Việt Nam
+                        </p>
+                        <p class="activity-time">@DateTime.Now.ToString("dd/MM/yyyy HH:mm")</p>
+                    </div>
+                    <span class="current-badge">Hiện tại</span>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="activity-details">
+                        <h4>Đăng nhập thành công</h4>
+                        <p class="activity-device">
+                            <i class="fas fa-mobile-alt"></i> iPhone 15 - Safari 17.0
+                        </p>
+                        <p class="activity-location">
+                            <i class="fas fa-map-marker-alt"></i> Hà Nội, Việt Nam
+                        </p>
+                        <p class="activity-time">15/11/2025 14:30</p>
+                    </div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="activity-details">
+                        <h4>Đăng nhập thành công</h4>
+                        <p class="activity-device">
+                            <i class="fas fa-laptop"></i> MacOS - Safari 17.0
+                        </p>
+                        <p class="activity-location">
+                            <i class="fas fa-map-marker-alt"></i> Đà Nẵng, Việt Nam
+                        </p>
+                        <p class="activity-time">10/11/2025 09:15</p>
+                    </div>
+                </div>
+
+                <div class="activity-item failed">
+                    <div class="activity-icon">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                    <div class="activity-details">
+                        <h4>Đăng nhập thất bại</h4>
+                        <p class="activity-device">
+                            <i class="fas fa-laptop"></i> Windows 10 - Firefox 120.0
+                        </p>
+                        <p class="activity-location">
+                            <i class="fas fa-map-marker-alt"></i> Unknown Location
+                        </p>
+                        <p class="activity-time">05/11/2025 22:45</p>
+                    </div>
+                    <span class="failed-badge">Thất bại</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/assets/js/dashboard-khachhang.js"></script>
