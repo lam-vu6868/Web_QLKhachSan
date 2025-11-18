@@ -22,143 +22,21 @@
 <section class="dashboard-main">
     <div class="container">
         <div class="dashboard-layout">
-
             <div class="dashboard-content">
-
-                <section id="profile" class="content-section">
-                    <h2 class="section-title">Thông Tin Tài Khoản</h2>
-
-                    <div class="profile-layout">
-                        <div class="profile-card">
-                            <div class="profile-header">
-                                <div class="profile-avatar">
-                                    <i class="fas fa-user-circle"></i>
-                                </div>
-                                <div class="profile-info">
-                                    <h3 id="profileName">@(Session["HoVaTen"])</h3>
-                                    <p id="profileEmail">@(Session["Email"])</p>
-                                    <span class="member-badge">
-                                        <i class="fas fa-crown"></i> Thành Viên VIP
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div class="profile-stats">
-                                <div class="profile-stat">
-                                    <i class="fas fa-calendar"></i>
-                                    <div>
-                                        <strong>Ngày Tạo</strong>
-                                        <p>@(Session["NgayTao"] != null ? ((DateTime)Session["NgayTao"]).ToString("dd/MM/yyyy") : "N/A")</p>
-                                    </div>
-                                </div>
-                                <div class="profile-stat">
-                                    <i class="fas fa-bed"></i>
-                                    <div>
-                                        <strong>Tổng đặt phòng</strong>
-                                        <p>15 lần</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="profile-form-card">
-                            <h3>Cập Nhật Thông Tin</h3>
-
-                            <!-- Form Họ và Tên -->
-                            <div class="form-section">
-                                <div class="form-group-inline">
-                                    <label for="fullName">Họ và Tên</label>
-                                    <div class="input-with-button">
-                                        <input type="text" id="fullName" value="@(Session["HoVaTen"])" readonly />
-                                        <button type="button" class="btn-edit" onclick="editField('fullName')">
-                                            <i class="fas fa-edit"></i> Đổi Tên
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Form Email -->
-                            <div class="form-section">
-                                <div class="form-group-inline">
-                                    <label for="email">Email</label>
-                                    <div class="input-with-button">
-                                        <input type="email" id="email" value="@(Session["Email"])" readonly />
-                                        <button type="button" class="btn-edit" onclick="editField('email')">
-                                            <i class="fas fa-envelope"></i> Đổi Email
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Form Số Điện Thoại -->
-                            <div class="form-section">
-                                <div class="form-group-inline">
-                                    <label for="phone">Số Điện Thoại</label>
-                                    <div class="input-with-button">
-                                        <input type="tel" id="phone" value="" placeholder="Chưa có số điện thoại" readonly />
-                                        <button type="button" class="btn-edit" onclick="editField('phone')">
-                                            <i class="fas fa-phone"></i> Thêm SĐT
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Form Ngày Sinh -->
-                            <div class="form-section">
-                                <div class="form-group-inline">
-                                    <label for="birthdate">Ngày Sinh</label>
-                                    <div class="input-with-button">
-                                        <input type="date"
-                                               id="birthdate"
-                                               value="@(Session["NgaySinh"] != null ? ((DateTime)Session["NgaySinh"]).ToString("yyyy-MM-dd") : "")"
-                                               readonly />
-                                        <button type="button" class="btn-edit" onclick="editField('birthdate')">
-                                            <i class="fas fa-calendar"></i> Đổi Ngày Sinh
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Form Địa Chỉ -->
-                            <div class="form-section">
-                                <div class="form-group-inline">
-                                    <label for="address">Địa Chỉ</label>
-                                    <div class="input-with-button">
-                                        <textarea id="address" rows="3" placeholder="Chưa có địa chỉ" readonly></textarea>
-                                        <button type="button" class="btn-edit" onclick="editField('address')">
-                                            <i class="fas fa-map-marker-alt"></i> Thêm Địa Chỉ
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Nút Lưu Thay Đổi (Chung) -->
-                            <div class="form-section">
-                                <button type="button" class="btn-primary btn-save-all" onclick="saveAllChanges()">
-                                    <i class="fas fa-save"></i> Lưu Thay Đổi
-                                </button>
-                            </div>
-                        </div>
-
-                </section>
-
-                <!-- Overview, Bookings and Services sections removed per request -->
-
-                <section id="history" class="content-section">
+                <section class="content-section">
                     <h2 class="section-title">Lịch Sử Giao Dịch</h2>
-
                     <div class="history-table-container">
                         <table class="history-table">
                             <thead>
                                 <tr>
-                        <th>Mã Đơn</th>
-                        <th>Ngày Đặt</th>
-                        <th>Loại Phòng</th>
-                        <th>Dịch Vụ</th>
-                        <th>Thời Gian</th>
-                        <th>Tổng Tiền</th>
-                        <th>Trạng Thái</th>
-                        <th>Hành Động</th>
+                                    <th>Mã Đơn</th>
+                                    <th>Ngày Đặt</th>
+                                    <th>Loại Phòng</th>
+                                    <th>Dịch Vụ</th>
+                                    <th>Thời Gian</th>
+                                    <th>Tổng Tiền</th>
+                                    <th>Trạng Thái</th>
+                                    <th>Hành Động</th>
                                 </tr>
                             </thead>
                             <tbody id="historyTableBody">
@@ -257,8 +135,6 @@
                         </table>
                     </div>
                 </section>
-
-
 
             </div>
         </div>

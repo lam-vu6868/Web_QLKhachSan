@@ -9,7 +9,21 @@ namespace Web_QLKhachSan.Controllers
     public class DashboardKhachHangController : Controller
     {
         // GET: DashboardKhachHang
-        public ActionResult Index()
+        public ActionResult TaiKhoan()
+        {
+            return View();
+        }
+        public ActionResult HoSo()
+        {
+
+            return View();
+        }
+        public ActionResult LichSu()
+        {
+
+            return View();
+        }
+        public ActionResult CapDo()
         {
 
             return View();

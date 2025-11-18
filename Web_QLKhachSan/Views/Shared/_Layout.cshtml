@@ -53,13 +53,16 @@
                             <i class="fas fa-chevron-down"></i>
                         </button>
                         <div class="user-dropdown">
-                            <a href="@Url.Action("Index", "DashboardKhachHang")#profile" class="dropdown-item" data-section="profile">
+                            <a href="@Url.Action("TaiKhoan", "DashboardKhachHang")" class="dropdown-item @(currentController == "DashboardKhachHang" && currentAction == "TaiKhoan" ? "active" : "")">
                                 <i class="fas fa-user"></i> Tài Khoản
                             </a>
-                            <a href="@Url.Action("Index", "DashboardKhachHang")#history" class="dropdown-item" data-section="history">
+                            <a href="@Url.Action("HoSo", "DashboardKhachHang")" class="dropdown-item @(currentController == "DashboardKhachHang" && currentAction == "HoSo" ? "active" : "")">
+                                <i class="fa-solid fa-address-card"></i> Hồ Sơ
+                            </a>
+                            <a href="@Url.Action("LichSu", "DashboardKhachHang")" class="dropdown-item @(currentController == "DashboardKhachHang" && currentAction == "LichSu" ? "active" : "")">
                                 <i class="fas fa-history"></i> Lịch Sử
                             </a>
-                            <a href="@Url.Action("Index", "CapDoKhachHang")" class="dropdown-item">
+                            <a href="@Url.Action("CapDo", "DashboardKhachHang")" class="dropdown-item @(currentController == "CapDoKhachHang" ? "active" : "")">
                                 <i class="fas fa-medal"></i> Cấp Độ
                             </a>
                             <a href="@Url.Action("DangXuat", "Login")" class="dropdown-item">
@@ -161,21 +164,28 @@
                         <h3>Tài Khoản</h3>
                         <ul class="mobile-nav-list">
                             <li>
-                                <a href="@Url.Action("Index", "DashboardKhachHang")#profile" data-section="profile">
+                                <a href='@Url.Action("TaiKhoan", "DashboardKhachHang")' class="@(currentController == "DashboardKhachHang" && currentAction == "TaiKhoan" ? "active-link" : "")">
                                     <i class="fas fa-user"></i>
-                                    <span>Thông Tin Cá Nhân</span>
+                                    <span>Tài Khoản</span>
                                     <i class="fas fa-chevron-right"></i>
                                 </a>
                             </li>
                             <li>
-                                <a href="@Url.Action("Index", "DashboardKhachHang")#history" data-section="history">
+                                <a href='@Url.Action("HoSo", "DashboardKhachHang")' class="@(currentController == "DashboardKhachHang" && currentAction == "HoSo" ? "active-link" : "")">
+                                    <i class="fa-solid fa-address-card"></i>
+                                    <span>Hồ Sơ</span>
+                                    <i class="fas fa-chevron-right"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a href='@Url.Action("LichSu", "DashboardKhachHang")' class="@(currentController == "DashboardKhachHang" && currentAction == "LichSu" ? "active-link" : "")">
                                     <i class="fas fa-history"></i>
                                     <span>Lịch Sử</span>
                                     <i class="fas fa-chevron-right"></i>
                                 </a>
                             </li>
                             <li>
-                                <a href="@Url.Action("Index", "CapDoKhachHang")">
+                                <a href="@Url.Action("CapDo", "DashboardKhachHang")" class="@(currentController == "CapDoKhachHang" ? "active-link" : "")">
                                     <i class="fas fa-medal"></i>
                                     <span>Cấp Độ</span>
                                     <i class="fas fa-chevron-right"></i>
@@ -191,7 +201,7 @@
                         <li>
                             <a href="@Url.Action("Index", "ThuVienAnh")">
                                 <i class="fas fa-images"></i>
-                                <span>Thư Viện Ảnh</span>
+                                <span>Thư ViệnẢnh</span>
                                 <i class="fas fa-chevron-right"></i>
                             </a>
                         </li>
@@ -205,7 +215,7 @@
                         <li>
                             <a href="tel:+84123456789">
                                 <i class="fas fa-phone"></i>
-                                <span>Hotline: (+84) 123 456 789</span>
+                                <span>Hotline: (+84)123456789</span>
                                 <i class="fas fa-external-link-alt"></i>
                             </a>
                         </li>
@@ -252,7 +262,7 @@
                     nghỉ dưỡng đích thực cho tâm hồn.
                 </p>
                 <div class="quality-badges">
-                    <span class="badge"><i class="fas fa-star"></i> 5 Sao</span>
+                    <span class="badge"><i class="fas fa-star"></i>5 Sao</span>
                     <span class="badge"><i class="fas fa-award"></i> Luxury</span>
                 </div>
             </div>
@@ -274,7 +284,7 @@
                     </div>
                     <div class="contact-item">
                         <i class="fas fa-phone"></i>
-                        <span>(+84) 123 456 789</span>
+                        <span>(+84)123456789</span>
                     </div>
                     <div class="contact-item">
                         <i class="fas fa-envelope"></i>
@@ -319,7 +329,7 @@
             <div class="footer-bottom-content">
                 <div class="marquee-container">
                     <div class="marquee-text">
-                        &copy; 2025 The Serene Horizon. All Rights Reserved. ✨ Trải nghiệm sang trọng bậc nhất ✨ Dịch vụ 5 sao đẳng cấp quốc tế ✨
+                        &copy;2025 The Serene Horizon. All Rights Reserved. ✨ Trải nghiệm sang trọng bậc nhất ✨ Dịch vụ5 sao đẳng cấp quốc tế ✨
                     </div>
                 </div>
                 <div class="footer-links">

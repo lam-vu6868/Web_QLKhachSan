@@ -190,7 +190,6 @@
     <Compile Include="Areas\NhanVienLeTan\ViewModels\DatPhong\DatPhongListViewModel.cs" />
     <Compile Include="Areas\NhanVienLeTan\ViewModels\PhongStatusViewModel.cs" />
     <Compile Include="Areas\NhanVienLeTan\ViewModels\SoDoPhongViewModel.cs" />
-    <Compile Include="Controllers\CapDoKhachHangController.cs" />
     <Compile Include="Controllers\ChinhSachVaDieuKhoanController.cs" />
     <Compile Include="Controllers\ChiTietPhongController.cs" />
     <Compile Include="Controllers\DanhGiaController.cs" />
@@ -455,10 +454,8 @@
     <Content Include="Views\DanhGia\Index.cshtml" />
     <Content Include="Views\ChiTietPhong\Index.cshtml" />
     <Content Include="Views\TimHieuThem\Index.cshtml" />
-    <Content Include="Views\DashboardKhachHang\Index.cshtml" />
     <Content Include="Views\ThuVienAnh\Index.cshtml" />
     <Content Include="Views\HoTroKhachHang\Index.cshtml" />
-    <Content Include="Views\CapDoKhachHang\Index.cshtml" />
     <Content Include="Views\Shared\_OrderSummary.cshtml" />
     <Content Include="Views\Login\DangKy.cshtml" />
     <Content Include="Views\Login\QuenMatKhau.cshtml" />
@@ -471,6 +468,10 @@
     <Content Include="Views\DatPhong\DichVuDatThem.cshtml" />
     <Content Include="Views\DatPhong\ThanhToan.cshtml" />
     <Content Include="Views\Shared\_CheckoutSteps.cshtml" />
+    <Content Include="Views\DashboardKhachHang\TaiKhoan.cshtml" />
+    <Content Include="Views\DashboardKhachHang\HoSo.cshtml" />
+    <Content Include="Views\DashboardKhachHang\LichSu.cshtml" />
+    <Content Include="Views\DashboardKhachHang\CapDo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

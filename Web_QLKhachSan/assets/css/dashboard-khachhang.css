@@ -331,6 +331,10 @@
   font-weight: 600;
 }
 
+.user-dropdown .dropdown-item.active::before {
+  transform: scaleY(1);
+}
+
 /* ==================== DASHBOARD HERO ==================== */
 .dashboard-hero {
     background: linear-gradient(135deg, var(--deep-navy) 0%, #1e3a5f 100%);
@@ -537,10 +541,6 @@
   width: 100%;
   max-width: 100%;
   overflow-x: hidden;
-}
-
-.content-section {
-  display: none;
 }
 
 .content-section.active {
