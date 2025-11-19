@@ -24,111 +24,153 @@
         <div class="dashboard-layout">
             <div class="dashboard-content">
                 <section class="content-section">
-                    <h2 class="section-title">Lịch Sử Giao Dịch</h2>
+                    <h2 class="section-title">Lịch Sử Đặt Phòng</h2>
                     <div class="history-table-container">
                         <table class="history-table">
                             <thead>
                                 <tr>
-                                    <th>Mã Đơn</th>
-                                    <th>Ngày Đặt</th>
+                                    <th>Mã Đặt Phòng</th>
                                     <th>Loại Phòng</th>
+                                    <th>Tên Phòng</th>
+                                    <th>Ngày Nhận</th>
+                                    <th>Ngày Trả</th>
                                     <th>Dịch Vụ</th>
-                                    <th>Thời Gian</th>
-                                    <th>Tổng Tiền</th>
                                     <th>Trạng Thái</th>
+                                    <th>Tổng Tiền</th>
                                     <th>Hành Động</th>
                                 </tr>
                             </thead>
                             <tbody id="historyTableBody">
+                                <!-- Example row with services -->
                                 <tr>
-                                    <td class="booking-id">#BK20250309001</td>
-                                    <td>01/09/2025</td>
-                                    <td>Deluxe Room</td>
+                                    <td class="booking-id">#DP001</td>
+                                    <td>Deluxe</td>
+                                    <td>Phòng Double 104</td>
+                                    <td>01/12/2025</td>
+                                    <td>05/12/2025</td>
                                     <td class="service-cell">
-                                        <div class="service-summary">
-                                            <span class="service-label">Spa & Massage</span>
-                                            <button class="service-toggle" aria-expanded="false" title="Xem dịch vụ khác">+1</button>
-                                            <ul class="service-list" hidden>
-                                                <li>Spa & Massage</li>
-                                                <li>Bữa sáng buffet</li>
-                                            </ul>
+                                        <button class="service-dropdown-btn" onclick="toggleServiceList(this)">
+                                            <span class="service-count">3 dịch vụ</span>
+                                            <i class="fas fa-chevron-down"></i>
+                                        </button>
+                                        <div class="service-dropdown-list">
+                                            <div class="service-item">
+                                                <i class="fas fa-spa"></i>
+                                                <span>Spa & Massage</span>
+                                            </div>
+                                            <div class="service-item">
+                                                <i class="fas fa-utensils"></i>
+                                                <span>Bữa sáng buffet</span>
+                                            </div>
+                                            <div class="service-item">
+                                                <i class="fas fa-car"></i>
+                                                <span>Đưa đón sân bay</span>
+                                            </div>
                                         </div>
                                     </td>
-                                    <td>10/09/2025 - 15/09/2025</td>
-                                    <td class="price">6.000.000 VNĐ</td>
                                     <td><span class="status-badge completed">Hoàn Thành</span></td>
+                                    <td class="price">6.500.000đ</td>
                                     <td>
-                                        <button class="btn-sm btn-primary" onclick="viewBookingDetails('BK20250309001')">Chi Tiết</button>
+                                        <button class="btn-detail" onclick="viewBookingDetails('#DP001')">
+                                            <i class="fas fa-file-alt"></i> Chi Tiết
+                                        </button>
                                     </td>
                                 </tr>
+                                <!-- Example row without services -->
                                 <tr>
-                                    <td class="booking-id">#BK20250308001</td>
-                                    <td>10/08/2025</td>
-                                    <td>Family Suite</td>
+                                    <td class="booking-id">#DP002</td>
+                                    <td>Standard</td>
+                                    <td>Phòng Single 201</td>
+                                    <td>10/11/2025</td>
+                                    <td>12/11/2025</td>
                                     <td class="service-cell">
-                                        <div class="service-summary">
-                                            <span class="service-label">Đưa đón sân bay</span>
-                                        </div>
+                                        <span class="no-service">Không có</span>
                                     </td>
-                                    <td>20/08/2025 - 25/08/2025</td>
-                                    <td class="price">12.000.000 VNĐ</td>
-                                    <td><span class="status-badge completed">Hoàn Thành</span></td>
+                                    <td><span class="status-badge confirmed">Đã Xác Nhận</span></td>
+                                    <td class="price">2.000.000đ</td>
                                     <td>
-                                        <button class="btn-sm btn-primary" onclick="viewBookingDetails('BK20250308001')">Chi Tiết</button>
+                                        <button class="btn-detail" onclick="viewBookingDetails('#DP002')">
+                                            <i class="fas fa-file-alt"></i> Chi Tiết
+                                        </button>
                                     </td>
                                 </tr>
+                                <!-- Example pending -->
                                 <tr>
-                                    <td class="booking-id">#BK20250307001</td>
-                                    <td>25/06/2025</td>
-                                    <td>Ocean View Room</td>
+                                    <td class="booking-id">#DP003</td>
+                                    <td>Suite</td>
+                                    <td>Phòng Family 305</td>
+                                    <td>20/12/2025</td>
+                                    <td>25/12/2025</td>
                                     <td class="service-cell">
-                                        <div class="service-summary">
-                                            <span class="service-label">-</span>
+                                        <button class="service-dropdown-btn" onclick="toggleServiceList(this)">
+                                            <span class="service-count">2 dịch vụ</span>
+                                            <i class="fas fa-chevron-down"></i>
+                                        </button>
+                                        <div class="service-dropdown-list">
+                                            <div class="service-item">
+                                                <i class="fas fa-swimming-pool"></i>
+                                                <span>Hồ bơi</span>
+                                            </div>
+                                            <div class="service-item">
+                                                <i class="fas fa-dumbbell"></i>
+                                                <span>Gym & Fitness</span>
+                                            </div>
                                         </div>
                                     </td>
-                                    <td>05/07/2025 - 10/07/2025</td>
-                                    <td class="price">8.000.000 VNĐ</td>
+                                    <td><span class="status-badge pending">Chờ Xác Nhận</span></td>
+                                    <td class="price">12.000.000đ</td>
+                                    <td>
+                                        <button class="btn-detail" onclick="viewBookingDetails('#DP003')">
+                                            <i class="fas fa-file-alt"></i> Chi Tiết
+                                        </button>
+                                    </td>
+                                </tr>
+                                <!-- Example cancelled -->
+                                <tr>
+                                    <td class="booking-id">#DP004</td>
+                                    <td>Deluxe</td>
+                                    <td>Phòng Double 105</td>
+                                    <td>05/10/2025</td>
+                                    <td>08/10/2025</td>
+                                    <td class="service-cell">
+                                        <span class="no-service">Không có</span>
+                                    </td>
                                     <td><span class="status-badge cancelled">Đã Hủy</span></td>
+                                    <td class="price">4.000.000đ</td>
                                     <td>
-                                        <button class="btn-sm btn-secondary" onclick="viewBookingDetails('BK20250307001')">Chi Tiết</button>
+                                        <button class="btn-detail" onclick="viewBookingDetails('#DP004')">
+                                            <i class="fas fa-file-alt"></i> Chi Tiết
+                                        </button>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="booking-id">#BK20250306001</td>
-                                    <td>15/05/2025</td>
-                                    <td>Standard Room</td>
+                                    <td class="booking-id">#DP003</td>
+                                    <td>Suite</td>
+                                    <td>Phòng Family 305</td>
+                                    <td>20/12/2025</td>
+                                    <td>25/12/2025</td>
                                     <td class="service-cell">
-                                        <div class="service-summary">
-                                            <span class="service-label">Bữa sáng buffet</span>
+                                        <button class="service-dropdown-btn" onclick="toggleServiceList(this)">
+                                            <span class="service-count">2 dịch vụ</span>
+                                            <i class="fas fa-chevron-down"></i>
+                                        </button>
+                                        <div class="service-dropdown-list">
+                                            <div class="service-item">
+                                                <i class="fas fa-swimming-pool"></i>
+                                                <span>Hồ bơi</span>
+                                            </div>
+                                            <div class="service-item">
+                                                <i class="fas fa-dumbbell"></i>
+                                                <span>Gym & Fitness</span>
+                                            </div>
                                         </div>
                                     </td>
-                                    <td>01/06/2025 - 03/06/2025</td>
-                                    <td class="price">4.000.000 VNĐ</td>
-                                    <td><span class="status-badge completed">Hoàn Thành</span></td>
+                                    <td><span class="status-badge pending">Chờ Xác Nhận</span></td>
+                                    <td class="price">12.000.000đ</td>
                                     <td>
-                                        <button class="btn-sm btn-primary" onclick="viewBookingDetails('BK20250306001')">Chi Tiết</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="booking-id">#BK20250305001</td>
-                                    <td>20/04/2025</td>
-                                    <td>Deluxe Ocean View</td>
-                                    <td class="service-cell">
-                                        <div class="service-summary">
-                                            <span class="service-label">Hồ bơi</span>
-                                            <button class="service-toggle" aria-expanded="false" title="Xem dịch vụ khác">+2</button>
-                                            <ul class="service-list" hidden>
-                                                <li>Hồ bơi</li>
-                                                <li>Gym & Fitness</li>
-                                                <li>Spa & Massage</li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                    <td>15/05/2025 - 18/05/2025</td>
-                                    <td class="price">9.000.000 VNĐ</td>
-                                    <td><span class="status-badge completed">Hoàn Thành</span></td>
-                                    <td>
-                                        <button class="btn-sm btn-primary" onclick="viewBookingDetails('BK20250305001')">Chi Tiết</button>
+                                        <button class="btn-detail" onclick="viewBookingDetails('#DP003')">
+                                            <i class="fas fa-file-alt"></i> Chi Tiết
+                                        </button>
                                     </td>
                                 </tr>
                             </tbody>
