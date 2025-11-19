@@ -235,6 +235,9 @@
     <Compile Include="Areas\NhanVienLeTan\ViewModels\DatPhong\DatPhongItemViewModel.cs" />
     <Compile Include="Areas\NhanVienLeTan\ViewModels\DatPhong\DatPhongListViewModel.cs" />
     <Compile Include="Areas\NhanVienLeTan\ViewModels\DatPhong\DatPhongStatViewModel.cs" />
+    <Compile Include="Areas\NhanVienLeTan\ViewModels\DatPhong\KhachHangItemViewModel.cs" />
+    <Compile Include="Areas\NhanVienLeTan\ViewModels\DatPhong\KhuyenMaiItemViewModel.cs" />
+    <Compile Include="Areas\NhanVienLeTan\ViewModels\DatPhong\NhanVienItemViewModel.cs" />
     <Compile Include="Areas\NhanVienLeTan\ViewModels\DatPhong\PhongDatItemViewModel.cs" />
     <Compile Include="Areas\NhanVienLeTan\ViewModels\PhongStatusViewModel.cs" />
     <Compile Include="Areas\NhanVienLeTan\ViewModels\SoDoPhongViewModel.cs" />

@@ -115,30 +115,7 @@
        </div>
         </div>
 
-            <div class="row">
-  <div class="col-md-12">
-             <label class="font-weight-bold d-block">Giới tính</label>
-              <div class="custom-control custom-radio custom-control-inline">
-          @Html.RadioButtonFor(m => m.GioiTinh, 0, new { @class = "custom-control-input", id = "gioiTinhNam", @checked = "checked" })
-        <label class="custom-control-label" for="gioiTinhNam">
-      <i class="fas fa-mars text-primary"></i> Nam
-        </label>
-     </div>
-          <div class="custom-control custom-radio custom-control-inline">
-     @Html.RadioButtonFor(m => m.GioiTinh, 1, new { @class = "custom-control-input", id = "gioiTinhNu" })
- <label class="custom-control-label" for="gioiTinhNu">
-<i class="fas fa-venus text-danger"></i> Nữ
-              </label>
-         </div>
-             <div class="custom-control custom-radio custom-control-inline">
-       @Html.RadioButtonFor(m => m.GioiTinh, 2, new { @class = "custom-control-input", id = "gioiTinhKhac" })
-         <label class="custom-control-label" for="gioiTinhKhac">
-          <i class="fas fa-genderless text-secondary"></i> Khác
-  </label>
-       </div>
-      </div>
-       </div>
- </div>
+            </div>
  </div>
 
       @* === STEP 2: THỜI GIAN === *@
@@ -236,19 +213,21 @@
        <div class="table-responsive">
       <table class="table table-hover mb-0" id="tableChonPhong">
          <thead class="thead-light">
-                <tr>
-         <th width="35%">Loại phòng</th>
+          <tr>
+   <th width="35%">Loại phòng</th>
         <th width="12%" class="text-center">Số lượng</th>
-           <th width="15%">Tầng</th>
+      <th width="15%">Tầng</th>
      <th width="13%" class="text-right">Đơn giá/đêm</th>
          <th width="12%" class="text-center">Giảm giá %</th>
     <th width="13%" class="text-right">Thành tiền</th>
   </tr>
-   </thead>
-             <tbody>
-           @for (int i = 0; i < Model.DanhSachPhongDat.Count; i++)
-  {
-      <tr>
+ </thead>
+        <tbody>
+           @if (Model.DanhSachPhongDat != null && Model.DanhSachPhongDat.Any())
+    {
+            for (int i = 0; i < Model.DanhSachPhongDat.Count; i++)
+{
+     <tr>
         <td>
             @Html.HiddenFor(m => m.DanhSachPhongDat[i].LoaiPhongId)
      @Html.HiddenFor(m => m.DanhSachPhongDat[i].DonGia)
@@ -256,12 +235,12 @@
  <div class="room-info">
      <strong class="room-name">@Model.DanhSachPhongDat[i].TenLoaiPhong</strong>
            <p class="room-desc mb-1">@Model.DanhSachPhongDat[i].MoTa</p>
-            <div class="room-meta">
-              <span class="badge badge-info mr-1">
-        <i class="fas fa-users"></i> @Model.DanhSachPhongDat[i].SoNguoiToiDa người
-           </span>
-      <span class="badge badge-secondary mr-1">
-             <i class="fas fa-expand-arrows-alt"></i> @Model.DanhSachPhongDat[i].DienTich m²
+    <div class="room-meta">
+     <span class="badge badge-info mr-1">
+    <i class="fas fa-users"></i> @Model.DanhSachPhongDat[i].SoNguoiToiDa người
+    </span>
+  <span class="badge badge-secondary mr-1">
+      <i class="fas fa-expand-arrows-alt"></i> @Model.DanhSachPhongDat[i].DienTich m²
 </span>
 <span class="badge badge-success">
      <i class="fas fa-door-open"></i> @Model.DanhSachPhongDat[i].SoPhongTrong trống
@@ -272,13 +251,13 @@
      <td class="text-center align-middle">
         @Html.TextBoxFor(m => m.DanhSachPhongDat[i].SoLuong, new { 
         @class = "form-control text-center input-so-luong", 
-        type = "number", 
-         min = "0", 
+ type = "number", 
+    min = "0", 
    max = Model.DanhSachPhongDat[i].SoPhongTrong,
  data_index = i,
         value = "0"
         })
-                  </td>
+           </td>
              <td class="align-middle">
     <select name="DanhSachPhongDat[@i].Tang" 
       class="form-control form-control-sm select-tang" 
@@ -286,8 +265,8 @@
         data-index="@i">
    <option value="">-- Chọn tầng --</option>
      </select>
-              </td>
-       <td class="text-right align-middle">
+      </td>
+  <td class="text-right align-middle">
       <strong class="text-primary">
     @Model.DanhSachPhongDat[i].DonGia.ToString("N0")đ
      </strong>
@@ -301,21 +280,32 @@
      step = "0.1",
  data_index = i,
        value = "0"
-            })
+     })
       </td>
  <td class="text-right align-middle">
          <strong class="text-danger thanh-tien" data-index="@i">0đ</strong>
-         </td>
+   </td>
      </tr>
         }
+}
+     else
+      {
+         <tr>
+       <td colspan="6" class="text-center text-danger py-4">
+     <i class="fas fa-exclamation-triangle fa-2x mb-2"></i>
+ <p>Không thể tải danh sách loại phòng. Vui lòng thử lại!</p>
+  </td>
+            </tr>
+       }
     </tbody>
-          </table>
+    </table>
 </div>
-              </div>
-         </div>
+   </div>
+        </div>
+        @* ========== END STEP 3 CARD ========== *@
 
   </div>
-            @* ========== END LEFT COLUMN ========== *@
+     @* ========== END LEFT COLUMN ========== *@
 
       @* ========== RIGHT COLUMN (4) - SUMMARY ========== *@
       <div class="col-lg-4">
@@ -332,13 +322,17 @@
     <div class="summary-item">
 <span>Tổng tiền phòng:</span>
      <strong id="tongTienPhong">0đ</strong>
-        </div>
+   </div>
       <div class="summary-item">
-      <span>Giảm giá:</span>
-       <strong class="text-success" id="tongGiamGia">0đ</strong>
+      <span>Giảm giá phòng:</span>
+       <strong class="text-success" id="tongGiamGiaPhong">0đ</strong>
       </div>
-      <hr />
-    <div class="summary-total">
+   <div class="summary-item" id="khuyenMaiInfo" style="display: none;">
+          <span>Khuyến mãi:</span>
+   <strong class="text-info" id="tongGiamGiaKM">0đ</strong>
+ </div>
+ <hr />
+<div class="summary-total">
    <span>TỔNG CỘNG:</span>
  <strong class="text-danger" id="tongCong">0đ</strong>
    </div>
@@ -351,7 +345,7 @@
          <i class="fas fa-tag"></i> Mã khuyến mãi
    </label>
     @Html.DropDownListFor(m => m.MaKhuyenMaiId, 
-   new SelectList(Enumerable.Empty<SelectListItem>()),
+          (IEnumerable<SelectListItem>)ViewBag.DanhSachKhuyenMai ?? new List<SelectListItem>(),
       "-- Không sử dụng --",
        new { @class = "form-control", id = "ddlKhuyenMai" })
   <small class="form-text text-muted">Chọn mã để giảm thêm</small>
