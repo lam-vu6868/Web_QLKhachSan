@@ -14,9 +14,6 @@
   margin-top: 5px;
   display: block;
 }
-.cta-button{
-  background-color: var(--white);
-}
 
 /* Services Selection Styles */
 .services-selection {
@@ -1619,6 +1616,9 @@ hr {
   border-radius: 5px;
   overflow: hidden;
   height: 100%;
+}
+.cta-button{
+  background-color: var(--white);
 }
 
 .phone-input-container:focus-within {

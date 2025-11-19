@@ -105,33 +105,143 @@ function showSaveNotification(fieldId) {
   }, 2000);
 }
 
-// Hàm lưu tất cả thay đổi (nút Lưu Thay Đổi lớn)
+// Hàm lưu tất cả thay đổi (nút Lưu Thay Đổi lớn) với validation
 function saveAllChanges() {
   console.log('💾 Saving all changes');
   
-  const fields = ['fullName', 'email', 'phone', 'birthdate', 'address'];
-  let hasChanges = false;
+  // Lấy giá trị từ form
+  const fullName = document.getElementById('fullName').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const birthdate = document.getElementById('birthdate').value;
+  const address = document.getElementById('address').value.trim();
   
-  fields.forEach(fieldId => {
-    const input = document.getElementById(fieldId);
-    if (input && !input.hasAttribute('readonly')) {
-      hasChanges = true;
-      const button = input.parentElement.querySelector('.btn-edit');
-      
-      // Lưu trường này
-      input.setAttribute('readonly', 'readonly');
-      resetButton(fieldId, button);
-      delete originalValues[fieldId];
-    }
-  });
+  // Object để lưu lỗi
+  const errors = {};
   
-  if (hasChanges) {
-    // Hiển thị thông báo chung
-    showGlobalSaveNotification();
-  } else {
-    // Không có thay đổi
-    showNoChangesNotification();
+  // ===== VALIDATION =====
+  
+  // 1. Validate Họ và Tên
+  if (!fullName) {
+    errors.fullName = 'Họ và tên không được để trống';
+  } else if (fullName.length > 100) {
+    errors.fullName = 'Họ và tên không được quá 100 ký tự';
+  } else if (!/^[a-zA-ZÀ-ỹ\s]+$/.test(fullName)) {
+    errors.fullName = 'Họ và tên chỉ được chứa chữ cái và khoảng trắng';
   }
+  
+  // 2. Validate Số Điện Thoại (nếu có nhập)
+  if (phone && phone !== '') {
+    if (!/^(0[3|5|7|8|9])+([0-9]{8})$/.test(phone)) {
+      errors.phone = 'Số điện thoại không hợp lệ (VD: 0912345678)';
+    }
+  }
+  
+  // 3. Validate Ngày Sinh - phải trên 18 tuổi
+  if (birthdate && birthdate !== '') {
+    const birthDate = new Date(birthdate);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    
+    if (age < 18) {
+      errors.birthdate = 'Bạn phải từ 18 tuổi trở lên';
+    }
+    
+    if (birthDate > today) {
+      errors.birthdate = 'Ngày sinh không được là ngày trong tương lai';
+    }
+  }
+  
+  // 4. Validate Địa Chỉ (nếu có nhập)
+  if (address && address.length > 500) {
+    errors.address = 'Địa chỉ không được quá 500 ký tự';
+  }
+  
+  // ===== HIỂN THỊ LỖI =====
+  // Xóa tất cả lỗi cũ
+  document.querySelectorAll('.error-message').forEach(el => el.remove());
+  document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+  
+  // Nếu có lỗi, hiển thị và dừng lại
+  if (Object.keys(errors).length > 0) {
+    for (const [fieldId, errorMsg] of Object.entries(errors)) {
+      const input = document.getElementById(fieldId);
+      if (input) {
+        // Thêm class error cho input
+        input.classList.add('input-error');
+        
+        // Tạo thông báo lỗi
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error-message';
+        errorDiv.style.cssText = `
+          color: #dc3545;
+          font-size: 0.85rem;
+          margin-top: 6px;
+          font-weight: 500;
+          display: flex;
+          align-items: center;
+          gap: 5px;
+        `;
+        errorDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${errorMsg}`;
+        
+        // Thêm vào sau input
+        input.parentElement.appendChild(errorDiv);
+      }
+    }
+    
+    // Hiển thị thông báo lỗi chung
+    showNotification('Vui lòng kiểm tra lại thông tin!', 'error');
+    return;
+  }
+  
+  // ===== GỬI DỮ LIỆU LÊN SERVER =====
+  // Hiển thị loading
+  const btnSave = document.querySelector('.btn-save-all');
+  const originalBtnText = btnSave.innerHTML;
+  btnSave.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang lưu...';
+  btnSave.disabled = true;
+  
+  // Gửi Ajax request
+  fetch('/DashboardKhachHang/CapNhatThongTin', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: new URLSearchParams({
+      hoVaTen: fullName,
+      soDienThoai: phone,
+      ngaySinh: birthdate,
+      diaChi: address
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      // Cập nhật session name trên UI
+      const welcomeName = document.getElementById('welcomeName');
+      const profileName = document.getElementById('profileName');
+      if (welcomeName) welcomeName.textContent = fullName;
+      if (profileName) profileName.textContent = fullName;
+      
+      // Hiển thị thông báo thành công
+      showNotification(data.message, 'success');
+    } else {
+      showNotification(data.message, 'error');
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showNotification('Đã xảy ra lỗi khi lưu thông tin', 'error');
+  })
+  .finally(() => {
+    // Reset button
+    btnSave.innerHTML = originalBtnText;
+    btnSave.disabled = false;
+  });
 }
 
 // Hiển thị thông báo lưu toàn bộ thành công
@@ -383,6 +493,7 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
     closeChangePasswordModal();
     closeLoginActivityModal();
+    hideChangePasswordForm();
   }
   
   // Enter key to submit password change
@@ -392,12 +503,220 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
+// ==================== CHANGE PASSWORD FORM (HoSo Page) ====================
+function showChangePasswordForm() {
+  const form = document.getElementById('changePasswordForm');
+  if (form) {
+    form.style.display = 'block';
+    form.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    
+    // Attach lại event listener sau khi form hiển thị
+    setTimeout(() => {
+      const newPasswordInput = document.getElementById('newPassword');
+      if (newPasswordInput) {
+        newPasswordInput.removeEventListener('input', handlePasswordInput);
+        newPasswordInput.removeEventListener('keyup', handlePasswordInput);
+        newPasswordInput.addEventListener('input', handlePasswordInput);
+        newPasswordInput.addEventListener('keyup', handlePasswordInput);
+      }
+    }, 100);
+  }
+}
 
+function hideChangePasswordForm() {
+  const form = document.getElementById('changePasswordForm');
+  if (form) {
+    form.style.display = 'none';
+    // Reset form fields
+    const currentPassword = document.getElementById('MatKhauHienTai');
+    const newPassword = document.getElementById('MatKhauMoi');
+    const confirmPassword = document.getElementById('XacNhanMatKhauMoi');
+    
+    if (currentPassword) currentPassword.value = '';
+    if (newPassword) newPassword.value = '';
+    if (confirmPassword) confirmPassword.value = '';
+    
+    // Reset strength indicator
+    checkPasswordStrength('');
+  }
+}
+
+function togglePasswordVisibility(inputId) {
+  const input = document.getElementById(inputId);
+  const button = input.parentElement.querySelector('.toggle-password');
+  const icon = button.querySelector('i');
   
+  if (input.type === 'password') {
+    input.type = 'text';
+    icon.classList.remove('fa-eye');
+    icon.classList.add('fa-eye-slash');
+  } else {
+    input.type = 'password';
+    icon.classList.remove('fa-eye-slash');
+    icon.classList.add('fa-eye');
+  }
+}
 
+// Password strength checker - sử dụng event delegation để đảm bảo luôn hoạt động
+function checkPasswordStrength(password) {
+  const strengthLevel = document.getElementById('strengthLevel');
+  const strengthText = document.getElementById('strengthText');
+  
+  if (!strengthLevel || !strengthText) {
+    console.warn('Strength indicator elements not found');
+    return;
+  }
+  
+  if (!password || password.length === 0) {
+    strengthLevel.className = 'strength-level';
+    strengthLevel.style.width = '0%';
+    strengthText.textContent = 'Độ mạnh: Chưa nhập';
+    strengthText.className = 'strength-text';
+    return;
+  }
+  
+  let strength = 0;
+  
+  // Check length
+  if (password.length >= 8) strength++;
+  if (password.length >= 12) strength++;
+  
+  // Check for lowercase and uppercase
+  if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+  
+  // Check for numbers
+  if (/\d/.test(password)) strength++;
+  
+  // Check for special characters
+  if (/[^a-zA-Z0-9]/.test(password)) strength++;
+  
+  // Update UI
+  if (strength <= 2) {
+    strengthLevel.className = 'strength-level weak';
+    strengthText.textContent = 'Độ mạnh: Yếu';
+    strengthText.className = 'strength-text weak';
+  } else if (strength <= 4) {
+    strengthLevel.className = 'strength-level medium';
+    strengthText.textContent = 'Độ mạnh: Trung bình';
+    strengthText.className = 'strength-text medium';
+  } else {
+    strengthLevel.className = 'strength-level strong';
+    strengthText.textContent = 'Độ mạnh: Mạnh';
+    strengthText.className = 'strength-text strong';
+  }
+}
 
+// Attach event listener khi DOM ready
+document.addEventListener('DOMContentLoaded', function() {
+  const newPasswordInput = document.getElementById('MatKhauMoi');
+  if (newPasswordInput) {
+    newPasswordInput.addEventListener('input', function() {
+      checkPasswordStrength(this.value);
+    });
+    
+    // Cũng check khi keyup để đảm bảo
+    newPasswordInput.addEventListener('keyup', function() {
+      checkPasswordStrength(this.value);
+    });
+  }
+});
 
+// Gọi lại khi form được hiển thị
+function showChangePasswordForm() {
+  const form = document.getElementById('changePasswordForm');
+  if (form) {
+    form.style.display = 'block';
+    form.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    
+    // Attach lại event listener sau khi form hiển thị
+    setTimeout(() => {
+      const newPasswordInput = document.getElementById('newPassword');
+      if (newPasswordInput) {
+        newPasswordInput.removeEventListener('input', handlePasswordInput);
+        newPasswordInput.removeEventListener('keyup', handlePasswordInput);
+        newPasswordInput.addEventListener('input', handlePasswordInput);
+        newPasswordInput.addEventListener('keyup', handlePasswordInput);
+      }
+    }, 100);
+  }
+}
 
+function handlePasswordInput(e) {
+  checkPasswordStrength(e.target.value);
+}
+
+// ==================== UPLOAD AVATAR ====================
+function uploadAvatar(input) {
+  if (input.files && input.files[0]) {
+    const file = input.files[0];
+    
+    // Validate file type
+    if (!file.type.match('image.*')) {
+      showNotification('Vui lòng chọn file ảnh!', 'error');
+      return;
+    }
+    
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      showNotification('Kích thước ảnh không được vượt quá 5MB!', 'error');
+      return;
+    }
+    
+    // Preview image
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const avatarImage = document.getElementById('avatarImage');
+      const defaultIcon = document.querySelector('.profile-avatar .fa-user-circle');
+      
+      if (avatarImage) {
+        avatarImage.src = e.target.result;
+        avatarImage.style.display = 'block';
+      }
+      
+      // Ẩn icon mặc định khi có ảnh
+      if (defaultIcon) {
+        defaultIcon.style.display = 'none';
+      }
+    };
+    reader.readAsDataURL(file);
+    
+    // Upload to server
+    const formData = new FormData();
+    formData.append('avatar', file);
+    
+    showNotification('Đang tải ảnh lên...', 'info');
+    
+    fetch('/DashboardKhachHang/UploadAvatar', {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        showNotification(data.message, 'success');
+        // Update avatar URL in session
+        if (data.avatarUrl) {
+          const avatarImage = document.getElementById('avatarImage');
+          const defaultIcon = document.querySelector('.profile-avatar .fa-user-circle');
+          
+          avatarImage.src = data.avatarUrl;
+          avatarImage.style.display = 'block';
+          
+          // Đảm bảo icon mặc định bị ẩn
+          if (defaultIcon) {
+            defaultIcon.style.display = 'none';
+          }
+        }
+      } else {
+        showNotification(data.message, 'error');
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      showNotification('Đã xảy ra lỗi khi tải ảnh lên!', 'error');
+    });
+  }
+}
 
   
 

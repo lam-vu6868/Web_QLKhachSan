@@ -697,7 +697,7 @@
 /* ==================== PROFILE SECTION ==================== */
 .profile-layout {
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: 2fr 2fr;
   gap: 30px;
 }
 
@@ -724,7 +724,7 @@
   position: absolute;
   top: -50%;
   right: -50%;
-  width: 200%;
+  width: 300%;
   height: 200%;
   background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 50%);
   animation: rotate 20s linear infinite;
@@ -749,9 +749,66 @@
 .profile-avatar {
   width: 100px;
   height: 100px;
-  margin: 0 auto 20px;
+  margin: 0 auto 10px;
   font-size: 80px;
   color: var(--gold);
+  position: relative;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(212, 175, 55, 0.05) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+  border: 3px solid var(--gold);
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+}
+
+.profile-avatar i.fa-user-circle {
+  font-size: 80px;
+  color: var(--gold);
+  z-index: 1;
+  position: relative;
+}
+
+.avatar-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 0;
+  opacity: 0;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  z-index: 3;
+  border-radius: 0 0 50% 50%;
+}
+
+.avatar-overlay i {
+  font-size: 18px;
+}
+
+.profile-avatar:hover .avatar-overlay {
+  opacity: 1;
+}
+
+.avatar-overlay:hover {
+  background: rgba(212, 175, 55, 0.9);
 }
 
 .profile-info h3 {
@@ -797,6 +854,430 @@
 .profile-stat strong {
   display: block;
   margin-bottom: 5px;
+}
+
+/* ==================== PASSWORD SECTION ==================== */
+.password-section {
+  margin-top: 25px;
+  padding-top: 25px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  z-index: 1;
+}
+
+.password-section h4 {
+  color: var(--white);
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.password-section h4 i {
+  color: var(--gold);
+}
+
+.btn-change-password {
+  width: 100%;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, var(--gold) 0%, #e8c04e 100%);
+  color: var(--deep-navy);
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 1rem;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+}
+
+.btn-change-password:hover {
+  background: linear-gradient(135deg, #e8c04e 0%, var(--gold) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+}
+
+.btn-change-password i {
+  font-size: 18px;
+}
+
+/* ==================== CHANGE PASSWORD FORM ==================== */
+.change-password-form {
+  margin-top: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+  animation: slideDown 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.password-form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.password-form-header h5 {
+  color: var(--deep-navy);
+  font-size: 1.2rem;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.password-form-header h5 i {
+  color: var(--gold);
+  font-size: 1.3rem;
+}
+
+.btn-close-form {
+  background: none;
+  border: none;
+  color: var(--charcoal-grey);
+  font-size: 1.5rem;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.btn-close-form:hover {
+  background: rgba(220, 53, 69, 0.1);
+  color: var(--danger-red);
+  transform: rotate(90deg);
+}
+
+.password-form-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group-password {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.form-group-password label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: var(--deep-navy);
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+}
+
+.form-group-password label i {
+  color: var(--gold);
+  font-size: 1rem;
+}
+
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.password-input-wrapper input {
+  max-width: 100%;
+  padding: 12px 15px;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  background: var(--white);
+}
+
+.password-input-wrapper input:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+}
+
+.toggle-password {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--charcoal-grey);
+  cursor: pointer;
+  padding: 6px 8px;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.6;
+  line-height: 1;
+}
+
+.password-input-wrapper:hover .toggle-password,
+.password-input-wrapper:focus-within .toggle-password {
+  opacity: 1;
+}
+input[type="password"]::-ms-reveal,
+input[type="password"]::-webkit-reveal {
+  display: none;
+}
+
+.toggle-password:hover {
+  color: var(--gold);
+  background: rgba(212, 175, 55, 0.1);
+}
+
+.password-hint {
+  color: var(--charcoal-grey);
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.password-hint i {
+  color: var(--info-blue);
+  font-size: 0.9rem;
+}
+
+/* ASP.NET Validation Messages */
+.validation-error {
+  color: #dc3545;
+  font-size: 0.85rem;
+  margin-top: 6px;
+  display: block;
+  font-weight: 500;
+}
+
+.validation-summary {
+  background: rgba(220, 53, 69, 0.1);
+  border: 1px solid #dc3545;
+  border-radius: 6px;
+  padding: 12px 15px;
+  margin-bottom: 20px;
+  color: #dc3545;
+  font-size: 0.9rem;
+}
+
+.validation-summary ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.form-group-password label {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  color: var(--deep-navy);
+  font-size: 0.95rem;
+}
+
+.form-group-password label i {
+  color: var(--gold);
+  font-size: 1rem;
+}
+
+/* Password Strength Indicator */
+.password-strength {
+  margin-top: 12px;
+  padding: 10px;
+  background: rgba(248, 249, 250, 0.5);
+  border-radius: 6px;
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.strength-bar {
+  width: 100%;
+  height: 8px;
+  background: #e9ecef;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 10px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.strength-level {
+  height: 100%;
+  width: 0%;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 4px;
+  position: relative;
+}
+
+.strength-level::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3));
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+.strength-level.weak {
+  width: 33%;
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  box-shadow: 0 2px 8px rgba(220, 53, 69, 0.4);
+}
+
+.strength-level.medium {
+  width: 66%;
+  background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+  box-shadow: 0 2px 8px rgba(255, 193, 7, 0.4);
+}
+
+.strength-level.strong {
+  width: 100%;
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.4);
+}
+
+.strength-text {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--charcoal-grey);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.3s ease;
+}
+
+.strength-text::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  display: inline-block;
+}
+
+.strength-text.weak {
+  color: #dc3545;
+}
+
+.password-strength:has(.strength-text.weak) {
+  border-color: rgba(220, 53, 69, 0.2);
+  background: rgba(220, 53, 69, 0.05);
+}
+
+.strength-text.medium {
+  color: #ff9800;
+}
+
+.password-strength:has(.strength-text.medium) {
+  border-color: rgba(255, 152, 0, 0.2);
+  background: rgba(255, 193, 7, 0.05);
+}
+
+.strength-text.strong {
+  color: #28a745;
+}
+
+.password-strength:has(.strength-text.strong) {
+  border-color: rgba(40, 167, 69, 0.2);
+  background: rgba(40, 167, 69, 0.05);
+}
+
+.password-form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color);
+}
+
+.btn-cancel {
+  flex: 1;
+  padding: 10px 18px;
+  background: #f8f9fa;
+  color: #495057;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 0.9rem;
+}
+
+.btn-cancel:hover {
+  background: #e9ecef;
+  border-color: #adb5bd;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.btn-confirm-password {
+    flex: 1;
+    padding: 10px 15px;
+    /* Dùng màu cứng #2ecc71 thay cho var(--success-green) */
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+    color: #ffffff; /* Dùng màu trắng cứng thay cho var(--white) */
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    box-shadow: 0 2px 10px rgba(40, 167, 69, 0.25);
+}
+
+.btn-confirm-password:hover {
+    /* Đảm bảo trạng thái hover hoạt động với màu cứng */
+    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.35);
+}
+
+.btn-confirm-password:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
 }
 
 /* ==================== PROFILE FORM SECTION - NEW DESIGN ==================== */

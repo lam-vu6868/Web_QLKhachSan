@@ -121,7 +121,10 @@
             <div class="reviews-controls" data-aos="fade-up" data-aos-delay="150">
                 <div class="reviews-filter">
                     <button id="filterAll" class="filter-btn active" data-filter="all">Tất cả</button>
-                    <button id="filterMine" class="filter-btn" data-filter="mine">Của tôi</button>
+                    @if (!string.IsNullOrEmpty(Model.EmailKhachHang))
+                    {
+                        <button id="filterMine" class="filter-btn" data-filter="mine">Của tôi</button>
+                    }
                 </div>
             </div>
 
@@ -183,35 +186,43 @@
             </div>
 
             <!-- Pagination -->
-            <div class="pagination-wrapper" data-aos="fade-up" data-aos-delay="300">
-                <button class="pagination-btn pagination-prev" disabled>
+            <div class="pagination-wrapper" data-aos="fade-up" data-aos-delay="300" data-current-page="@Model.CurrentPage" data-total-pages="@Model.TotalPages">
+                <button class="pagination-btn pagination-prev" data-page="@(Model.CurrentPage - 1)" @(Model.CurrentPage <= 1 ? "disabled" : "")>
                     <i class="fas fa-chevron-left"></i>
                 </button>
                 
                 <div class="pagination-numbers">
-                    <button class="pagination-number">1</button>
-                    <button class="pagination-number active">2</button>
-                    <button class="pagination-number">3</button>
-                    <span class="pagination-dots">...</span>
-                    <button class="pagination-number">8</button>
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        if (i == 1 || i == Model.TotalPages || (i >= Model.CurrentPage - 1 && i <= Model.CurrentPage + 1))
+                        {
+                            <button class="pagination-number @(i == Model.CurrentPage ? "active" : "")" data-page="@i">@i</button>
+                        }
+                        else if (i == Model.CurrentPage - 2 || i == Model.CurrentPage + 2)
+                        {
+                            <span class="pagination-dots">...</span>
+                        }
+                    }
                 </div>
                 
-                <button class="pagination-btn pagination-next">
+                <button class="pagination-btn pagination-next" data-page="@(Model.CurrentPage + 1)" @(Model.CurrentPage >= Model.TotalPages ? "disabled" : "")>
                     <i class="fas fa-chevron-right"></i>
                 </button>
             </div>
         </div>
     </section>
 
-    <section class="write-review-section">
-        <div class="container">
-            <div class="review-form-wrapper" data-aos="fade-up">
-                <div class="form-header">
-                    <h3>Chia Sẻ Trải Nghiệm Của Bạn</h3>
-                    <p>Đánh giá của bạn sẽ giúp chúng tôi cải thiện dịch vụ và hỗ trợ khách hàng khác đưa ra quyết định tốt hơn</p>
-                </div>
+    @if (!string.IsNullOrEmpty(Model.EmailKhachHang))
+    {
+        <section class="write-review-section">
+            <div class="container">
+                <div class="review-form-wrapper" data-aos="fade-up">
+                    <div class="form-header">
+                        <h3>Chia Sẻ Trải Nghiệm Của Bạn</h3>
+                        <p>Đánh giá của bạn sẽ giúp chúng tôi cải thiện dịch vụ và hỗ trợ khách hàng khác đưa ra quyết định tốt hơn</p>
+                    </div>
 
-                @using (Html.BeginForm("ThemDanhGia", "DanhGia", FormMethod.Post, new { @class = "modern-review-form", id = "reviewForm" }))
+                    @using (Html.BeginForm("ThemDanhGia", "DanhGia", FormMethod.Post, new { @class = "modern-review-form", id = "reviewForm", enctype = "multipart/form-data" }))
                 {
                     @Html.AntiForgeryToken()
                     
@@ -271,7 +282,7 @@
                                 <p>Kéo thả hình ảnh vào đây hoặc <span class="upload-link">chọn file</span></p>
                                 <small>Tối đa 5 hình, mỗi hình không quá 5MB</small>
                             </div>
-                            <input type="file" id="photoInput" multiple accept="image/*" hidden>
+                            <input type="file" id="photoInput" name="AnhDanhGia" multiple accept="image/*" hidden>
                         </div>
                         <div class="photo-preview" id="photoPreview"></div>
                     </div>
@@ -290,6 +301,7 @@
             </div>
         </div>
     </section>
+    }
 
     <!-- Toast notifications -->
     <div class="toast-container" id="toastContainer"></div>

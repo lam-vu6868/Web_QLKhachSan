@@ -48,7 +48,14 @@
                 {
                     <div class="user-menu-container">
                         <button class="user-menu-toggle">
-                            <i class="fas fa-user-circle"></i>
+                            @if (!string.IsNullOrEmpty(Session["AnhDaiDienUrl"] as string))
+                            {
+                                <img src="@Session["AnhDaiDienUrl"]" alt="Avatar" style="width: 26px; height: 26px; border-radius: 50%; object-fit: cover;" />
+                            }
+                            else
+                            {
+                                <i class="fas fa-user-circle"></i>
+                            }
                             <span id="userName">@Session["HoVaTen"]</span>
                             <i class="fas fa-chevron-down"></i>
                         </button>
@@ -100,7 +107,14 @@
                     <div class="mobile-user-section">
                         <div class="mobile-user-info">
                             <div class="user-avatar">
-                                <i class="fas fa-user-circle"></i>
+                                @if (!string.IsNullOrEmpty(Session["AnhDaiDienUrl"] as string))
+                                {
+                                    <img src="@Session["AnhDaiDienUrl"]" alt="Avatar" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;" />
+                                }
+                                else
+                                {
+                                    <i class="fas fa-user-circle"></i>
+                                }
                             </div>
                             <div class="user-details">
                                 <h4>@(Session["HoVaTen"])</h4>

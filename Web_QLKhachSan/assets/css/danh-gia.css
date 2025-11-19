@@ -2066,6 +2066,7 @@
     align-items: center;
     gap: 10px;
     padding: 12px 12px;
+    text-decoration: none;
     background: linear-gradient(135deg, var(--gold) 0%, #f7d76b 100%);
     color: var(--deep-navy);
     border: none;

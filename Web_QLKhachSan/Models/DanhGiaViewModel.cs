@@ -37,5 +37,9 @@ namespace Web_QLKhachSan.Models
         public double TongDiem { get; set; }
         public int SoDanhGia { get; set; }
         public double PhanTramHaiLong { get; set; }
+        
+        // Phân trang
+        public int CurrentPage { get; set; }
+        public int TotalPages { get; set; }
     }
 }

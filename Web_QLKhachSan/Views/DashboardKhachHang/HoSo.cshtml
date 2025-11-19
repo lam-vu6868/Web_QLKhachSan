@@ -1,4 +1,5 @@
-﻿@{
+﻿@model Web_QLKhachSan.Models.RangBuocHoSoViewModel
+@{
     ViewBag.Title = "Thông Tin Cá Nhân";
 }
 <link rel="stylesheet" href="~/assets/css/dashboard-khachhang.css" />
@@ -32,32 +33,111 @@
                         <div class="profile-card">
                             <div class="profile-header">
                                 <div class="profile-avatar">
-                                    <i class="fas fa-user-circle"></i>
+                                    <img src="@(!string.IsNullOrEmpty(Session["AnhDaiDienUrl"] as string) ? Session["AnhDaiDienUrl"] : Url.Content("~/assets/images/default-avatar.png"))" 
+                                         alt="Avatar" 
+                                         id="avatarImage" 
+                                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                                    <i class="fas fa-user-circle" style="display: none;"></i>
+                                    <div class="avatar-overlay" onclick="document.getElementById('avatarUpload').click()">
+                                        <i class="fas fa-camera"></i>
+                                    </div>
+                                    <input type="file" id="avatarUpload" accept="image/*" style="display: none;" onchange="uploadAvatar(this)" />
                                 </div>
                                 <div class="profile-info">
                                     <h3 id="profileName">@(Session["HoVaTen"])</h3>
-                                    <p id="profileEmail">@(Session["Email"])</p>
                                     <span class="member-badge">
                                         <i class="fas fa-crown"></i> Thành Viên VIP
                                     </span>
                                 </div>
                             </div>
 
-                            <div class="profile-stats">
-                                <div class="profile-stat">
-                                    <i class="fas fa-calendar"></i>
-                                    <div>
-                                        <strong>Ngày Tạo</strong>
-                                        <p>@(Session["NgayTao"] != null ? ((DateTime)Session["NgayTao"]).ToString("dd/MM/yyyy") : "N/A")</p>
-                                    </div>
+                            <!-- Phần Thay Đổi Mật Khẩu -->
+                            <div class="password-section">
+                                <h4><i class="fas fa-lock"></i> Bảo Mật Tài Khoản</h4>
+                                <button type="button" class="btn-change-password" onclick="showChangePasswordForm()">
+                                    <i class="fas fa-key"></i> Đổi Mật Khẩu
+                                </button>
+                            </div>
+
+                            <!-- Form Đổi Mật Khẩu (Ẩn mặc định) -->
+                            <div class="change-password-form" id="changePasswordForm" style="display: none;">
+                                <div class="password-form-header">
+                                    <h5><i class="fas fa-shield-alt"></i> Thay Đổi Mật Khẩu</h5>
+                                    <button type="button" class="btn-close-form" onclick="hideChangePasswordForm()">
+                                        <i class="fas fa-times"></i>
+                                    </button>
                                 </div>
-                                <div class="profile-stat">
-                                    <i class="fas fa-bed"></i>
-                                    <div>
-                                        <strong>Tổng đặt phòng</strong>
-                                        <p>15 lần</p>
+                                
+                                @using (Html.BeginForm("DoiMatKhau", "DashboardKhachHang", FormMethod.Post, new { id = "changePasswordFormSubmit" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <div class="password-form-body">
+                                        <div class="form-group-password">
+                                            @Html.LabelFor(m => m.MatKhauHienTai, new { @class = "" })
+                                            <div class="password-input-wrapper">
+                                                @Html.PasswordFor(m => m.MatKhauHienTai, new { 
+                                                    @class = "form-control", 
+                                                    placeholder = "Nhập mật khẩu hiện tại",
+                                                    id = "MatKhauHienTai"
+                                                })
+                                                <button type="button" class="toggle-password" onclick="togglePasswordVisibility('MatKhauHienTai')">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            </div>
+                                            @Html.ValidationMessageFor(m => m.MatKhauHienTai, "", new { @class = "text-danger validation-error" })
+                                        </div>
+
+                                        <div class="form-group-password">
+                                            @Html.LabelFor(m => m.MatKhauMoi, new { @class = "" })
+                                            <div class="password-input-wrapper">
+                                                @Html.PasswordFor(m => m.MatKhauMoi, new { 
+                                                    @class = "form-control", 
+                                                    placeholder = "Nhập mật khẩu mới",
+                                                    id = "MatKhauMoi"
+                                                })
+                                                <button type="button" class="toggle-password" onclick="togglePasswordVisibility('MatKhauMoi')">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            </div>
+                                            <small class="password-hint">
+                                                <i class="fas fa-info-circle"></i> Tối thiểu 8 ký tự, bao gồm chữ hoa, chữ thường và số
+                                            </small>
+                                            @Html.ValidationMessageFor(m => m.MatKhauMoi, "", new { @class = "text-danger validation-error" })
+                                            
+                                            <!-- Password Strength Indicator -->
+                                            <div class="password-strength">
+                                                <div class="strength-bar">
+                                                    <div class="strength-level" id="strengthLevel"></div>
+                                                </div>
+                                                <span class="strength-text" id="strengthText">Độ mạnh: Chưa nhập</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group-password">
+                                            @Html.LabelFor(m => m.XacNhanMatKhauMoi, new { @class = "" })
+                                            <div class="password-input-wrapper">
+                                                @Html.PasswordFor(m => m.XacNhanMatKhauMoi, new { 
+                                                    @class = "form-control", 
+                                                    placeholder = "Nhập lại mật khẩu mới",
+                                                    id = "XacNhanMatKhauMoi"
+                                                })
+                                                <button type="button" class="toggle-password" onclick="togglePasswordVisibility('XacNhanMatKhauMoi')">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            </div>
+                                            @Html.ValidationMessageFor(m => m.XacNhanMatKhauMoi, "", new { @class = "text-danger validation-error" })
+                                        </div>
+
+                                        <div class="password-form-actions">
+                                            <button type="button" class="btn-cancel" onclick="hideChangePasswordForm()">
+                                                <i class="fas fa-times"></i> Hủy
+                                            </button>
+                                            <button type="submit" class="btn-confirm-password">
+                                                <i class="fas fa-check"></i> Xác Nhận Đổi
+                                            </button>
+                                        </div>
                                     </div>
-                                </div>
+                                }
                             </div>
                         </div>
 
@@ -82,9 +162,9 @@
                                 <div class="form-group-inline">
                                     <label for="phone"><i class="fa-solid fa-phone"></i> Số Điện Thoại</label>
                                     <div class="input-with-button">
-                                        <input type="tel" id="phone" value="" placeholder="Chưa có số điện thoại" readonly />
+                                        <input type="tel" id="phone" value="@(Session["SoDienThoai"] ?? "")" placeholder="Chưa có số điện thoại" readonly />
                                         <button type="button" class="btn-edit" onclick="editField('phone')">
-                                            <i class="fas fa-phone"></i> Thêm SĐT
+                                            <i class="fas fa-phone"></i> @(Session["SoDienThoai"] != null ? "Đổi SĐT" : "Thêm SĐT")
                                         </button>
                                     </div>
                                 </div>
@@ -111,13 +191,14 @@
                                 <div class="form-group-inline">
                                     <label for="address"><i class="fa-solid fa-location-dot"></i> Địa Chỉ</label>
                                     <div class="input-with-button">
-                                        <textarea id="address" rows="3" placeholder="Chưa có địa chỉ" readonly></textarea>
+                                        <textarea id="address" rows="3" placeholder="Chưa có địa chỉ" readonly>@(Session["DiaChi"] ?? "")</textarea>
                                         <button type="button" class="btn-edit" onclick="editField('address')">
-                                            <i class="fas fa-map-marker-alt"></i> Thêm Địa Chỉ
+                                            <i class="fas fa-map-marker-alt"></i> @(Session["DiaChi"] != null ? "Đổi Địa Chỉ" : "Thêm Địa Chỉ")
                                         </button>
                                     </div>
                                 </div>
                             </div>
+                            
                             <!-- Nút Lưu Thay Đổi (Chung) -->
                             <div class="form-section">
                                 <button type="button" class="btn-primary btn-save-all" onclick="saveAllChanges()">
@@ -130,4 +211,8 @@
         </div>
     </div>
 </section>
-<script src="~/assets/js/dashboard-khachhang.js"></script>
+
+@section scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/assets/js/dashboard-khachhang.js"></script>
+}

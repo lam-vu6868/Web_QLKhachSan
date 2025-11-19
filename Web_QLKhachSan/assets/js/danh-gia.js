@@ -5,6 +5,8 @@ class ReviewSystem {
         this.currentFilter = 'all';
         this.currentUserEmail = '';
         this.currentUserName = '';
+        this.currentPage = 1;
+        this.totalPages = 1;
         
         this.init();
     }
@@ -19,6 +21,7 @@ class ReviewSystem {
         this.setupStarRatings();
         this.setupFormReset();
         this.setupFormValidation();
+        this.setupPagination();
     }
 
     // ========== UPDATE SCORE BADGE ==========
@@ -392,11 +395,16 @@ class ReviewSystem {
                 isValid = false;
             }
             
-            // If valid, submit form
+            // If valid, submit form with images
             if (isValid) {
-                form.submit();
+                this.submitFormWithImages(form);
             }
         });
+    }
+
+    submitFormWithImages(form) {
+        // Form đã có enctype="multipart/form-data" nên chỉ cần submit bình thường
+        form.submit();
     }
 
     clearFieldValidationError(fieldName) {
@@ -471,12 +479,27 @@ class ReviewSystem {
     }
 
     handleFileUpload(files, uploadedFiles, preview) {
+        const photoInput = document.getElementById('photoInput');
+        const dataTransfer = new DataTransfer();
+        
+        // Thêm các file cũ vào DataTransfer
+        uploadedFiles.forEach(file => {
+            dataTransfer.items.add(file);
+        });
+        
+        // Thêm các file mới
         files.forEach(file => {
             if (file.type.startsWith('image/') && uploadedFiles.length < 5) {
                 uploadedFiles.push(file);
+                dataTransfer.items.add(file);
                 this.createPhotoPreview(file, uploadedFiles, preview);
             }
         });
+        
+        // Cập nhật photoInput.files
+        if (photoInput) {
+            photoInput.files = dataTransfer.files;
+        }
 
         if (uploadedFiles.length >= 5) {
             document.getElementById('uploadArea').style.opacity = '0.5';
@@ -503,6 +526,16 @@ class ReviewSystem {
                     uploadedFiles.splice(index, 1);
                     previewItem.remove();
                     
+                    // Cập nhật photoInput.files
+                    const photoInput = document.getElementById('photoInput');
+                    const dataTransfer = new DataTransfer();
+                    uploadedFiles.forEach(f => {
+                        dataTransfer.items.add(f);
+                    });
+                    if (photoInput) {
+                        photoInput.files = dataTransfer.files;
+                    }
+                    
                     if (uploadedFiles.length < 5) {
                         document.getElementById('uploadArea').style.opacity = '1';
                         document.getElementById('uploadArea').style.pointerEvents = 'auto';
@@ -513,6 +546,175 @@ class ReviewSystem {
             preview.appendChild(previewItem);
         };
         reader.readAsDataURL(file);
+    }
+
+    // ========== PAGINATION ==========
+    setupPagination() {
+        const paginationWrapper = document.querySelector('.pagination-wrapper');
+        if (!paginationWrapper) return;
+
+        this.currentPage = parseInt(paginationWrapper.dataset.currentPage) || 1;
+        this.totalPages = parseInt(paginationWrapper.dataset.totalPages) || 1;
+
+        // Xử lý click vào các nút pagination
+        paginationWrapper.addEventListener('click', (e) => {
+            const btn = e.target.closest('[data-page]');
+            if (!btn || btn.disabled) return;
+
+            e.preventDefault();
+            const page = parseInt(btn.dataset.page);
+            if (page >= 1 && page <= this.totalPages) {
+                this.loadPage(page);
+            }
+        });
+    }
+
+    async loadPage(page) {
+        const grid = document.querySelector('.reviews-grid');
+        if (!grid) return;
+
+        // Hiển thị loading
+        grid.style.opacity = '0.5';
+        grid.style.pointerEvents = 'none';
+
+        try {
+            const response = await fetch(`/DanhGia/GetReviews?page=${page}`);
+            const result = await response.json();
+
+            if (result.success) {
+                this.currentPage = result.currentPage;
+                this.totalPages = result.totalPages;
+                
+                // Cập nhật reviews grid
+                this.renderReviews(result.data);
+                
+                // Cập nhật pagination UI
+                this.updatePaginationUI();
+                
+                // Scroll to reviews section
+                document.querySelector('.reviews-section').scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        } catch (error) {
+            console.error('Error loading page:', error);
+        } finally {
+            grid.style.opacity = '1';
+            grid.style.pointerEvents = 'auto';
+        }
+    }
+
+    renderReviews(reviews) {
+        const grid = document.querySelector('.reviews-grid');
+        if (!grid) return;
+
+        grid.innerHTML = '';
+
+        reviews.forEach(danhGia => {
+            const avatarUrl = danhGia.khachHang.anhDaiDien || 
+                `https://www.gravatar.com/avatar/?d=mp&s=150${danhGia.khachHang.maKhachHang % 70 + 1}`;
+            
+            const ngayDanhGia = Math.floor((new Date() - new Date(danhGia.ngayTao)) / (1000 * 60 * 60 * 24));
+            const timeAgo = ngayDanhGia === 0 ? 'Hôm nay' :
+                            ngayDanhGia === 1 ? '1 ngày trước' :
+                            ngayDanhGia < 7 ? `${ngayDanhGia} ngày trước` :
+                            ngayDanhGia < 30 ? `${Math.floor(ngayDanhGia / 7)} tuần trước` :
+                            `${Math.floor(ngayDanhGia / 30)} tháng trước`;
+
+            let starsHTML = '';
+            for (let i = 1; i <= 5; i++) {
+                if (i <= danhGia.diem) {
+                    starsHTML += '<i class="fas fa-star"></i>';
+                } else {
+                    starsHTML += '<i class="fas fa-star" style="color: #e2e8f0;"></i>';
+                }
+            }
+
+            let imagesHTML = '';
+            if (danhGia.hinhAnhs && danhGia.hinhAnhs.length > 0) {
+                imagesHTML = '<div class="review-images">';
+                danhGia.hinhAnhs.forEach(imgUrl => {
+                    imagesHTML += `
+                        <div class="review-image-item">
+                            <img src="${imgUrl}" alt="Review image">
+                        </div>
+                    `;
+                });
+                imagesHTML += '</div>';
+            }
+
+            const cardHTML = `
+                <div class="review-card" data-email="${danhGia.khachHang.email}">
+                    <div class="review-header">
+                        <div class="reviewer-avatar">
+                            <img src="${avatarUrl}" alt="${danhGia.khachHang.hoVaTen}">
+                        </div>
+                        <div class="reviewer-info">
+                            <h4>${danhGia.khachHang.hoVaTen}</h4>
+                            <div class="review-date">${timeAgo}</div>
+                        </div>
+                    </div>
+                    <div class="review-rating">
+                        <div class="stars">
+                            ${starsHTML}
+                        </div>
+                        <span class="rating-score">${danhGia.diem}/5</span>
+                    </div>
+                    <div class="review-content">${danhGia.binhLuan}</div>
+                    ${imagesHTML}
+                    <div class="review-service">${danhGia.phong.tenPhong}</div>
+                </div>
+            `;
+
+            grid.insertAdjacentHTML('beforeend', cardHTML);
+        });
+
+        // Cập nhật image overlays sau khi render
+        this.updateImageOverlays();
+    }
+
+    updatePaginationUI() {
+        const wrapper = document.querySelector('.pagination-wrapper');
+        if (!wrapper) return;
+
+        wrapper.dataset.currentPage = this.currentPage;
+        wrapper.dataset.totalPages = this.totalPages;
+
+        // Cập nhật nút prev
+        const prevBtn = wrapper.querySelector('.pagination-prev');
+        if (prevBtn) {
+            prevBtn.dataset.page = this.currentPage - 1;
+            prevBtn.disabled = this.currentPage <= 1;
+        }
+
+        // Cập nhật nút next
+        const nextBtn = wrapper.querySelector('.pagination-next');
+        if (nextBtn) {
+            nextBtn.dataset.page = this.currentPage + 1;
+            nextBtn.disabled = this.currentPage >= this.totalPages;
+        }
+
+        // Cập nhật số trang
+        const numbersContainer = wrapper.querySelector('.pagination-numbers');
+        if (numbersContainer) {
+            numbersContainer.innerHTML = '';
+            
+            for (let i = 1; i <= this.totalPages; i++) {
+                if (i === 1 || i === this.totalPages || (i >= this.currentPage - 1 && i <= this.currentPage + 1)) {
+                    const btn = document.createElement('button');
+                    btn.className = `pagination-number ${i === this.currentPage ? 'active' : ''}`;
+                    btn.dataset.page = i;
+                    btn.textContent = i;
+                    numbersContainer.appendChild(btn);
+                } else if (i === this.currentPage - 2 || i === this.currentPage + 2) {
+                    const dots = document.createElement('span');
+                    dots.className = 'pagination-dots';
+                    dots.textContent = '...';
+                    numbersContainer.appendChild(dots);
+                }
+            }
+        }
     }
 
 }
