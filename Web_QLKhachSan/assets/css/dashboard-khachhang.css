@@ -589,6 +589,10 @@
 /* ==================== HISTORY TABLE ==================== */
 .history-table-container {
   overflow-x: auto;
+  background: var(--white);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  overflow-y: visible;
 }
 
 .history-table {
@@ -601,97 +605,252 @@
   color: var(--white);
 }
 
-.history-table th,
+.history-table th {
+  padding: 16px 12px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
 .history-table td {
-  padding: 15px;
+  padding: 16px 12px;
   text-align: left;
   border-bottom: 1px solid var(--border-color);
+  vertical-align: middle;
+  position: relative;
+}
+
+.history-table tbody tr {
+  transition: all 0.2s ease;
 }
 
 .history-table tbody tr:hover {
-  background-color: var(--off-white);
+  background-color: rgba(212, 175, 55, 0.05);
 }
 
-/* Service cell dropdown styles */
-.service-summary {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.service-label {
-  font-weight: 600;
-  color: var(--deep-navy);
+.history-table .booking-id {
+  font-weight: 700;
+  color: var(--gold);
   font-size: 0.95rem;
 }
 
-.service-toggle {
-  background: transparent;
-  border: 1px solid rgba(0,0,0,0.06);
-  padding: 4px 8px;
-  border-radius: 8px;
-  cursor: pointer;
+.history-table .price {
   font-weight: 700;
   color: var(--deep-navy);
-  transition: all 0.18s ease;
-}
-
-.service-toggle:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(2,6,23,0.04);
-}
-
-.service-list {
-  position: absolute;
-  background: var(--white);
-  border: 1px solid rgba(0,0,0,0.06);
-  padding: 8px 12px;
-  list-style: none;
-  margin: 8px 0 0 0;
-  border-radius: 8px;
-  box-shadow: 0 8px 30px rgba(2,6,23,0.06);
-  z-index: 40;
-}
-
-.service-list li {
-  padding: 6px 8px;
+  font-size: 1rem;
   white-space: nowrap;
-  font-size: 0.95rem;
-  color: var(--deep-navy);
 }
 
-.service-cell { position: relative; }
-
-.history-table .status-badge {
-  padding: 5px 10px;
-  border-radius: 15px;
-  font-size: 0.85rem;
-  font-weight: 600;
+/* Service cell with dropdown */
+.service-cell {
+  position: relative;
 }
 
-.history-table .status-badge.success {
-  background: #d4edda;
-  color: #155724;
-}
-
-.history-table .status-badge.danger {
-  background: #f8d7da;
-  color: #721c24;
-}
-
-.history-table .btn-details {
-  padding: 5px 15px;
-  background: var(--info-blue);
+.service-dropdown-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: linear-gradient(135deg, var(--gold) 0%, #daa520 100%);
   color: var(--white);
   border: none;
-  border-radius: 5px;
+  border-radius: 20px;
   cursor: pointer;
   font-weight: 600;
+  font-size: 0.85rem;
   transition: all 0.3s ease;
+  white-space: nowrap;
 }
 
-.history-table .btn-details:hover {
-  background: #2980b9;
+.service-dropdown-btn .service-count {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.service-dropdown-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
+}
+
+.service-dropdown-btn i {
+  transition: transform 0.3s ease;
+  font-size: 0.7rem;
+}
+
+.service-dropdown-btn.active i {
+  transform: rotate(180deg);
+}
+
+.service-dropdown-list {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  background: var(--white);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+  min-width: 220px;
+  padding: 8px;
+  animation: fadeInDown 0.3s ease;
+}
+
+.service-dropdown-list.show {
+  display: block;
+}
+
+.service-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  color: var(--charcoal-grey);
+  font-size: 0.9rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  margin-bottom: 4px;
+}
+
+.service-item:last-child {
+  margin-bottom: 0;
+}
+
+.service-item:hover {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(212, 175, 55, 0.05) 100%);
+  transform: translateX(4px);
+}
+
+.service-item i {
+  color: var(--gold);
+  width: 18px;
+  text-align: center;
+  font-size: 1rem;
+}
+
+.service-item span {
+  flex: 1;
+  font-weight: 500;
+}
+
+.no-service {
+  color: var(--charcoal-grey);
+  font-style: italic;
+  opacity: 0.6;
+  font-size: 0.9rem;
+}
+
+/* Status badges */
+.history-table .status-badge {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.history-table .status-badge.completed {
+  background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+  color: var(--white);
+}
+
+.history-table .status-badge.confirmed {
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+  color: var(--white);
+}
+
+.history-table .status-badge.pending {
+  background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+  color: var(--white);
+}
+
+.history-table .status-badge.cancelled {
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  color: var(--white);
+}
+
+/* Action buttons */
+.btn-detail {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, var(--deep-navy) 0%, #1e3a5f 100%);
+  color: var(--white);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.btn-detail:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(10, 25, 49, 0.3);
+}
+
+.btn-detail i {
+  font-size: 0.9rem;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .history-table th,
+  .history-table td {
+    padding: 12px 8px;
+    font-size: 0.85rem;
+  }
+  
+  .history-table th {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .history-table-container {
+    border-radius: 8px;
+  }
+  
+  .history-table {
+    font-size: 0.8rem;
+  }
+  
+  .history-table th,
+  .history-table td {
+    padding: 10px 6px;
+  }
+  
+  .service-dropdown-btn {
+    padding: 5px 10px;
+    font-size: 0.75rem;
+  }
+  
+  .btn-action {
+    width: 32px;
+    height: 32px;
+    font-size: 0.9rem;
+  }
 }
 
 /* ==================== PROFILE SECTION ==================== */
