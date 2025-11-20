@@ -87,21 +87,19 @@
                                             <td class="service-cell">
                                                 @if (item.ChiTietDatDichVus != null && item.ChiTietDatDichVus.Any())
                                                 {
-                                                    <button class="service-dropdown-btn" onclick="toggleServiceList(this)">
-                                                        <span class="service-count">@item.ChiTietDatDichVus.Count() dịch vụ</span>
-                                                        <i class="fas fa-chevron-down"></i>
-                                                    </button>
-                                                    <div class="service-dropdown-list">
-                                                        @foreach (var dv in item.ChiTietDatDichVus)
-                                                        {
-                                                            var tenDichVu = dv.DichVu != null ? dv.DichVu.TenDichVu : "Dịch vụ";
-                                                            var iconDichVu = dv.DichVu != null && !string.IsNullOrEmpty(dv.DichVu.Icon) ? dv.DichVu.Icon : "fas fa-concierge-bell";
-                                                            <div class="service-item">
-                                                                <i class="@iconDichVu"></i>
-                                                                <span>@tenDichVu @(dv.SoLuong > 1 ? "(x" + dv.SoLuong + ")" : "")</span>
-                                                            </div>
-                                                        }
-                                                    </div>
+                                                    <button class="service-dropdown-btn">
+                                                        <span class="service-tooltip">
+                                                            @foreach (var dv in item.ChiTietDatDichVus)
+                                                            {
+                                                                var tenDichVu = dv.DichVu != null ? dv.DichVu.TenDichVu : "Dịch vụ";
+                                                                var iconDichVu = dv.DichVu != null && !string.IsNullOrEmpty(dv.DichVu.Icon) ? dv.DichVu.Icon : "fas fa-concierge-bell";
+                                                                <div class="service-item">
+                                                                    <i class="@iconDichVu"></i>
+                                                                    <span>@tenDichVu @(dv.SoLuong > 1 ? "(x" + dv.SoLuong + ")" : "")</span>
+                                                                </div>
+                                                            }
+                                                        </span>
+                                                        <span class="service-count">@item.ChiTietDatDichVus.Count() dịch vụ</span>                                                    </button>
                                                 }
                                                 else
                                                 {
@@ -111,9 +109,25 @@
                                             <td><span class="status-badge @statusClass">@statusText</span></td>
                                             <td class="price">@((item.TongTien ?? 0).ToString("N0"))đ</td>
                                             <td>
-                                                <button class="btn-detail">
-                                                    <i class="fas fa-file-alt"></i> Chi Tiết
-                                                </button>
+                                                @if (item.TrangThaiDatPhong == 0 || item.TrangThaiDatPhong == 1)
+                                                {
+                                                    <div class="btn-dual-action">
+                                                        <button class="btn-dual-left" data-action="detail">
+                                                            <i class="fas fa-file-alt"></i>
+                                                            <span class="btn-text">Chi tiết</span>
+                                                        </button>
+                                                        <button class="btn-dual-right" data-action="cancel">
+                                                            <i class="fas fa-times-circle"></i>
+                                                            <span class="btn-text">Hủy Đặt</span>
+                                                        </button>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <button class="btn-detail">
+                                                        <i class="fas fa-file-alt"></i> <span>Chi Tiết</span>
+                                                    </button>
+                                                }
                                             </td>
                                         </tr>
                                     }

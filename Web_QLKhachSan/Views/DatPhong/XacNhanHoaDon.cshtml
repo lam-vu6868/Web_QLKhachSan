@@ -19,7 +19,20 @@
             
             <div class="confirmation-box">
             
-            @if (TempData["PaymentSuccess"] != null && (bool)TempData["PaymentSuccess"])
+            @{
+                bool? paymentSuccess = ViewBag.PaymentSuccess as bool?;
+                
+                // Nếu không có dữ liệu gì (chưa thanh toán), redirect về trang chủ
+                if (paymentSuccess == null)
+                {
+                    Response.Redirect(Url.Action("Index", "Home"));
+                    return;
+                }
+                
+                bool isSuccess = paymentSuccess.Value;
+            }
+            
+            @if (isSuccess)
             {
                 <div class="confirmation-header success">
                     <div class="confirmation-icon-circle success">
@@ -32,22 +45,34 @@
                 <div class="transaction-info-box">
                     <h3 class="transaction-title">📋 Thông tin giao dịch</h3>
                     <table class="transaction-table">
-                        <tr>
-                            <td class="transaction-label">Mã đặt phòng:</td>
-                            <td class="transaction-value">@TempData["BookingRef"]</td>
-                        </tr>
-                        <tr>
-                            <td class="transaction-label">Số tiền:</td>
-                            <td class="transaction-value amount">@string.Format("{0:N0}đ", TempData["Amount"])</td>
-                        </tr>
-                        <tr>
-                            <td class="transaction-label">Mã giao dịch:</td>
-                            <td class="transaction-value">@TempData["TransactionNo"]</td>
-                        </tr>
-                        <tr>
-                            <td class="transaction-label">Ngân hàng:</td>
-                            <td class="transaction-value">@TempData["BankCode"]</td>
-                        </tr>
+                        @if (ViewBag.BookingRef != null)
+                        {
+                            <tr>
+                                <td class="transaction-label">Mã đặt phòng:</td>
+                                <td class="transaction-value">@ViewBag.BookingRef</td>
+                            </tr>
+                        }
+                        @if (ViewBag.Amount != null)
+                        {
+                            <tr>
+                                <td class="transaction-label">Số tiền:</td>
+                                <td class="transaction-value amount">@string.Format("{0:N0}đ", ViewBag.Amount)</td>
+                            </tr>
+                        }
+                        @if (ViewBag.TransactionNo != null)
+                        {
+                            <tr>
+                                <td class="transaction-label">Mã giao dịch:</td>
+                                <td class="transaction-value">@ViewBag.TransactionNo</td>
+                            </tr>
+                        }
+                        @if (ViewBag.BankCode != null)
+                        {
+                            <tr>
+                                <td class="transaction-label">Ngân hàng:</td>
+                                <td class="transaction-value">@ViewBag.BankCode</td>
+                            </tr>
+                        }
                     </table>
                 </div>
 
@@ -65,7 +90,7 @@
                         <i class="fas fa-times"></i>
                     </div>
                     <h2 class="confirmation-title error">❌ Thanh Toán Thất Bại</h2>
-                    <p class="confirmation-subtitle">@TempData["ErrorMessage"]</p>
+                    <p class="confirmation-subtitle">@ViewBag.ErrorMessage</p>
                 </div>
 
                 <div class="alert-box warning">
@@ -80,7 +105,7 @@
                 <a href="@Url.Action("Index", "Home")" class="btn-confirmation primary">
                     <i class="fas fa-home"></i> Về Trang Chủ
                 </a>
-                @if (TempData["PaymentSuccess"] != null && (bool)TempData["PaymentSuccess"])
+                @if (isSuccess)
                 {
                     <a href="@Url.Action("Index", "PhongNghi")" class="btn-confirmation success">
                         <i class="fas fa-bed"></i> Đặt Phòng Tiếp

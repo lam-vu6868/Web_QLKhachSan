@@ -717,44 +717,29 @@ function uploadAvatar(input) {
     });
   }
 }
-
-// ==================== SERVICE DROPDOWN TOGGLE ====================
-function toggleServiceList(button) {
-  const dropdown = button.nextElementSibling;
-  const allDropdowns = document.querySelectorAll('.service-dropdown-list');
-  const allButtons = document.querySelectorAll('.service-dropdown-btn');
-  
-  // Đóng tất cả dropdown khác
-  allDropdowns.forEach(dd => {
-    if (dd !== dropdown) {
-      dd.classList.remove('show');
+// ==================== DUAL ACTION BUTTONS ====================
+// Xử lý click cho các button dual action (Xem chi tiết / Hủy đặt phòng)
+document.addEventListener('DOMContentLoaded', function() {
+  // Lắng nghe sự kiện click cho tất cả button dual
+  document.addEventListener('click', function(e) {
+    const btn = e.target.closest('.btn-dual-left, .btn-dual-right');
+    if (!btn) return;
+    
+    const action = btn.getAttribute('data-action');
+    const row = btn.closest('tr');
+    const bookingId = row?.querySelector('.booking-id')?.textContent.trim();
+    
+    if (action === 'detail') {
+      // Xử lý xem chi tiết
+      console.log('Xem chi tiết đơn:', bookingId);
+      // TODO: Thêm logic xem chi tiết ở đây
+    } else if (action === 'cancel') {
+      // Xử lý hủy đặt phòng
+      console.log('Hủy đặt phòng:', bookingId);
+      // TODO: Thêm logic hủy đặt phòng ở đây
     }
   });
-  
-  // Xóa active class khỏi tất cả button khác
-  allButtons.forEach(btn => {
-    if (btn !== button) {
-      btn.classList.remove('active');
-    }
-  });
-  
-  // Toggle dropdown hiện tại
-  dropdown.classList.toggle('show');
-  button.classList.toggle('active');
-}
-
-// Đóng dropdown khi click ra ngoài
-document.addEventListener('click', function(e) {
-  if (!e.target.closest('.service-cell')) {
-    document.querySelectorAll('.service-dropdown-list').forEach(dd => {
-      dd.classList.remove('show');
-    });
-    document.querySelectorAll('.service-dropdown-btn').forEach(btn => {
-      btn.classList.remove('active');
-    });
-  }
 });
-  
 
 
 

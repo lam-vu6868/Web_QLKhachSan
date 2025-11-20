@@ -699,9 +699,19 @@ namespace Web_QLKhachSan.Controllers
 
                 // TODO: Gửi email thông báo với thông tin thanh toán
 
+                // Lưu vào Session để tránh mất data khi reload
+                Session["LastPaymentSuccess"] = true;
+                Session["LastBookingRef"] = paymentRefId;
+                Session["LastAmount"] = thongTinDatPhong.TongCong;
+                Session["LastTransactionNo"] = null;
+                Session["LastBankCode"] = null;
+                
+                TempData["PaymentSuccess"] = true;
                 TempData["SuccessMessage"] = $"Đặt phòng thành công! Vui lòng thanh toán trước {deadline:HH:mm dd/MM/yyyy}. Thông tin chi tiết đã được gửi qua email {thongTinDatPhong.Email}.";
                 TempData["PaymentDeadline"] = deadline;
                 TempData["PaymentRefId"] = paymentRefId;
+                TempData["Amount"] = thongTinDatPhong.TongCong;
+                TempData["BookingRef"] = paymentRefId;
 
                 return RedirectToAction("XacNhanHoaDon");
             }
@@ -785,6 +795,25 @@ namespace Web_QLKhachSan.Controllers
                 // ✅ Lấy thông tin đơn đặt phòng từ session
                 string paymentRefId = Session["CurrentPaymentRefId"] as string;
                 int? datPhongId = Session["CurrentDatPhongId"] as int?;
+                
+                // ✅ Nếu Session mất, tìm đơn đặt phòng theo vnp_TxnRef
+                if (!datPhongId.HasValue)
+                {
+                    var log = db.VNPAY_Transaction_Logs
+                        .Where(l => l.vnp_txn_ref == vnp_TxnRef)
+                        .OrderByDescending(l => l.log_time)
+                        .FirstOrDefault();
+                    
+                    if (log != null && log.DatPhongId.HasValue)
+                    {
+                        datPhongId = log.DatPhongId;
+                        var datPhong = db.DatPhongs.Find(datPhongId.Value);
+                        if (datPhong != null)
+                        {
+                            paymentRefId = datPhong.PaymentRefId;
+                        }
+                    }
+                }
 
                 if (checkSignature)
                 {
@@ -817,6 +846,13 @@ namespace Web_QLKhachSan.Controllers
                             }
                          }
 
+                         // Lưu vào Session để tránh mất data khi reload
+                         Session["LastPaymentSuccess"] = true;
+                         Session["LastBookingRef"] = paymentRefId;
+                         Session["LastAmount"] = vnp_Amount;
+                         Session["LastTransactionNo"] = vnp_TransactionNo;
+                         Session["LastBankCode"] = vnp_BankCode;
+                         
                          TempData["PaymentSuccess"] = true;
                          TempData["TransactionNo"] = vnp_TransactionNo;
                          TempData["Amount"] = vnp_Amount;
@@ -837,6 +873,10 @@ namespace Web_QLKhachSan.Controllers
                             }
                         }
 
+                        // Lưu vào Session
+                        Session["LastPaymentSuccess"] = false;
+                        Session["LastErrorMessage"] = "Thanh toán thất bại. Mã lỗi: " + vnp_ResponseCode;
+                        
                         TempData["PaymentSuccess"] = false;
                         TempData["ErrorMessage"] = "Thanh toán thất bại. Mã lỗi: " + vnp_ResponseCode;
                     }
@@ -877,6 +917,14 @@ namespace Web_QLKhachSan.Controllers
         /// </summary>
         public ActionResult XacNhanHoaDon()
         {
+            // Ưu tiên lấy từ TempData, nếu không có thì lấy từ Session
+            ViewBag.PaymentSuccess = TempData["PaymentSuccess"] ?? Session["LastPaymentSuccess"];
+            ViewBag.BookingRef = TempData["BookingRef"] ?? TempData["PaymentRefId"] ?? Session["LastBookingRef"];
+            ViewBag.Amount = TempData["Amount"] ?? Session["LastAmount"];
+            ViewBag.TransactionNo = TempData["TransactionNo"] ?? Session["LastTransactionNo"];
+            ViewBag.BankCode = TempData["BankCode"] ?? Session["LastBankCode"];
+            ViewBag.ErrorMessage = TempData["ErrorMessage"] ?? Session["LastErrorMessage"];
+            
             return View();
         }
 
