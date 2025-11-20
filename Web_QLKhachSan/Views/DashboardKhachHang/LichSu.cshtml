@@ -1,4 +1,5 @@
-﻿@{
+﻿@model IEnumerable<Web_QLKhachSan.Models.DatPhong>
+@{
     ViewBag.Title = "Index";
 }
 <link rel="stylesheet" href="~/assets/css/dashboard-khachhang.css" />
@@ -41,141 +42,141 @@
                                 </tr>
                             </thead>
                             <tbody id="historyTableBody">
-                                <!-- Example row with services -->
-                                <tr>
-                                    <td class="booking-id">#DP001</td>
-                                    <td>Deluxe</td>
-                                    <td>Phòng Double 104</td>
-                                    <td>01/12/2025</td>
-                                    <td>05/12/2025</td>
-                                    <td class="service-cell">
-                                        <button class="service-dropdown-btn" onclick="toggleServiceList(this)">
-                                            <span class="service-count">3 dịch vụ</span>
-                                            <i class="fas fa-chevron-down"></i>
-                                        </button>
-                                        <div class="service-dropdown-list">
-                                            <div class="service-item">
-                                                <i class="fas fa-spa"></i>
-                                                <span>Spa & Massage</span>
-                                            </div>
-                                            <div class="service-item">
-                                                <i class="fas fa-utensils"></i>
-                                                <span>Bữa sáng buffet</span>
-                                            </div>
-                                            <div class="service-item">
-                                                <i class="fas fa-car"></i>
-                                                <span>Đưa đón sân bay</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td><span class="status-badge completed">Hoàn Thành</span></td>
-                                    <td class="price">6.500.000đ</td>
-                                    <td>
-                                        <button class="btn-detail" onclick="viewBookingDetails('#DP001')">
-                                            <i class="fas fa-file-alt"></i> Chi Tiết
-                                        </button>
-                                    </td>
-                                </tr>
-                                <!-- Example row without services -->
-                                <tr>
-                                    <td class="booking-id">#DP002</td>
-                                    <td>Standard</td>
-                                    <td>Phòng Single 201</td>
-                                    <td>10/11/2025</td>
-                                    <td>12/11/2025</td>
-                                    <td class="service-cell">
-                                        <span class="no-service">Không có</span>
-                                    </td>
-                                    <td><span class="status-badge confirmed">Đã Xác Nhận</span></td>
-                                    <td class="price">2.000.000đ</td>
-                                    <td>
-                                        <button class="btn-detail" onclick="viewBookingDetails('#DP002')">
-                                            <i class="fas fa-file-alt"></i> Chi Tiết
-                                        </button>
-                                    </td>
-                                </tr>
-                                <!-- Example pending -->
-                                <tr>
-                                    <td class="booking-id">#DP003</td>
-                                    <td>Suite</td>
-                                    <td>Phòng Family 305</td>
-                                    <td>20/12/2025</td>
-                                    <td>25/12/2025</td>
-                                    <td class="service-cell">
-                                        <button class="service-dropdown-btn" onclick="toggleServiceList(this)">
-                                            <span class="service-count">2 dịch vụ</span>
-                                            <i class="fas fa-chevron-down"></i>
-                                        </button>
-                                        <div class="service-dropdown-list">
-                                            <div class="service-item">
-                                                <i class="fas fa-swimming-pool"></i>
-                                                <span>Hồ bơi</span>
-                                            </div>
-                                            <div class="service-item">
-                                                <i class="fas fa-dumbbell"></i>
-                                                <span>Gym & Fitness</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td><span class="status-badge pending">Chờ Xác Nhận</span></td>
-                                    <td class="price">12.000.000đ</td>
-                                    <td>
-                                        <button class="btn-detail" onclick="viewBookingDetails('#DP003')">
-                                            <i class="fas fa-file-alt"></i> Chi Tiết
-                                        </button>
-                                    </td>
-                                </tr>
-                                <!-- Example cancelled -->
-                                <tr>
-                                    <td class="booking-id">#DP004</td>
-                                    <td>Deluxe</td>
-                                    <td>Phòng Double 105</td>
-                                    <td>05/10/2025</td>
-                                    <td>08/10/2025</td>
-                                    <td class="service-cell">
-                                        <span class="no-service">Không có</span>
-                                    </td>
-                                    <td><span class="status-badge cancelled">Đã Hủy</span></td>
-                                    <td class="price">4.000.000đ</td>
-                                    <td>
-                                        <button class="btn-detail" onclick="viewBookingDetails('#DP004')">
-                                            <i class="fas fa-file-alt"></i> Chi Tiết
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="booking-id">#DP003</td>
-                                    <td>Suite</td>
-                                    <td>Phòng Family 305</td>
-                                    <td>20/12/2025</td>
-                                    <td>25/12/2025</td>
-                                    <td class="service-cell">
-                                        <button class="service-dropdown-btn" onclick="toggleServiceList(this)">
-                                            <span class="service-count">2 dịch vụ</span>
-                                            <i class="fas fa-chevron-down"></i>
-                                        </button>
-                                        <div class="service-dropdown-list">
-                                            <div class="service-item">
-                                                <i class="fas fa-swimming-pool"></i>
-                                                <span>Hồ bơi</span>
-                                            </div>
-                                            <div class="service-item">
-                                                <i class="fas fa-dumbbell"></i>
-                                                <span>Gym & Fitness</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td><span class="status-badge pending">Chờ Xác Nhận</span></td>
-                                    <td class="price">12.000.000đ</td>
-                                    <td>
-                                        <button class="btn-detail" onclick="viewBookingDetails('#DP003')">
-                                            <i class="fas fa-file-alt"></i> Chi Tiết
-                                        </button>
-                                    </td>
-                                </tr>
+                                @if (Model != null && Model.Any())
+                                {
+                                    foreach (var item in Model)
+                                    {
+                                        // Lấy thông tin phòng đầu tiên
+                                        var chiTietPhong = item.ChiTietDatPhongs.FirstOrDefault();
+                                        var tenPhong = chiTietPhong?.Phong?.TenPhong ?? "N/A";
+                                        var tenLoaiPhong = chiTietPhong?.LoaiPhong?.TenLoai ?? "N/A";
+
+                                        // Xử lý trạng thái
+                                        string statusClass = "";
+                                        string statusText = "";
+                                        switch (item.TrangThaiDatPhong)
+                                        {
+                                            case 0:
+                                                statusClass = "pending";
+                                                statusText = "Chờ Xác Nhận";
+                                                break;
+                                            case 1:
+                                                statusClass = "confirmed";
+                                                statusText = "Đã Xác Nhận";
+                                                break;
+                                            case 2:
+                                                statusClass = "completed";
+                                                statusText = "Hoàn Thành";
+                                                break;
+                                            case 3:
+                                                statusClass = "cancelled";
+                                                statusText = "Đã Hủy";
+                                                break;
+                                            default:
+                                                statusClass = "";
+                                                statusText = "Không xác định";
+                                                break;
+                                        }
+
+                                        <tr>
+                                            <td class="booking-id">@(item.MaDatPhong ?? "#DP" + item.DatPhongId)</td>
+                                            <td>@tenLoaiPhong</td>
+                                            <td>@tenPhong</td>
+                                            <td>@(item.NgayNhan?.ToString("dd/MM/yyyy") ?? "N/A")</td>
+                                            <td>@(item.NgayTra?.ToString("dd/MM/yyyy") ?? "N/A")</td>
+                                            <td class="service-cell">
+                                                @if (item.ChiTietDatDichVus != null && item.ChiTietDatDichVus.Any())
+                                                {
+                                                    <button class="service-dropdown-btn" onclick="toggleServiceList(this)">
+                                                        <span class="service-count">@item.ChiTietDatDichVus.Count() dịch vụ</span>
+                                                        <i class="fas fa-chevron-down"></i>
+                                                    </button>
+                                                    <div class="service-dropdown-list">
+                                                        @foreach (var dv in item.ChiTietDatDichVus)
+                                                        {
+                                                            var tenDichVu = dv.DichVu != null ? dv.DichVu.TenDichVu : "Dịch vụ";
+                                                            var iconDichVu = dv.DichVu != null && !string.IsNullOrEmpty(dv.DichVu.Icon) ? dv.DichVu.Icon : "fas fa-concierge-bell";
+                                                            <div class="service-item">
+                                                                <i class="@iconDichVu"></i>
+                                                                <span>@tenDichVu @(dv.SoLuong > 1 ? "(x" + dv.SoLuong + ")" : "")</span>
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <span class="no-service">Không có</span>
+                                                }
+                                            </td>
+                                            <td><span class="status-badge @statusClass">@statusText</span></td>
+                                            <td class="price">@((item.TongTien ?? 0).ToString("N0"))đ</td>
+                                            <td>
+                                                <button class="btn-detail">
+                                                    <i class="fas fa-file-alt"></i> Chi Tiết
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="9" style="text-align: center; padding: 20px;">
+                                            Chưa có lịch sử đặt phòng nào.
+                                        </td>
+                                    </tr>
+                                }
                             </tbody>
                         </table>
                     </div>
+
+                    @if (ViewBag.TotalPages > 1)
+                    {
+                        <div class="pagination-container">
+                            <ul class="pagination">
+                                @* Nút Previous *@
+                                @if (ViewBag.CurrentPage > 1)
+                                {
+                                    <li>
+                                        <a href="@Url.Action("LichSu", new { page = ViewBag.CurrentPage - 1 })">
+                                            <i class="fas fa-chevron-left"></i>
+                                        </a>
+                                    </li>
+                                }
+
+                                @* Các số trang *@
+                                @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                                {
+                                    if (i == ViewBag.CurrentPage)
+                                    {
+                                        <li>
+                                            <span>@i</span>
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li>
+                                            <a href="@Url.Action("LichSu", new { page = i })">@i</a>
+                                        </li>
+                                    }
+                                }
+
+                                @* Nút Next *@
+                                @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+                                {
+                                    <li>
+                                        <a href="@Url.Action("LichSu", new { page = ViewBag.CurrentPage + 1 })">
+                                            <i class="fas fa-chevron-right"></i>
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                            <p class="pagination-info">
+                                <i class="fas fa-info-circle"></i>
+                                Trang @ViewBag.CurrentPage / @ViewBag.TotalPages (Tổng @ViewBag.TotalItems bản ghi)
+                            </p>
+                        </div>
+                    }
                 </section>
 
             </div>
