@@ -1,0 +1,541 @@
+﻿@model Web_QLKhachSan.Areas.NhanVienLeTan.ViewModels.CheckOut.CheckOutListViewModel
+@{
+    ViewBag.Title = "Quản Lý Check-out";
+ Layout = "~/Areas/NhanVienLeTan/Views/Shared/_LayoutNVLT.cshtml";
+}
+
+@section styles {
+    <!-- Custom CSS for Check-out Page (reuse checkIn.css) -->
+    <link href="@Url.Content("~/Areas/NhanVienLeTan/assets/css/checkIn.css")" rel="stylesheet" />
+}
+
+<div class="container-fluid">
+    @* ==== HEADER ==== *@
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">
+   <i class="fas fa-sign-out-alt"></i> Quản Lý Check-out
+        </h1>
+        <a href="@Url.Action("Index", "DatPhong")" class="btn btn-secondary btn-icon-split shadow-sm">
+         <span class="icon text-white-50">
+     <i class="fas fa-arrow-left"></i>
+   </span>
+            <span class="text">Quay lại Đặt phòng</span>
+  </a>
+    </div>
+
+@* ==== THÔNG BÁO ==== *@
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+ <i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]
+         <button type="button" class="close" data-dismiss="alert">
+     <span>&times;</span>
+ </button>
+    </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+   <div class="alert alert-danger alert-dismissible fade show" role="alert">
+   <i class="fas fa-exclamation-triangle"></i> @TempData["ErrorMessage"]
+       <button type="button" class="close" data-dismiss="alert">
+    <span>&times;</span>
+      </button>
+        </div>
+    }
+
+    @* ==== THỐNG KÊ NHANH ==== *@
+    <div class="row mb-4 stat-cards-container">
+        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 mb-3">
+            <div class="card border-left-success shadow-sm h-100 py-2 stat-card">
+    <div class="card-body">
+     <div class="row no-gutters align-items-center">
+                 <div class="col">
+           <div class="stat-label">Check-out hôm nay</div>
+      <div class="stat-value">@Model.ThongKe.CanCheckOutHomNay</div>
+      </div>
+          <div class="col-auto">
+         <i class="fas fa-calendar-check fa-2x text-success"></i>
+        </div>
+          </div>
+          </div>
+ </div>
+        </div>
+
+    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 mb-3">
+    <div class="card border-left-primary shadow-sm h-100 py-2 stat-card">
+                <div class="card-body">
+         <div class="row no-gutters align-items-center">
+   <div class="col">
+   <div class="stat-label">Đã check-out hôm nay</div>
+      <div class="stat-value">@Model.ThongKe.DaCheckOutHomNay</div>
+    </div>
+               <div class="col-auto">
+        <i class="fas fa-check-circle fa-2x text-primary"></i>
+         </div>
+              </div>
+             </div>
+ </div>
+      </div>
+
+    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 mb-3">
+      <div class="card border-left-danger shadow-sm h-100 py-2 stat-card @(Model.ThongKe.QuaHan > 0 ? "has-alert" : "")">
+     <div class="card-body">
+            <div class="row no-gutters align-items-center">
+       <div class="col">
+<div class="stat-label">Quá hạn</div>
+      <div class="stat-value">@Model.ThongKe.QuaHan</div>
+       </div>
+       <div class="col-auto">
+    <i class="fas fa-exclamation-triangle fa-2x text-danger"></i>
+  </div>
+           </div>
+</div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 mb-3">
+     <div class="card border-left-warning shadow-sm h-100 py-2 stat-card">
+         <div class="card-body">
+    <div class="row no-gutters align-items-center">
+  <div class="col">
+        <div class="stat-label">Tổng đơn đang ở</div>
+         <div class="stat-value">@Model.ThongKe.TongDonDangO</div>
+              </div>
+       <div class="col-auto">
+                 <i class="fas fa-users fa-2x text-warning"></i>
+         </div>
+      </div>
+         </div>
+            </div>
+        </div>
+    </div>
+
+    @* ==== BỘ LỌC ==== *@
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-gradient-primary">
+ <h6 class="m-0 font-weight-bold text-white">
+       <i class="fas fa-filter"></i> Bộ Lọc & Tìm Kiếm
+            </h6>
+        </div>
+   <div class="card-body">
+       @using (Html.BeginForm("Index", "CheckOut", FormMethod.Get))
+         {
+        <div class="row">
+ <div class="col-md-8 mb-3">
+     <label><i class="fas fa-search text-primary"></i> Tìm kiếm</label>
+    @Html.TextBox("TimKiem", Model.Filter.TimKiem, new { 
+      @class = "form-control", 
+ placeholder = "Nhập mã đơn, tên khách hàng, số điện thoại..." 
+})
+          </div>
+
+    <div class="col-md-4 mb-3">
+<label><i class="far fa-calendar-alt text-primary"></i> Ngày check-out</label>
+         @Html.TextBox("NgayCheckOut", Model.Filter.NgayCheckOut?.ToString("yyyy-MM-dd"), new { 
+     @class = "form-control", 
+             type = "date" 
+               })
+     </div>
+                </div>
+
+              <div class="row">
+           <div class="col-12">
+             <button type="submit" class="btn btn-primary">
+       <i class="fas fa-search"></i> Tìm kiếm
+     </button>
+         <a href="@Url.Action("Index", "CheckOut")" class="btn btn-secondary">
+            <i class="fas fa-redo"></i> Làm mới
+            </a>
+    </div>
+      </div>
+            }
+   </div>
+    </div>
+
+    @* ==== DANH SÁCH CHECK-OUT ==== *@
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">
+        <i class="fas fa-table"></i> Danh sách đơn cần check-out
+           <span class="badge badge-primary ml-2">@Model.TotalRecords đơn</span>
+            </h6>
+        </div>
+     <div class="card-body">
+   @if (Model.DanhSachCheckOut != null && Model.DanhSachCheckOut.Any())
+            {
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="thead-light">
+                    <tr>
+     <th>Mã đơn</th>
+        <th>Khách hàng</th>
+      <th>Phòng</th>
+        <th>Check-in</th>
+    <th>Check-out</th>
+    <th>Số đêm</th>
+        <th>Số khách</th>
+     <th>Tổng tiền</th>
+  <th>Trạng thái</th>
+   <th>Thao tác</th>
+     </tr>
+   </thead>
+      <tbody>
+       @foreach (var item in Model.DanhSachCheckOut)
+        {
+        <tr class="@(item.QuaHanCheckOut ? "table-danger" : "")">
+  <td>
+     <strong>@item.MaDatPhong</strong>
+                  @if (item.LaDonOnline)
+       {
+      <br /><small class="badge badge-info"><i class="fas fa-globe"></i> Online</small>
+             }
+   </td>
+            <td>
+    <strong>@item.TenKhachHang</strong><br />
+   <small class="text-muted">
+       <i class="fas fa-phone"></i> @item.SoDienThoai
+       </small>
+       </td>
+    <td>
+       <small>@item.DanhSachLoaiPhong</small><br />
+            <small class="text-primary">@item.DanhSachPhong</small>
+        </td>
+      <td>
+   @(item.NgayCheckIn.HasValue ? item.NgayCheckIn.Value.ToString("dd/MM/yyyy") : "-")
+             </td>
+             <td>
+   @(item.NgayCheckOut.HasValue ? item.NgayCheckOut.Value.ToString("dd/MM/yyyy") : "-")
+       @if (item.CheckOutHomNay)
+ {
+         <br /><span class="badge badge-success">Hôm nay</span>
+     }
+         else if (item.QuaHanCheckOut)
+  {
+               <br /><span class="badge badge-danger">Quá hạn</span>
+    }
+     </td>
+        <td class="text-center">@item.SoDem</td>
+     <td class="text-center">@item.SoLuongKhach</td>
+               <td class="text-right">
+       <strong class="text-danger">@((item.TongTien ?? 0).ToString("N0"))đ</strong>
+       </td>
+   <td class="text-center">
+        <span class="badge badge-status" style="background-color: @item.BadgeColor; color: white;">
+             @item.BadgeText
+ </span>
+ </td>
+  <td class="action-buttons text-center">
+   <button type="button" class="btn btn-sm btn-primary" 
+        onclick="openCheckOutModal(@item.DatPhongId, '@item.MaDatPhong', '@item.TenKhachHang', '@item.DanhSachPhong', @((item.TongTien ?? 0)))"
+           title="Check-out">
+  <i class="fas fa-sign-out-alt"></i> Check-out
+         </button>
+           </td>
+       </tr>
+       }
+          </tbody>
+       </table>
+           </div>
+
+ @* ==== PAGINATION ==== *@
+       if (Model.TotalPages > 1)
+              {
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+     <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
+          <a class="page-link" href="@Url.Action("Index", new { 
+        TimKiem = Model.Filter.TimKiem,
+     NgayCheckOut = Model.Filter.NgayCheckOut?.ToString("yyyy-MM-dd"),
+     CurrentPage = Model.CurrentPage - 1 
+       })">
+           <i class="fas fa-chevron-left"></i> Trước
+     </a>
+       </li>
+
+       @for (int i = 1; i <= Model.TotalPages; i++)
+    {
+        <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+    <a class="page-link" href="@Url.Action("Index", new { 
+             TimKiem = Model.Filter.TimKiem,
+       NgayCheckOut = Model.Filter.NgayCheckOut?.ToString("yyyy-MM-dd"),
+         CurrentPage = i 
+    })">@i</a>
+           </li>
+  }
+
+          <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
+  <a class="page-link" href="@Url.Action("Index", new { 
+   TimKiem = Model.Filter.TimKiem,
+                   NgayCheckOut = Model.Filter.NgayCheckOut?.ToString("yyyy-MM-dd"),
+    CurrentPage = Model.CurrentPage + 1 
+      })">
+        Sau <i class="fas fa-chevron-right"></i>
+          </a>
+    </li>
+</ul>
+      </nav>
+
+            <p class="text-center text-muted">
+     Trang @Model.CurrentPage / @Model.TotalPages - Tổng @Model.TotalRecords đơn
+           </p>
+        }
+            }
+   else
+      {
+    <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i> Không có đơn nào cần check-out.
+     </div>
+       }
+        </div>
+    </div>
+</div>
+
+@* ==== MODAL CHECK-OUT ==== *@
+<div class="modal fade" id="modalCheckOut" tabindex="-1" role="dialog" aria-labelledby="modalCheckOutLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+    <div class="modal-header bg-danger text-white">
+    <h5 class="modal-title" id="modalCheckOutLabel">
+         <i class="fas fa-sign-out-alt"></i> Xác nhận Check-out
+       </h5>
+   <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+     </button>
+     </div>
+          <div class="modal-body">
+   <input type="hidden" id="hdnDatPhongId" />
+
+         <div class="row">
+          <div class="col-md-6">
+       <div class="info-group">
+        <label><i class="fas fa-bookmark"></i> Mã đặt phòng</label>
+      <div class="value" id="txtMaDatPhong"></div>
+         </div>
+          </div>
+    <div class="col-md-6">
+   <div class="info-group">
+      <label><i class="fas fa-user"></i> Khách hàng</label>
+    <div class="value" id="txtTenKhachHang"></div>
+      </div>
+      </div>
+                </div>
+
+          <div class="row">
+        <div class="col-md-12">
+  <div class="info-group">
+   <label><i class="fas fa-door-open"></i> Phòng</label>
+                 <div class="value" id="txtDanhSachPhong"></div>
+           </div>
+        </div>
+        </div>
+
+    <div class="row">
+         <div class="col-md-12">
+             <div class="info-group">
+     <label><i class="fas fa-money-bill-wave"></i> Tổng tiền</label>
+          <div class="value text-danger font-weight-bold" id="txtTongTien"></div>
+  </div>
+        </div>
+       </div>
+
+      <hr />
+
+     <div class="form-group">
+   <label for="txtGhiChuCheckOut">
+              <i class="fas fa-sticky-note"></i> Ghi chú check-out
+          </label>
+     <textarea class="form-control" id="txtGhiChuCheckOut" rows="3" 
+                  placeholder="Nhập ghi chú về tình trạng phòng khi trả..."></textarea>
+            </div>
+
+   <div class="alert alert-warning">
+     <i class="fas fa-info-circle"></i>
+             Sau khi check-out, trạng thái phòng sẽ chuyển sang <strong>"Đang dọn"</strong>
+ </div>
+   </div>
+      <div class="modal-footer justify-content-center">
+     <button type="button" class="btn btn-secondary" data-dismiss="modal">
+       <i class="fas fa-times"></i> Hủy
+  </button>
+    <button type="button" class="btn btn-danger" id="btnConfirmCheckOut">
+      <i class="fas fa-check"></i> Xác nhận Check-out
+        </button>
+         </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        (function() {
+ // ✅ Wrap trong IIFE để tránh conflict với trang khác
+     'use strict';
+
+        var currentDatPhongId = 0;
+         var currentTongTien = 0;
+
+    $(document).ready(function() {
+     // Debug
+          console.log('[CheckOut] Page initialized');
+
+    // Mở modal check-out
+ window.openCheckOutModal = function(datPhongId, maDatPhong, tenKhachHang, danhSachPhong, tongTien) {
+     console.log('[CheckOut] Opening modal:', datPhongId);
+   currentDatPhongId = datPhongId;
+currentTongTien = tongTien;
+
+        $('#hdnDatPhongId').val(datPhongId);
+     $('#txtMaDatPhong').text(maDatPhong);
+        $('#txtTenKhachHang').text(tenKhachHang);
+    $('#txtDanhSachPhong').text(danhSachPhong);
+  $('#txtTongTien').text(formatCurrency(tongTien));
+     $('#txtGhiChuCheckOut').val('');
+
+ $('#modalCheckOut').modal('show');
+  };
+
+        // ✅ FIX: Thêm event handler cho nút đóng modal
+    $(document).on('click', '[data-dismiss="modal"]', function() {
+  console.log('[CheckOut] Close button clicked');
+        $('#modalCheckOut').modal('hide');
+ });
+
+  // Xác nhận check-out
+  $('#btnConfirmCheckOut').off('click').on('click', function() {
+ var datPhongId = $('#hdnDatPhongId').val();
+      var ghiChuCheckOut = $('#txtGhiChuCheckOut').val();
+         var maDatPhong = $('#txtMaDatPhong').text();
+      var tenKhachHang = $('#txtTenKhachHang').text();
+
+    var $btn = $(this);
+   var originalHtml = $btn.html();
+$btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Đang xử lý...');
+
+ $.ajax({
+      url: '@Url.Action("DoCheckOut", "CheckOut")',
+type: 'POST',
+     data: {
+    datPhongId: datPhongId,
+      ghiChuCheckOut: ghiChuCheckOut
+},
+    success: function(response) {
+    $('#modalCheckOut').modal('hide');
+     if (response.success) {
+  var successMessage = `
+       <div class="checkin-success-notification">
+    <div class="success-icon">
+       <i class="fas fa-check-circle"></i>
+     </div>
+     <h4 class="success-title">Check-out thành công!</h4>
+     <div class="success-details">
+     <p><strong>Khách hàng:</strong> ${tenKhachHang}</p>
+     <p><strong>Mã đơn:</strong> ${maDatPhong}</p>
+ ${response.checkOutTime ? `<p><strong>Thời gian:</strong> ${response.checkOutTime}</p>` : ''}
+     <p><strong>Tổng tiền:</strong> <span class="text-danger">${formatCurrency(currentTongTien)}</span></p>
+  </div>
+       <div class="success-note">
+       <i class="fas fa-info-circle"></i> Phòng đã chuyển sang trạng thái "Đang dọn"
+</div>
+   </div>
+   `;
+   showSuccessModal(successMessage);
+      setTimeout(function() { location.reload(); }, 3000);
+  } else {
+    showNotification('error', response.message);
+$btn.prop('disabled', false).html(originalHtml);
+  }
+      },
+     error: function() {
+         $('#modalCheckOut').modal('hide');
+ showNotification('error', 'Không thể check-out. Vui lòng thử lại!');
+       $btn.prop('disabled', false).html(originalHtml);
+}
+    });
+       });
+
+     // Auto-hide alerts
+   setTimeout(function() {
+        $('.alert').fadeOut('slow', function() {
+   $(this).remove();
+       });
+       }, 5000);
+     });
+
+            function showSuccessModal(content) {
+     var modalHtml = `
+        <div class="modal fade" id="modalSuccessCheckOut" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+           <div class="modal-content success-modal-content">
+           <div class="modal-body">${content}</div>
+  <div class="modal-footer border-0 justify-content-center">
+       <button type="button" class="btn btn-primary" data-dismiss="modal">
+           <i class="fas fa-check"></i> Đóng
+           </button>
+   </div>
+         </div>
+    </div>
+    </div>
+                `;
+          $('body').append(modalHtml);
+                $('#modalSuccessCheckOut').modal('show');
+       $('#modalSuccessCheckOut').on('hidden.bs.modal', function() {
+     $(this).remove();
+     });
+    }
+
+          function showNotification(type, message) {
+        var alertClass = type === 'success' ? 'alert-success' : 
+          type === 'warning' ? 'alert-warning' : 
+           type === 'info' ? 'alert-info' : 'alert-danger';
+       var icon = type === 'success' ? 'fa-check-circle' : 
+         type === 'warning' ? 'fa-exclamation-triangle' :
+        type === 'info' ? 'fa-info-circle' : 'fa-times-circle';
+
+ var alertHtml = `
+     <div class="alert ${alertClass} alert-dismissible fade show notification-alert" role="alert">
+  <i class="fas ${icon}"></i> <strong>${message}</strong>
+            <button type="button" class="close" data-dismiss="alert">
+    <span>&times;</span>
+                </button>
+ </div>
+        `;
+       $('.container-fluid').prepend(alertHtml);
+           setTimeout(function() {
+               $('.notification-alert').fadeOut('slow', function() {
+        $(this).remove();
+      });
+     }, 5000);
+   }
+
+      function formatCurrency(value) {
+            if (!value) return '0đ';
+      return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
+            }
+        })();
+    </script>
+
+    <style>
+        /* ... giữ nguyên CSS ... */
+   .success-modal-content { border: none; border-radius: 15px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2); }
+    .checkin-success-notification { text-align: center; padding: 2rem 1rem; }
+        .success-icon { margin-bottom: 1.5rem; }
+        .success-icon i { font-size: 4rem; color: #28a745; animation: scaleIn 0.5s ease-out; }
+   @@keyframes scaleIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .success-title { color: #28a745; font-weight: 700; margin-bottom: 1.5rem; font-size: 1.75rem; }
+ .success-details { background: #f8f9fa; border-radius: 10px; padding: 1.5rem; margin-bottom: 1rem; text-align: left; }
+        .success-details p { margin-bottom: 0.75rem; font-size: 1rem; color: #495057; }
+        .success-details p:last-child { margin-bottom: 0; }
+        .success-details strong { color: #212529; font-weight: 600; display: inline-block; min-width: 120px; }
+        .success-note { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 0.75rem 1rem; border-radius: 8px; font-size: 0.9rem; margin-top: 1rem; }
+      .success-note i { margin-right: 0.5rem; }
+     .notification-alert { position: fixed; top: 80px; right: 20px; z-index: 9999; min-width: 350px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); border-left: 4px solid; animation: slideInRight 0.4s ease-out; }
+      @@keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .notification-alert.alert-success { border-left-color: #28a745; }
+        .notification-alert.alert-warning { border-left-color: #ffc107; }
+        .notification-alert.alert-danger { border-left-color: #dc3545; }
+   .notification-alert.alert-info { border-left-color: #17a2b8; }
+        .notification-alert i { font-size: 1.2rem; margin-right: 0.5rem; }
+        .btn .fa-spinner { animation: spin 1s linear infinite; }
+        @@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+}

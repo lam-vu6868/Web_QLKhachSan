@@ -1,0 +1,430 @@
+﻿@model Web_QLKhachSan.Areas.NhanVienLeTan.ViewModels.DichVu.DichVuItemViewModel
+@{
+    ViewBag.Title = "Chi Tiết Dịch Vụ";
+    Layout = "~/Areas/NhanVienLeTan/Views/Shared/_LayoutNVLT.cshtml";
+}
+
+@section styles {
+    <link href="@Url.Content("~/Areas/NhanVienLeTan/assets/css/dichVu.css")" rel="stylesheet" />
+}
+
+<div class="container-fluid">
+    @* ==== HEADER ==== *@
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+     <h1 class="h3 mb-0 text-gray-800">
+       <i class="fas fa-info-circle"></i> Chi Tiết Dịch Vụ
+   </h1>
+        <div class="btn-group">
+            <a href="@Url.Action("Index", "DichVu")" class="btn btn-secondary btn-icon-split shadow-sm">
+       <span class="icon text-white-50">
+        <i class="fas fa-arrow-left"></i>
+    </span>
+       <span class="text">Quay Lại</span>
+            </a>
+        </div>
+    </div>
+
+    @* ==== THÔNG BÁO ==== *@
+    @if (TempData["SuccessMessage"] != null)
+    {
+        var successMsg = TempData["SuccessMessage"].ToString();
+        TempData.Remove("SuccessMessage");
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+         <i class="fas fa-check-circle"></i> @successMsg
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+</div>
+    }
+
+    @* ==== THÔNG TIN DỊCH VỤ ==== *@
+    <div class="row">
+     <div class="col-lg-8">
+            <div class="card shadow mb-4">
+    <div class="card-header py-3 bg-gradient-primary">
+             <h6 class="m-0 font-weight-bold text-white">
+   <i class="fas fa-file-alt"></i> Thông Tin Chi Tiết
+      </h6>
+           </div>
+        <div class="card-body">
+     <div class="detail-row">
+                  <div class="detail-label">
+  <i class="fas fa-hashtag text-primary"></i>
+ <strong>Mã dịch vụ:</strong>
+     </div>
+     <div class="detail-value">
+            <span class="badge badge-primary">@Model.MaDichVu</span>
+        </div>
+         </div>
+
+            <div class="detail-row">
+             <div class="detail-label">
+   <i class="fas fa-concierge-bell text-primary"></i>
+    <strong>Tên dịch vụ:</strong>
+       </div>
+    <div class="detail-value">
+          @Model.TenDichVu
+  @if (!string.IsNullOrEmpty(Model.Icon))
+                {
+             <i class="@Model.Icon ml-2"></i>
+     }
+</div>
+     </div>
+
+     <div class="detail-row">
+   <div class="detail-label">
+   <i class="fas fa-layer-group text-primary"></i>
+       <strong>Loại dịch vụ:</strong>
+       </div>
+    <div class="detail-value">
+          @if (!string.IsNullOrEmpty(Model.TenLoaiDichVu))
+        {
+     <span class="badge badge-info">@Model.TenLoaiDichVu</span>
+          }
+    else
+           {
+        <span class="text-muted">Chưa phân loại</span>
+          }
+               </div>
+      </div>
+
+        <div class="detail-row">
+     <div class="detail-label">
+  <i class="fas fa-align-left text-primary"></i>
+        <strong>Mô tả:</strong>
+          </div>
+    <div class="detail-value">
+                 @if (!string.IsNullOrEmpty(Model.MoTa))
+         {
+    @Model.MoTa
+                 }
+         else
+      {
+      <span class="text-muted">Chưa có mô tả</span>
+           }
+              </div>
+                </div>
+
+         <div class="detail-row">
+         <div class="detail-label">
+               <i class="fas fa-dollar-sign text-primary"></i>
+          <strong>Giá gốc:</strong>
+   </div>
+  <div class="detail-value">
+     @if (Model.Gia.HasValue)
+          {
+    if (Model.DangGiamGia)
+         {
+                <del class="text-muted">@Model.Gia.Value.ToString("N0")đ</del>
+         }
+     else
+             {
+               <span class="text-primary font-weight-bold">@Model.Gia.Value.ToString("N0")đ</span>
+       }
+       }
+        else
+          {
+         <span class="text-muted">Chưa có giá</span>
+       }
+          </div>
+          </div>
+
+     @if (Model.GiaUuDai.HasValue)
+        {
+             <div class="detail-row">
+       <div class="detail-label">
+ <i class="fas fa-tag text-success"></i>
+              <strong>Giá ưu đãi:</strong>
+          </div>
+             <div class="detail-value">
+       <span class="text-success font-weight-bold">@Model.GiaUuDai.Value.ToString("N0")đ</span>
+         @if (Model.DangGiamGia)
+      {
+    <span class="badge badge-success ml-2">-@Model.PhanTramGiamGia%</span>
+        }
+      </div>
+        </div>
+    }
+
+  <div class="detail-row">
+     <div class="detail-label">
+ <i class="fas fa-money-bill-wave text-danger"></i>
+           <strong>Giá hiển thị:</strong>
+    </div>
+             <div class="detail-value">
+        <span class="h4 mb-0 text-danger font-weight-bold">@Model.GiaHienThi.ToString("N0")đ</span>
+       </div>
+    </div>
+
+        <div class="detail-row">
+                   <div class="detail-label">
+      <i class="fas fa-toggle-on text-primary"></i>
+            <strong>Trạng thái:</strong>
+  </div>
+      <div class="detail-value">
+             <span class="badge badge-status" style="background-color: @Model.TrangThaiColor; color: white;">
+ @Model.TrangThaiText
+  </span>
+              </div>
+ </div>
+
+     <div class="detail-row">
+         <div class="detail-label">
+          <i class="fas fa-calendar-plus text-primary"></i>
+         <strong>Ngày tạo:</strong>
+   </div>
+          <div class="detail-value">
+       @Model.NgayTao.ToString("dd/MM/yyyy HH:mm:ss")
+           </div>
+       </div>
+
+         @if (Model.NgayCapNhat.HasValue)
+            {
+   <div class="detail-row">
+       <div class="detail-label">
+          <i class="fas fa-calendar-check text-primary"></i>
+  <strong>Ngày cập nhật:</strong>
+       </div>
+         <div class="detail-value">
+          @Model.NgayCapNhat.Value.ToString("dd/MM/yyyy HH:mm:ss")
+               </div>
+    </div>
+            }
+          </div>
+            </div>
+   </div>
+
+        <div class="col-lg-4">
+   @* ==== QUICK ACTIONS ==== *@
+      <div class="card shadow mb-4">
+          <div class="card-header py-3 bg-gradient-primary">
+        <h6 class="m-0 font-weight-bold text-white">
+     <i class="fas fa-tools"></i> Thao Tác
+              </h6>
+ </div>
+        <div class="card-body">
+      <div class="d-flex flex-column gap-3">
+         <button type="button" class="btn btn-@(Model.DaHoatDong ? "warning" : "success") btn-block"
+        onclick="toggleStatus(@Model.DichVuId, '@Model.TenDichVu')">
+     <i class="fas fa-@(Model.DaHoatDong ? "ban" : "check")"></i>
+        @(Model.DaHoatDong ? "Ngừng hoạt động" : "Kích hoạt")
+        </button>
+
+     <a href="@Url.Action("LichSuSuDung", "DichVu", new { id = Model.DichVuId })" class="btn btn-info btn-block">
+  <i class="fas fa-history"></i> Xem lịch sử sử dụng
+       </a>
+
+      <a href="@Url.Action("Index", "DichVu")" class="btn btn-secondary btn-block">
+      <i class="fas fa-arrow-left"></i> Quay về danh sách
+         </a>
+     </div>
+          </div>
+   </div>
+
+   @* ==== SUMMARY CARD ==== *@
+   <div class="card shadow mb-4">
+             <div class="card-header py-3 bg-gradient-info">
+     <h6 class="m-0 font-weight-bold text-white">
+   <i class="fas fa-chart-bar"></i> Tổng Quan
+     </h6>
+      </div>
+   <div class="card-body">
+           <div class="summary-item">
+           <div class="summary-icon bg-primary">
+         <i class="fas fa-dollar-sign"></i>
+      </div>
+               <div class="summary-content">
+           <div class="summary-label">Giá hiển thị</div>
+     <div class="summary-value text-primary">@Model.GiaHienThi.ToString("N0")đ</div>
+     </div>
+  </div>
+
+     @if (Model.DangGiamGia)
+             {
+     <div class="summary-item">
+     <div class="summary-icon bg-success">
+          <i class="fas fa-percent"></i>
+  </div>
+    <div class="summary-content">
+          <div class="summary-label">Giảm giá</div>
+          <div class="summary-value text-success">@Model.PhanTramGiamGia%</div>
+    </div>
+        </div>
+
+         <div class="summary-item">
+       <div class="summary-icon bg-info">
+      <i class="fas fa-coins"></i>
+    </div>
+            <div class="summary-content">
+        <div class="summary-label">Tiết kiệm</div>
+  <div class="summary-value text-info">@((Model.Gia.Value - Model.GiaUuDai.Value).ToString("N0"))đ</div>
+        </div>
+             </div>
+          }
+
+                <div class="summary-item">
+       <div class="summary-icon bg-@(Model.DaHoatDong ? "success" : "danger")">
+         <i class="fas fa-@(Model.DaHoatDong ? "check-circle" : "times-circle")"></i>
+    </div>
+    <div class="summary-content">
+ <div class="summary-label">Trạng thái</div>
+       <div class="summary-value text-@(Model.DaHoatDong ? "success" : "danger")">
+       @Model.TrangThaiText
+        </div>
+      </div>
+      </div>
+     </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Auto-hide alerts after 5 seconds
+       setTimeout(function() {
+                $('.alert:not(.dynamic-alert)').fadeOut('slow', function() {
+         $(this).remove();
+                });
+            }, 5000);
+        });
+
+  // Toggle status
+  function toggleStatus(dichVuId, tenDichVu) {
+            if (confirm('Bạn có chắc chắn muốn thay đổi trạng thái của dịch vụ "' + tenDichVu + '"?')) {
+   $.ajax({
+        url: '@Url.Action("ToggleStatus", "DichVu")',
+           type: 'POST',
+        data: {
+        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val(),
+ id: dichVuId
+            },
+      success: function(response) {
+         if (response.success) {
+    showNotification('success', response.message);
+          setTimeout(function() { location.reload(); }, 1500);
+                } else {
+           showNotification('error', response.message);
+        }
+      },
+ error: function() {
+    showNotification('error', 'Không thể thay đổi trạng thái. Vui lòng thử lại!');
+  }
+              });
+         }
+     }
+
+ // Hiển thị thông báo
+        function showNotification(type, message) {
+            var alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
+  var icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle';
+
+      var alertHtml = `
+                <div class="alert ${alertClass} alert-dismissible fade show dynamic-alert" role="alert">
+    <i class="fas ${icon}"></i> ${message}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+           <span aria-hidden="true">&times;</span>
+            </button>
+       </div>
+            `;
+
+     $('.container-fluid').prepend(alertHtml);
+
+            setTimeout(function() {
+  $('.dynamic-alert').fadeOut('slow', function() {
+          $(this).remove();
+     });
+            }, 5000);
+        }
+    </script>
+
+    <style>
+    .detail-row {
+         display: flex;
+            padding: 15px;
+  border-bottom: 1px solid #e3e6f0;
+align-items: center;
+      }
+
+        .detail-row:last-child {
+   border-bottom: none;
+        }
+
+        .detail-row:hover {
+            background-color: rgba(78, 115, 223, 0.05);
+        }
+
+  .detail-label {
+          flex: 0 0 200px;
+        display: flex;
+            align-items: center;
+   gap: 10px;
+     color: #5a5c69;
+        }
+
+    .detail-value {
+            flex: 1;
+        color: #2e3a4d;
+          font-weight: 500;
+ }
+
+        .summary-item {
+      display: flex;
+  align-items: center;
+            gap: 15px;
+padding: 15px;
+  background-color: #f8f9fc;
+            border-radius: 8px;
+    margin-bottom: 12px;
+         transition: all 0.3s ease;
+   }
+
+        .summary-item:hover {
+     transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+   }
+
+    .summary-icon {
+width: 50px;
+            height: 50px;
+border-radius: 10px;
+ display: flex;
+      align-items: center;
+         justify-content: center;
+            color: white;
+font-size: 1.5rem;
+     }
+
+        .summary-content {
+            flex: 1;
+        }
+
+        .summary-label {
+          font-size: 0.85rem;
+       color: #858796;
+          margin-bottom: 4px;
+        }
+
+        .summary-value {
+ font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+  .gap-3 {
+            gap: 12px;
+        }
+
+        @@media (max-width: 768px) {
+            .detail-row {
+   flex-direction: column;
+    align-items: flex-start;
+           gap: 8px;
+  }
+
+         .detail-label {
+            flex: none;
+            }
+   }
+    </style>
+}

@@ -1,0 +1,865 @@
+﻿/* ================================================
+   CHECK-IN PAGE - CUSTOM STYLES
+   Trang quản lý Check-in cho Nhân viên Lễ Tân
+   ================================================ */
+
+/* ====================
+   0. STAT CARDS CONTAINER
+   ==================== */
+.stat-cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+}
+
+.stat-cards-container > [class*='col-'] {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+/* Ensure equal height for all cards */
+.stat-cards-container .stat-card {
+    min-height: 120px;
+}
+
+/* ====================
+   1. STAT CARDS (Thống kê)
+   ==================== */
+.stat-card {
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 15px;
+    border: none;
+    overflow: hidden;
+    position: relative;
+    background: #fff;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Animated gradient border effect */
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 5px;
+    height: 100%;
+    transition: all 0.3s ease;
+    z-index: 1;
+}
+
+.stat-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+  right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.stat-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+}
+
+.stat-card:hover::before {
+    width: 100%;
+    opacity: 0.1;
+}
+
+.stat-card:hover::after {
+    opacity: 1;
+}
+
+.stat-card .card-body {
+    padding: 1.75rem;
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.stat-card .row {
+    width: 100%;
+    margin: 0;
+}
+
+/* Stat value styling */
+.stat-card .stat-value {
+    font-size: 2.75rem;
+    font-weight: 800;
+    color: #2c3e50;
+    line-height: 1;
+    margin-bottom: 0.75rem;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    letter-spacing: -1px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Stat label styling */
+.stat-card .stat-label {
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+    display: block;
+    opacity: 0.9;
+}
+
+/* Icon container */
+.stat-card .col-auto {
+    display: flex;
+ align-items: center;
+    justify-content: center;
+}
+
+.stat-card .col-auto i {
+    opacity: 0.12;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.stat-card:hover .col-auto i {
+    opacity: 0.25;
+    transform: scale(1.15) rotate(5deg);
+}
+
+/* Màu sắc cho từng loại stat card */
+/* Success Card */
+.border-left-success {
+    border-left: 5px solid #28a745;
+}
+
+.border-left-success::before {
+background: linear-gradient(180deg, #28a745 0%, #20c997 100%);
+}
+
+.border-left-success .stat-value {
+    color: #28a745;
+}
+
+.border-left-success .stat-label {
+    color: #28a745;
+}
+
+.border-left-success:hover {
+    box-shadow: 0 15px 35px rgba(40, 167, 69, 0.3);
+}
+
+/* Primary Card */
+.border-left-primary {
+    border-left: 5px solid #007bff;
+}
+
+.border-left-primary::before {
+    background: linear-gradient(180deg, #007bff 0%, #0056b3 100%);
+}
+
+.border-left-primary .stat-value {
+    color: #007bff;
+}
+
+.border-left-primary .stat-label {
+    color: #007bff;
+}
+
+.border-left-primary:hover {
+    box-shadow: 0 15px 35px rgba(0, 123, 255, 0.3);
+}
+
+/* Danger Card */
+.border-left-danger {
+    border-left: 5px solid #dc3545;
+}
+
+.border-left-danger::before {
+    background: linear-gradient(180deg, #dc3545 0%, #c82333 100%);
+}
+
+.border-left-danger .stat-value {
+  color: #dc3545;
+}
+
+.border-left-danger .stat-label {
+    color: #dc3545;
+}
+
+.border-left-danger:hover {
+    box-shadow: 0 15px 35px rgba(220, 53, 69, 0.3);
+}
+
+/* Warning Card */
+.border-left-warning {
+    border-left: 5px solid #ffc107;
+}
+
+.border-left-warning::before {
+    background: linear-gradient(180deg, #ffc107 0%, #ff9800 100%);
+}
+
+.border-left-warning .stat-value {
+    color: #ff9800;
+}
+
+.border-left-warning .stat-label {
+    color: #ff9800;
+}
+
+.border-left-warning:hover {
+    box-shadow: 0 15px 35px rgba(255, 193, 7, 0.3);
+}
+
+/* Pulse animation for important cards */
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.4);
+    }
+    70% {
+    box-shadow: 0 0 0 10px rgba(220, 53, 69, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(220, 53, 69, 0);
+    }
+}
+
+/* Apply pulse to danger card if there's an alert */
+.border-left-danger.has-alert {
+animation: pulse 2s infinite;
+}
+
+/* Number counter animation */
+@keyframes countUp {
+  from {
+      opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.stat-value {
+    animation: countUp 0.6s ease-out;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+    .stat-card .stat-value {
+        font-size: 2.25rem;
+    }
+    
+    .stat-card .stat-label {
+  font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 992px) {
+.stat-card .card-body {
+        padding: 1.5rem;
+    }
+    
+    .stat-card .stat-value {
+        font-size: 2rem;
+    }
+    
+    .stat-card .col-auto i {
+        font-size: 1.75rem !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .stat-card {
+        margin-bottom: 1.25rem;
+    }
+    
+    .stat-card .card-body {
+  padding: 1.25rem;
+    }
+    
+    .stat-card .stat-value {
+        font-size: 2rem;
+    }
+    
+    .stat-card .stat-label {
+    font-size: 0.75rem;
+   letter-spacing: 0.5px;
+    }
+    
+    .stat-card .col-auto i {
+        font-size: 1.5rem !important;
+        opacity: 0.1;
+    }
+}
+
+@media (max-width: 576px) {
+    .stat-card .card-body {
+        padding: 1rem;
+    }
+    
+    .stat-card .stat-value {
+        font-size: 1.75rem;
+    }
+    
+    .stat-card .stat-label {
+    font-size: 0.7rem;
+    }
+    
+    .stat-card .row {
+        flex-direction: row;
+        align-items: center;
+    }
+    
+  .stat-card .col-auto {
+ margin-left: auto;
+    }
+}
+
+/* Additional hover effects for better UX */
+.stat-card:active {
+ transform: translateY(-8px) scale(1.01);
+}
+
+/* Focus state for accessibility */
+.stat-card:focus {
+    outline: 3px solid rgba(102, 126, 234, 0.5);
+    outline-offset: 3px;
+}
+
+/* Loading state */
+.stat-card.loading .stat-value {
+    opacity: 0.5;
+    animation: pulse 1.5s infinite;
+}
+
+/* Shine effect on hover */
+.stat-card:hover::after {
+    background: linear-gradient(135deg, 
+        rgba(255,255,255,0) 0%, 
+        rgba(255,255,255,0.3) 50%, 
+        rgba(255,255,255,0) 100%);
+    animation: shine 1.5s ease-in-out;
+}
+
+@keyframes shine {
+    0% {
+transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+/* ====================
+   2. FILTER SECTION (Bộ lọc)
+   ==================== */
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.card-header h6 {
+    margin-bottom: 0;
+    font-weight: 600;
+}
+
+.form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    padding: 0.6rem 1.5rem;
+  font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.btn-secondary {
+    padding: 0.6rem 1.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(108, 117, 125, 0.3);
+}
+
+/* ====================
+   3. TABLE STYLES (Bảng danh sách)
+   ==================== */
+.table-responsive {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table {
+    margin-bottom: 0;
+}
+
+.table thead th {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+    color: #495057;
+    padding: 1rem 0.75rem;
+    vertical-align: middle;
+}
+
+.table tbody tr {
+    transition: all 0.2s ease;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.table tbody tr:hover {
+    background-color: #f1f3f5;
+transform: scale(1.01);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.table tbody td {
+    vertical-align: middle;
+    padding: 1rem 0.75rem;
+    font-size: 0.9rem;
+}
+
+/* Highlight row quá hạn */
+.table-danger {
+    background-color: #f8d7da !important;
+    border-left: 4px solid #dc3545;
+}
+
+.table-danger:hover {
+    background-color: #f5c6cb !important;
+}
+
+/* ====================
+   4. BADGE STYLES
+   ==================== */
+.badge {
+    padding: 0.5em 0.85em;
+    font-weight: 600;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    letter-spacing: 0.3px;
+}
+
+.badge-status {
+ padding: 0.6em 1em;
+    font-size: 0.85rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.badge-info {
+    background: linear-gradient(135deg, #17a2b8, #138496);
+    border: none;
+}
+
+.badge-success {
+    background: linear-gradient(135deg, #28a745, #20c997);
+  border: none;
+}
+
+.badge-warning {
+    background: linear-gradient(135deg, #ffc107, #fd7e14);
+    color: #fff;
+    border: none;
+}
+
+.badge-danger {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    border: none;
+}
+
+.badge-primary {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    border: none;
+}
+
+/* ====================
+   5. ACTION BUTTONS
+   ==================== */
+.action-buttons {
+  display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.action-buttons .btn {
+ margin: 2px;
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+ border-radius: 6px;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.action-buttons .btn-primary {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+box-shadow: 0 2px 5px rgba(102, 126, 234, 0.3);
+}
+
+.action-buttons .btn-primary:hover {
+    background: linear-gradient(135deg, #764ba2, #667eea);
+  transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.action-buttons .btn-sm {
+padding: 0.4rem 0.9rem;
+    font-size: 0.8rem;
+}
+
+/* ====================
+   6. MODAL STYLES
+   ==================== */
+.check-in-modal .modal-content {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.check-in-modal .modal-header {
+    border-radius: 12px 12px 0 0;
+  padding: 1.5rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.check-in-modal .modal-header .modal-title {
+    font-weight: 600;
+    font-size: 1.3rem;
+}
+
+.check-in-modal .modal-body {
+    padding: 2rem;
+    background: #f8f9fa;
+}
+
+.check-in-modal .modal-footer {
+    border-top: 2px solid #dee2e6;
+    padding: 1.25rem 2rem;
+    background: #fff;
+}
+
+/* Info Group trong Modal */
+.info-group {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: #fff;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+}
+
+.info-group label {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 0.5rem;
+    display: block;
+    font-size: 0.9rem;
+  text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-group .value {
+    font-size: 1.15rem;
+    color: #212529;
+    font-weight: 500;
+}
+
+/* Form trong Modal */
+.check-in-modal .form-group label {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 0.75rem;
+}
+
+.check-in-modal .form-control {
+    border-radius: 8px;
+    border: 2px solid #dee2e6;
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.check-in-modal .form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15);
+}
+
+.check-in-modal .alert-info {
+    background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+    border: none;
+    border-left: 4px solid #2196f3;
+    color: #0d47a1;
+}
+
+/* ====================
+   7. PAGINATION
+   ==================== */
+.pagination {
+    margin-top: 1.5rem;
+}
+
+.pagination .page-link {
+    border-radius: 6px;
+    margin: 0 3px;
+    color: #667eea;
+    font-weight: 600;
+    border: 2px solid #dee2e6;
+    transition: all 0.3s ease;
+}
+
+.pagination .page-link:hover {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+    border-color: #667eea;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+}
+
+.pagination .page-item.active .page-link {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+  border-color: #667eea;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+}
+
+.pagination .page-item.disabled .page-link {
+    background: #f8f9fa;
+    border-color: #dee2e6;
+    color: #6c757d;
+}
+
+/* ====================
+   8. ALERTS & NOTIFICATIONS
+   ==================== */
+.alert {
+    border-radius: 8px;
+    border: none;
+    padding: 1rem 1.25rem;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.alert-success {
+    background: linear-gradient(135deg, #d4edda, #c3e6cb);
+    color: #155724;
+    border-left: 4px solid #28a745;
+}
+
+.alert-danger {
+    background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+    color: #721c24;
+    border-left: 4px solid #dc3545;
+}
+
+.alert-info {
+    background: linear-gradient(135deg, #d1ecf1, #bee5eb);
+    color: #0c5460;
+    border-left: 4px solid #17a2b8;
+}
+
+.alert-warning {
+    background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+ color: #856404;
+    border-left: 4px solid #ffc107;
+}
+
+.alert .close {
+    font-size: 1.5rem;
+    font-weight: 300;
+    opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+
+.alert .close:hover {
+    opacity: 1;
+}
+
+/* ====================
+   9. RESPONSIVE DESIGN
+   ==================== */
+@media (max-width: 768px) {
+    .stat-card .stat-value {
+        font-size: 2rem;
+    }
+
+    .stat-card .stat-label {
+        font-size: 0.75rem;
+    }
+
+ .table {
+        font-size: 0.85rem;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+  .action-buttons .btn {
+        width: 100%;
+        margin: 0.25rem 0;
+    }
+
+    .check-in-modal .modal-body {
+   padding: 1.25rem;
+    }
+
+    .info-group {
+   padding: 0.75rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .stat-card {
+     margin-bottom: 1rem;
+    }
+
+    .table thead {
+        display: none;
+ }
+
+    .table tbody tr {
+        display: block;
+        margin-bottom: 1rem;
+  border: 1px solid #dee2e6;
+        border-radius: 8px;
+    }
+
+  .table tbody td {
+        display: block;
+        text-align: right;
+        border: none;
+        padding: 0.75rem;
+    }
+
+    .table tbody td::before {
+        content: attr(data-label);
+        float: left;
+        font-weight: 600;
+        color: #495057;
+    }
+}
+
+/* ====================
+   10. ANIMATIONS
+   ==================== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInRight {
+ from {
+   opacity: 0;
+        transform: translateX(20px);
+}
+    to {
+        opacity: 1;
+  transform: translateX(0);
+    }
+}
+
+.alert {
+    animation: slideInRight 0.4s ease-out;
+}
+
+.stat-card {
+    animation: fadeIn 0.5s ease-out;
+}
+
+.stat-card:nth-child(1) { animation-delay: 0.1s; }
+.stat-card:nth-child(2) { animation-delay: 0.2s; }
+.stat-card:nth-child(3) { animation-delay: 0.3s; }
+.stat-card:nth-child(4) { animation-delay: 0.4s; }
+
+/* ====================
+   11. UTILITY CLASSES
+   ==================== */
+.text-muted {
+    color: #6c757d !important;
+}
+
+.text-primary {
+    color: #667eea !important;
+}
+
+.text-danger {
+    color: #dc3545 !important;
+}
+
+.text-success {
+    color: #28a745 !important;
+}
+
+.shadow-sm {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+}
+
+.shadow {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Border radius utilities */
+.rounded-lg {
+    border-radius: 12px !important;
+}
+
+/* Spacing utilities */
+.mb-4 {
+    margin-bottom: 1.5rem !important;
+}
+
+.mt-3 {
+    margin-top: 1rem !important;
+}
+
+/* ====================
+   12. PRINT STYLES
+   ==================== */
+@media print {
+ .stat-card,
+    .card-header,
+.action-buttons,
+    .pagination {
+     display: none;
+    }
+
+    .table {
+        border: 1px solid #000;
+    }
+
+    .table thead th {
+  background: #f0f0f0 !important;
+  color: #000 !important;
+    }
+}

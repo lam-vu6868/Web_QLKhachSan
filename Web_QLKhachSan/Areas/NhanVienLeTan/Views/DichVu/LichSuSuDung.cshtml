@@ -1,0 +1,225 @@
+﻿@model List<Web_QLKhachSan.Models.ChiTietDatDichVu>
+@{
+    ViewBag.Title = "Lịch Sử Sử Dụng Dịch Vụ";
+  Layout = "~/Areas/NhanVienLeTan/Views/Shared/_LayoutNVLT.cshtml";
+    var dichVu = ViewBag.DichVu as Web_QLKhachSan.Models.DichVu;
+    var currentPage = ViewBag.CurrentPage;
+    var totalPages = ViewBag.TotalPages;
+    var totalRecords = ViewBag.TotalRecords;
+}
+
+@section styles {
+    <link href="@Url.Content("~/Areas/NhanVienLeTan/assets/css/dichVu.css")" rel="stylesheet" />
+}
+
+<div class="container-fluid">
+    @* ==== HEADER ==== *@
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+  <h1 class="h3 mb-0 text-gray-800">
+<i class="fas fa-history"></i> Lịch Sử Sử Dụng - @dichVu.TenDichVu
+        </h1>
+        <div class="btn-group">
+  <a href="@Url.Action("Details", "DichVu", new { id = dichVu.DichVuId })" class="btn btn-secondary btn-icon-split shadow-sm">
+       <span class="icon text-white-50">
+ <i class="fas fa-arrow-left"></i>
+            </span>
+  <span class="text">Quay Lại</span>
+    </a>
+        </div>
+    </div>
+
+    @* ==== THỐNG KÊ ==== *@
+    <div class="row mb-4">
+   <div class="col-xl-4 col-md-6 mb-3">
+            <div class="card border-left-primary shadow h-100 py-2 stat-card">
+ <div class="card-body">
+     <div class="row no-gutters align-items-center">
+   <div class="col mr-2">
+         <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Tổng lần sử dụng</div>
+       <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.TongSoLanSuDung</div>
+   </div>
+       <div class="col-auto">
+   <i class="fas fa-shopping-cart fa-2x text-gray-300"></i>
+      </div>
+  </div>
+   </div>
+    </div>
+ </div>
+
+   <div class="col-xl-4 col-md-6 mb-3">
+      <div class="card border-left-success shadow h-100 py-2 stat-card">
+        <div class="card-body">
+    <div class="row no-gutters align-items-center">
+    <div class="col mr-2">
+       <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Tổng doanh thu</div>
+           <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.TongDoanhThu.ToString("N0")đ</div>
+         </div>
+       <div class="col-auto">
+      <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+       </div>
+       </div>
+ </div>
+  </div>
+        </div>
+
+   <div class="col-xl-4 col-md-6 mb-3">
+   <div class="card border-left-info shadow h-100 py-2 stat-card">
+         <div class="card-body">
+      <div class="row no-gutters align-items-center">
+<div class="col mr-2">
+    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Số lượng trung bình</div>
+      <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.SoLuongTrungBinh.ToString("N1")</div>
+          </div>
+              <div class="col-auto">
+  <i class="fas fa-chart-bar fa-2x text-gray-300"></i>
+       </div>
+         </div>
+    </div>
+    </div>
+        </div>
+    </div>
+
+    @* ==== DANH SÁCH ==== *@
+    <div class="card shadow mb-4">
+<div class="card-header py-3 bg-gradient-primary">
+     <h6 class="m-0 font-weight-bold text-white">
+        <i class="fas fa-table"></i> Chi tiết sử dụng
+      <span class="badge badge-light ml-2">@totalRecords lần</span>
+          </h6>
+</div>
+        <div class="card-body">
+     @if (Model != null && Model.Any())
+    {
+       <div class="table-responsive">
+            <table class="table table-bordered table-hover" width="100%" cellspacing="0">
+   <thead class="thead-light">
+       <tr>
+        <th>Mã đặt phòng</th>
+     <th>Khách hàng</th>
+    <th>Ngày sử dụng</th>
+        <th>Số lượng</th>
+     <th>Đơn giá</th>
+       <th>Thành tiền</th>
+       <th>Ghi chú</th>
+         <th>Thao tác</th>
+   </tr>
+     </thead>
+    <tbody>
+    @foreach (var item in Model)
+       {
+       <tr>
+  <td>
+    <strong>@item.DatPhong.MaDatPhong</strong>
+     </td>
+      <td>
+     <strong>@item.DatPhong.KhachHang.HoVaTen</strong><br />
+   <small class="text-muted">@item.DatPhong.KhachHang.SoDienThoai</small>
+       </td>
+        <td>
+     @if (item.NgaySuDung.HasValue)
+    {
+   @item.NgaySuDung.Value.ToString("dd/MM/yyyy HH:mm")
+    }
+else
+     {
+   <span class="text-muted">@item.DatPhong.NgayDat.ToString("dd/MM/yyyy HH:mm")</span>
+        }
+       </td>
+     <td class="text-center">
+      <span class="badge badge-primary">@item.SoLuong</span>
+         </td>
+   <td class="text-right">
+      @if (item.DonGia.HasValue)
+       {
+ @item.DonGia.Value.ToString("N0")<text>đ</text>
+  }
+    else
+    {
+   <span class="text-muted">-</span>
+      }
+    </td>
+ <td class="text-right">
+         @if (item.ThanhTien.HasValue)
+       {
+     <strong class="text-success">@item.ThanhTien.Value.ToString("N0")đ</strong>
+        }
+          else
+   {
+  <span class="text-muted">-</span>
+       }
+ </td>
+      <td>
+       @if (!string.IsNullOrEmpty(item.GhiChu))
+      {
+     @item.GhiChu
+        }
+     else
+    {
+      <span class="text-muted">-</span>
+       }
+     </td>
+ <td class="text-center">
+     <a href="@Url.Action("Details", "DatPhong", new { id = item.DatPhongId })" 
+  class="btn btn-sm btn-info" title="Xem đơn đặt phòng">
+   <i class="fas fa-eye"></i>
+     </a>
+       </td>
+      </tr>
+       }
+  </tbody>
+    </table>
+     </div>
+
+     @* ==== PAGINATION ==== *@
+    @if (totalPages > 1)
+      {
+      <nav aria-label="Page navigation">
+         <ul class="pagination justify-content-center">
+     <li class="page-item @(currentPage > 1 ? "" : "disabled")">
+       <a class="page-link" href="@Url.Action("LichSuSuDung", new { id = dichVu.DichVuId, CurrentPage = currentPage - 1 })">
+           <i class="fas fa-chevron-left"></i> Trước
+   </a>
+     </li>
+
+  @for (int i = 1; i <= totalPages; i++)
+    {
+      <li class="page-item @(i == currentPage ? "active" : "")">
+      <a class="page-link" href="@Url.Action("LichSuSuDung", new { id = dichVu.DichVuId, CurrentPage = i })">@i</a>
+     </li>
+    }
+
+      <li class="page-item @(currentPage < totalPages ? "" : "disabled")">
+       <a class="page-link" href="@Url.Action("LichSuSuDung", new { id = dichVu.DichVuId, CurrentPage = currentPage + 1 })">
+         Sau <i class="fas fa-chevron-right"></i>
+    </a>
+          </li>
+        </ul>
+       </nav>
+
+     <p class="text-center text-muted">
+Trang @currentPage / @totalPages - Tổng @totalRecords lần sử dụng
+     </p>
+     }
+      }
+   else
+       {
+   <div class="alert alert-info">
+    <i class="fas fa-info-circle"></i> Chưa có lịch sử sử dụng dịch vụ này.
+ </div>
+       }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+ $(document).ready(function() {
+     // Auto-hide alerts
+          setTimeout(function() {
+  $('.alert:not(.dynamic-alert)').fadeOut('slow', function() {
+       $(this).remove();
+  });
+   }, 5000);
+        });
+    </script>
+}
