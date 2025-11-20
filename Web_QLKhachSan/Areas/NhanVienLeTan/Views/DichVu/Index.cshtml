@@ -1,0 +1,622 @@
+﻿@model Web_QLKhachSan.Areas.NhanVienLeTan.ViewModels.DichVu.DichVuListViewModel
+@{
+    ViewBag.Title = "Quản Lý Dịch Vụ";
+    Layout = "~/Areas/NhanVienLeTan/Views/Shared/_LayoutNVLT.cshtml";
+}
+
+@section styles {
+    <link href="@Url.Content("~/Areas/NhanVienLeTan/assets/css/dichVu.css")" rel="stylesheet" />
+}
+
+<div class="container-fluid">
+    @* ==== HEADER ==== *@
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">
+            <i class="fas fa-concierge-bell"></i> Quản Lý Dịch Vụ
+        </h1>
+   <div class="btn-group">
+            <a href="@Url.Action("Create", "DichVu")" class="btn btn-primary btn-icon-split shadow-sm">
+       <span class="icon text-white-50">
+        <i class="fas fa-plus"></i>
+     </span>
+ <span class="text">Thêm Dịch Vụ Mới</span>
+   </a>
+    </div>
+    </div>
+
+    @* ==== THÔNG BÁO ==== *@
+    @if (TempData["SuccessMessage"] != null)
+    {
+        var successMsg = TempData["SuccessMessage"].ToString();
+        TempData.Remove("SuccessMessage");
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i> @successMsg
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+     <span aria-hidden="true">&times;</span>
+         </button>
+   </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+{
+        var errorMsg = TempData["ErrorMessage"].ToString();
+        TempData.Remove("ErrorMessage");
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+         <i class="fas fa-exclamation-triangle"></i> @errorMsg
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+     </button>
+      </div>
+    }
+
+    @* ==== THỐNG KÊ NHANH ==== *@
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-3">
+   <div class="card border-left-primary shadow h-100 py-2 stat-card">
+         <div class="card-body">
+        <div class="row no-gutters align-items-center">
+      <div class="col mr-2">
+         <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Tổng dịch vụ</div>
+             <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.ThongKe.TongDichVu</div>
+   </div>
+         <div class="col-auto">
+           <i class="fas fa-list fa-2x text-gray-300"></i>
+           </div>
+              </div>
+    </div>
+   </div>
+     </div>
+
+        <div class="col-xl-3 col-md-6 mb-3">
+         <div class="card border-left-success shadow h-100 py-2 stat-card">
+       <div class="card-body">
+  <div class="row no-gutters align-items-center">
+     <div class="col mr-2">
+  <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Đang hoạt động</div>
+  <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.ThongKe.DangHoatDong</div>
+       </div>
+    <div class="col-auto">
+              <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+         </div>
+     </div>
+       </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-3">
+        <div class="card border-left-warning shadow h-100 py-2 stat-card">
+          <div class="card-body">
+   <div class="row no-gutters align-items-center">
+       <div class="col mr-2">
+   <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Đang giảm giá</div>
+    <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.ThongKe.DangGiamGia</div>
+            </div>
+            <div class="col-auto">
+         <i class="fas fa-tag fa-2x text-gray-300"></i>
+      </div>
+               </div>
+      </div>
+          </div>
+   </div>
+
+        <div class="col-xl-3 col-md-6 mb-3">
+ <div class="card border-left-info shadow h-100 py-2 stat-card">
+             <div class="card-body">
+    <div class="row no-gutters align-items-center">
+       <div class="col mr-2">
+        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Ngừng hoạt động</div>
+          <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.ThongKe.NgungHoatDong</div>
+             </div>
+ <div class="col-auto">
+         <i class="fas fa-ban fa-2x text-gray-300"></i>
+             </div>
+       </div>
+      </div>
+     </div>
+     </div>
+    </div>
+
+@* ==== BỘ LỌC - CODE MỚI ==== *@
+    <div class="card shadow-sm mb-4 filter-card">
+    <div class="card-header bg-gradient-primary py-3">
+     <h6 class="m-0 font-weight-bold text-white">
+       <i class="fas fa-filter"></i> Bộ Lọc & Tìm Kiếm
+  </h6>
+  </div>
+        <div class="card-body p-4">
+            @using (Html.BeginForm("Index", "DichVu", FormMethod.Get, new { @class = "filter-form" }))
+   {
+                <div class="form-row mb-4">
+   <div class="col-12">
+    <label class="form-label">
+      <i class="fas fa-search text-primary"></i>
+ <strong>Tìm kiếm</strong>
+            </label>
+           @Html.TextBox("TimKiem", Model.Filter.TimKiem, new
+               {
+         @class = "form-control form-control-lg",
+   placeholder = "Nhập mã, tên dịch vụ...",
+ autocomplete = "off"
+          })
+                    </div>
+        </div>
+
+            <div class="form-row">
+           <div class="col-lg-3 col-md-6 mb-3">
+         <label class="form-label">
+    <i class="fas fa-layer-group text-primary"></i>
+               <strong>Loại dịch vụ</strong>
+         </label>
+        @Html.DropDownList("LoaiDichVuId",
+  new SelectList(Model.DanhSachLoaiDichVu, "LoaiDichVuId", "TenLoai", Model.Filter.LoaiDichVuId),
+              "-- Tất cả --",
+          new { @class = "form-control custom-select" })
+              </div>
+
+             <div class="col-lg-3 col-md-6 mb-3">
+         <label class="form-label">
+         <i class="fas fa-toggle-on text-primary"></i>
+     <strong>Trạng thái</strong>
+  </label>
+            @Html.DropDownList("DaHoatDong",
+  new SelectList(new[]
+         {
+               new { Value = true, Text = "Đang hoạt động" },
+       new { Value = false, Text = "Ngừng hoạt động" }
+ }, "Value", "Text", Model.Filter.DaHoatDong),
+     "-- Tất cả --",
+               new { @class = "form-control custom-select" })
+                </div>
+
+            <div class="col-lg-3 col-md-6 mb-3">
+       <label class="form-label">
+            <i class="fas fa-dollar-sign text-primary"></i>
+      <strong>Từ giá</strong>
+               </label>
+           @Html.TextBox("TuGia", Model.Filter.TuGia, new
+  {
+       @class = "form-control",
+        type = "number",
+           min = "0",
+step = "1000",
+          placeholder = "0đ"
+  })
+         </div>
+
+             <div class="col-lg-3 col-md-6 mb-3">
+    <label class="form-label">
+      <i class="fas fa-dollar-sign text-primary"></i>
+  <strong>Đến giá</strong>
+         </label>
+        @Html.TextBox("DenGia", Model.Filter.DenGia, new
+      {
+            @class = "form-control",
+            type = "number",
+  min = "0",
+   step = "1000",
+      placeholder = "999,999,999đ"
+})
+                  </div>
+          </div>
+
+      <div class="form-row">
+            <div class="col-12">
+         <div class="d-flex gap-2 flex-wrap">
+             <button type="submit" class="btn btn-primary px-4">
+   <i class="fas fa-search"></i> Tìm kiếm
+      </button>
+    <a href="@Url.Action("Index", "DichVu")" class="btn btn-secondary px-4">
+              <i class="fas fa-redo"></i> Làm mới
+      </a>
+      </div>
+       </div>
+    </div>
+            }
+      </div>
+    </div>
+
+    @* ==== DANH SÁCH DỊCH VỤ ==== *@
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">
+<i class="fas fa-table"></i> Danh sách dịch vụ
+     <span class="badge badge-primary ml-2">@Model.TotalRecords dịch vụ</span>
+      </h6>
+      </div>
+        <div class="card-body">
+  @if (Model.DanhSachDichVu != null && Model.DanhSachDichVu.Any())
+    {
+   <div class="table-responsive">
+           <table class="table table-bordered table-hover" width="100%" cellspacing="0">
+       <thead class="thead-light">
+      <tr>
+          <th>Mã dịch vụ</th>
+                     <th>Tên dịch vụ</th>
+     <th>Loại dịch vụ</th>
+            <th>Giá gốc</th>
+            <th>Giá ưu đãi</th>
+    <th>Giá hiển thị</th>
+            <th>Trạng thái</th>
+ <th>Ngày tạo</th>
+            <th>Thao tác</th>
+   </tr>
+        </thead>
+            <tbody>
+       @foreach (var item in Model.DanhSachDichVu)
+ {
+                <tr>
+      <td>
+ <strong>@item.MaDichVu</strong>
+          @if (!string.IsNullOrEmpty(item.Icon))
+             {
+         <br /><i class="@item.Icon text-primary"></i>
+        }
+             </td>
+               <td>
+    <strong>@item.TenDichVu</strong>
+       @if (!string.IsNullOrEmpty(item.MoTa))
+                   {
+      <br /><small class="text-muted">@(item.MoTa.Length > 50 ? item.MoTa.Substring(0, 50) + "..." : item.MoTa)</small>
+    }
+               </td>
+             <td>
+       @if (!string.IsNullOrEmpty(item.TenLoaiDichVu))
+                  {
+                   <span class="badge badge-info">@item.TenLoaiDichVu</span>
+   }
+       else
+ {
+           <span class="text-muted">-</span>
+       }
+       </td>
+       <td class="text-right">
+   @if (item.Gia.HasValue)
+            {
+       if (item.DangGiamGia)
+            {
+   <del class="text-muted">@item.Gia.Value.ToString("N0")đ</del>
+                   }
+      else
+     {
+     <strong>@item.Gia.Value.ToString("N0")đ</strong>
+          }
+            }
+             else
+            {
+                   <span class="text-muted">-</span>
+    }
+         </td>
+   <td class="text-right">
+        @{
+       var giaUuDai = item.GiaUuDai ?? 0;
+     var coGiaUuDai = item.GiaUuDai.HasValue && item.GiaUuDai.Value > 0;
+            }
+        @if (coGiaUuDai)
+  {
+  <strong class="text-success">@giaUuDai.ToString("N0")đ</strong>
+            if (item.DangGiamGia)
+         {
+ <br /><span class="badge badge-success">-@item.PhanTramGiamGia%</span>
+                 }
+                 }
+      else
+            {
+   <span class="text-muted">-</span>
+            }
+              </td>
+         <td class="text-right">
+         <strong class="text-danger">@item.GiaHienThi.ToString("N0")đ</strong>
+              </td>
+      <td class="text-center">
+  <span class="badge badge-status" style="background-color: @item.TrangThaiColor; color: white;">
+               @item.TrangThaiText
+         </span>
+    </td>
+<td>
+           <small>@item.NgayTao.ToString("dd/MM/yyyy")</small><br />
+    <small class="text-muted">@item.NgayTao.ToString("HH:mm")</small>
+       </td>
+    <td class="action-buttons text-center">
+    <a href="@Url.Action("Details", new { id = item.DichVuId })" class="btn btn-sm btn-info" title="Xem chi tiết">
+     <i class="fas fa-eye"></i>
+        </a>
+     <button type="button" class="btn btn-sm btn-@(item.DaHoatDong ? "warning" : "success")"
+  data-dichvu-id="@item.DichVuId"
+ data-dichvu-ten="@item.TenDichVu"
+ data-dichvu-status="@item.DaHoatDong.ToString().ToLower()"
+   onclick="toggleStatus(this)"
+           title="@(item.DaHoatDong ? "Ngừng hoạt động" : "Kích hoạt")">
+                 <i class="fas fa-@(item.DaHoatDong ? "ban" : "check")"></i>
+ </button>
+        </td>
+  </tr>
+        }
+ </tbody>
+         </table>
+                </div>
+
+             @* ==== PAGINATION ==== *@
+   if (Model.TotalPages > 1)
+    {
+           <nav aria-label="Page navigation">
+       <ul class="pagination justify-content-center">
+         <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
+         <a class="page-link" href="@Url.Action("Index", new
+       {
+           TimKiem = Model.Filter.TimKiem,
+    LoaiDichVuId = Model.Filter.LoaiDichVuId,
+    DaHoatDong = Model.Filter.DaHoatDong,
+      TuGia = Model.Filter.TuGia,
+     DenGia = Model.Filter.DenGia,
+               CurrentPage = Model.CurrentPage - 1
+            })">
+ <i class="fas fa-chevron-left"></i> Trước
+                </a>
+              </li>
+
+      @for (int i = 1; i <= Model.TotalPages; i++)
+{
+    <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+     <a class="page-link" href="@Url.Action("Index", new
+           {
+ TimKiem = Model.Filter.TimKiem,
+ LoaiDichVuId = Model.Filter.LoaiDichVuId,
+   DaHoatDong = Model.Filter.DaHoatDong,
+               TuGia = Model.Filter.TuGia,
+   DenGia = Model.Filter.DenGia,
+    CurrentPage = i
+              })">@i</a>
+              </li>
+         }
+
+     <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
+                <a class="page-link" href="@Url.Action("Index", new
+            {
+         TimKiem = Model.Filter.TimKiem,
+     LoaiDichVuId = Model.Filter.LoaiDichVuId,
+     DaHoatDong = Model.Filter.DaHoatDong,
+         TuGia = Model.Filter.TuGia,
+     DenGia = Model.Filter.DenGia,
+         CurrentPage = Model.CurrentPage + 1
+          })">
+            Sau <i class="fas fa-chevron-right"></i>
+      </a>
+       </li>
+            </ul>
+          </nav>
+
+   <p class="text-center text-muted">
+   Trang @Model.CurrentPage / @Model.TotalPages - Tổng @Model.TotalRecords dịch vụ
+            </p>
+                }
+     }
+    else
+            {
+           <div class="alert alert-info">
+     <i class="fas fa-info-circle"></i> Không có dịch vụ nào phù hợp với điều kiện lọc.
+       </div>
+            }
+        </div>
+    </div>
+</div>
+
+@* ==== MODAL XÁC NHẬN THAY ĐỔI TRẠNG THÁI ==== *@
+<div class="modal fade" id="confirmStatusModal" tabindex="-1" role="dialog" aria-labelledby="confirmStatusModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+      <div class="modal-header bg-warning text-white">
+           <h5 class="modal-title" id="confirmStatusModalLabel">
+      <i class="fas fa-exclamation-triangle"></i> Xác nhận thay đổi trạng thái
+     </h5>
+ <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+            <div class="modal-body text-center">
+    <div class="mb-3">
+     <i class="fas fa-question-circle fa-4x text-warning"></i>
+      </div>
+           <h5 id="modalMessage" class="mb-3"></h5>
+              <p class="text-muted">Hành động này có thể ảnh hưởng đến việc đặt dịch vụ.</p>
+            </div>
+            <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="cancelStatusBtn" data-dismiss="modal">
+         <i class="fas fa-times"></i> Hủy
+     </button>
+    <button type="button" class="btn btn-warning" id="confirmStatusBtn">
+              <i class="fas fa-check"></i> Xác nhận
+                </button>
+   </div>
+        </div>
+    </div>
+</div>
+
+@* Anti-forgery token for AJAX requests *@
+@Html.AntiForgeryToken()
+
+@section Scripts {
+    <script>
+        // Ensure jQuery and Bootstrap are loaded
+        if (typeof jQuery === 'undefined') {
+            console.error('jQuery is not loaded!');
+ }
+        if (typeof $().modal === 'undefined') {
+            console.error('Bootstrap JS is not loaded!');
+        }
+
+  $(document).ready(function() {
+            console.log('Page ready, initializing modal handlers...');
+
+            // Auto-hide alerts after 5 seconds
+        setTimeout(function() {
+  $('.alert:not(.dynamic-alert)').fadeOut('slow', function() {
+       $(this).remove();
+     });
+       }, 5000);
+
+   // Variables to store current service info
+    var currentDichVuId = null;
+        var currentTenDichVu = null;
+        var currentDaHoatDong = null;
+
+     // Make toggleStatus available globally
+   window.toggleStatus = function(button) {
+            // Get data from button attributes
+                var dichVuId = $(button).data('dichvu-id');
+  var tenDichVu = $(button).data('dichvu-ten');
+    var daHoatDong = $(button).data('dichvu-status') === 'true';
+        
+     console.log('toggleStatus called:', dichVuId, tenDichVu, daHoatDong);
+         
+              // Store current service info
+     currentDichVuId = dichVuId;
+       currentTenDichVu = tenDichVu;
+       currentDaHoatDong = daHoatDong;
+
+    // Set modal message
+           var action = daHoatDong ? 'ngừng hoạt động' : 'kích hoạt';
+            var modalHeader = daHoatDong ? 
+       '<i class="fas fa-ban"></i> Xác nhận ngừng hoạt động' : 
+               '<i class="fas fa-check-circle"></i> Xác nhận kích hoạt';
+        
+      $('#confirmStatusModalLabel').html(modalHeader);
+       $('#modalMessage').html('Bạn có chắc chắn muốn <strong>' + action + '</strong> dịch vụ<br/><strong class="text-primary">"' + tenDichVu + '"</strong>?');
+    
+           // Change button color based on action
+    var btnClass = daHoatDong ? 'btn-danger' : 'btn-success';
+        $('#confirmStatusBtn').removeClass('btn-warning btn-success btn-danger').addClass(btnClass);
+                
+      // Change modal header color
+                var headerClass = daHoatDong ? 'bg-danger' : 'bg-success';
+     $('.modal-header').removeClass('bg-warning bg-danger bg-success').addClass(headerClass);
+     
+          // Show modal
+ console.log('Showing modal...');
+                $('#confirmStatusModal').modal('show');
+       };
+
+   // Handle cancel button click (explicit handler)
+    $('#cancelStatusBtn').on('click', function() {
+   console.log('Cancel button clicked');
+       $('#confirmStatusModal').modal('hide');
+});
+
+        // Handle close button (X) click
+      $('[data-dismiss="modal"]').on('click', function() {
+         console.log('Close button clicked');
+     $('#confirmStatusModal').modal('hide');
+       });
+
+// Handle confirm button click
+    $('#confirmStatusBtn').off('click').on('click', function() {
+                console.log('Confirm button clicked');
+     
+    if (currentDichVuId === null) {
+        console.error('No service ID set!');
+           return;
+    }
+
+       // Hide modal first
+    $('#confirmStatusModal').modal('hide');
+
+          // Call AJAX directly without loading notification
+       $.ajax({
+        url: '@Url.Action("ToggleStatus", "DichVu")',
+     type: 'POST',
+        data: {
+ __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val(),
+            id: currentDichVuId
+              },
+       success: function(response) {
+        console.log('AJAX response:', response);
+  
+         if (response.success) {
+           // Use message from server
+       var successMessage = '<strong>Thành công!</strong><br/>' + response.message;
+    
+        showNotification('success', successMessage);
+           setTimeout(function() { location.reload(); }, 2000);
+      } else {
+    var errorMessage = response.message || 'Không thể thay đổi trạng thái dịch vụ.';
+      showNotification('error', '<strong>Lỗi!</strong><br/>' + errorMessage);
+     }
+  },
+    error: function(xhr, status, error) {
+             console.error('AJAX error:', status, error);
+            
+    var errorMsg = '<strong>Lỗi kết nối!</strong><br/>' +
+         'Không thể thay đổi trạng thái dịch vụ. Vui lòng kiểm tra kết nối và thử lại.';
+          
+   showNotification('error', errorMsg);
+        }
+    });
+
+    // Reset current service info
+                currentDichVuId = null;
+           currentTenDichVu = null;
+                currentDaHoatDong = null;
+});
+
+     // Reset modal state when hidden
+    $('#confirmStatusModal').on('hidden.bs.modal', function () {
+  console.log('Modal hidden event triggered');
+ currentDichVuId = null;
+      currentTenDichVu = null;
+    currentDaHoatDong = null;
+          // Reset button to default
+       $('#confirmStatusBtn').removeClass('btn-success btn-danger').addClass('btn-warning');
+ $('.modal-header').removeClass('bg-danger bg-success').addClass('bg-warning');
+    });
+
+// Handle backdrop click
+            $('#confirmStatusModal').on('click', function(e) {
+  if (e.target === this) {
+          console.log('Backdrop clicked');
+  $(this).modal('hide');
+       }
+     });
+
+            // Hiển thị thông báo
+      window.showNotification = function(type, message) {
+         console.log('Showing notification:', type, message);
+   
+  // Remove existing alerts with animation
+           $('.dynamic-alert').each(function() {
+        var $alert = $(this);
+    $alert.addClass('fade-out');
+           setTimeout(function() {
+       $alert.remove();
+   }, 300);
+     });
+
+        // Wait for old alerts to fade out
+   setTimeout(function() {
+    var alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
+            var icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle';
+
+   var alertHtml = `
+   <div class="alert ${alertClass} alert-dismissible fade show dynamic-alert" role="alert">
+         <i class="fas ${icon}"></i>
+         <span>${message}</span>
+       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+   <span aria-hidden="true">&times;</span>
+ </button>
+       </div>
+    `;
+
+          $('.container-fluid').prepend(alertHtml);
+
+       // Auto hide after duration
+        var duration = type === 'success' ? 3000 : 5000;
+   setTimeout(function() {
+                 $('.dynamic-alert').addClass('fade-out');
+     setTimeout(function() {
+             $('.dynamic-alert').remove();
+    }, 300);
+    }, duration);
+       }, 350);
+    };
+
+            console.log('Modal handlers initialized successfully');
+        });
+    </script>
+}

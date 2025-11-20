@@ -220,8 +220,11 @@
     <Compile Include="Areas\DangNhapNV\ViewModels\DangNhapNVViewModel.cs" />
     <Compile Include="Areas\DangNhapNV\ViewModels\DatLaiMatKhauNVViewModel.cs" />
     <Compile Include="Areas\NhanVienBuongPhong\NhanVienBuongPhongAreaRegistration.cs" />
+    <Compile Include="Areas\NhanVienLeTan\Controllers\CheckInController.cs" />
+    <Compile Include="Areas\NhanVienLeTan\Controllers\CheckOutController.cs" />
     <Compile Include="Areas\NhanVienLeTan\Controllers\DashboardNVLTController.cs" />
     <Compile Include="Areas\NhanVienLeTan\Controllers\DatPhongController.cs" />
+    <Compile Include="Areas\NhanVienLeTan\Controllers\DichVuController.cs" />
     <Compile Include="Areas\NhanVienLeTan\Controllers\SoDoPhongController.cs" />
     <Compile Include="Areas\NhanVienLeTan\NhanVienAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\BaoCaoTaiChinhController.cs" />
@@ -229,6 +232,10 @@
     <Compile Include="Areas\Admin\Controllers\DashboardAdminController.cs" />
     <Compile Include="Areas\Admin\Controllers\QuanLyNhanVienController.cs" />
     <Compile Include="Areas\NhanVienLeTan\NhanVienLeTanAreaRegistration.cs" />
+    <Compile Include="Areas\NhanVienLeTan\ViewModels\CheckIn\CheckInViewModel.cs" />
+    <Compile Include="Areas\NhanVienLeTan\ViewModels\CheckOut\CheckOutFilterViewModel.cs" />
+    <Compile Include="Areas\NhanVienLeTan\ViewModels\CheckOut\CheckOutItemViewModel.cs" />
+    <Compile Include="Areas\NhanVienLeTan\ViewModels\CheckOut\CheckOutListViewModel.cs" />
     <Compile Include="Areas\NhanVienLeTan\ViewModels\DashboardViewModel.cs" />
     <Compile Include="Areas\NhanVienLeTan\ViewModels\DatPhong\DatPhongCreateViewModel.cs" />
     <Compile Include="Areas\NhanVienLeTan\ViewModels\DatPhong\DatPhongFilterViewModel.cs" />
@@ -239,6 +246,9 @@
     <Compile Include="Areas\NhanVienLeTan\ViewModels\DatPhong\KhuyenMaiItemViewModel.cs" />
     <Compile Include="Areas\NhanVienLeTan\ViewModels\DatPhong\NhanVienItemViewModel.cs" />
     <Compile Include="Areas\NhanVienLeTan\ViewModels\DatPhong\PhongDatItemViewModel.cs" />
+    <Compile Include="Areas\NhanVienLeTan\ViewModels\DichVu\DichVuFilterViewModel.cs" />
+    <Compile Include="Areas\NhanVienLeTan\ViewModels\DichVu\DichVuItemViewModel.cs" />
+    <Compile Include="Areas\NhanVienLeTan\ViewModels\DichVu\DichVuListViewModel.cs" />
     <Compile Include="Areas\NhanVienLeTan\ViewModels\PhongStatusViewModel.cs" />
     <Compile Include="Areas\NhanVienLeTan\ViewModels\SoDoPhongViewModel.cs" />
     <Compile Include="Controllers\ChinhSachVaDieuKhoanController.cs" />
@@ -369,8 +379,10 @@
     <Content Include="Areas\Admin\assets\js\shared.js" />
     <Content Include="Areas\Admin\assets\js\quanly-nhanvien.js" />
     <Content Include="Areas\Admin\assets\js\quanly-taichinh.js" />
+    <Content Include="Areas\NhanVienLeTan\assets\css\checkIn.css" />
     <Content Include="Areas\NhanVienLeTan\assets\css\dashboard.css" />
     <Content Include="Areas\NhanVienLeTan\assets\css\datPhong.css" />
+    <Content Include="Areas\NhanVienLeTan\assets\css\dichVu.css" />
     <Content Include="Areas\NhanVienLeTan\assets\css\layout.css" />
     <Content Include="Areas\NhanVienLeTan\assets\css\sodoPhong.css" />
     <Content Include="Areas\NhanVienLeTan\assets\js\dashboard.js" />
@@ -478,6 +490,11 @@
     <Content Include="Areas\NhanVienLeTan\Views\DashboardNVLT\Index.cshtml" />
     <Content Include="Areas\NhanVienLeTan\Views\DatPhong\Index.cshtml" />
     <Content Include="Areas\NhanVienLeTan\Views\DatPhong\Create.cshtml" />
+    <Content Include="Areas\NhanVienLeTan\Views\CheckIn\Index.cshtml" />
+    <Content Include="Areas\NhanVienLeTan\Views\CheckOut\Index.cshtml" />
+    <Content Include="Areas\NhanVienLeTan\Views\DichVu\Index.cshtml" />
+    <Content Include="Areas\NhanVienLeTan\Views\DichVu\Details.cshtml" />
+    <Content Include="Areas\NhanVienLeTan\Views\DichVu\LichSuSuDung.cshtml" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />

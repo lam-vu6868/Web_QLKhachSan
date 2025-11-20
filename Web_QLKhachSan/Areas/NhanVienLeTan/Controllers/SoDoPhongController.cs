@@ -291,45 +291,71 @@ return null;
 // GET: NhanVienLeTan/SoDoPhong/ChiTietPhong
       /// <summary>
         /// Lấy chi tiết phòng (AJAX) - Dùng cho modal popup
-        /// </summary>
-      [HttpGet]
+ /// </summary>
+    [HttpGet]
 public JsonResult ChiTietPhong(int phongId)
     {
  try
           {
     // ✅ Kiểm tra Role
-        if (!CheckRole())
+ if (!CheckRole())
         {
  return Json(new { success = false, message = "Bạn không có quyền xem thông tin này!" }, JsonRequestBehavior.AllowGet);
-        }
+  }
 
         // Validate input
-        if (phongId <= 0)
-    {
+  if (phongId <= 0)
+  {
  return Json(new { success = false, message = "Mã phòng không hợp lệ!" }, JsonRequestBehavior.AllowGet);
         }
 
         // Tìm phòng
-        var phong = db.Phongs.Find(phongId);
-      if (phong == null)
+      var phong = db.Phongs.Find(phongId);
+   if (phong == null)
   {
      return Json(new { success = false, message = "Không tìm thấy phòng!" }, JsonRequestBehavior.AllowGet);
 }
 
-        // Map sang ViewModel
+     // Map sang ViewModel
         var viewModel = MapPhongToViewModel(phong);
 
-        if (viewModel == null)
-        {
+    if (viewModel == null)
+    {
       return Json(new { success = false, message = "Không thể tải thông tin phòng!" }, JsonRequestBehavior.AllowGet);
    }
 
-  return Json(new
-        {
+        // ✅ Format ngày tháng trước khi trả về JSON
+        var result = new
+{
        success = true,
-      data = viewModel
-        }, JsonRequestBehavior.AllowGet);
-    }
+       data = new
+       {
+      viewModel.PhongId,
+      viewModel.MaPhong,
+   viewModel.TenPhong,
+     viewModel.Tang,
+         viewModel.TrangThaiPhong,
+           viewModel.TrangThaiPhongText,
+     viewModel.TrangThaiPhongColor,
+      viewModel.TrangThaiPhongIcon,
+           viewModel.LoaiPhongId,
+          viewModel.TenLoaiPhong,
+    viewModel.GiaPhong,
+      viewModel.SoNguoiToiDa,
+       viewModel.DatPhongId,
+              viewModel.TenKhach,
+        viewModel.SoDienThoaiKhach,
+              // ✅ Format ngày dạng ISO 8601 để JavaScript parse đúng
+  NgayCheckIn = viewModel.NgayCheckIn?.ToString("o"), // ISO 8601: "2024-01-15T14:30:00.000Z"
+              NgayCheckOut = viewModel.NgayCheckOut?.ToString("o"),
+              viewModel.SoNguoi,
+  viewModel.GhiChu,
+       viewModel.CoYeuCauDacBiet
+       }
+        };
+
+  return Json(result, JsonRequestBehavior.AllowGet);
+ }
     catch (Exception ex)
     {
         System.Diagnostics.Debug.WriteLine($"[ERROR - ChiTietPhong] {ex.Message}");
