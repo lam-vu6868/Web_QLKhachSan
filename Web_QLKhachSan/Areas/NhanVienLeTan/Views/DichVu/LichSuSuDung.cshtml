@@ -1,225 +1,850 @@
-﻿@model List<Web_QLKhachSan.Models.ChiTietDatDichVu>
+﻿@model Web_QLKhachSan.Areas.NhanVienLeTan.ViewModels.DichVu.LichSuSuDungViewModel
 @{
     ViewBag.Title = "Lịch Sử Sử Dụng Dịch Vụ";
-  Layout = "~/Areas/NhanVienLeTan/Views/Shared/_LayoutNVLT.cshtml";
-    var dichVu = ViewBag.DichVu as Web_QLKhachSan.Models.DichVu;
-    var currentPage = ViewBag.CurrentPage;
-    var totalPages = ViewBag.TotalPages;
-    var totalRecords = ViewBag.TotalRecords;
+    Layout = "~/Areas/NhanVienLeTan/Views/Shared/_LayoutNVLT.cshtml";
 }
 
 @section styles {
     <link href="@Url.Content("~/Areas/NhanVienLeTan/assets/css/dichVu.css")" rel="stylesheet" />
+    <style>
+  /* ===== GRADIENT HEADER ===== */
+        .service-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+      padding: 30px;
+  border-radius: 15px;
+            margin-bottom: 30px;
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+     }
+
+        .service-header h1 {
+            color: white;
+        margin: 0;
+            font-size: 2rem;
+     font-weight: 700;
+}
+
+      .service-code {
+   background: rgba(255, 255, 255, 0.2);
+      padding: 5px 15px;
+         border-radius: 20px;
+        display: inline-block;
+            margin-top: 10px;
+  font-size: 0.9rem;
+        }
+
+        /* ===== STAT CARDS ===== */
+        .stat-card {
+        transition: all 0.3s ease;
+          cursor: pointer;
+      border: none;
+      border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15) !important;
+        }
+
+        .stat-icon {
+            font-size: 3rem;
+     opacity: 0.3;
+        }
+
+   /* ===== CHART SECTION ===== */
+        .chart-container {
+   background: white;
+border-radius: 15px;
+   padding: 20px;
+   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+          margin-bottom: 30px;
+      }
+
+        .chart-container canvas {
+         max-height: 350px;
+        }
+
+      .btn-chart-toggle {
+     background: white;
+ border: 2px solid #4e73df;
+    color: #4e73df;
+            padding: 8px 15px;
+          border-radius: 8px;
+    font-weight: 600;
+            transition: all 0.3s ease;
+    }
+
+        .btn-chart-toggle.active {
+         background: #4e73df;
+     color: white;
+    box-shadow: 0 3px 10px rgba(78, 115, 223, 0.4);
+        }
+
+      /* ===== FILTER CARD ===== */
+     .filter-card {
+          border-radius: 15px;
+            border: none;
+        }
+
+        .filter-card .card-header {
+          border-radius: 15px 15px 0 0 !important;
+         background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+        }
+
+        .date-range-input {
+ border-radius: 10px;
+            border: 2px solid #e3e6f0;
+      padding: 10px 15px;
+            transition: all 0.3s ease;
+        }
+
+        .date-range-input:focus {
+ border-color: #4e73df;
+            box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+   }
+
+        .export-btn {
+            background: linear-gradient(135deg, #1cc88a 0%, #17a673 100%);
+     border: none;
+            color: white;
+  padding: 10px 20px;
+   border-radius: 10px;
+font-weight: 600;
+       transition: all 0.3s ease;
+        }
+
+    .export-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(28, 200, 138, 0.4);
+            color: white;
+        }
+
+        /* ===== TABLE ===== */
+  .history-table {
+   border-radius: 15px;
+          overflow: hidden;
+  }
+
+        .history-table thead th {
+          background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+            color: white;
+   font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            border: none;
+padding: 15px;
+      }
+
+        .history-table tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        .history-table tbody tr:hover {
+            background-color: #f8f9fc;
+    transform: scale(1.01);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* ===== CUSTOMER INFO ===== */
+        .customer-info {
+   display: flex;
+            align-items: center;
+    gap: 10px;
+        }
+
+        .customer-avatar {
+            width: 40px;
+     height: 40px;
+            border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+     display: flex;
+    align-items: center;
+        justify-content: center;
+        color: white;
+  font-weight: bold;
+ font-size: 1.2rem;
+     }
+
+        .customer-name {
+     font-weight: 600;
+    color: #2e3a4d;
+          margin-bottom: 2px;
+        }
+
+        .customer-phone {
+            color: #858796;
+            font-size: 0.85rem;
+        }
+
+        /* ===== BADGES ===== */
+  .quantity-badge {
+        background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+     color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+   font-size: 1rem;
+     }
+
+        .price-display {
+   font-size: 1.1rem;
+          font-weight: 700;
+            color: #1cc88a;
+        }
+
+      /* ===== EMPTY STATE ===== */
+   .empty-state {
+        text-align: center;
+      padding: 60px 20px;
+      }
+
+        .empty-state i {
+          font-size: 5rem;
+            color: #d1d3e2;
+      margin-bottom: 20px;
+     }
+
+        .empty-state h4 {
+    color: #858796;
+  margin-bottom: 10px;
+     }
+    </style>
 }
 
 <div class="container-fluid">
-    @* ==== HEADER ==== *@
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-  <h1 class="h3 mb-0 text-gray-800">
-<i class="fas fa-history"></i> Lịch Sử Sử Dụng - @dichVu.TenDichVu
-        </h1>
-        <div class="btn-group">
-  <a href="@Url.Action("Details", "DichVu", new { id = dichVu.DichVuId })" class="btn btn-secondary btn-icon-split shadow-sm">
-       <span class="icon text-white-50">
- <i class="fas fa-arrow-left"></i>
+    @* ==== SERVICE HEADER ==== *@
+    <div class="service-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+    <h1>
+             <i class="fas fa-history"></i> Lịch Sử Sử Dụng
+       </h1>
+           <div class="mt-2">
+                <h3 class="mb-0">@Model.TenDichVu</h3>
+              <span class="service-code">
+ <i class="fas fa-tag"></i> @Model.MaDichVu
             </span>
-  <span class="text">Quay Lại</span>
-    </a>
+         </div>
+       </div>
+<div>
+              <a href="@Url.Action("Details", "DichVu", new { id = Model.DichVuId })"
+        class="btn btn-light btn-lg shadow-sm">
+    <i class="fas fa-arrow-left"></i> Quay Lại
+   </a>
+            </div>
         </div>
     </div>
 
-    @* ==== THỐNG KÊ ==== *@
+    @* ==== STATISTICS CARDS ==== *@
     <div class="row mb-4">
-   <div class="col-xl-4 col-md-6 mb-3">
-            <div class="card border-left-primary shadow h-100 py-2 stat-card">
+        <div class="col-xl-4 col-md-6 mb-3">
+   <div class="card stat-card border-left-primary shadow h-100 py-2">
  <div class="card-body">
+         <div class="row no-gutters align-items-center">
+<div class="col mr-2">
+      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+    Tổng lần sử dụng
+               </div>
+      <div class="h5 mb-0 font-weight-bold text-gray-800">
+      @Model.TongSoLanSuDung
+      </div>
+          </div>
+       <div class="col-auto">
+              <i class="fas fa-shopping-cart stat-icon text-primary"></i>
+  </div>
+  </div>
+      </div>
+            </div>
+      </div>
+
+      <div class="col-xl-4 col-md-6 mb-3">
+          <div class="card stat-card border-left-success shadow h-100 py-2">
+    <div class="card-body">
+           <div class="row no-gutters align-items-center">
+          <div class="col mr-2">
+       <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+   Tổng doanh thu
+        </div>
+        <div class="h5 mb-0 font-weight-bold text-gray-800">
+  @Model.TongDoanhThu.ToString("N0")đ
+          </div>
+       </div>
+ <div class="col-auto">
+    <i class="fas fa-dollar-sign stat-icon text-success"></i>
+        </div>
+           </div>
+        </div>
+      </div>
+        </div>
+
+    <div class="col-xl-4 col-md-6 mb-3">
+     <div class="card stat-card border-left-info shadow h-100 py-2">
+     <div class="card-body">
      <div class="row no-gutters align-items-center">
    <div class="col mr-2">
-         <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Tổng lần sử dụng</div>
-       <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.TongSoLanSuDung</div>
-   </div>
-       <div class="col-auto">
-   <i class="fas fa-shopping-cart fa-2x text-gray-300"></i>
+       <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+    Số lượng trung bình
+               </div>
+      <div class="h5 mb-0 font-weight-bold text-gray-800">
+        @Model.SoLuongTrungBinh.ToString("N1")
+ </div>
+        </div>
+             <div class="col-auto">
+     <i class="fas fa-chart-bar stat-icon text-info"></i>
       </div>
-  </div>
-   </div>
-    </div>
- </div>
-
-   <div class="col-xl-4 col-md-6 mb-3">
-      <div class="card border-left-success shadow h-100 py-2 stat-card">
-        <div class="card-body">
-    <div class="row no-gutters align-items-center">
-    <div class="col mr-2">
-       <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Tổng doanh thu</div>
-           <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.TongDoanhThu.ToString("N0")đ</div>
-         </div>
-       <div class="col-auto">
-      <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
        </div>
-       </div>
- </div>
-  </div>
-        </div>
-
-   <div class="col-xl-4 col-md-6 mb-3">
-   <div class="card border-left-info shadow h-100 py-2 stat-card">
-         <div class="card-body">
-      <div class="row no-gutters align-items-center">
-<div class="col mr-2">
-    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Số lượng trung bình</div>
-      <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.SoLuongTrungBinh.ToString("N1")</div>
-          </div>
-              <div class="col-auto">
-  <i class="fas fa-chart-bar fa-2x text-gray-300"></i>
-       </div>
-         </div>
     </div>
-    </div>
-        </div>
-    </div>
-
-    @* ==== DANH SÁCH ==== *@
-    <div class="card shadow mb-4">
-<div class="card-header py-3 bg-gradient-primary">
-     <h6 class="m-0 font-weight-bold text-white">
-        <i class="fas fa-table"></i> Chi tiết sử dụng
-      <span class="badge badge-light ml-2">@totalRecords lần</span>
-          </h6>
 </div>
-        <div class="card-body">
-     @if (Model != null && Model.Any())
+     </div>
+    </div>
+
+    @* ==== CHART SECTION ==== *@
+    @if (Model.ThongKeTheoThang != null && Model.ThongKeTheoThang.Any())
     {
-       <div class="table-responsive">
-            <table class="table table-bordered table-hover" width="100%" cellspacing="0">
-   <thead class="thead-light">
-       <tr>
-        <th>Mã đặt phòng</th>
-     <th>Khách hàng</th>
-    <th>Ngày sử dụng</th>
-        <th>Số lượng</th>
-     <th>Đơn giá</th>
-       <th>Thành tiền</th>
-       <th>Ghi chú</th>
-         <th>Thao tác</th>
-   </tr>
-     </thead>
-    <tbody>
-    @foreach (var item in Model)
-       {
-       <tr>
-  <td>
-    <strong>@item.DatPhong.MaDatPhong</strong>
-     </td>
-      <td>
-     <strong>@item.DatPhong.KhachHang.HoVaTen</strong><br />
-   <small class="text-muted">@item.DatPhong.KhachHang.SoDienThoai</small>
-       </td>
-        <td>
-     @if (item.NgaySuDung.HasValue)
-    {
-   @item.NgaySuDung.Value.ToString("dd/MM/yyyy HH:mm")
+ <div class="row mb-4">
+            <div class="col-12">
+            <div class="card shadow-sm chart-container">
+  <div class="card-header bg-gradient-primary py-3">
+         <div class="d-flex justify-content-between align-items-center">
+            <h6 class="m-0 font-weight-bold text-white">
+      <i class="fas fa-chart-line"></i> Biểu Đồ Thống Kê Theo Tháng
+</h6>
+      <div class="btn-group btn-group-sm" role="group">
+         <button type="button" class="btn btn-chart-toggle active" onclick="switchChart('revenue')">
+  <i class="fas fa-dollar-sign"></i> Doanh Thu
+   </button>
+  <button type="button" class="btn btn-chart-toggle" onclick="switchChart('usage')">
+    <i class="fas fa-chart-bar"></i> Lượt Sử Dụng
+      </button>
+       </div>
+       </div>
+        </div>
+       <div class="card-body p-4">
+        <div style="position: relative; height: 350px;">
+             <canvas id="serviceChart"></canvas>
+               </div>
+    <div class="mt-3 text-center">
+           <small class="text-muted">
+     <i class="fas fa-info-circle"></i>
+      Thống kê 12 tháng gần nhất
+        </small>
+ </div>
+  </div>
+             </div>
+            </div>
+        </div>
     }
-else
-     {
-   <span class="text-muted">@item.DatPhong.NgayDat.ToString("dd/MM/yyyy HH:mm")</span>
-        }
-       </td>
-     <td class="text-center">
-      <span class="badge badge-primary">@item.SoLuong</span>
+
+    @* ==== FILTER SECTION ==== *@
+    <div class="card filter-card shadow-sm mb-4">
+        <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-white">
+    <i class="fas fa-filter"></i> Bộ Lọc & Xuất Dữ Liệu
+            </h6>
+        </div>
+        <div class="card-body p-4">
+          @using (Html.BeginForm("LichSuSuDung", "DichVu", FormMethod.Get, new { @class = "filter-form" }))
+            {
+     <input type="hidden" name="id" value="@Model.DichVuId" />
+
+        <div class="form-row">
+             <div class="col-lg-3 col-md-6 mb-3">
+         <label class="form-label">
+         <i class="fas fa-calendar-alt text-primary"></i>
+       <strong>Từ ngày</strong>
+                  </label>
+<input type="date" name="TuNgay" value="@Model.TuNgay?.ToString("yyyy-MM-dd")" class="form-control date-range-input" />
+ </div>
+
+<div class="col-lg-3 col-md-6 mb-3">
+<label class="form-label">
+    <i class="fas fa-calendar-alt text-primary"></i>
+     <strong>Đến ngày</strong>
+  </label>
+          <input type="date" name="DenNgay" value="@Model.DenNgay?.ToString("yyyy-MM-dd")" class="form-control date-range-input" />
+ </div>
+
+         <div class="col-lg-3 col-md-6 mb-3">
+              <label class="form-label">
+    <i class="fas fa-search text-primary"></i>
+         <strong>Tìm kiếm khách hàng</strong>
+             </label>
+   <input type="text" name="TimKiem" value="@Model.TimKiem" class="form-control" placeholder="Tên, SĐT khách hàng..." />
+  </div>
+
+           <div class="col-lg-3 col-md-6 mb-3">
+               <label class="form-label">
+         <i class="fas fa-sort-amount-down text-primary"></i>
+        <strong>Sắp xếp</strong>
+       </label>
+ <select name="SortBy" class="form-control custom-select">
+     <option value="date_desc" selected="@(Model.SortBy == "date_desc" || string.IsNullOrEmpty(Model.SortBy))">Mới nhất</option>
+     <option value="date_asc" selected="@(Model.SortBy == "date_asc")">Cũ nhất</option>
+        <option value="amount_desc" selected="@(Model.SortBy == "amount_desc")">Giá cao nhất</option>
+     <option value="amount_asc" selected="@(Model.SortBy == "amount_asc")">Giá thấp nhất</option>
+   <option value="quantity_desc" selected="@(Model.SortBy == "quantity_desc")">Số lượng nhiều</option>
+        </select>
+        </div>
+                </div>
+
+  <div class="form-row">
+   <div class="col-12">
+           <div class="d-flex gap-2 flex-wrap justify-content-between">
+      <div>
+<button type="submit" class="btn btn-primary px-4 mr-2">
+   <i class="fas fa-search"></i> Tìm kiếm
+         </button>
+   <a href="@Url.Action("LichSuSuDung", new { id = Model.DichVuId })" class="btn btn-secondary px-4">
+  <i class="fas fa-redo"></i> Làm mới
+</a>
+   </div>
+            <div>
+   <button type="button" class="export-btn" onclick="exportToExcel()">
+  <i class="fas fa-file-excel"></i> Xuất Excel
+           </button>
+   </div>
+   </div>
+         </div>
+   </div>
+}
+        </div>
+    </div>
+
+    @* ==== HISTORY TABLE ==== *@
+    <div class="card shadow mb-4 history-table">
+     <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-white">
+     <i class="fas fa-table"></i> Chi tiết sử dụng
+                <span class="badge badge-light ml-2">@Model.TotalRecords lần</span>
+            </h6>
+        </div>
+        <div class="card-body">
+    @if (Model.DanhSachChiTiet != null && Model.DanhSachChiTiet.Any())
+            {
+ <div class="table-responsive">
+          <table class="table table-hover" id="historyTable" width="100%" cellspacing="0">
+       <thead>
+     <tr>
+      <th>STT</th>
+        <th>Mã đặt phòng</th>
+   <th>Khách hàng</th>
+       <th>Ngày sử dụng</th>
+   <th class="text-center">Số lượng</th>
+     <th class="text-right">Đơn giá</th>
+          <th class="text-right">Thành tiền</th>
+            <th>Ghi chú</th>
+          <th class="text-center">Thao tác</th>
+     </tr>
+      </thead>
+              <tbody>
+           @{
+        int stt = (Model.CurrentPage - 1) * Model.PageSize + 1;
+     }
+      @foreach (var item in Model.DanhSachChiTiet)
+{
+            <tr>
+       <td>@stt</td>
+          <td>
+ <strong class="text-primary">@item.MaDatPhong</strong>
          </td>
-   <td class="text-right">
-      @if (item.DonGia.HasValue)
-       {
- @item.DonGia.Value.ToString("N0")<text>đ</text>
-  }
-    else
-    {
-   <span class="text-muted">-</span>
-      }
-    </td>
- <td class="text-right">
-         @if (item.ThanhTien.HasValue)
-       {
-     <strong class="text-success">@item.ThanhTien.Value.ToString("N0")đ</strong>
-        }
-          else
-   {
-  <span class="text-muted">-</span>
-       }
- </td>
-      <td>
-       @if (!string.IsNullOrEmpty(item.GhiChu))
-      {
-     @item.GhiChu
-        }
-     else
-    {
-      <span class="text-muted">-</span>
-       }
-     </td>
- <td class="text-center">
-     <a href="@Url.Action("Details", "DatPhong", new { id = item.DatPhongId })" 
-  class="btn btn-sm btn-info" title="Xem đơn đặt phòng">
-   <i class="fas fa-eye"></i>
-     </a>
+           <td>
+        <div class="customer-info">
+      <div class="customer-avatar">
+       @item.TenKhachHang.Substring(0, 1).ToUpper()
+         </div>
+        <div>
+ <div class="customer-name">@item.TenKhachHang</div>
+      <div class="customer-phone">
+        <i class="fas fa-phone-alt"></i> @item.SoDienThoaiKhachHang
+     </div>
+</div>
+      </div>
        </td>
-      </tr>
+  <td>
+          @if (item.NgaySuDung.HasValue)
+             {
+    <div>
+   <i class="fas fa-calendar-day text-primary"></i>
+                @item.NgaySuDung.Value.ToString("dd/MM/yyyy")
+           </div>
+          <small class="text-muted">
+         <i class="fas fa-clock"></i> @item.NgaySuDung.Value.ToString("HH:mm")
+          </small>
+         }
+            else
+          {
+             <div class="text-muted">
+     <i class="fas fa-calendar-day"></i>
+    @item.NgayDatPhong.ToString("dd/MM/yyyy HH:mm")
+           </div>
+            }
+ </td>
+      <td class="text-center">
+        <span class="quantity-badge">×@item.SoLuong</span>
+     </td>
+        <td class="text-right">
+      @if (item.DonGia.HasValue)
+  {
+            <span class="text-dark font-weight-bold">@item.DonGia.Value.ToString("N0")đ</span>
        }
+        else
+  {
+                  <span class="text-muted">-</span>
+         }
+  </td>
+     <td class="text-right">
+         @if (item.ThanhTien.HasValue)
+ {
+                   <span class="price-display">@item.ThanhTien.Value.ToString("N0")đ</span>
+   }
+         else
+          {
+       <span class="text-muted">-</span>
+              }
+    </td>
+     <td>
+            @if (!string.IsNullOrEmpty(item.GhiChu))
+          {
+  <span class="text-muted">
+   <i class="fas fa-sticky-note"></i> @item.GhiChu
+         </span>
+          }
+               else
+           {
+        <span class="text-muted">-</span>
+     }
+    </td>
+   <td class="text-center">
+    <a href="@Url.Action("Details", "DatPhong", new { id = item.DatPhongId })"
+       class="btn btn-sm btn-info"
+          title="Xem đơn đặt phòng">
+    <i class="fas fa-eye"></i>
+           </a>
+             </td>
+      </tr>
+   stt++;
+          }
   </tbody>
-    </table>
+           </table>
      </div>
 
-     @* ==== PAGINATION ==== *@
-    @if (totalPages > 1)
-      {
-      <nav aria-label="Page navigation">
-         <ul class="pagination justify-content-center">
-     <li class="page-item @(currentPage > 1 ? "" : "disabled")">
-       <a class="page-link" href="@Url.Action("LichSuSuDung", new { id = dichVu.DichVuId, CurrentPage = currentPage - 1 })">
-           <i class="fas fa-chevron-left"></i> Trước
-   </a>
-     </li>
-
-  @for (int i = 1; i <= totalPages; i++)
+    @* ==== PAGINATION ==== *@
+       if (Model.TotalPages > 1)
     {
-      <li class="page-item @(i == currentPage ? "active" : "")">
-      <a class="page-link" href="@Url.Action("LichSuSuDung", new { id = dichVu.DichVuId, CurrentPage = i })">@i</a>
-     </li>
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+   <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
+     <a class="page-link" href="@Url.Action("LichSuSuDung", new {
+    id = Model.DichVuId,
+             TuNgay = Model.TuNgay,
+        DenNgay = Model.DenNgay,
+          TimKiem = Model.TimKiem,
+         SortBy = Model.SortBy,
+         CurrentPage = Model.CurrentPage - 1
+          })">
+     <i class="fas fa-chevron-left"></i> Trước
+      </a>
+        </li>
+
+          @{
+     int startPage = Math.Max(1, Model.CurrentPage - 2);
+int endPage = Math.Min(Model.TotalPages, Model.CurrentPage + 2);
+     }
+
+    if (startPage > 1)
+   {
+   <li class="page-item">
+  <a class="page-link" href="@Url.Action("LichSuSuDung", new {
+        id = Model.DichVuId,
+      TuNgay = Model.TuNgay,
+           DenNgay = Model.DenNgay,
+   TimKiem = Model.TimKiem,
+SortBy = Model.SortBy,
+    CurrentPage = 1
+   })">1</a>
+       </li>
+   if (startPage > 2)
+     {
+       <li class="page-item disabled"><span class="page-link">...</span></li>
+      }
+  }
+
+    @for (int i = startPage; i <= endPage; i++)
+     {
+   <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+    <a class="page-link" href="@Url.Action("LichSuSuDung", new {
+   id = Model.DichVuId,
+            TuNgay = Model.TuNgay,
+ DenNgay = Model.DenNgay,
+     TimKiem = Model.TimKiem,
+     SortBy = Model.SortBy,
+            CurrentPage = i
+ })">@i</a>
+    </li>
     }
 
-      <li class="page-item @(currentPage < totalPages ? "" : "disabled")">
-       <a class="page-link" href="@Url.Action("LichSuSuDung", new { id = dichVu.DichVuId, CurrentPage = currentPage + 1 })">
-         Sau <i class="fas fa-chevron-right"></i>
-    </a>
-          </li>
-        </ul>
-       </nav>
-
-     <p class="text-center text-muted">
-Trang @currentPage / @totalPages - Tổng @totalRecords lần sử dụng
-     </p>
+       if (endPage < Model.TotalPages)
+  {
+    if (endPage < Model.TotalPages - 1)
+   {
+        <li class="page-item disabled"><span class="page-link">...</span></li>
+    }
+ <li class="page-item">
+       <a class="page-link" href="@Url.Action("LichSuSuDung", new {
+     id = Model.DichVuId,
+   TuNgay = Model.TuNgay,
+       DenNgay = Model.DenNgay,
+ TimKiem = Model.TimKiem,
+SortBy = Model.SortBy,
+    CurrentPage = Model.TotalPages
+        })">@Model.TotalPages</a>
+              </li>
      }
-      }
-   else
-       {
-   <div class="alert alert-info">
-    <i class="fas fa-info-circle"></i> Chưa có lịch sử sử dụng dịch vụ này.
- </div>
-       }
+
+       <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
+ <a class="page-link" href="@Url.Action("LichSuSuDung", new {
+      id = Model.DichVuId,
+ TuNgay = Model.TuNgay,
+  DenNgay = Model.DenNgay,
+          TimKiem = Model.TimKiem,
+         SortBy = Model.SortBy,
+            CurrentPage = Model.CurrentPage + 1
+        })">
+      Sau <i class="fas fa-chevron-right"></i>
+           </a>
+       </li>
+        </ul>
+            </nav>
+
+<p class="text-center text-muted mt-3">
+          <i class="fas fa-info-circle"></i>
+    Trang <strong>@Model.CurrentPage</strong> / <strong>@Model.TotalPages</strong>
+         - Tổng <strong>@Model.TotalRecords</strong> lần sử dụng
+     </p>
+  }
+   }
+     else
+        {
+     <div class="empty-state">
+   <i class="fas fa-inbox"></i>
+   <h4>Chưa có lịch sử sử dụng</h4>
+            <p class="text-muted">
+        @if (Model.HasFilter)
+     {
+           <text>Không tìm thấy kết quả phù hợp với điều kiện lọc.</text>
+ }
+ else
+      {
+       <text>Dịch vụ này chưa được sử dụng lần nào.</text>
+          }
+        </p>
+      <a href="@Url.Action("Index", "DichVu")" class="btn btn-primary mt-3">
+    <i class="fas fa-arrow-left"></i> Quay về danh sách
+   </a>
         </div>
+   }
+    </div>
     </div>
 </div>
 
 @section Scripts {
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script>
- $(document).ready(function() {
-     // Auto-hide alerts
-          setTimeout(function() {
-  $('.alert:not(.dynamic-alert)').fadeOut('slow', function() {
-       $(this).remove();
-  });
-   }, 5000);
+        // Chart data from server
+     var chartData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.ThongKeTheoThang));
+        var serviceChart = null;
+        var currentChartType = 'revenue';
+
+     $(document).ready(function() {
+         // Auto-hide alerts
+            setTimeout(function() {
+              $('.alert:not(.dynamic-alert)').fadeOut('slow', function() {
+             $(this).remove();
+     });
+         }, 5000);
+
+     // Animate statistics cards
+      $('.stat-card').each(function(index) {
+        $(this).css({
+         'opacity': '0',
+       'transform': 'translateY(20px)'
+        }).delay(index * 100).animate({
+      'opacity': '1'
+           }, 500, function() {
+              $(this).css('transform', 'translateY(0)');
+     });
+    });
+
+        // Initialize chart if data available
+            if (chartData && chartData.length > 0) {
+                initializeChart();
+   }
         });
+
+        // Initialize Chart.js
+        function initializeChart() {
+var ctx = document.getElementById('serviceChart');
+          if (!ctx) return;
+
+            var labels = chartData.map(function(item) { return item.Thang; });
+            var revenueData = chartData.map(function(item) { return item.DoanhThu; });
+  var usageData = chartData.map(function(item) { return item.SoLan; });
+
+     serviceChart = new Chart(ctx, {
+           type: 'bar',
+           data: {
+     labels: labels,
+      datasets: [{
+  label: 'Doanh Thu (VNĐ)',
+     data: revenueData,
+           backgroundColor: 'rgba(78, 115, 223, 0.8)',
+  borderColor: 'rgba(78, 115, 223, 1)',
+  borderWidth: 2,
+   borderRadius: 8,
+        hoverBackgroundColor: 'rgba(78, 115, 223, 1)'
+      }]
+    },
+           options: {
+      responsive: true,
+           maintainAspectRatio: false,
+   plugins: {
+      legend: {
+          display: true,
+      position: 'top',
+         labels: {
+        font: { size: 14, weight: 'bold' },
+     padding: 20,
+        usePointStyle: true
+      }
+     },
+        tooltip: {
+      backgroundColor: 'rgba(0, 0, 0, 0.8)',
+         padding: 12,
+   titleFont: { size: 14, weight: 'bold' },
+       bodyFont: { size: 13 },
+    callbacks: {
+           label: function(context) {
+      if (currentChartType === 'revenue') {
+   return ' ' + context.parsed.y.toLocaleString('vi-VN') + 'đ';
+        } else {
+       return ' ' + context.parsed.y + ' lần';
+         }
+   }
+         }
+ }
+         },
+  scales: {
+         y: {
+        beginAtZero: true,
+        grid: { color: 'rgba(0, 0, 0, 0.05)', drawBorder: false },
+       ticks: {
+         font: { size: 12 },
+      callback: function(value) {
+         if (currentChartType === 'revenue') {
+        return (value / 1000000).toFixed(1) + 'M';
+            } else {
+       return value;
+                 }
+       }
+          }
+      },
+     x: {
+     grid: { display: false },
+          ticks: { font: { size: 12 } }
+ }
+         },
+      animation: {
+       duration: 1500,
+               easing: 'easeInOutQuart'
+             }
+           }
+      });
+        }
+
+        // Switch between revenue and usage chart
+  window.switchChart = function(type) {
+            if (!serviceChart) return;
+
+  currentChartType = type;
+
+   // Update button states
+  $('.btn-chart-toggle').removeClass('active');
+ event.target.closest('button').classList.add('active');
+
+            var labels = chartData.map(function(item) { return item.Thang; });
+   var data, label, color;
+
+   if (type === 'revenue') {
+    data = chartData.map(function(item) { return item.DoanhThu; });
+label = 'Doanh Thu (VNĐ)';
+        color = 'rgba(78, 115, 223, 0.8)';
+       } else {
+             data = chartData.map(function(item) { return item.SoLan; });
+                label = 'Lượt Sử Dụng';
+      color = 'rgba(28, 200, 138, 0.8)';
+            }
+
+            serviceChart.data.datasets[0] = {
+      label: label,
+       data: data,
+    backgroundColor: color,
+  borderColor: color.replace('0.8', '1'),
+    borderWidth: 2,
+ borderRadius: 8,
+    hoverBackgroundColor: color.replace('0.8', '1')
+       };
+
+     serviceChart.update();
+        };
+
+ // Export to Excel
+        function exportToExcel() {
+            try {
+                var table = document.getElementById('historyTable');
+                if (!table) {
+      alert('Không tìm thấy bảng dữ liệu!');
+   return;
+                }
+
+                var wb = XLSX.utils.table_to_book(table, {sheet: "Lịch sử sử dụng"});
+   var serviceName = '@Model.TenDichVu'.replace(/[^a-zA-Z0-9]/g, '_');
+     var fileName = 'LichSuSuDung_' + serviceName + '_' + new Date().getTime() + '.xlsx';
+
+  XLSX.writeFile(wb, fileName);
+
+          showToast('success', 'Thành công', 'Đã xuất file Excel: ' + fileName);
+            } catch (error) {
+                console.error('Export error:', error);
+        showToast('error', 'Lỗi', 'Không thể xuất file Excel. Vui lòng thử lại!');
+         }
+        }
+
+        // Toast notification
+        function showToast(type, title, message) {
+         var alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
+   var icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle';
+
+            var alertHtml = `
+       <div class="alert ${alertClass} alert-dismissible fade show dynamic-alert position-fixed"
+          style="top: 20px; right: 20px; z-index: 9999; min-width: 300px;" role="alert">
+         <i class="fas ${icon}"></i>
+        <strong>${title}!</strong><br/>${message}
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+     <span aria-hidden="true">&times;</span>
+      </button>
+                </div>
+         `;
+
+            $('body').append(alertHtml);
+
+setTimeout(function() {
+        $('.dynamic-alert').fadeOut('slow', function() {
+       $(this).remove();
+                });
+            }, 3000);
+        }
     </script>
 }

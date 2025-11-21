@@ -1,0 +1,674 @@
+﻿@model Web_QLKhachSan.Areas.NhanVienLeTan.ViewModels.DichVu.DichVuCreateViewModel
+@{
+    ViewBag.Title = "Thêm Dịch Vụ Mới";
+    Layout = "~/Areas/NhanVienLeTan/Views/Shared/_LayoutNVLT.cshtml";
+}
+
+@section styles {
+    <link href="@Url.Content("~/Areas/NhanVienLeTan/assets/css/dichVu.css")" rel="stylesheet" />
+    <style>
+        /* ===== FORM HEADER ===== */
+        .form-header {
+     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+ border-radius: 15px 15px 0 0;
+    margin: -15px -15px 30px -15px;
+        }
+
+     .form-header h1 {
+color: white;
+margin: 0;
+            font-size: 1.75rem;
+            font-weight: 700;
+ }
+
+        /* ===== FORM SECTIONS ===== */
+        .form-section {
+            background: #f8f9fc;
+ padding: 20px;
+            border-radius: 10px;
+        margin-bottom: 25px;
+            border-left: 4px solid #4e73df;
+        }
+
+        .form-section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+  color: #4e73df;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        gap: 10px;
+        }
+
+     /* ===== FORM CONTROLS ===== */
+        .form-control:focus {
+            border-color: #4e73df;
+    box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+ }
+
+     .custom-select:focus {
+ border-color: #4e73df;
+   box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+        }
+
+      /* ===== ICON PREVIEW ===== */
+        .icon-preview {
+            display: flex;
+            align-items: center;
+      gap: 15px;
+            padding: 15px;
+   background: white;
+            border: 2px dashed #e3e6f0;
+     border-radius: 10px;
+ margin-top: 10px;
+     }
+
+        .icon-preview-box {
+            width: 60px;
+   height: 60px;
+   display: flex;
+        align-items: center;
+        justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 10px;
+ color: white;
+   font-size: 2rem;
+        }
+
+    .icon-preview-text {
+    flex: 1;
+        }
+
+  /* ===== PRICE PREVIEW ===== */
+        .price-preview {
+ background: white;
+ padding: 20px;
+            border-radius: 10px;
+    border: 2px solid #e3e6f0;
+    margin-top: 15px;
+        }
+
+   .price-row {
+   display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+        border-bottom: 1px solid #e3e6f0;
+     }
+
+        .price-row:last-child {
+    border-bottom: none;
+       margin-top: 10px;
+     padding-top: 15px;
+         border-top: 2px solid #4e73df;
+        }
+
+        .price-label {
+         font-weight: 600;
+            color: #5a5c69;
+      }
+
+    .price-value {
+    font-size: 1.25rem;
+  font-weight: 700;
+        }
+
+        .price-original {
+            color: #858796;
+            text-decoration: line-through;
+        }
+
+    .price-discount {
+            color: #1cc88a;
+      }
+
+ .price-final {
+    color: #e74a3b;
+            font-size: 1.5rem;
+        }
+
+        .discount-badge {
+            background: linear-gradient(135deg, #1cc88a 0%, #17a673 100%);
+         color: white;
+  padding: 5px 15px;
+      border-radius: 20px;
+            font-weight: 600;
+       font-size: 0.9rem;
+      }
+
+        /* ===== TOGGLE SWITCH ===== */
+        .custom-control-input:checked ~ .custom-control-label::before {
+   background-color: #1cc88a;
+            border-color: #1cc88a;
+        }
+
+  .custom-control-label {
+       cursor: pointer;
+        }
+
+        .switch-container {
+      display: flex;
+      align-items: center;
+            gap: 15px;
+     padding: 15px;
+ background: white;
+            border: 2px solid #e3e6f0;
+         border-radius: 10px;
+        }
+
+        .toggle-switch {
+            position: relative;
+      display: inline-block;
+   width: 60px;
+  height: 30px;
+        }
+
+.toggle-switch input {
+        opacity: 0;
+            width: 0;
+height: 0;
+        }
+
+        .toggle-slider {
+   position: absolute;
+            cursor: pointer;
+     top: 0;
+    left: 0;
+    right: 0;
+            bottom: 0;
+        background-color: #dc3545;
+     transition: 0.4s;
+            border-radius: 30px;
+        }
+
+        .toggle-slider:before {
+   position: absolute;
+   content: "";
+      height: 22px;
+  width: 22px;
+       left: 4px;
+     bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+ border-radius: 50%;
+   }
+
+        .toggle-switch input:checked + .toggle-slider {
+   background-color: #1cc88a;
+        }
+
+        .toggle-switch input:checked + .toggle-slider:before {
+       transform: translateX(30px);
+   }
+
+        .status-label {
+            flex: 1;
+      }
+
+.status-label strong {
+            font-size: 1.1rem;
+            color: #2e3a4d;
+        }
+
+     .status-badge {
+     display: inline-block;
+            padding: 5px 15px;
+     border-radius: 20px;
+ font-size: 0.85rem;
+         font-weight: 600;
+        margin-left: 10px;
+        }
+
+  .status-badge.active {
+      background: #d4edda;
+            color: #155724;
+        }
+
+        .status-badge.inactive {
+  background: #f8d7da;
+     color: #721c24;
+      }
+
+        /* ===== BUTTONS ===== */
+        .btn-create {
+       background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+        border: none;
+     padding: 12px 30px;
+            font-weight: 600;
+      transition: all 0.3s ease;
+        }
+
+        .btn-create:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(78, 115, 223, 0.4);
+        }
+
+ .btn-cancel {
+      background: #6c757d;
+   border: none;
+   padding: 12px 30px;
+font-weight: 600;
+        }
+
+        /* ===== VALIDATION ===== */
+        .field-validation-error {
+   color: #e74a3b;
+   font-size: 0.875rem;
+   margin-top: 5px;
+      display: block;
+     font-weight: 500;
+        }
+
+     .input-validation-error {
+      border-color: #e74a3b !important;
+     box-shadow: 0 0 0 0.2rem rgba(231, 74, 59, 0.25) !important;
+      }
+
+        .validation-summary-errors {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+ border-left: 4px solid #e74a3b;
+ border-radius: 10px;
+         padding: 15px 20px;
+ margin-bottom: 20px;
+        }
+
+        .validation-summary-errors ul {
+   margin: 0;
+  padding-left: 20px;
+        }
+
+        .validation-summary-errors li {
+            color: #721c24;
+    font-weight: 500;
+ margin-bottom: 5px;
+        }
+
+        .validation-summary-errors li:last-child {
+     margin-bottom: 0;
+        }
+
+        /* Form group với validation */
+        .form-group.has-error .form-control {
+ border-color: #e74a3b;
+            box-shadow: 0 0 0 0.2rem rgba(231, 74, 59, 0.25);
+        }
+
+        .form-group.has-error label {
+  color: #e74a3b;
+        }
+
+  .form-group.has-success .form-control {
+ border-color: #1cc88a;
+        box-shadow: 0 0 0 0.2rem rgba(28, 200, 138, 0.25);
+        }
+
+        .form-group.has-success label {
+      color: #1cc88a;
+        }
+
+        /* Required field indicator */
+        .required-field::after {
+            content: " *";
+            color: #e74a3b;
+            font-weight: bold;
+      }
+
+     /* Validation icon */
+.validation-icon {
+            position: absolute;
+        right: 10px;
+   top: 50%;
+ transform: translateY(-50%);
+      font-size: 1.2rem;
+   }
+
+        .validation-icon.error {
+          color: #e74a3b;
+        }
+
+    .validation-icon.success {
+    color: #1cc88a;
+        }
+
+        /* Input with validation icon */
+   .input-with-icon {
+        position: relative;
+        }
+
+        .input-with-icon .form-control {
+      padding-right: 40px;
+        }
+    </style>
+}
+
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="form-header">
+  <div class="d-flex justify-content-between align-items-center">
+     <div>
+  <h1>
+               <i class="fas fa-plus-circle"></i> Thêm Dịch Vụ Mới
+         </h1>
+ <p class="mb-0 mt-2">Vui lòng điền đầy đủ thông tin dịch vụ</p>
+              </div>
+             <div>
+         <a href="@Url.Action("Index", "DichVu")" class="btn btn-light btn-lg">
+<i class="fas fa-arrow-left"></i> Quay lại
+     </a>
+         </div>
+            </div>
+        </div>
+
+ <div class="card-body">
+  @using (Html.BeginForm("Create", "DichVu", FormMethod.Post, new { @class = "needs-validation", id = "createForm" }))
+   {
+@Html.AntiForgeryToken()
+
+@* ==== VALIDATION SUMMARY ==== *@
+if (!ViewData.ModelState.IsValid)
+ {
+   <div class="validation-summary-errors alert alert-danger alert-dismissible fade show" role="alert">
+   <h5 class="alert-heading">
+  <i class="fas fa-exclamation-triangle"></i> Vui lòng kiểm tra lại thông tin
+      </h5>
+      @Html.ValidationSummary(false, "", new { @class = "mb-0" })
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+     </button>
+       </div>
+      }
+
+    @* ==== SECTION 1: THÔNG TIN CƠ BẢN ==== *@
+  <div class="form-section">
+        <div class="form-section-title">
+  <i class="fas fa-info-circle"></i>
+  <span>Thông Tin Cơ Bản</span>
+                </div>
+
+            <div class="row">
+          <div class="col-md-6">
+           <div class="form-group">
+   @Html.LabelFor(m => m.MaDichVu, new { @class = "font-weight-bold" })
+          <small class="text-muted">(Để trống để tự động tạo)</small>
+    @Html.TextBoxFor(m => m.MaDichVu, new { @class = "form-control", placeholder = "VD: DV001", @readonly = "readonly", style = "background-color: #e9ecef;" })
+ @Html.ValidationMessageFor(m => m.MaDichVu, "", new { @class = "field-validation-error" })
+      </div>
+      </div>
+
+     <div class="col-md-6">
+   <div class="form-group">
+            @Html.LabelFor(m => m.TenDichVu, new { @class = "font-weight-bold" })
+        <span class="text-danger">*</span>
+    @Html.TextBoxFor(m => m.TenDichVu, new { @class = "form-control", placeholder = "VD: Massage toàn thân", required = "required" })
+          @Html.ValidationMessageFor(m => m.TenDichVu, "", new { @class = "field-validation-error" })
+     </div>
+       </div>
+   </div>
+
+         <div class="form-group">
+    @Html.LabelFor(m => m.MoTa, new { @class = "font-weight-bold" })
+      @Html.TextAreaFor(m => m.MoTa, new { @class = "form-control", rows = 4, placeholder = "Mô tả chi tiết về dịch vụ..." })
+    @Html.ValidationMessageFor(m => m.MoTa, "", new { @class = "field-validation-error" })
+            </div>
+
+    <div class="form-group">
+         @Html.LabelFor(m => m.LoaiDichVuId, new { @class = "font-weight-bold" })
+    <span class="text-danger">*</span>
+            @Html.DropDownListFor(m => m.LoaiDichVuId, Model.DanhSachLoaiDichVu, "-- Chọn loại dịch vụ --", new { @class = "form-control custom-select" })
+       @Html.ValidationMessageFor(m => m.LoaiDichVuId, "", new { @class = "field-validation-error" })
+ </div>
+          </div>
+
+                @* ==== SECTION 2: GIÁ CẢ ==== *@
+           <div class="form-section">
+           <div class="form-section-title">
+    <i class="fas fa-dollar-sign"></i>
+         <span>Thông Tin Giá</span>
+         </div>
+
+                    <div class="row">
+             <div class="col-md-6">
+  <div class="form-group">
+       @Html.LabelFor(m => m.Gia, new { @class = "font-weight-bold" })
+       <span class="text-danger">*</span>
+        <div class="input-group">
+             @Html.TextBoxFor(m => m.Gia, "{0:N0}", new { @class = "form-control", type = "number", min = "0", step = "1000", placeholder = "0", required = "required", id = "giaGoc" })
+ <div class="input-group-append">
+            <span class="input-group-text">đ</span>
+           </div>
+   </div>
+     @Html.ValidationMessageFor(m => m.Gia, "", new { @class = "field-validation-error" })
+          </div>
+  </div>
+
+    <div class="col-md-6">
+<div class="form-group">
+      @Html.LabelFor(m => m.GiaUuDai, new { @class = "font-weight-bold" })
+       <small class="text-muted">(Không bắt buộc)</small>
+       <div class="input-group">
+   @Html.TextBoxFor(m => m.GiaUuDai, new { @class = "form-control", type = "number", min = "0", step = "1000", placeholder = "0", id = "giaUuDai" })
+           <div class="input-group-append">
+               <span class="input-group-text">đ</span>
+          </div>
+    </div>
+    @Html.ValidationMessageFor(m => m.GiaUuDai, "", new { @class = "field-validation-error" })
+       </div>
+ </div>
+      </div>
+
+    @* Price Preview *@
+       <div class="price-preview" id="pricePreview">
+            <div class="price-row">
+         <span class="price-label">Giá gốc:</span>
+    <span class="price-value price-original" id="displayGiaGoc">0đ</span>
+           </div>
+         <div class="price-row" id="discountRow" style="display: none;">
+            <span class="price-label">Giá ưu đãi:</span>
+    <span class="price-value price-discount" id="displayGiaUuDai">0đ</span>
+        </div>
+    <div class="price-row" id="percentRow" style="display: none;">
+<span class="price-label">% Giảm giá:</span>
+    <span class="discount-badge" id="displayPercent">0%</span>
+              </div>
+         <div class="price-row">
+        <span class="price-label">Giá hiển thị cuối cùng:</span>
+      <span class="price-value price-final" id="displayGiaFinal">0đ</span>
+     </div>
+   </div>
+   </div>
+
+     @* ==== SECTION 3: GIAO DIỆN ==== *@
+      <div class="form-section">
+    <div class="form-section-title">
+     <i class="fas fa-palette"></i>
+        <span>Giao Diện & Hiển Thị</span>
+    </div>
+
+     <div class="form-group">
+      @Html.LabelFor(m => m.Icon, new { @class = "font-weight-bold" })
+      <span class="text-danger">*</span>
+  @Html.DropDownListFor(m => m.Icon, Model.DanhSachIcon, new { @class = "form-control custom-select", id = "iconSelect" })
+        @Html.ValidationMessageFor(m => m.Icon, "", new { @class = "field-validation-error" })
+
+     <div class="icon-preview" id="iconPreview" style="display: none;">
+     <div class="icon-preview-box" id="iconPreviewBox">
+          <i id="iconPreviewIcon"></i>
+  </div>
+      <div class="icon-preview-text">
+   <strong>Preview Icon</strong>
+          <p class="mb-0 text-muted" id="iconPreviewText">Chọn icon để xem preview</p>
+       </div>
+    </div>
+      </div>
+
+ <div class="form-group">
+        <label class="font-weight-bold d-block mb-3">@Html.DisplayNameFor(m => m.DaHoatDong)</label>
+        <div class="custom-control custom-checkbox custom-control-inline" style="font-size: 1.1rem;">
+   @Html.CheckBoxFor(m => m.DaHoatDong, new { @class = "custom-control-input", id = "DaHoatDong" })
+       <label class="custom-control-label" for="DaHoatDong">
+      <strong>Kích hoạt dịch vụ này</strong>
+         </label>
+        </div>
+     <small class="text-muted d-block mt-2">
+      <i class="fas fa-info-circle"></i> Chỉ những dịch vụ đang hoạt động mới hiển thị cho khách hàng
+    </small>
+    </div>
+    </div>
+
+      @* ==== ACTION BUTTONS ==== *@
+                <div class="text-center mt-4">
+         <button type="submit" class="btn btn-create btn-lg">
+        <i class="fas fa-save"></i> Lưu Dịch Vụ
+         </button>
+            <a href="@Url.Action("Index", "DichVu")" class="btn btn-cancel btn-lg">
+            <i class="fas fa-times"></i> Hủy
+           </a>
+           </div>
+            }
+      </div>
+    </div>
+</div>
+
+@* Loading Overlay *@
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner">
+        <i class="fas fa-spinner"></i>
+        <p class="mt-3">Đang lưu dịch vụ...</p>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function() {
+    // ===== PRICE CALCULATION =====
+            function updatePricePreview() {
+         var giaGoc = parseFloat($('#giaGoc').val()) || 0;
+      var giaUuDai = parseFloat($('#giaUuDai').val()) || 0;
+
+       // Display giá gốc
+  $('#displayGiaGoc').text(giaGoc.toLocaleString('vi-VN') + 'đ');
+
+       // Calculate discount
+    if (giaUuDai > 0 && giaUuDai < giaGoc) {
+   var percent = Math.round(((giaGoc - giaUuDai) / giaGoc) * 100);
+      
+     $('#displayGiaUuDai').text(giaUuDai.toLocaleString('vi-VN') + 'đ');
+  $('#displayPercent').text('-' + percent + '%');
+   $('#displayGiaFinal').text(giaUuDai.toLocaleString('vi-VN') + 'đ');
+       
+     $('#discountRow').show();
+         $('#percentRow').show();
+         $('#displayGiaGoc').addClass('text-decoration-line-through');
+    } else {
+  $('#displayGiaFinal').text(giaGoc.toLocaleString('vi-VN') + 'đ');
+       $('#discountRow').hide();
+    $('#percentRow').hide();
+        $('#displayGiaGoc').removeClass('text-decoration-line-through');
+      }
+     }
+
+       // Listen to price changes
+   $('#giaGoc, #giaUuDai').on('input', updatePricePreview);
+ updatePricePreview(); // Initial call
+
+            // ===== ICON PREVIEW =====
+   function updateIconPreview() {
+   var selectedIcon = $('#iconSelect').val();
+   var selectedText = $('#iconSelect option:selected').text();
+
+  if (selectedIcon) {
+ $('#iconPreviewIcon').attr('class', selectedIcon);
+    $('#iconPreviewText').text(selectedText);
+     $('#iconPreview').show();
+    } else {
+  $('#iconPreview').hide();
+         }
+    }
+
+   $('#iconSelect').on('change', updateIconPreview);
+    updateIconPreview(); // Initial call
+
+   // ===== FORM SUBMIT =====
+    $('#createForm').on('submit', function() {
+      if ($(this).valid()) {
+      $('#loadingOverlay').css('display', 'flex');
+ }
+  });
+
+          // ===== REAL-TIME VALIDATION =====
+            $.validator.setDefaults({
+            highlight: function(element) {
+     $(element).addClass('input-validation-error');
+       $(element).closest('.form-group').addClass('has-error').removeClass('has-success');
+   },
+         unhighlight: function(element) {
+    $(element).removeClass('input-validation-error');
+     $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+         },
+      errorPlacement: function(error, element) {
+   // Place error message after the input or input-group
+        if (element.parent('.input-group').length) {
+     error.insertAfter(element.parent());
+           } else {
+    error.insertAfter(element);
+       }
+      }
+ });
+
+   // Custom validation rules
+            $('#giaUuDai').rules('add', {
+       lessThan: '#giaGoc',
+     messages: {
+   lessThan: 'Giá ưu đãi phải nhỏ hơn giá gốc'
+          }
+      });
+
+   // Validate giá gốc tối thiểu 10,000đ
+ $('#giaGoc').rules('add', {
+       min: 10000,
+        messages: {
+       min: 'Giá gốc phải từ 10,000đ trở lên'
+    }
+    });
+
+   // Validate loại dịch vụ bắt buộc
+    $('#LoaiDichVuId').rules('add', {
+   required: true,
+      messages: {
+   required: 'Vui lòng chọn loại dịch vụ'
+     }
+    });
+
+  // Validate icon bắt buộc
+        $('#iconSelect').rules('add', {
+   required: true,
+        messages: {
+     required: 'Vui lòng chọn icon cho dịch vụ'
+   }
+ });
+
+     // Custom validator: Less than
+       $.validator.addMethod('lessThan', function(value, element, param) {
+      if (!value) return true; // Optional field
+      var target = $(param);
+    if (!target.val()) return true;
+          return parseFloat(value) < parseFloat(target.val());
+     }, 'Giá trị phải nhỏ hơn {0}');
+
+      // Validate on input
+  $('#giaGoc, #giaUuDai, #TenDichVu, #LoaiDichVuId, #iconSelect').on('blur change', function() {
+        $(this).valid();
+      });
+
+ // Remove error on focus
+       $('input, select, textarea').on('focus', function() {
+   $(this).removeClass('input-validation-error');
+     $(this).closest('.form-group').removeClass('has-error');
+        });
+        });
+    </script>
+}

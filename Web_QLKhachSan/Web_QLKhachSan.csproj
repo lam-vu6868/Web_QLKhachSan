@@ -246,9 +246,11 @@
     <Compile Include="Areas\NhanVienLeTan\ViewModels\DatPhong\KhuyenMaiItemViewModel.cs" />
     <Compile Include="Areas\NhanVienLeTan\ViewModels\DatPhong\NhanVienItemViewModel.cs" />
     <Compile Include="Areas\NhanVienLeTan\ViewModels\DatPhong\PhongDatItemViewModel.cs" />
+    <Compile Include="Areas\NhanVienLeTan\ViewModels\DichVu\DichVuCreateViewModel.cs" />
     <Compile Include="Areas\NhanVienLeTan\ViewModels\DichVu\DichVuFilterViewModel.cs" />
     <Compile Include="Areas\NhanVienLeTan\ViewModels\DichVu\DichVuItemViewModel.cs" />
     <Compile Include="Areas\NhanVienLeTan\ViewModels\DichVu\DichVuListViewModel.cs" />
+    <Compile Include="Areas\NhanVienLeTan\ViewModels\DichVu\LichSuSuDungViewModel.cs" />
     <Compile Include="Areas\NhanVienLeTan\ViewModels\PhongStatusViewModel.cs" />
     <Compile Include="Areas\NhanVienLeTan\ViewModels\SoDoPhongViewModel.cs" />
     <Compile Include="Controllers\ChinhSachVaDieuKhoanController.cs" />
@@ -495,6 +497,7 @@
     <Content Include="Areas\NhanVienLeTan\Views\DichVu\Index.cshtml" />
     <Content Include="Areas\NhanVienLeTan\Views\DichVu\Details.cshtml" />
     <Content Include="Areas\NhanVienLeTan\Views\DichVu\LichSuSuDung.cshtml" />
+    <Content Include="Areas\NhanVienLeTan\Views\DichVu\Create.cshtml" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />
