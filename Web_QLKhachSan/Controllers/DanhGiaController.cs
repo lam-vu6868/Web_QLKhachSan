@@ -19,6 +19,11 @@ namespace Web_QLKhachSan.Controllers
             // Lấy thông tin khách hàng từ Session
             var email = Session["Email"]?.ToString();
             var hoVaTen = Session["HoVaTen"]?.ToString();
+            
+            // Tìm khách hàng từ email
+            var khachHang = !string.IsNullOrEmpty(email) 
+                ? db.KhachHangs.FirstOrDefault(k => k.Email == email) 
+                : null;
 
             // Phân trang: 6 đánh giá mỗi trang
             int pageSize = 6;
@@ -49,18 +54,53 @@ namespace Web_QLKhachSan.Controllers
             var soDanhGia = allDanhGias.Count();
             var phanTramHaiLong = allDanhGias.Any() ? (allDanhGias.Count(d => d.Diem >= 4) * 100.0 / soDanhGia) : 0;
 
+            // Lấy danh sách phòng đã đặt (trạng thái hoàn thành) của khách hàng hiện tại
+            List<SelectListItem> danhSachPhongDaDat = new List<SelectListItem>();
+            
+            if (khachHang != null)
+            {
+                // Lấy chính xác phòng có trạng thái = 2 (hoàn thành)
+                var phongIdDaHoanThanh = db.ChiTietDatPhongs
+                    .Where(ct => ct.DatPhong.MaKhachHang == khachHang.MaKhachHang 
+                              && ct.DatPhong.TrangThaiDatPhong == 2 // Chỉ trạng thái 2
+                              && ct.PhongId.HasValue)
+                    .Select(ct => ct.PhongId.Value)
+                    .Distinct()
+                    .ToList();
+
+                // Lấy danh sách phòng đã đánh giá (DISTINCT để tránh trùng lặp)
+                var phongIdDaDanhGia = db.DanhGias
+                    .Where(dg => dg.MaKhachHang == khachHang.MaKhachHang)
+                    .Select(dg => dg.PhongId)
+                    .Distinct()
+                    .ToList();
+
+                // CHỈ lấy phòng hoàn thành VÀ chưa đánh giá
+                var phongIdChuaDanhGia = phongIdDaHoanThanh
+                    .Where(id => !phongIdDaDanhGia.Contains(id))
+                    .ToList();
+
+                // NẾU có phòng chưa đánh giá thì mới tạo dropdown
+                if (phongIdChuaDanhGia.Any())
+                {
+                    danhSachPhongDaDat = db.Phongs
+                        .Where(p => phongIdChuaDanhGia.Contains(p.PhongId))
+                        .OrderBy(p => p.TenPhong)
+                        .Select(p => new SelectListItem
+                        {
+                            Value = p.PhongId.ToString(),
+                            Text = p.TenPhong
+                        })
+                        .ToList();
+                }
+
+            }
+
             // Tạo ViewModel
             var viewModel = new DanhGiaIndexViewModel
             {
                 DanhSachDanhGia = danhGias,
-                DanhSachPhong = db.Phongs
-                    .Where(p => p.DaHoatDong)
-                    .Select(p => new SelectListItem
-                    {
-                        Value = p.PhongId.ToString(),
-                        Text = p.TenPhong
-                    })
-                    .ToList(),
+                DanhSachPhong = danhSachPhongDaDat,
                 TenKhachHang = hoVaTen,
                 EmailKhachHang = email,
                 TongDiem = Math.Round(tongDiem, 1),
@@ -147,6 +187,27 @@ namespace Web_QLKhachSan.Controllers
 
             try
             {
+                // Kiểm tra xem khách hàng đã đánh giá phòng này chưa
+                var daDanhGia = db.DanhGias.Any(dg => dg.MaKhachHang == khachHang.MaKhachHang 
+                                                   && dg.PhongId == model.PhongId);
+                if (daDanhGia)
+                {
+                    TempData["ErrorMessage"] = "Bạn đã đánh giá phòng này rồi. Mỗi phòng chỉ được đánh giá một lần!";
+                    return RedirectToAction("Index");
+                }
+
+                // Kiểm tra xem khách hàng có đặt phòng này với trạng thái hoàn thành không
+                var daDatPhong = db.ChiTietDatPhongs.Any(ct => 
+                    ct.DatPhong.MaKhachHang == khachHang.MaKhachHang 
+                    && ct.PhongId == model.PhongId
+                    && ct.DatPhong.TrangThaiDatPhong == 2); // Hoàn thành
+                
+                if (!daDatPhong)
+                {
+                    TempData["ErrorMessage"] = "Bạn chỉ có thể đánh giá những phòng đã đặt và hoàn thành!";
+                    return RedirectToAction("Index");
+                }
+
                 // Tạo đánh giá mới
                 var danhGia = new DanhGia
                 {

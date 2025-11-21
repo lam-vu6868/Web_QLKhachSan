@@ -542,6 +542,7 @@
     <Content Include="Views\DashboardKhachHang\HoSo.cshtml" />
     <Content Include="Views\DashboardKhachHang\LichSu.cshtml" />
     <Content Include="Views\DashboardKhachHang\CapDo.cshtml" />
+    <Content Include="Views\DatPhong\XacNhanHoaDon.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -551,7 +552,6 @@
     <Folder Include="Areas\NhanVienBuongPhong\Data\" />
     <Folder Include="Areas\NhanVienBuongPhong\Views\Shared\" />
     <Folder Include="Areas\NhanVienLeTan\Data\" />
-    <Folder Include="Views\CookieTest\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

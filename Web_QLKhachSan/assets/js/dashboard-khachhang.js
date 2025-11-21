@@ -717,29 +717,81 @@ function uploadAvatar(input) {
     });
   }
 }
-// ==================== DUAL ACTION BUTTONS ====================
-// Xử lý click cho các button dual action (Xem chi tiết / Hủy đặt phòng)
+// ==================== SERVICE DROPDOWN & MAP MODAL ====================
 document.addEventListener('DOMContentLoaded', function() {
-  // Lắng nghe sự kiện click cho tất cả button dual
-  document.addEventListener('click', function(e) {
-    const btn = e.target.closest('.btn-dual-left, .btn-dual-right');
-    if (!btn) return;
+  // Xử lý dropdown hiển thị dịch vụ
+  const serviceButtons = document.querySelectorAll('.service-dropdown-btn');
+  
+  serviceButtons.forEach(button => {
+    button.addEventListener('mouseenter', function() {
+      const tooltip = this.querySelector('.service-tooltip');
+      if (tooltip) {
+        tooltip.style.display = 'block';
+      }
+    });
     
-    const action = btn.getAttribute('data-action');
-    const row = btn.closest('tr');
-    const bookingId = row?.querySelector('.booking-id')?.textContent.trim();
-    
-    if (action === 'detail') {
-      // Xử lý xem chi tiết
-      console.log('Xem chi tiết đơn:', bookingId);
-      // TODO: Thêm logic xem chi tiết ở đây
-    } else if (action === 'cancel') {
-      // Xử lý hủy đặt phòng
-      console.log('Hủy đặt phòng:', bookingId);
-      // TODO: Thêm logic hủy đặt phòng ở đây
-    }
+    button.addEventListener('mouseleave', function() {
+      const tooltip = this.querySelector('.service-tooltip');
+      if (tooltip) {
+        tooltip.style.display = 'none';
+      }
+    });
   });
+  
+  // Xử lý đóng modal map
+  const closeMapBtn = document.getElementById('closeMapModal');
+  if (closeMapBtn) {
+    closeMapBtn.addEventListener('click', closeMapModal);
+  }
+  
+  // Đóng modal khi click overlay
+  const mapModal = document.getElementById('mapModal');
+  if (mapModal) {
+    mapModal.querySelector('.map-modal-overlay')?.addEventListener('click', closeMapModal);
+  }
 });
 
+// ==================== MAP MODAL ====================
+function openMapModal(mapUrl, address, phone) {
+  const modal = document.getElementById('mapModal');
+  const iframe = document.getElementById('mapIframe');
+  const addressEl = document.getElementById('mapAddress');
+  const phoneEl = document.getElementById('mapPhone');
+  
+  if (!modal || !iframe) {
+    console.error('Modal hoặc iframe không tồn tại');
+    return;
+  }
+  
+  // Set iframe src
+  iframe.src = mapUrl;
+  
+  // Update address and phone
+  if (addressEl) addressEl.textContent = address;
+  if (phoneEl) phoneEl.textContent = phone;
+  
+  // Show modal
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeMapModal() {
+  const modal = document.getElementById('mapModal');
+  const iframe = document.getElementById('mapIframe');
+  
+  if (modal) {
+    modal.classList.remove('active');
+    document.body.style.overflow = 'auto';
+    // Clear iframe to stop loading
+    if (iframe) iframe.src = '';
+  }
+}
+
+// Keyboard shortcut for closing map modal
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closeMapModal();
+  }
+});
 
 
