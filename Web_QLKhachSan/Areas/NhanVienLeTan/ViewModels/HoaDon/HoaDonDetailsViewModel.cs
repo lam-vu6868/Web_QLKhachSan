@@ -80,9 +80,12 @@ public List<ThanhToanItemViewModel> LichSuThanhToan { get; set; }
 
     // ===== T?NG TI?N =====
     public decimal TongTienPhong { get; set; }
-        public decimal TongTienDichVu { get; set; }
-   public decimal TongCong => (TongTienPhong + TongTienDichVu) - (GiamGia ?? 0) + (Thue ?? 0);
-    public decimal ConLai => TongCong - (LichSuThanhToan?.Sum(tt => tt.SoTien) ?? 0);
+   public decimal TongTienDichVu { get; set; }
+   
+    // ? FIX: S? d?ng TongTien t? HoaDon (?ã tính ?úng khi checkout)
+  public decimal TongCong => TongTien ?? ((TongTienPhong + TongTienDichVu) - (GiamGia ?? 0) + (Thue ?? 0));
+    
+  public decimal ConLai => TongCong - (LichSuThanhToan?.Sum(tt => tt.SoTien) ?? 0);
 
    // ===== TH?I GIAN =====
   public DateTime NgayTao { get; set; }
