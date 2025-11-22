@@ -73,6 +73,20 @@
                                 <td class="transaction-value">@ViewBag.BankCode</td>
                             </tr>
                         }
+                        @if (ViewBag.TransactionTime != null)
+                        {
+                            <tr>
+                                <td class="transaction-label">Thời gian giao dịch:</td>
+                                <td class="transaction-value">@ViewBag.TransactionTime</td>
+                            </tr>
+                        }
+                        @if (ViewBag.TransactionStatus != null)
+                        {
+                            <tr>
+                                <td class="transaction-label">Trạng thái giao dịch:</td>
+                                <td class="transaction-value">@ViewBag.TransactionStatus</td>
+                            </tr>
+                        }
                     </table>
                 </div>
 
@@ -101,7 +115,7 @@
                 </div>
             }
 
-            <div class="confirmation-actions">
+            <div class="confirmation-actions no-print">
                 <a href="@Url.Action("Index", "Home")" class="btn-confirmation primary">
                     <i class="fas fa-home"></i> Về Trang Chủ
                 </a>

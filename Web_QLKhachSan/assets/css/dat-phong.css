@@ -1617,9 +1617,6 @@ hr {
   overflow: hidden;
   height: 100%;
 }
-.cta-button{
-  background-color: var(--white);
-}
 
 .phone-input-container:focus-within {
   border-color: var(--gold);

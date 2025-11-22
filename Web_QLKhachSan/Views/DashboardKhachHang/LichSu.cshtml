@@ -359,7 +359,7 @@
                                         Email: <strong>@(Session["Email"] ?? "N/A")</strong><br/>
                                         Mã đơn: <strong>@(item.MaDatPhong ?? "#DP" + item.DatPhongId)</strong>
                                     </p>
-                                    <button class="btn-resend-email">
+                                    <button class="btn-resend-email" onclick="resendEmail_@(item.DatPhongId)()">
                                         <i class="fas fa-paper-plane"></i>
                                         Gửi Lại Email
                                     </button>
@@ -622,6 +622,33 @@
         function closeCancelModal_@(item.DatPhongId)() {
             document.getElementById('cancelModal_@(item.DatPhongId)').classList.remove('active');
             document.body.style.overflow = 'auto';
+        }
+
+        function resendEmail_@(item.DatPhongId)() {
+            if (confirm('Bạn có muốn gửi lại email xác nhận đặt phòng?')) {
+                // Submit form để gửi lại email
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '@Url.Action("GuiLaiEmail", "DashboardKhachHang")';
+                
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'datPhongId';
+                input.value = '@item.DatPhongId';
+                
+                const token = document.querySelector('input[name="__RequestVerificationToken"]');
+                if (token) {
+                    const tokenInput = document.createElement('input');
+                    tokenInput.type = 'hidden';
+                    tokenInput.name = '__RequestVerificationToken';
+                    tokenInput.value = token.value;
+                    form.appendChild(tokenInput);
+                }
+                
+                form.appendChild(input);
+                document.body.appendChild(form);
+                form.submit();
+            }
         }
     </script>
 }
