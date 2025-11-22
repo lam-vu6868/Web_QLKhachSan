@@ -335,6 +335,8 @@
   transform: scaleY(1);
 }
 
+/* ==================== DASHBOARD CONTENT ==================== */
+
 /* ==================== DASHBOARD HERO ==================== */
 .dashboard-hero {
     background: linear-gradient(135deg, var(--deep-navy) 0%, #1e3a5f 100%);
@@ -3205,6 +3207,1011 @@ font-size: 0.85rem;
     position: absolute;
     top: 10px;
     right: 10px;
+  }
+}
+
+/* ===================================
+   Modal Chi Tiết Đơn Hàng
+   =================================== */
+.detail-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10000;
+  animation: fadeIn 0.3s ease;
+  align-items: center;
+  justify-content: center;
+}
+
+.detail-modal.active {
+  display: flex;
+}
+
+.detail-modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+}
+
+.detail-modal-container {
+  position: relative;
+  background: #fff;
+  border-radius: 20px;
+  max-width: 1200px;
+  width: 95%;
+  max-height: 90vh;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.4s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.detail-modal-header {
+  background: linear-gradient(135deg, #1a365d 0%, #2d5a8a 100%);
+  color: white;
+  padding: 25px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 3px solid #d4af37;
+}
+
+.detail-modal-header h2 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.detail-modal-header h2 i {
+  color: #d4af37;
+  font-size: 28px;
+}
+
+.detail-modal-close {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 20px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.detail-modal-close:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: rotate(90deg);
+}
+
+.detail-modal-body {
+  padding: 30px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: #666;
+}
+
+.loading-spinner i {
+  font-size: 48px;
+  color: #d4af37;
+  margin-bottom: 20px;
+}
+
+.loading-spinner p {
+  font-size: 16px;
+  color: #666;
+}
+
+/* Detail Content */
+.detail-section {
+  margin-bottom: 30px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 25px;
+  border-left: 4px solid #d4af37;
+}
+
+.detail-section-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a365d;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.detail-section-title i {
+  color: #d4af37;
+  font-size: 22px;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.detail-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.detail-value {
+  font-size: 16px;
+  font-weight: 500;
+  color: #1a365d;
+}
+
+.detail-value.status {
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.detail-value.status.pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.detail-value.status.confirmed {
+  background: #d1ecf1;
+  color: #0c5460;
+}
+
+.detail-value.status.completed {
+  background: #d4edda;
+  color: #155724;
+}
+
+.detail-value.status.cancelled {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.detail-value.price {
+  color: #d4af37;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+/* Detail Section Row - 2 cột */
+.detail-section-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+/* Detail Section Row - 3 cột */
+.detail-section-row.three-cols {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.detail-section.half {
+  margin-bottom: 0;
+}
+
+.detail-section.third {
+  margin-bottom: 0;
+}
+
+/* Địa chỉ */
+.detail-address {
+  display: flex;
+  align-items: start;
+  gap: 15px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  border: 2px solid #e0e0e0;
+  height: 100%;
+}
+
+.detail-address-icon {
+  color: #d4af37;
+  font-size: 24px;
+  margin-top: 5px;
+}
+
+.detail-address-content {
+  flex: 1;
+}
+
+/* Calendar Info */
+.detail-calendar-info {
+  display: flex;
+  align-items: start;
+  gap: 15px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  border: 2px solid #e0e0e0;
+  height: 100%;
+}
+
+.detail-calendar-icon {
+  color: #d4af37;
+  font-size: 24px;
+  margin-top: 5px;
+}
+
+.detail-calendar-content {
+  flex: 1;
+}
+
+.detail-calendar-text {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 12px;
+  line-height: 1.8;
+}
+
+.detail-calendar-text strong {
+  color: #1a365d;
+}
+
+/* Email Info */
+.detail-email-info {
+  display: flex;
+  align-items: start;
+  gap: 15px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  border: 2px solid #e0e0e0;
+  height: 100%;
+}
+
+.detail-email-icon {
+  color: #d4af37;
+  font-size: 24px;
+  margin-top: 5px;
+}
+
+.detail-email-content {
+  flex: 1;
+}
+
+.detail-email-text {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 12px;
+  line-height: 1.8;
+}
+
+.detail-email-text strong {
+  color: #1a365d;
+}
+
+.btn-resend-email {
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.btn-resend-email:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+}
+
+.detail-address-text {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 12px;
+  line-height: 1.6;
+}
+
+.detail-action-buttons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.btn-view-map,
+.btn-add-calendar {
+  background: linear-gradient(135deg, #1a365d 0%, #2d5a8a 100%);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.btn-add-calendar {
+  background: linear-gradient(135deg, #d4af37 0%, #b8941f 100%);
+}
+
+.btn-view-map:hover,
+.btn-add-calendar:hover {
+  transform: translateY(-2px);
+  color: white;
+  box-shadow: 0 5px 15px rgba(26, 54, 93, 0.3);
+}
+
+.btn-add-calendar:hover {
+  box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+}
+
+.modal-contact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.modal-contact-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  border: 2px solid #e0e0e0;
+}
+
+.modal-contact-box i {
+  color: #d4af37;
+  font-size: 20px;
+}
+
+.modal-contact-text {
+  font-size: 14px;
+  color: #333;
+}
+
+.modal-contact-text strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #666;
+  font-size: 12px;
+}
+
+/* Room Details Table */
+.room-details-table,
+.detail-table-wrapper {
+  width: 100%;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.room-details-table table,
+.detail-info-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.room-details-table thead,
+.detail-info-table thead {
+  background: linear-gradient(135deg, #1a365d 0%, #2d5a8a 100%);
+  color: white;
+}
+
+.room-details-table th,
+.detail-info-table th {
+  padding: 15px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.room-details-table td,
+.detail-info-table td {
+  padding: 15px;
+  border-bottom: 1px solid #e0e0e0;
+  color: #333;
+  font-size: 14px;
+}
+
+.room-details-table tbody tr:last-child td,
+.detail-info-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.room-details-table tbody tr:hover,
+.detail-info-table tbody tr:hover {
+  background: #f8f9fa;
+}
+
+.amenities-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.amenity-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #e3f2fd;
+  color: #1976d2;
+  padding: 5px 12px;
+  border-radius: 15px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.amenity-tag i {
+  font-size: 11px;
+}
+
+.amenity-tag.facility {
+  background: #f3e5f5;
+  color: #7b1fa2;
+}
+
+/* Service Items */
+.service-items-list {
+  display: grid;
+  gap: 15px;
+}
+
+.service-item-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  border: 2px solid #e0e0e0;
+  transition: all 0.3s ease;
+}
+
+.service-item-card:hover {
+  border-color: #d4af37;
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
+}
+
+.service-item-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex: 1;
+}
+
+.service-item-icon {
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #1a365d 0%, #2d5a8a 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 22px;
+}
+
+.service-item-details h4 {
+  margin: 0 0 5px 0;
+  font-size: 16px;
+  color: #1a365d;
+}
+
+.service-item-details p {
+  margin: 0;
+  font-size: 13px;
+  color: #666;
+}
+
+.service-item-price {
+  text-align: right;
+}
+
+.service-item-price .quantity {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.service-item-price .price {
+  font-size: 18px;
+  font-weight: 700;
+  color: #d4af37;
+}
+
+/* Notes Section */
+.notes-box {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  border-left: 4px solid #d4af37;
+  font-size: 15px;
+  color: #333;
+  line-height: 1.6;
+  font-style: italic;
+}
+
+.notes-box.empty {
+  color: #999;
+  font-style: normal;
+}
+
+/* ===================================
+   Modal Địa Chỉ Google Map
+   =================================== */
+.map-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10001;
+  animation: fadeIn 0.3s ease;
+}
+
+.map-modal.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.map-modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+}
+
+.map-modal-container {
+  position: relative;
+  background: #fff;
+  border-radius: 20px;
+  max-width: 900px;
+  width: 95%;
+  max-height: 85vh;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.4s ease;
+}
+
+.map-modal-header {
+  background: linear-gradient(135deg, #1a365d 0%, #2d5a8a 100%);
+  color: white;
+  padding: 20px 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 3px solid #d4af37;
+}
+
+.map-modal-header h3 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.map-modal-header h3 i {
+  color: #d4af37;
+  font-size: 24px;
+}
+
+.map-modal-close {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.map-modal-close:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: rotate(90deg);
+}
+
+.map-modal-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.google-map-frame {
+  width: 100%;
+  height: 400px;
+}
+
+.google-map-frame iframe {
+  width: 100%;
+  height: 100%;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .detail-modal-container,
+  .map-modal-container {
+    width: 100%;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+
+  .detail-section-row {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .detail-section-row.three-cols {
+    grid-template-columns: 1fr;
+  }
+  
+  .detail-modal-header,
+  .map-modal-header {
+    padding: 20px;
+  }
+  
+  .detail-modal-header h2 {
+    font-size: 20px;
+  }
+  
+  .map-modal-header h3 {
+    font-size: 18px;
+  }
+  
+  .detail-modal-body {
+    padding: 20px;
+  }
+  
+  .detail-grid,
+  .contact-info {
+    grid-template-columns: 1fr;
+  }
+  
+  .room-details-table,
+  .detail-table-wrapper {
+    overflow-x: auto;
+  }
+  
+  .room-details-table table,
+  .detail-info-table {
+    min-width: 600px;
+  }
+  
+  .google-map-frame {
+    height: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .detail-section {
+    padding: 15px;
+  }
+  
+  .service-item-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .service-item-price {
+    text-align: left;
+    margin-top: 10px;
+  }
+}
+
+/* ===================================
+   Modal Hủy Đặt Phòng
+   =================================== */
+.cancel-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10002;
+  animation: fadeIn 0.3s ease;
+}
+
+.cancel-modal.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cancel-modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+}
+
+.cancel-modal-container {
+  position: relative;
+  background: #fff;
+  border-radius: 20px;
+  max-width: 600px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.4s ease;
+  z-index: 1;
+}
+
+.cancel-modal-icon {
+  text-align: center;
+  padding: 30px 30px 0;
+}
+
+.cancel-modal-icon i {
+  font-size: 80px;
+  color: #ff6b6b;
+  animation: pulse 1.5s infinite;
+}
+
+.cancel-modal-header {
+  text-align: center;
+  padding: 20px 30px 0;
+}
+
+.cancel-modal-header h2 {
+  font-size: 28px;
+  color: #1a365d;
+  margin: 0;
+  font-weight: 700;
+}
+
+.cancel-modal-body {
+  padding: 20px 30px 30px;
+}
+
+.cancel-warning-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cancel-warning-title i {
+  color: #d4af37;
+  font-size: 18px;
+}
+
+.cancel-policy-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 25px 0;
+  background: #fff5f5;
+  border: 2px solid #feb2b2;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.cancel-policy-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 0;
+  color: #2d3748;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.cancel-policy-list li:not(:last-child) {
+  border-bottom: 1px solid #fed7d7;
+}
+
+.cancel-policy-list li i {
+  color: #e53e3e;
+  font-size: 16px;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.cancel-policy-list li strong {
+  color: #c53030;
+}
+
+.cancel-confirmation-text {
+  text-align: center;
+  font-size: 14px;
+  color: #2d3748;
+  margin: 0;
+  padding: 20px;
+  background: #f7fafc;
+  border-radius: 10px;
+  border-left: 4px solid #d4af37;
+}
+
+.cancel-confirmation-text strong {
+  color: #1a365d;
+  font-weight: 700;
+}
+
+.cancel-modal-footer {
+  display: flex;
+  gap: 15px;
+  padding: 0 30px 30px;
+}
+
+.btn-cancel-abort,
+.btn-cancel-confirm {
+  flex: 1;
+  padding: 15px 25px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-cancel-abort {
+  background: #e2e8f0;
+  color: #2d3748;
+}
+
+.btn-cancel-abort:hover {
+  background: #cbd5e0;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.btn-cancel-confirm {
+  background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+  color: white;
+}
+
+.btn-cancel-confirm:hover:not(:disabled) {
+  background: linear-gradient(135deg, #c53030 0%, #9b2c2c 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(229, 62, 62, 0.4);
+}
+
+.btn-cancel-confirm:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Responsive cho Cancel Modal */
+@media (max-width: 768px) {
+  .cancel-modal-container {
+    width: 95%;
+    max-width: none;
+  }
+
+  .cancel-modal-icon i {
+    font-size: 60px;
+  }
+
+  .cancel-modal-header h2 {
+    font-size: 22px;
+  }
+
+  .cancel-modal-body {
+    padding: 15px 20px 20px;
+  }
+
+  .cancel-policy-list {
+    padding: 15px;
+  }
+
+  .cancel-policy-list li {
+    font-size: 13px;
+  }
+
+  .cancel-modal-footer {
+    flex-direction: column;
+    padding: 0 20px 20px;
+  }
+
+  .btn-cancel-abort,
+  .btn-cancel-confirm {
+    padding: 12px 20px;
+    font-size: 14px;
   }
 }
 

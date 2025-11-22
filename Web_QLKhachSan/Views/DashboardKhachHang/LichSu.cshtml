@@ -78,7 +78,7 @@
                                                 break;
                                         }
 
-                                        <tr>
+                                        <tr data-booking-id="@item.DatPhongId">
                                             <td class="booking-id">@(item.MaDatPhong ?? "#DP" + item.DatPhongId)</td>
                                             <td>@tenLoaiPhong</td>
                                             <td>@tenPhong</td>
@@ -112,11 +112,11 @@
                                                 @if (item.TrangThaiDatPhong == 0 || item.TrangThaiDatPhong == 1)
                                                 {
                                                     <div class="btn-dual-action">
-                                                        <button class="btn-dual-left" data-action="detail">
+                                                        <button class="btn-dual-left" onclick="openDetailModal_@(item.DatPhongId)()">
                                                             <i class="fas fa-file-alt"></i>
                                                             <span class="btn-text">Chi tiết</span>
                                                         </button>
-                                                        <button class="btn-dual-right" data-action="cancel">
+                                                        <button class="btn-dual-right" onclick="openCancelModal_@(item.DatPhongId)()">
                                                             <i class="fas fa-times-circle"></i>
                                                             <span class="btn-text">Hủy Đặt</span>
                                                         </button>
@@ -124,7 +124,7 @@
                                                 }
                                                 else
                                                 {
-                                                    <button class="btn-detail">
+                                                    <button class="btn-detail" onclick="openDetailModal_@(item.DatPhongId)()">
                                                         <i class="fas fa-file-alt"></i> <span>Chi Tiết</span>
                                                     </button>
                                                 }
@@ -197,4 +197,459 @@
         </div>
     </div>
 </section>
+
+@* Modals Chi Tiết Đơn Hàng *@
+@if (Model != null && Model.Any())
+{
+    foreach (var item in Model)
+    {
+        // Xử lý trạng thái
+        string statusClass = "";
+        string statusText = "";
+        switch (item.TrangThaiDatPhong)
+        {
+            case 0:
+                statusClass = "pending";
+                statusText = "Chờ Xác Nhận";
+                break;
+            case 1:
+                statusClass = "confirmed";
+                statusText = "Đã Xác Nhận";
+                break;
+            case 2:
+                statusClass = "completed";
+                statusText = "Hoàn Thành";
+                break;
+            case 3:
+                statusClass = "cancelled";
+                statusText = "Đã Hủy";
+                break;
+            default:
+                statusClass = "";
+                statusText = "Không xác định";
+                break;
+        }
+
+        <!-- Modal Chi Tiết cho đơn hàng @item.DatPhongId -->
+        <script>
+            function openDetailModal_@(item.DatPhongId)() {
+                document.getElementById('detailModal_@(item.DatPhongId)').classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+            function closeDetailModal_@(item.DatPhongId)() {
+                document.getElementById('detailModal_@(item.DatPhongId)').classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        </script>
+
+        <div id="detailModal_@(item.DatPhongId)" class="detail-modal">
+            <div class="detail-modal-overlay" onclick="closeDetailModal_@(item.DatPhongId)()"></div>
+            <div class="detail-modal-container">
+                <div class="detail-modal-header">
+                    <h2><i class="fas fa-file-invoice"></i> Chi Tiết Đơn Hàng</h2>
+                    <button class="detail-modal-close" onclick="closeDetailModal_@(item.DatPhongId)()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <div class="detail-modal-body">
+                    <!-- Thông tin cơ bản -->
+                    <div class="detail-section">
+                        <h3 class="detail-section-title">
+                            <i class="fas fa-info-circle"></i>
+                            Thông Tin Đơn Hàng
+                        </h3>
+                        <div class="detail-table-wrapper">
+                            <table class="detail-info-table">
+                                <thead>
+                                    <tr>
+                                        <th>Mã Đơn Hàng</th>
+                                        <th>Trạng Thái</th>
+                                        <th>Tổng Tiền</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>@(item.MaDatPhong ?? "#DP" + item.DatPhongId)</td>
+                                        <td><span class="status @statusClass">@statusText</span></td>
+                                        <td class="price">@((item.TongTien ?? 0).ToString("N0"))đ</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Thời gian -->
+                    <div class="detail-section">
+                        <h3 class="detail-section-title">
+                            <i class="fas fa-clock"></i>
+                            Thời Gian Cụ Thể
+                        </h3>
+                        <div class="detail-table-wrapper">
+                            <table class="detail-info-table">
+                                <thead>
+                                    <tr>
+                                        <th>Ngày Nhận Phòng</th>
+                                        <th>Ngày Trả Phòng</th>
+                                        <th>Số Đêm</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>@(item.NgayNhan?.ToString("dd/MM/yyyy") ?? "N/A")</td>
+                                        <td>@(item.NgayTra?.ToString("dd/MM/yyyy") ?? "N/A")</td>
+                                        <td>@(item.SoDem ?? 0) đêm</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Địa chỉ & Lịch - 3 cột -->
+                    <div class="detail-section-row three-cols">
+                        <!-- Địa chỉ khách sạn -->
+                        <div class="detail-section third">
+                            <h3 class="detail-section-title">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Địa Chỉ Chi Tiết
+                            </h3>
+                            <div class="detail-address">
+                                <i class="fas fa-hotel detail-address-icon"></i>
+                                <div class="detail-address-content">
+                                    <p class="detail-address-text">123 Đường Bờ Biển, TP Paradise</p>
+                                    <button class="btn-view-map" onclick="openMapModal('https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3916.644233957414!2d106.66163457480823!3d10.990203189171902!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3174d1be2495c19d%3A0xafd977d94466ffc2!2zxJDhuqFpIGjhu41jIELDrG5oIETGsMahbmc!5e0!3m2!1svi!2s!4v1761220984026!5m2!1svi!2s', '123 Đường Bờ Biển, TP Paradise', '(+84) 123 456 789')">
+                                        <i class="fas fa-map-marked-alt"></i>
+                                        Xem Bản Đồ
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Thêm vào lịch -->
+                        <div class="detail-section third">
+                            <h3 class="detail-section-title">
+                                <i class="fas fa-calendar-alt"></i>
+                                Lịch Đặt Phòng
+                            </h3>
+                            <div class="detail-calendar-info">
+                                <i class="fas fa-calendar-check detail-calendar-icon"></i>
+                                <div class="detail-calendar-content">
+                                    <p class="detail-calendar-text">
+                                        Nhận phòng: <strong>@(item.NgayNhan?.ToString("dd/MM/yyyy") ?? "N/A")</strong><br/>
+                                        Trả phòng: <strong>@(item.NgayTra?.ToString("dd/MM/yyyy") ?? "N/A")</strong>
+                                    </p>
+                                    <a href="@Url.Action("TaiFileICS", "DashboardKhachHang", new { datPhongId = item.DatPhongId })" class="btn-add-calendar">
+                                        <i class="fas fa-calendar-plus"></i>
+                                        Thêm Vào Lịch
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Gửi lại email xác nhận -->
+                        <div class="detail-section third">
+                            <h3 class="detail-section-title">
+                                <i class="fas fa-envelope"></i>
+                                Email Xác Nhận
+                            </h3>
+                            <div class="detail-email-info">
+                                <i class="fas fa-envelope-open-text detail-email-icon"></i>
+                                <div class="detail-email-content">
+                                    <p class="detail-email-text">
+                                        Email: <strong>@(Session["Email"] ?? "N/A")</strong><br/>
+                                        Mã đơn: <strong>@(item.MaDatPhong ?? "#DP" + item.DatPhongId)</strong>
+                                    </p>
+                                    <button class="btn-resend-email">
+                                        <i class="fas fa-paper-plane"></i>
+                                        Gửi Lại Email
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Thông tin liên hệ -->
+                    <div class="detail-section">
+                        <h3 class="detail-section-title">
+                            <i class="fas fa-phone-alt"></i>
+                            Thông Tin Liên Hệ Trực Tiếp
+                        </h3>
+                        <div class="modal-contact-grid">
+                            <div class="modal-contact-box">
+                                <i class="fas fa-phone"></i>
+                                <div class="modal-contact-text">
+                                    <strong>Hotline</strong>
+                                    (+84) 123 456 789
+                                </div>
+                            </div>
+                            <div class="modal-contact-box">
+                                <i class="fas fa-envelope"></i>
+                                <div class="modal-contact-text">
+                                    <strong>Email</strong>
+                                    support@serenehorizon.com
+                                </div>
+                            </div>
+                            <div class="modal-contact-box">
+                                <i class="fas fa-clock"></i>
+                                <div class="modal-contact-text">
+                                    <strong>Giờ làm việc</strong>
+                                    24/7 - Phục vụ mọi lúc
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Thông tin phòng -->
+                    <div class="detail-section">
+                        <h3 class="detail-section-title">
+                            <i class="fas fa-bed"></i>
+                            Thông Tin Phòng
+                        </h3>
+                        <div class="room-details-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Loại Phòng</th>
+                                        <th>Tên Phòng</th>
+                                        <th>Số Lượng</th>
+                                        <th>Đơn Giá</th>
+                                        <th>Thành Tiền</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (item.ChiTietDatPhongs != null && item.ChiTietDatPhongs.Any())
+                                    {
+                                        foreach (var phong in item.ChiTietDatPhongs)
+                                        {
+                                            <tr>
+                                                <td><strong>@(phong.LoaiPhong?.TenLoai ?? "N/A")</strong></td>
+                                                <td>@(phong.Phong?.TenPhong ?? "N/A")</td>
+                                                <td>@phong.SoLuong</td>
+                                                <td>@((phong.DonGia ?? 0).ToString("N0"))đ</td>
+                                                <td><strong>@((phong.ThanhTien ?? 0).ToString("N0"))đ</strong></td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="5" style="text-align: center; padding: 20px;">Không có thông tin phòng</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Tiện nghi & Tiện ích -->
+                    @if (item.ChiTietDatPhongs != null && item.ChiTietDatPhongs.Any())
+                    {
+                        foreach (var phong in item.ChiTietDatPhongs)
+                        {
+                            var hasTienNghi = phong.LoaiPhong?.TienNghis != null && phong.LoaiPhong.TienNghis.Any();
+                            var hasTienIch = phong.LoaiPhong?.TienIches != null && phong.LoaiPhong.TienIches.Any();
+                            
+                            if (hasTienNghi || hasTienIch)
+                            {
+                                <div class="detail-section">
+                                    <h3 class="detail-section-title">
+                                        <i class="fas fa-star"></i>
+                                        Tiện Nghi & Tiện Ích - @(phong.LoaiPhong?.TenLoai ?? "N/A")
+                                    </h3>
+                                    
+                                    @if (hasTienNghi)
+                                    {
+                                        <div style="margin-bottom: 20px;">
+                                            <h4 style="color: #1a365d; font-size: 16px; margin-bottom: 12px; font-weight: 600;">
+                                                <i class="fas fa-check-circle" style="color: #d4af37;"></i> Tiện Nghi Phòng
+                                            </h4>
+                                            <div class="amenities-list">
+                                                @foreach (var tn in phong.LoaiPhong.TienNghis)
+                                                {
+                                                    <span class="amenity-tag">
+                                                        <i class="@(tn.Icon ?? "fas fa-check")"></i>
+                                                        @tn.TenTienNghi @(tn.LoaiTienNghi != null ? "(" + tn.LoaiTienNghi.TenLoai + ")" : "")
+                                                    </span>
+                                                }
+                                            </div>
+                                        </div>
+                                    }
+                                    
+                                    @if (hasTienIch)
+                                    {
+                                        <div>
+                                            <h4 style="color: #1a365d; font-size: 16px; margin-bottom: 12px; font-weight: 600;">
+                                                <i class="fas fa-concierge-bell" style="color: #d4af37;"></i> Tiện Ích Phòng
+                                            </h4>
+                                            <div class="amenities-list">
+                                                @foreach (var ti in phong.LoaiPhong.TienIches)
+                                                {
+                                                    <span class="amenity-tag facility">
+                                                        <i class="@(ti.Icon ?? "fas fa-star")"></i>
+                                                        @ti.TenTienIch @(ti.LoaiTienIch != null ? "(" + ti.LoaiTienIch.TenLoai + ")" : "")
+                                                    </span>
+                                                }
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        }
+                    }
+
+                    <!-- Dịch vụ đặt thêm -->
+                    <div class="detail-section">
+                        <h3 class="detail-section-title">
+                            <i class="fas fa-concierge-bell"></i>
+                            Dịch Vụ Đặt Thêm
+                        </h3>
+                        @if (item.ChiTietDatDichVus != null && item.ChiTietDatDichVus.Any())
+                        {
+                            <div class="detail-table-wrapper">
+                                <table class="detail-info-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Tên Dịch Vụ</th>
+                                            <th>Loại Dịch Vụ</th>
+                                            <th>Số Lượng</th>
+                                            <th>Đơn Giá</th>
+                                            <th>Thành Tiền</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var dv in item.ChiTietDatDichVus)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <i class="@(dv.DichVu?.Icon ?? "fas fa-concierge-bell")" style="color: #d4af37; margin-right: 8px;"></i>
+                                                    <strong>@(dv.DichVu?.TenDichVu ?? "N/A")</strong>
+                                                </td>
+                                                <td>@(dv.DichVu?.LoaiDichVu?.TenLoai ?? "N/A")</td>
+                                                <td>@dv.SoLuong</td>
+                                                <td>@((dv.DonGia ?? 0).ToString("N0"))đ</td>
+                                                <td class="price"><strong>@((dv.ThanhTien ?? 0).ToString("N0"))đ</strong></td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="notes-box empty">
+                                Không có dịch vụ đặt thêm
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Ghi chú -->
+                    <div class="detail-section">
+                        <h3 class="detail-section-title">
+                            <i class="fas fa-sticky-note"></i>
+                            Ghi Chú
+                        </h3>
+                        <div class="notes-box @(string.IsNullOrEmpty(item.GhiChu) ? "empty" : "")">
+                            @(item.GhiChu ?? "Không có ghi chú")
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+<!-- Modal Hủy Đặt Phòng -->
+@foreach (var item in Model)
+{
+    <div id="cancelModal_@(item.DatPhongId)" class="cancel-modal">
+        <div class="cancel-modal-overlay" onclick="closeCancelModal_@(item.DatPhongId)()"></div>
+        <div class="cancel-modal-container">
+            <div class="cancel-modal-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="cancel-modal-header">
+                <h2>Xác Nhận Hủy Đặt Phòng</h2>
+            </div>
+            <div class="cancel-modal-body">
+                <p class="cancel-warning-title">
+                    <i class="fas fa-info-circle"></i>
+                    Vui lòng đọc kỹ chính sách hủy phòng:
+                </p>
+                <ul class="cancel-policy-list">
+                    <li>
+                        <i class="fas fa-ban"></i>
+                        <strong>Không hoàn tiền:</strong> Hủy đặt phòng thì số tiền thanh toán sẽ không hoàn lại.
+                    </li>
+                    <li>
+                        <i class="fas fa-clock"></i>
+                        <strong>Hiệu lực ngay lập tức:</strong> Đơn đặt phòng sẽ bị hủy ngay sau khi bạn xác nhận.
+                    </li>
+                    <li>
+                        <i class="fas fa-undo"></i>
+                        <strong>Không thể hoàn tác:</strong> Bạn không thể khôi phục lại đơn đặt phòng sau khi đã hủy.
+                    </li>
+                    <li>
+                        <i class="fas fa-calendar-times"></i>
+                        <strong>Phòng được giải phóng:</strong> Phòng của bạn sẽ được mở lại cho khách hàng khác đặt.
+                    </li>
+                </ul>
+                <p class="cancel-confirmation-text">
+                    Bạn có chắc chắn muốn hủy đơn đặt phòng <strong>@(item.MaDatPhong ?? "#DP" + item.DatPhongId)</strong> không?
+                </p>
+            </div>
+            <div class="cancel-modal-footer">
+                <button class="btn-cancel-abort" onclick="closeCancelModal_@(item.DatPhongId)()">
+                    <i class="fas fa-arrow-left"></i>
+                    Quay Lại
+                </button>
+                <form method="post" action="@Url.Action("HuyDatPhong", "DashboardKhachHang")" style="display: inline; margin: 0;">
+                    <input type="hidden" name="datPhongId" value="@item.DatPhongId" />
+                    <button type="submit" class="btn-cancel-confirm">
+                        <i class="fas fa-check"></i>
+                        Xác Nhận Hủy
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openCancelModal_@(item.DatPhongId)() {
+            document.getElementById('cancelModal_@(item.DatPhongId)').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeCancelModal_@(item.DatPhongId)() {
+            document.getElementById('cancelModal_@(item.DatPhongId)').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+    </script>
+}
+
+<!-- Modal Địa Chỉ Google Map -->
+<div id="mapModal" class="map-modal">
+    <div class="map-modal-overlay"></div>
+    <div class="map-modal-container">
+        <div class="map-modal-header">
+            <h3><i class="fas fa-map-marker-alt"></i> Vị Trí Khách Sạn</h3>
+            <button class="map-modal-close" id="closeMapModal">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="map-modal-body">
+            <div id="googleMapFrame" class="google-map-frame">
+                <iframe id="mapIframe" 
+                        src="" 
+                        width="100%" 
+                        height="100%" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="~/assets/js/dashboard-khachhang.js"></script>

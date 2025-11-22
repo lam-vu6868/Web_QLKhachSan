@@ -213,6 +213,109 @@ namespace Web_QLKhachSan.Controllers
             return View(lichSuDatPhong);
         }
 
+        [HttpGet]
+        public JsonResult GetChiTietDatPhong(int id)
+        {
+            try
+            {
+                // Kiểm tra session
+                if (Session["MaKhachHang"] == null)
+                {
+                    return Json(new { success = false, message = "Vui lòng đăng nhập" }, JsonRequestBehavior.AllowGet);
+                }
+
+                int maKhachHang = (int)Session["MaKhachHang"];
+
+                var datPhong = db.DatPhongs
+                    .Include("ChiTietDatPhongs.Phong")
+                    .Include("ChiTietDatPhongs.LoaiPhong.TienNghis.LoaiTienNghi")
+                    .Include("ChiTietDatPhongs.LoaiPhong.TienIches.LoaiTienIch")
+                    .Include("ChiTietDatDichVus.DichVu.LoaiDichVu")
+                    .Include("KhachHang")
+                    .FirstOrDefault(dp => dp.DatPhongId == id && dp.MaKhachHang == maKhachHang);
+
+                if (datPhong == null)
+                {
+                    return Json(new { success = false, message = "Không tìm thấy đơn hàng" }, JsonRequestBehavior.AllowGet);
+                }
+
+                // Lấy thông tin chi tiết
+                var chiTietPhongs = datPhong.ChiTietDatPhongs.Select(ct => new
+                {
+                    TenLoaiPhong = ct.LoaiPhong?.TenLoai,
+                    TenPhong = ct.Phong?.TenPhong,
+                    SoLuong = ct.SoLuong,
+                    DonGia = ct.DonGia,
+                    ThanhTien = ct.ThanhTien,
+                    TienNghis = ct.LoaiPhong?.TienNghis.Select(tn => new
+                    {
+                        TenTienNghi = tn.TenTienNghi,
+                        Icon = tn.Icon,
+                        LoaiTienNghi = tn.LoaiTienNghi?.TenLoai
+                    }).ToList(),
+                    TienIches = ct.LoaiPhong?.TienIches.Select(ti => new
+                    {
+                        TenTienIch = ti.TenTienIch,
+                        Icon = ti.Icon,
+                        LoaiTienIch = ti.LoaiTienIch?.TenLoai
+                    }).ToList()
+                }).ToList();
+
+                var chiTietDichVus = datPhong.ChiTietDatDichVus.Select(dv => new
+                {
+                    TenDichVu = dv.DichVu?.TenDichVu,
+                    LoaiDichVu = dv.DichVu?.LoaiDichVu?.TenLoai,
+                    SoLuong = dv.SoLuong,
+                    DonGia = dv.DonGia,
+                    ThanhTien = dv.ThanhTien,
+                    Icon = dv.DichVu?.Icon
+                }).ToList();
+
+                // Xác định trạng thái
+                string trangThaiText = "";
+                switch (datPhong.TrangThaiDatPhong)
+                {
+                    case 0: trangThaiText = "Chờ Xác Nhận"; break;
+                    case 1: trangThaiText = "Đã Xác Nhận"; break;
+                    case 2: trangThaiText = "Hoàn Thành"; break;
+                    case 3: trangThaiText = "Đã Hủy"; break;
+                    default: trangThaiText = "Không xác định"; break;
+                }
+
+                var result = new
+                {
+                    success = true,
+                    data = new
+                    {
+                        MaDatPhong = datPhong.MaDatPhong ?? "#DP" + datPhong.DatPhongId,
+                        TrangThaiDatPhong = datPhong.TrangThaiDatPhong,
+                        TrangThaiText = trangThaiText,
+                        NgayNhan = datPhong.NgayNhan?.ToString("dd/MM/yyyy HH:mm"),
+                        NgayTra = datPhong.NgayTra?.ToString("dd/MM/yyyy HH:mm"),
+                        SoDem = datPhong.SoDem,
+                        TongTien = datPhong.TongTien,
+                        GhiChu = datPhong.GhiChu,
+                        ChiTietPhongs = chiTietPhongs,
+                        ChiTietDichVus = chiTietDichVus,
+                        // Thông tin liên hệ khách sạn
+                        HotelInfo = new
+                        {
+                            DiaChi = "123 Đường Bờ Biển, TP Paradise",
+                            SoDienThoai = "(+84) 123 456 789",
+                            Email = "support@serenehorizon.com",
+                            MapUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3916.644233957414!2d106.66163457480823!3d10.990203189171902!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3174d1be2495c19d%3A0xafd977d94466ffc2!2zxJDhuqFpIGjhu41jIELDrG5oIETGsMahbmc!5e0!3m2!1svi!2s!4v1761220984026!5m2!1svi!2s"
+                        }
+                    }
+                };
+
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Đã xảy ra lỗi: " + ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DoiMatKhau(RangBuocHoSoViewModel model)
@@ -315,6 +418,162 @@ namespace Web_QLKhachSan.Controllers
             }
 
             return View();
+        }
+
+        [HttpPost]
+        public ActionResult HuyDatPhong(int datPhongId)
+        {
+            try
+            {
+                // Kiểm tra session
+                if (Session["MaKhachHang"] == null)
+                {
+                    TempData["ErrorMessage"] = "Vui lòng đăng nhập lại";
+                    return RedirectToAction("LichSu");
+                }
+
+                int maKhachHang = (int)Session["MaKhachHang"];
+
+                // Tìm đơn đặt phòng kèm theo chi tiết
+                var datPhong = db.DatPhongs
+                    .Include("ChiTietDatPhongs")
+                    .FirstOrDefault(dp => dp.DatPhongId == datPhongId && dp.MaKhachHang == maKhachHang);
+
+                if (datPhong == null)
+                {
+                    TempData["ErrorMessage"] = "Không tìm thấy đơn đặt phòng";
+                    return RedirectToAction("LichSu");
+                }
+
+                // Kiểm tra trạng thái (chỉ cho phép hủy nếu đang ở trạng thái chờ xác nhận hoặc đã xác nhận)
+                if (datPhong.TrangThaiDatPhong != 0 && datPhong.TrangThaiDatPhong != 1)
+                {
+                    TempData["ErrorMessage"] = "Không thể hủy đơn đặt phòng này";
+                    return RedirectToAction("LichSu");
+                }
+
+                // Cập nhật trạng thái đặt phòng thành 3 (Đã hủy)
+                datPhong.TrangThaiDatPhong = 3;
+                
+                // Cập nhật trạng thái của tất cả phòng liên quan về 0 (trống)
+                var chiTietDatPhongs = db.ChiTietDatPhongs
+                    .Where(ct => ct.DatPhongId == datPhongId && ct.PhongId.HasValue)
+                    .ToList();
+
+                foreach (var chiTiet in chiTietDatPhongs)
+                {
+                    var phong = db.Phongs.FirstOrDefault(p => p.PhongId == chiTiet.PhongId);
+                    if (phong != null)
+                    {
+                        phong.TrangThaiPhong = 0; // 0 = Trống
+                    }
+                }
+
+                db.SaveChanges();
+
+                TempData["SuccessMessage"] = "Hủy đặt phòng thành công!";
+                return RedirectToAction("LichSu");
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "Có lỗi xảy ra: " + ex.Message;
+                return RedirectToAction("LichSu");
+            }
+        }
+
+        public ActionResult TaiFileICS(int datPhongId)
+        {
+            try
+            {
+                // Kiểm tra session
+                if (Session["MaKhachHang"] == null)
+                {
+                    return RedirectToAction("DangNhap", "Login");
+                }
+
+                int maKhachHang = (int)Session["MaKhachHang"];
+
+                // Tìm đơn đặt phòng
+                var datPhong = db.DatPhongs
+                    .Include(dp => dp.ChiTietDatPhongs.Select(ct => ct.LoaiPhong))
+                    .Include(dp => dp.KhachHang)
+                    .FirstOrDefault(dp => dp.DatPhongId == datPhongId && dp.MaKhachHang == maKhachHang);
+
+                if (datPhong == null)
+                {
+                    return HttpNotFound();
+                }
+
+                // Tạo nội dung file ICS
+                var icsContent = GenerateICSContent(datPhong);
+
+                // Trả về file để download
+                var fileName = $"DatPhong_{datPhong.MaDatPhong ?? "DP" + datPhong.DatPhongId}.ics";
+                return File(System.Text.Encoding.UTF8.GetBytes(icsContent), "text/calendar", fileName);
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("LichSu");
+            }
+        }
+
+        private string GenerateICSContent(DatPhong datPhong)
+        {
+            var now = DateTime.Now;
+            var timestamp = now.ToString("yyyyMMddTHHmmssZ");
+            
+            // Format ngày giờ cho ICS (phải là UTC hoặc local time với timezone)
+            var checkIn = datPhong.NgayNhan ?? DateTime.Now;
+            var checkOut = datPhong.NgayTra ?? DateTime.Now.AddDays(1);
+            
+            var dtStart = checkIn.ToString("yyyyMMddTHHmmss");
+            var dtEnd = checkOut.ToString("yyyyMMddTHHmmss");
+
+            // Lấy thông tin phòng
+            var roomInfo = "";
+            if (datPhong.ChiTietDatPhongs != null && datPhong.ChiTietDatPhongs.Any())
+            {
+                roomInfo = string.Join(", ", datPhong.ChiTietDatPhongs.Select(ct => 
+                    $"{ct.LoaiPhong?.TenLoai ?? "Phòng"} x{ct.SoLuong}"));
+            }
+
+            var summary = $"Đặt phòng - The Serene Horizon Hotel";
+            var description = $"Mã đặt phòng: {datPhong.MaDatPhong ?? "#DP" + datPhong.DatPhongId}\\n" +
+                            $"Phòng: {roomInfo}\\n" +
+                            $"Số đêm: {datPhong.SoDem ?? 0}\\n" +
+                            $"Tổng tiền: {(datPhong.TongTien ?? 0).ToString("N0")}đ\\n" +
+                            $"Khách hàng: {datPhong.KhachHang?.HoVaTen ?? ""}\\n" +
+                            $"SĐT: {datPhong.KhachHang?.SoDienThoai ?? ""}";
+
+            var location = "The Serene Horizon Hotel, 123 Đường Bờ Biển, TP Paradise";
+
+            // Tạo UID duy nhất
+            var uid = $"{datPhong.DatPhongId}@serenehorizonhotel.com";
+
+            var icsContent = $@"BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//The Serene Horizon Hotel//Booking System//VI
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:{uid}
+DTSTAMP:{timestamp}
+DTSTART:{dtStart}
+DTEND:{dtEnd}
+SUMMARY:{summary}
+DESCRIPTION:{description}
+LOCATION:{location}
+STATUS:CONFIRMED
+SEQUENCE:0
+BEGIN:VALARM
+TRIGGER:-PT24H
+ACTION:DISPLAY
+DESCRIPTION:Nhắc nhở: Ngày mai bạn có lịch nhận phòng tại The Serene Horizon Hotel
+END:VALARM
+END:VEVENT
+END:VCALENDAR";
+
+            return icsContent;
         }
 
         protected override void Dispose(bool disposing)
