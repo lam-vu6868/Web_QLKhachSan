@@ -413,18 +413,87 @@ function confirmDeactivate() {
 }
 
 function confirmDelete() {
-  const confirmation = prompt('⚠️ CẢNH BÁO: Hành động này không thể hoàn tác!\n\nNhập "XOA TAI KHOAN" để xác nhận xóa tài khoản:');
-  
-  if (confirmation === 'XOA TAI KHOAN') {
-    if (confirm('Bạn có hoàn toàn chắc chắn? Tất cả dữ liệu sẽ bị xóa vĩnh viễn.')) {
-      // TODO: Send to server
-      console.log('Deleting account...');
-      showNotification('Đang xử lý yêu cầu xóa tài khoản...', 'error');
-    }
-  } else if (confirmation !== null) {
-    showNotification('Xác nhận không chính xác', 'error');
+  const modal = document.getElementById('deleteAccountModal');
+  if (modal) {
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    
+    // Reset input
+    const input = document.getElementById('confirmDeleteText');
+    if (input) input.value = '';
+    
+    // Disable button
+    const btn = document.getElementById('confirmDeleteBtn');
+    if (btn) btn.disabled = true;
   }
 }
+
+function closeDeleteAccountModal() {
+  const modal = document.getElementById('deleteAccountModal');
+  if (modal) {
+    modal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+  }
+}
+
+function submitDeleteAccount() {
+  const input = document.getElementById('confirmDeleteText');
+  const confirmText = input ? input.value.trim() : '';
+  
+  if (confirmText !== 'XOA TAI KHOAN') {
+    showNotification('Vui lòng nhập chính xác: XOA TAI KHOAN', 'error');
+    return;
+  }
+  
+  // Hiển thị loading
+  const btn = document.getElementById('confirmDeleteBtn');
+  const originalBtnText = btn.innerHTML;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xử lý...';
+  btn.disabled = true;
+  
+  // Gửi request xóa tài khoản
+  fetch('/DashboardKhachHang/XoaTaiKhoan', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      showNotification('Tài khoản đã được xóa thành công!', 'success');
+      setTimeout(() => {
+        window.location.href = '/Login/DangNhap';
+      }, 2000);
+    } else {
+      showNotification(data.message || 'Có lỗi xảy ra khi xóa tài khoản', 'error');
+      btn.innerHTML = originalBtnText;
+      btn.disabled = false;
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showNotification('Đã xảy ra lỗi khi xóa tài khoản', 'error');
+    btn.innerHTML = originalBtnText;
+    btn.disabled = false;
+  });
+}
+
+// Enable/disable delete button based on input
+document.addEventListener('DOMContentLoaded', function() {
+  const confirmInput = document.getElementById('confirmDeleteText');
+  const confirmBtn = document.getElementById('confirmDeleteBtn');
+  
+  if (confirmInput && confirmBtn) {
+    confirmInput.addEventListener('input', function() {
+      if (this.value.trim() === 'XOA TAI KHOAN') {
+        confirmBtn.disabled = false;
+      } else {
+        confirmBtn.disabled = true;
+      }
+    });
+  }
+});
 
 // ==================== NOTIFICATION SYSTEM ====================
 function showNotification(message, type = 'info') {
@@ -484,6 +553,7 @@ window.addEventListener('click', (e) => {
   if (e.target.classList.contains('modal-overlay')) {
     closeChangePasswordModal();
     closeLoginActivityModal();
+    closeDeleteAccountModal();
   }
 });
 
@@ -493,6 +563,7 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
     closeChangePasswordModal();
     closeLoginActivityModal();
+    closeDeleteAccountModal();
     hideChangePasswordForm();
   }
   
