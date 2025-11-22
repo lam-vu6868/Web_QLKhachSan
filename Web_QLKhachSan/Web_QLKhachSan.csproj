@@ -285,99 +285,99 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\ChiTietDatDichVu.cs">
-      <DependentUpon>Contect.tt</DependentUpon>
+      <DependentUpon>ContectDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ChiTietDatPhong.cs">
-      <DependentUpon>Contect.tt</DependentUpon>
+      <DependentUpon>ContectDB.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Contect.Context.cs">
+    <Compile Include="Models\ContectDB.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Contect.Context.tt</DependentUpon>
+      <DependentUpon>ContectDB.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Contect.cs">
+    <Compile Include="Models\ContectDB.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Contect.tt</DependentUpon>
+      <DependentUpon>ContectDB.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Contect.Designer.cs">
+    <Compile Include="Models\ContectDB.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Contect.edmx</DependentUpon>
+      <DependentUpon>ContectDB.edmx</DependentUpon>
     </Compile>
     <Compile Include="Models\DangNhap.cs" />
     <Compile Include="Models\DangKy.cs" />
     <Compile Include="Models\DanhGia.cs">
-      <DependentUpon>Contect.tt</DependentUpon>
+      <DependentUpon>ContectDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DanhGiaHinhAnh.cs">
-      <DependentUpon>Contect.tt</DependentUpon>
+      <DependentUpon>ContectDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DanhGiaViewModel.cs" />
     <Compile Include="Models\DatLaiMatKhau.cs" />
     <Compile Include="Models\DatPhong.cs">
-      <DependentUpon>Contect.tt</DependentUpon>
+      <DependentUpon>ContectDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DichVu.cs">
-      <DependentUpon>Contect.tt</DependentUpon>
+      <DependentUpon>ContectDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DichVuDatThemViewModel.cs" />
     <Compile Include="Models\DichVuToken.cs" />
-    <Compile Include="Models\RangBuocHoSoViewModel.cs" />
     <Compile Include="Models\GiaTheoNgay.cs">
-      <DependentUpon>Contect.tt</DependentUpon>
+      <DependentUpon>ContectDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\HoaDon.cs">
-      <DependentUpon>Contect.tt</DependentUpon>
+      <DependentUpon>ContectDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\KhachHang.cs">
-      <DependentUpon>Contect.tt</DependentUpon>
+      <DependentUpon>ContectDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\KhuyenMai.cs">
-      <DependentUpon>Contect.tt</DependentUpon>
+      <DependentUpon>ContectDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\LoaiDichVu.cs">
-      <DependentUpon>Contect.tt</DependentUpon>
+      <DependentUpon>ContectDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\LoaiPhong.cs">
-      <DependentUpon>Contect.tt</DependentUpon>
+      <DependentUpon>ContectDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\LoaiTienIch.cs">
-      <DependentUpon>Contect.tt</DependentUpon>
+      <DependentUpon>ContectDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\LoaiTienNghi.cs">
-      <DependentUpon>Contect.tt</DependentUpon>
+      <DependentUpon>ContectDB.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\MailKitEmailService.cs" />
     <Compile Include="Models\NhanVien.cs">
-      <DependentUpon>Contect.tt</DependentUpon>
+      <DependentUpon>ContectDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Phong.cs">
-      <DependentUpon>Contect.tt</DependentUpon>
+      <DependentUpon>ContectDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\PhongAnh.cs">
-      <DependentUpon>Contect.tt</DependentUpon>
+      <DependentUpon>ContectDB.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\RangBuocHoSoViewModel.cs" />
+    <Compile Include="Models\MailKitEmailService.cs" />
     <Compile Include="Models\QuenMatKhau.cs" />
     <Compile Include="Models\SearchRoomViewModel.cs" />
     <Compile Include="Models\TaiKhoan.cs">
-      <DependentUpon>Contect.tt</DependentUpon>
+      <DependentUpon>ContectDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ThanhToan.cs">
-      <DependentUpon>Contect.tt</DependentUpon>
+      <DependentUpon>ContectDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ThongTinDatPhongViewModel.cs" />
     <Compile Include="Models\TienIch.cs">
-      <DependentUpon>Contect.tt</DependentUpon>
+      <DependentUpon>ContectDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\TienNghi.cs">
-      <DependentUpon>Contect.tt</DependentUpon>
+      <DependentUpon>ContectDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\TokenLogin.cs">
-      <DependentUpon>Contect.tt</DependentUpon>
+      <DependentUpon>ContectDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\VNPAY_Transaction_Logs.cs">
-      <DependentUpon>Contect.tt</DependentUpon>
+      <DependentUpon>ContectDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\CloudinaryService.cs" />
@@ -462,15 +462,15 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="Models\Contect.Context.tt">
+    <Content Include="Models\ContectDB.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>Contect.edmx</DependentUpon>
-      <LastGenOutput>Contect.Context.cs</LastGenOutput>
+      <DependentUpon>ContectDB.edmx</DependentUpon>
+      <LastGenOutput>ContectDB.Context.cs</LastGenOutput>
     </Content>
-    <Content Include="Models\Contect.tt">
+    <Content Include="Models\ContectDB.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>Contect.edmx</DependentUpon>
-      <LastGenOutput>Contect.cs</LastGenOutput>
+      <DependentUpon>ContectDB.edmx</DependentUpon>
+      <LastGenOutput>ContectDB.cs</LastGenOutput>
     </Content>
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
@@ -496,13 +496,6 @@
     <Content Include="Areas\DangNhapNV\Views\web.config" />
     <Content Include="Areas\DangNhapNV\Views\DangNhapNV\XacThucOTP.cshtml" />
     <Content Include="Areas\DangNhapNV\Views\DangNhapNV\DatLaiMatKhau.cshtml" />
-    <EntityDeploy Include="Models\Contect.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>Contect.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="Models\Contect.edmx.diagram">
-      <DependentUpon>Contect.edmx</DependentUpon>
-    </Content>
     <Content Include="Areas\NhanVienLeTan\Views\DashboardNVLT\Index.cshtml" />
     <Content Include="Areas\NhanVienLeTan\Views\DatPhong\Index.cshtml" />
     <Content Include="Areas\NhanVienLeTan\Views\DatPhong\Create.cshtml" />
@@ -515,6 +508,13 @@
     <Content Include="Areas\NhanVienLeTan\Views\HoaDon\Index.cshtml" />
     <Content Include="Areas\NhanVienLeTan\Views\HoaDon\Details.cshtml" />
     <Content Include="Areas\NhanVienLeTan\Views\KhuyenMai\Index.cshtml" />
+    <EntityDeploy Include="Models\ContectDB.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>ContectDB.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\ContectDB.edmx.diagram">
+      <DependentUpon>ContectDB.edmx</DependentUpon>
+    </Content>
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />

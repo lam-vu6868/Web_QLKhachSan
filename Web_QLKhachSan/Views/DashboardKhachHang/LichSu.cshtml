@@ -65,10 +65,14 @@
                                                 statusText = "Đã Xác Nhận";
                                                 break;
                                             case 2:
-                                                statusClass = "completed";
-                                                statusText = "Hoàn Thành";
+                                                statusClass = "checkin";
+                                                statusText = "Check-In";
                                                 break;
                                             case 3:
+                                                statusClass = "checkout";
+                                                statusText = "Check-Out";
+                                                break;
+                                            case 4:
                                                 statusClass = "cancelled";
                                                 statusText = "Đã Hủy";
                                                 break;
@@ -217,10 +221,14 @@
                 statusText = "Đã Xác Nhận";
                 break;
             case 2:
-                statusClass = "completed";
-                statusText = "Hoàn Thành";
+                statusClass = "checkin";
+                statusText = "Check-In";
                 break;
             case 3:
+                statusClass = "checkout";
+                statusText = "Check-Out";
+                break;
+            case 4:
                 statusClass = "cancelled";
                 statusText = "Đã Hủy";
                 break;

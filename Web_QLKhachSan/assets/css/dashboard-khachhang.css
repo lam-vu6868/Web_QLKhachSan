@@ -27,8 +27,12 @@
   border-left-color: var(--success-green);
 }
 
-.booking-card.completed {
-  border-left-color: var(--charcoal-grey);
+.booking-card.checkin {
+  border-left-color: #27ae60;
+}
+
+.booking-card.checkout {
+  border-left-color: #8e44ad;
 }
 
 .booking-card.cancelled {
@@ -66,9 +70,16 @@
   color: var(--success-green);
 }
 
-.booking-status.completed {
-  background: rgba(51, 51, 51, 0.1);
-  color: var(--charcoal-grey);
+.booking-status.checkin {
+  background: rgba(39, 174, 96, 0.15);
+  color: #27ae60;
+  font-weight: 700;
+}
+
+.booking-status.checkout {
+  background: rgba(142, 68, 173, 0.15);
+  color: #8e44ad;
+  font-weight: 700;
 }
 
 .booking-status.cancelled {
@@ -153,9 +164,16 @@
   text-transform: uppercase;
 }
 
-.status-badge.completed {
-  background: rgba(39, 174, 96, 0.1);
-  color: var(--success-green);
+.status-badge.checkin {
+  background: rgba(39, 174, 96, 0.15);
+  color: #27ae60;
+  font-weight: 700;
+}
+
+.status-badge.checkout {
+  background: rgba(142, 68, 173, 0.15);
+  color: #8e44ad;
+  font-weight: 700;
 }
 
 .status-badge.cancelled {
@@ -783,9 +801,16 @@
   white-space: nowrap;
 }
 
-.history-table .status-badge.completed {
+.history-table .status-badge.checkin {
   background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
   color: var(--white);
+  box-shadow: 0 2px 8px rgba(39, 174, 96, 0.3);
+}
+
+.history-table .status-badge.checkout {
+  background: linear-gradient(135deg, #8e44ad 0%, #7d3c98 100%);
+  color: var(--white);
+  box-shadow: 0 2px 8px rgba(142, 68, 173, 0.3);
 }
 
 .history-table .status-badge.confirmed {
