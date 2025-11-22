@@ -156,17 +156,17 @@ dp.MaDatPhong.ToLower().Contains(searchTerm) ||
    }
 
      // ===== TÍNH TỔNG TIỀN =====
-      // ✅ FIX: Tính lại CHÍNH XÁC từ ChiTietDatPhong + ChiTietDatDichVu
-      // KHÔNG dùng DatPhong.TongTien để tránh lỗi cộng x2
+      // ✅ FIX: Sử dụng DatPhong.TongTien đã tính sẵn (đã bao gồm giảm giá khuyến mãi)
+      // Chỉ cộng thêm tiền dịch vụ
       
-      // 1. Tính tổng tiền phòng từ ChiTietDatPhong (đã trừ giảm giá)
-    decimal tongTienPhong = datPhong.ChiTietDatPhongs?.Sum(ct => ct.ThanhTien ?? 0) ?? 0;
+      // 1. Tổng tiền phòng (đã bao gồm giảm giá khuyến mãi từ lúc đặt phòng)
+      decimal tongTienPhong = datPhong.TongTien ?? 0;
       
-    // 2. Tính tổng tiền dịch vụ từ ChiTietDatDichVu
-      decimal tongTienDichVu = datPhong.ChiTietDatDichVus?.Sum(dv => dv.ThanhTien ?? 0) ?? 0;
-      
-      // 3. Tổng tiền hóa đơn = Tiền phòng + Tiền dịch vụ
-decimal tongTien = tongTienPhong + tongTienDichVu;
+      // 2. Tính tổng tiền dịch vụ từ ChiTietDatDichVu
+   decimal tongTienDichVu = datPhong.ChiTietDatDichVus?.Sum(dv => dv.ThanhTien ?? 0) ?? 0;
+ 
+      // 3. Tổng tiền hóa đơn = Tiền phòng (đã giảm) + Tiền dịch vụ
+    decimal tongTien = tongTienPhong + tongTienDichVu;
 
           // ===== KIỂM TRA ĐÃ CÓ HÓA ĐƠN CHƯA =====
             var hoaDonCu = db.HoaDons.FirstOrDefault(hd => hd.DatPhongId == datPhong.DatPhongId);
