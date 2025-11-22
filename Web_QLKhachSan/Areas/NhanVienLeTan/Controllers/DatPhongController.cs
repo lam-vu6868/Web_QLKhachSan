@@ -214,7 +214,7 @@ if (filter.TrangThaiDatPhong.HasValue)
  {
    giamGiaKM = tongTien * (khuyenMai.GiaTri.GetValueOrDefault() / 100);
 tongTien = tongTien - giamGiaKM;
-            }
+  }
      }
    }
 
@@ -983,9 +983,10 @@ System.Diagnostics.Debug.WriteLine($"[ERROR - Huy] {ex.Message}");
          }
 
        // Tính tổng tiền
-  decimal tongTienPhong = datPhong.ChiTietDatPhongs.Sum(ct => ct.ThanhTien ?? 0);
+  decimal tongTienPhong = datPhong.TongTien ?? 0;
   decimal tongTienDichVu = datPhong.ChiTietDatDichVus?.Sum(dv => dv.ThanhTien ?? 0) ?? 0;
-      decimal tongTien = tongTienPhong + tongTienDichVu;
+      // ✅ SỬ DỤNG TongTien từ DatPhong (đã bao gồm giảm giá khuyến mãi)
+       decimal tongTien = tongTienPhong + tongTienDichVu;
 
           // Kiểm tra đã có hóa đơn chưa
     var hoaDonCu = db.HoaDons.FirstOrDefault(hd => hd.DatPhongId == datPhong.DatPhongId);

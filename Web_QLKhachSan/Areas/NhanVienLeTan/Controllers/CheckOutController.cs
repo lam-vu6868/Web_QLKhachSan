@@ -134,31 +134,64 @@ dp.MaDatPhong.ToLower().Contains(searchTerm) ||
        try
             {
    if (!CheckRole())
-           {
+  {
       return Json(new { success = false, message = "Bạn không có quyền!" });
    }
 
     var datPhong = db.DatPhongs
   .Include(dp => dp.ChiTietDatPhongs)
+  .Include(dp => dp.ChiTietDatDichVus)
          .Include(dp => dp.KhachHang)
 .FirstOrDefault(dp => dp.DatPhongId == datPhongId);
 
   if (datPhong == null)
-         {
+      {
    return Json(new { success = false, message = "Không tìm thấy đơn đặt phòng!" });
       }
 
    // Kiểm tra trạng thái
   if (datPhong.TrangThaiDatPhong != 2)
         {
-           return Json(new { success = false, message = "Chỉ check-out được đơn đã check-in!" });
+   return Json(new { success = false, message = "Chỉ check-out được đơn đã check-in!" });
    }
 
-              // Thêm ghi chú check-out
-             if (!string.IsNullOrWhiteSpace(ghiChuCheckOut))
+     // ===== TÍNH TỔNG TIỀN =====
+      // ✅ Tổng tiền phòng (đã trừ khuyến mãi) + Tổng tiền dịch vụ
+decimal tongTienPhong = datPhong.TongTien ?? 0;
+decimal tongTienDichVu = datPhong.ChiTietDatDichVus?.Sum(dv => dv.ThanhTien ?? 0) ?? 0;
+decimal tongTien = tongTienPhong + tongTienDichVu;
+
+          // ===== KIỂM TRA ĐÃ CÓ HÓA ĐƠN CHƯA =====
+            var hoaDonCu = db.HoaDons.FirstOrDefault(hd => hd.DatPhongId == datPhong.DatPhongId);
+       if (hoaDonCu != null)
+{
+ return Json(new { 
+         success = false, 
+         message = "Đơn này đã có hóa đơn rồi!",
+     hoaDonId = hoaDonCu.HoaDonId,
+                maHoaDon = hoaDonCu.MaHoaDon
+       });
+ }
+
+      // ===== TẠO HÓA ĐƠN MỚI =====
+  var hoaDon = new HoaDon
+{
+         MaHoaDon = GenerateMaHoaDon(),
+   DatPhongId = datPhong.DatPhongId,
+             MaKhachHang = datPhong.MaKhachHang,
+        NgayLap = DateTime.Now,
+  TongTien = tongTien,
+ TrangThaiHoaDon = 0, // Chưa thanh toán
+      NguoiLapHoaDon = Session["HoVaTen"]?.ToString(),
+                  NgayTao = DateTime.Now
+     };
+           db.HoaDons.Add(hoaDon);
+
+          // Thêm ghi chú check-out
+        if (!string.IsNullOrWhiteSpace(ghiChuCheckOut))
                 {
           datPhong.GhiChu = (datPhong.GhiChu ?? "") +
-             $"\n[CHECK-OUT] {DateTime.Now:dd/MM/yyyy HH:mm} - {ghiChuCheckOut}";
+     $"\n[CHECK-OUT] {DateTime.Now:dd/MM/yyyy HH:mm} - {ghiChuCheckOut}";
           }
 
          // Cập nhật ngày check-out thực tế
@@ -167,42 +200,44 @@ dp.MaDatPhong.ToLower().Contains(searchTerm) ||
     // Cập nhật trạng thái phòng sang "Đang dọn"
  foreach (var chiTiet in datPhong.ChiTietDatPhongs.Where(ct => ct.PhongId.HasValue))
         {
-           var phong = db.Phongs.Find(chiTiet.PhongId.Value);
+    var phong = db.Phongs.Find(chiTiet.PhongId.Value);
         if (phong != null)
 {
-               phong.TrangThaiPhong = 3; // Đang dọn
+      phong.TrangThaiPhong = 3; // Đang dọn
  phong.NgayCapNhat = DateTime.Now;
   }
 
      chiTiet.TrangThaiPhong = 3;
-        chiTiet.NgayDi = DateTime.Now;
+     chiTiet.NgayDi = DateTime.Now;
     chiTiet.NgayCapNhat = DateTime.Now;
            }
 
       // Cập nhật trạng thái đơn
-           datPhong.TrangThaiDatPhong = 3; // Đã check-out
+        datPhong.TrangThaiDatPhong = 3; // Đã check-out
      datPhong.NgayCapNhat = DateTime.Now;
 
     db.SaveChanges();
 
-             var danhSachPhong = string.Join(", ", datPhong.ChiTietDatPhongs
+     var danhSachPhong = string.Join(", ", datPhong.ChiTietDatPhongs
           .Where(ct => ct.Phong != null)
       .Select(ct => ct.Phong.MaPhong));
 
   return Json(new
         {
      success = true,
-        message = $"Check-out thành công cho khách {datPhong.KhachHang.HoVaTen}! Phòng: {danhSachPhong}",
+        message = $"Check-out thành công cho khách {datPhong.KhachHang.HoVaTen}! Phòng: {danhSachPhong}. Hóa đơn: {hoaDon.MaHoaDon}",
         checkOutTime = DateTime.Now.ToString("HH:mm dd/MM/yyyy"),
-        tongTien = datPhong.TongTien
+        tongTien = tongTien,
+        hoaDonId = hoaDon.HoaDonId,
+        maHoaDon = hoaDon.MaHoaDon
        });
-            }
+  }
           catch (Exception ex)
       {
      System.Diagnostics.Debug.WriteLine($"[ERROR - DoCheckOut] {ex.Message}");
     return Json(new { success = false, message = "Có lỗi xảy ra: " + ex.Message });
   }
-        }
+   }
 
   // Helper Methods
         private CheckOutItemViewModel MapToCheckOutItemViewModel(DatPhong datPhong)
@@ -242,6 +277,26 @@ dp.MaDatPhong.ToLower().Contains(searchTerm) ||
    OnlinePaymentStatus = datPhong.OnlinePaymentStatus
   };
   }
+
+     /// <summary>
+      /// Tự động tạo mã hóa đơn theo format: HD000001, HD000002, ...
+        /// </summary>
+      private string GenerateMaHoaDon()
+     {
+            var lastHoaDon = db.HoaDons.OrderByDescending(hd => hd.HoaDonId).FirstOrDefault();
+            int newId = 1;
+
+       if (lastHoaDon != null && !string.IsNullOrEmpty(lastHoaDon.MaHoaDon))
+            {
+          int lastId;
+if (int.TryParse(lastHoaDon.MaHoaDon.Replace("HD", ""), out lastId))
+     {
+        newId = lastId + 1;
+        }
+            }
+
+            return "HD" + newId.ToString("D6");
+        }
 
         protected override void Dispose(bool disposing)
         {

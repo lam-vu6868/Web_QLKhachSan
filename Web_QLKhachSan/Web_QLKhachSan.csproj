@@ -225,6 +225,7 @@
     <Compile Include="Areas\NhanVienLeTan\Controllers\DashboardNVLTController.cs" />
     <Compile Include="Areas\NhanVienLeTan\Controllers\DatPhongController.cs" />
     <Compile Include="Areas\NhanVienLeTan\Controllers\DichVuController.cs" />
+    <Compile Include="Areas\NhanVienLeTan\Controllers\HoaDonController.cs" />
     <Compile Include="Areas\NhanVienLeTan\Controllers\SoDoPhongController.cs" />
     <Compile Include="Areas\NhanVienLeTan\NhanVienAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\BaoCaoTaiChinhController.cs" />
@@ -251,6 +252,12 @@
     <Compile Include="Areas\NhanVienLeTan\ViewModels\DichVu\DichVuItemViewModel.cs" />
     <Compile Include="Areas\NhanVienLeTan\ViewModels\DichVu\DichVuListViewModel.cs" />
     <Compile Include="Areas\NhanVienLeTan\ViewModels\DichVu\LichSuSuDungViewModel.cs" />
+    <Compile Include="Areas\NhanVienLeTan\ViewModels\HoaDon\HoaDonDetailsViewModel.cs" />
+    <Compile Include="Areas\NhanVienLeTan\ViewModels\HoaDon\HoaDonFilterViewModel.cs" />
+    <Compile Include="Areas\NhanVienLeTan\ViewModels\HoaDon\HoaDonItemViewModel.cs" />
+    <Compile Include="Areas\NhanVienLeTan\ViewModels\HoaDon\HoaDonListViewModel.cs" />
+    <Compile Include="Areas\NhanVienLeTan\ViewModels\HoaDon\HoaDonThongKeViewModel.cs" />
+    <Compile Include="Areas\NhanVienLeTan\ViewModels\HoaDon\ThanhToanItemViewModel.cs" />
     <Compile Include="Areas\NhanVienLeTan\ViewModels\PhongStatusViewModel.cs" />
     <Compile Include="Areas\NhanVienLeTan\ViewModels\SoDoPhongViewModel.cs" />
     <Compile Include="Controllers\ChinhSachVaDieuKhoanController.cs" />
@@ -498,6 +505,8 @@
     <Content Include="Areas\NhanVienLeTan\Views\DichVu\Details.cshtml" />
     <Content Include="Areas\NhanVienLeTan\Views\DichVu\LichSuSuDung.cshtml" />
     <Content Include="Areas\NhanVienLeTan\Views\DichVu\Create.cshtml" />
+    <Content Include="Areas\NhanVienLeTan\Views\HoaDon\Index.cshtml" />
+    <Content Include="Areas\NhanVienLeTan\Views\HoaDon\Details.cshtml" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />

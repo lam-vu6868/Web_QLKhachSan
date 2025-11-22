@@ -1,0 +1,655 @@
+﻿@model Web_QLKhachSan.Areas.NhanVienLeTan.ViewModels.HoaDon.HoaDonDetailsViewModel
+@{
+    ViewBag.Title = "Chi Tiết Hóa Đơn";
+    Layout = "~/Areas/NhanVienLeTan/Views/Shared/_LayoutNVLT.cshtml";
+}
+
+@section styles {
+    <style>
+        /* ===== INVOICE CONTAINER ===== */
+    .invoice-container {
+ background: white;
+  border-radius: 15px;
+     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+      }
+
+        .invoice-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+   color: white;
+     padding: 30px;
+            position: relative;
+        }
+
+        .invoice-header h2 {
+            margin: 0;
+            font-size: 2rem;
+     font-weight: 700;
+   }
+
+        .invoice-status {
+       position: absolute;
+    top: 20px;
+            right: 30px;
+  padding: 10px 20px;
+border-radius: 25px;
+ font-weight: 600;
+            font-size: 1rem;
+}
+
+        /* ===== INFO SECTIONS ===== */
+      .info-section {
+   padding: 25px;
+      border-bottom: 1px solid #e3e6f0;
+        }
+
+     .info-section:last-child {
+            border-bottom: none;
+        }
+
+      .info-section h5 {
+color: #5a5c69;
+    font-weight: 700;
+      margin-bottom: 20px;
+    padding-bottom: 10px;
+            border-bottom: 2px solid #4e73df;
+     display: inline-block;
+      }
+
+      .info-row {
+      display: flex;
+         justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px dashed #e3e6f0;
+    }
+
+  .info-row:last-child {
+border-bottom: none;
+        }
+
+        .info-label {
+  font-weight: 600;
+            color: #5a5c69;
+        }
+
+        .info-value {
+    color: #858796;
+        }
+
+        /* ===== TABLES ===== */
+        .detail-table {
+   width: 100%;
+ margin-top: 15px;
+        }
+
+      .detail-table thead {
+   background: #f8f9fc;
+    }
+
+        .detail-table th {
+            padding: 12px;
+    font-weight: 600;
+    color: #5a5c69;
+      border-bottom: 2px solid #4e73df;
+  }
+
+   .detail-table td {
+            padding: 12px;
+       border-bottom: 1px solid #e3e6f0;
+  }
+
+        .detail-table tbody tr:hover {
+   background: #f8f9fc;
+        }
+
+        /* ===== SUMMARY BOX ===== */
+    .summary-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+   color: white;
+         padding: 25px;
+            border-radius: 10px;
+   margin-top: 20px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+     font-size: 1.1rem;
+        }
+
+        .summary-total {
+            border-top: 2px solid rgba(255, 255, 255, 0.3);
+      margin-top: 10px;
+            padding-top: 15px;
+font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        /* ===== TIMELINE ===== */
+      .payment-timeline {
+        position: relative;
+       padding-left: 30px;
+        }
+
+        .timeline-item {
+            position: relative;
+    padding: 15px 0 15px 30px;
+   border-left: 2px solid #4e73df;
+        }
+
+    .timeline-item:last-child {
+   border-left: 2px solid transparent;
+        }
+
+     .timeline-dot {
+   position: absolute;
+   left: -8px;
+    top: 20px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 3px solid white;
+    box-shadow: 0 0 0 2px #4e73df;
+        }
+
+    .timeline-content {
+            background: #f8f9fc;
+            padding: 15px;
+          border-radius: 8px;
+        }
+
+        /* ===== ACTIONS ===== */
+        .action-buttons {
+     padding: 25px;
+  background: #f8f9fc;
+   text-align: center;
+     }
+
+        .action-buttons .btn {
+            margin: 5px;
+            min-width: 150px;
+   }
+
+        /* ===== BADGES ===== */
+     .custom-badge {
+        padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+ }
+
+        /* ===== RESPONSIVE ===== */
+        @@media (max-width: 768px) {
+        .invoice-header h2 {
+    font-size: 1.5rem;
+ }
+
+            .invoice-status {
+         position: static;
+           margin-top: 15px;
+     display: inline-block;
+     }
+
+  .info-row {
+ flex-direction: column;
+            }
+
+            .summary-row {
+        font-size: 1rem;
+         }
+
+            .summary-total {
+    font-size: 1.3rem;
+         }
+      }
+    </style>
+}
+
+<div class="container-fluid">
+    @* ==== HEADER ==== *@
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">
+         <i class="fas fa-file-invoice"></i> Chi Tiết Hóa Đơn
+ </h1>
+    <a href="@Url.Action("Index", "HoaDon")" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Quay lại
+    </a>
+    </div>
+
+    @* ==== THÔNG BÁO ==== *@
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+ <i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]
+       <button type="button" class="close" data-dismiss="alert">
+     <span>&times;</span>
+    </button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle"></i> @TempData["ErrorMessage"]
+        <button type="button" class="close" data-dismiss="alert">
+     <span>&times;</span>
+            </button>
+        </div>
+    }
+
+    @* ==== HÓA ĐƠN ==== *@
+    <div class="invoice-container">
+        @* HEADER *@
+        <div class="invoice-header">
+         <h2>
+        <i class="fas fa-file-invoice-dollar"></i> @Model.MaHoaDon
+      </h2>
+  <p class="mb-0 mt-2">
+     <i class="far fa-calendar-alt"></i> Ngày lập: @Model.NgayLap.ToString("dd/MM/yyyy HH:mm")
+        </p>
+            <div class="invoice-status" style="background-color: @Model.TrangThaiHoaDonColor;">
+                @Model.TrangThaiHoaDonText
+            </div>
+      </div>
+
+      @* THÔNG TIN KHÁCH HÀNG *@
+        <div class="info-section">
+   <h5><i class="fas fa-user"></i> Thông tin khách hàng</h5>
+     <div class="row">
+    <div class="col-md-6">
+        <div class="info-row">
+    <span class="info-label">Tên khách hàng:</span>
+           <span class="info-value"><strong>@Model.TenKhachHang</strong></span>
+         </div>
+ <div class="info-row">
+     <span class="info-label">Số điện thoại:</span>
+         <span class="info-value">@Model.SoDienThoaiKhachHang</span>
+         </div>
+     </div>
+<div class="col-md-6">
+               <div class="info-row">
+    <span class="info-label">Email:</span>
+   <span class="info-value">@Model.EmailKhachHang</span>
+  </div>
+        <div class="info-row">
+      <span class="info-label">Địa chỉ:</span>
+        <span class="info-value">@Model.DiaChiKhachHang</span>
+   </div>
+         </div>
+            </div>
+        </div>
+
+        @* THÔNG TIN ĐẶT PHÒNG *@
+        @if (Model.DatPhongId.HasValue)
+      {
+          <div class="info-section">
+       <h5><i class="fas fa-bookmark"></i> Thông tin đặt phòng</h5>
+      <div class="row">
+           <div class="col-md-6">
+        <div class="info-row">
+           <span class="info-label">Mã đặt phòng:</span>
+    <span class="info-value">
+   <span class="badge badge-info">@Model.MaDatPhong</span>
+         </span>
+        </div>
+          <div class="info-row">
+             <span class="info-label">Ngày nhận:</span>
+           <span class="info-value">@(Model.NgayNhan.HasValue ? Model.NgayNhan.Value.ToString("dd/MM/yyyy") : "-")</span>
+   </div>
+           </div>
+          <div class="col-md-6">
+             <div class="info-row">
+     <span class="info-label">Ngày trả:</span>
+     <span class="info-value">@(Model.NgayTra.HasValue ? Model.NgayTra.Value.ToString("dd/MM/yyyy") : "-")</span>
+    </div>
+        <div class="info-row">
+          <span class="info-label">Số đêm:</span>
+          <span class="info-value"><strong>@Model.SoDem đêm</strong></span>
+     </div>
+   </div>
+       </div>
+            </div>
+        }
+
+        @* CHI TIẾT PHÒNG *@
+        @if (Model.DanhSachPhong != null && Model.DanhSachPhong.Any())
+        {
+            <div class="info-section">
+        <h5><i class="fas fa-bed"></i> Chi tiết phòng</h5>
+      <table class="detail-table table table-bordered">
+     <thead>
+         <tr>
+        <th>Loại phòng</th>
+          <th>Mã phòng</th>
+       <th class="text-center">SL</th>
+         <th class="text-right">Đơn giá</th>
+          <th class="text-center">Số đêm</th>
+     <th class="text-right">Giảm giá</th>
+       <th class="text-right">Thành tiền</th>
+           </tr>
+         </thead>
+        <tbody>
+ @foreach (var phong in Model.DanhSachPhong)
+    {
+             <tr>
+        <td>@phong.TenLoaiPhong</td>
+    <td><span class="badge badge-primary">@phong.MaPhong</span></td>
+          <td class="text-center">@phong.SoLuong</td>
+    <td class="text-right">@phong.DonGia.ToString("N0")đ</td>
+           <td class="text-center">@phong.SoDem</td>
+   <td class="text-right">@phong.GiamGia.ToString("N0")đ</td>
+           <td class="text-right"><strong>@phong.ThanhTien.ToString("N0")đ</strong></td>
+              </tr>
+       }
+    </tbody>
+ <tfoot>
+      <tr>
+   <td colspan="6" class="text-right"><strong>Tổng tiền phòng:</strong></td>
+             <td class="text-right"><strong class="text-primary">@Model.TongTienPhong.ToString("N0")đ</strong></td>
+  </tr>
+        </tfoot>
+   </table>
+            </div>
+  }
+
+        @* CHI TIẾT DỊCH VỤ *@
+        @if (Model.DanhSachDichVu != null && Model.DanhSachDichVu.Any())
+        {
+ <div class="info-section">
+                <h5><i class="fas fa-concierge-bell"></i> Chi tiết dịch vụ</h5>
+    <table class="detail-table table table-bordered">
+             <thead>
+     <tr>
+                 <th>Tên dịch vụ</th>
+           <th class="text-center">Số lượng</th>
+         <th class="text-right">Đơn giá</th>
+      <th class="text-center">Ngày sử dụng</th>
+         <th class="text-right">Thành tiền</th>
+            </tr>
+         </thead>
+     <tbody>
+             @foreach (var dichVu in Model.DanhSachDichVu)
+      {
+ <tr>
+  <td>@dichVu.TenDichVu</td>
+       <td class="text-center">@dichVu.SoLuong</td>
+              <td class="text-right">@dichVu.DonGia.ToString("N0")đ</td>
+  <td class="text-center">@(dichVu.NgaySuDung.HasValue ? dichVu.NgaySuDung.Value.ToString("dd/MM/yyyy") : "-")</td>
+            <td class="text-right"><strong>@dichVu.ThanhTien.ToString("N0")đ</strong></td>
+      </tr>
+    }
+  </tbody>
+               <tfoot>
+        <tr>
+          <td colspan="4" class="text-right"><strong>Tổng tiền dịch vụ:</strong></td>
+       <td class="text-right"><strong class="text-success">@Model.TongTienDichVu.ToString("N0")đ</strong></td>
+        </tr>
+             </tfoot>
+        </table>
+            </div>
+        }
+
+        @* TỔNG KẾT *@
+        <div class="info-section">
+<div class="row">
+         <div class="col-md-6">
+           <div class="info-row">
+ <span class="info-label">Người lập hóa đơn:</span>
+        <span class="info-value">@Model.NguoiLapHoaDon</span>
+       </div>
+  @if (!string.IsNullOrEmpty(Model.GhiChu))
+                {
+     <div class="info-row">
+      <span class="info-label">Ghi chú:</span>
+      <span class="info-value">@Model.GhiChu</span>
+      </div>
+          }
+   </div>
+       <div class="col-md-6">
+       <div class="summary-box">
+       <div class="summary-row">
+              <span>Tổng tiền phòng:</span>
+  <span>@Model.TongTienPhong.ToString("N0")đ</span>
+  </div>
+    <div class="summary-row">
+   <span>Tổng tiền dịch vụ:</span>
+          <span>@Model.TongTienDichVu.ToString("N0")đ</span>
+       </div>
+       @if (Model.GiamGia.HasValue && Model.GiamGia.Value > 0)
+ {
+         <div class="summary-row" style="border-top: 1px solid rgba(255,255,255,0.2); margin-top: 10px; padding-top: 10px;">
+  <span><i class="fas fa-tag"></i> Giảm giá khuyến mãi:</span>
+      <span>-@Model.GiamGia.Value.ToString("N0")đ</span>
+      </div>
+   }
+         @if (Model.Thue.HasValue && Model.Thue.Value > 0)
+    {
+     <div class="summary-row">
+  <span><i class="fas fa-percentage"></i> Thuế VAT:</span>
+ <span>+@Model.Thue.Value.ToString("N0")đ</span>
+  </div>
+       }
+        <div class="summary-row summary-total">
+       <span>TỔNG CỘNG:</span>
+        <span>@Model.TongCong.ToString("N0")đ</span>
+     </div>
+       @if (Model.ConLai > 0)
+   {
+    <div class="summary-row" style="color: #ffc107;">
+   <span><i class="fas fa-exclamation-circle"></i> Còn lại:</span>
+             <span>@Model.ConLai.ToString("N0")đ</span>
+</div>
+  }
+  </div>
+    </div>
+          </div>
+      </div>
+
+  @* LỊCH SỬ THANH TOÁN *@
+    @if (Model.LichSuThanhToan != null && Model.LichSuThanhToan.Any())
+        {
+       <div class="info-section">
+     <h5><i class="fas fa-history"></i> Lịch sử thanh toán</h5>
+                <div class="payment-timeline">
+@foreach (var tt in Model.LichSuThanhToan)
+   {
+     <div class="timeline-item">
+       <div class="timeline-dot" style="background-color: @tt.TrangThaiColor;"></div>
+    <div class="timeline-content">
+  <div class="d-flex justify-content-between align-items-start">
+        <div>
+        <h6 class="mb-2">
+     <span class="custom-badge" style="background-color: @tt.TrangThaiColor; color: white;">
+            @tt.TrangThaiText
+           </span>
+     <span class="badge badge-secondary ml-2">@tt.PhuongThucText</span>
+           </h6>
+                 <p class="mb-1">
+        <i class="far fa-clock"></i> @tt.NgayThanhToan.ToString("dd/MM/yyyy HH:mm")
+    </p>
+     @if (!string.IsNullOrEmpty(tt.MaGiaoDich))
+       {
+   <p class="mb-1">
+             <i class="fas fa-hashtag"></i> Mã GD: <strong>@tt.MaGiaoDich</strong>
+     </p>
+           }
+   @if (!string.IsNullOrEmpty(tt.NguoiThucHien))
+           {
+           <p class="mb-1">
+         <i class="fas fa-user"></i> Người thực hiện: @tt.NguoiThucHien
+          </p>
+             }
+ @if (!string.IsNullOrEmpty(tt.GhiChu))
+           {
+        <p class="mb-0 text-muted">
+       <i class="fas fa-sticky-note"></i> @tt.GhiChu
+   </p>
+        }
+      </div>
+   <div class="text-right">
+   <h5 class="text-success mb-0">@tt.SoTien.ToString("N0")đ</h5>
+       </div>
+       </div>
+       </div>
+        </div>
+  }
+            </div>
+            </div>
+      }
+
+ @* ACTION BUTTONS *@
+        <div class="action-buttons">
+            @if (Model.TrangThaiHoaDon == 0)
+   {
+       <button type="button" class="btn btn-success btn-lg" onclick="showThanhToanModal()">
+    <i class="fas fa-money-bill-wave"></i> Thanh toán
+         </button>
+            }
+          <button type="button" class="btn btn-info btn-lg" onclick="window.print()">
+   <i class="fas fa-print"></i> In hóa đơn
+ </button>
+   <a href="@Url.Action("Index", "HoaDon")" class="btn btn-secondary btn-lg">
+    <i class="fas fa-arrow-left"></i> Quay lại
+     </a>
+    </div>
+    </div>
+</div>
+
+@* ==== MODAL THANH TOÁN ==== *@
+<div class="modal fade" id="thanhToanModal" tabindex="-1" role="dialog" aria-labelledby="thanhToanModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+ <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+    <div class="modal-header bg-success text-white">
+           <h5 class="modal-title" id="thanhToanModalLabel">
+         <i class="fas fa-money-bill-wave"></i> Thanh Toán Hóa Đơn
+  </h5>
+          <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+       </button>
+            </div>
+            <div class="modal-body">
+    <div class="text-center mb-3">
+               <h4>Hóa đơn: <span class="text-primary">@Model.MaHoaDon</span></h4>
+         <h3>Số tiền: <span class="text-success">@Model.TongCong.ToString("N0")đ</span></h3>
+              </div>
+
+      <div class="form-group">
+       <label><strong>Phương thức thanh toán:</strong> <span class="text-danger">*</span></label>
+          <select id="phuongThucThanhToan" class="form-control">
+     <option value="0">Tiền mặt</option>
+      <option value="1">Chuyển khoản</option>
+    </select>
+       </div>
+
+   <div class="form-group" id="maGiaoDichGroup" style="display: none;">
+   <label><strong>Mã giao dịch:</strong> <span class="text-danger">*</span></label>
+        <input type="text" id="maGiaoDich" class="form-control" placeholder="Nhập mã giao dịch chuyển khoản" />
+      </div>
+         </div>
+     <div class="modal-footer">
+<button type="button" class="btn btn-secondary" data-dismiss="modal">
+        <i class="fas fa-times"></i> Hủy
+          </button>
+          <button type="button" class="btn btn-success" id="btnConfirmThanhToan">
+    <i class="fas fa-check"></i> Xác nhận thanh toán
+              </button>
+       </div>
+        </div>
+    </div>
+</div>
+
+@* Anti-forgery token *@
+@Html.AntiForgeryToken()
+
+@section Scripts {
+    <script>
+    $(document).ready(function() {
+      // Show/hide mã giao dịch
+            $('#phuongThucThanhToan').on('change', function() {
+       if ($(this).val() == '1') {
+        $('#maGiaoDichGroup').slideDown();
+          } else {
+   $('#maGiaoDichGroup').slideUp();
+  $('#maGiaoDich').val('');
+       }
+        });
+
+            // Confirm thanh toán
+          $('#btnConfirmThanhToan').on('click', function() {
+      var phuongThuc = $('#phuongThucThanhToan').val();
+        var maGiaoDich = $('#maGiaoDich').val();
+
+             if (phuongThuc == '1' && !maGiaoDich) {
+            alert('Vui lòng nhập mã giao dịch!');
+    return;
+ }
+
+            var $btn = $(this);
+             var originalHtml = $btn.html();
+         $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Đang xử lý...');
+
+          $.ajax({
+  url: '@Url.Action("ThanhToan", "HoaDon")',
+            type: 'POST',
+     data: {
+   __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val(),
+          hoaDonId: @Model.HoaDonId,
+  phuongThuc: phuongThuc,
+   maGiaoDich: maGiaoDich
+                  },
+success: function(response) {
+         $('#thanhToanModal').modal('hide');
+       if (response.success) {
+            showNotification('success', response.message);
+    setTimeout(function() { location.reload(); }, 1500);
+       } else {
+      showNotification('error', response.message);
+     $btn.prop('disabled', false).html(originalHtml);
+      }
+            },
+    error: function() {
+         $('#thanhToanModal').modal('hide');
+      showNotification('error', 'Có lỗi xảy ra khi thanh toán!');
+   $btn.prop('disabled', false).html(originalHtml);
+   }
+          });
+            });
+
+    // Auto-hide alerts
+            setTimeout(function() {
+        $('.alert').fadeOut('slow', function() {
+ $(this).remove();
+       });
+   }, 5000);
+        });
+
+   function showThanhToanModal() {
+ $('#phuongThucThanhToan').val('0');
+            $('#maGiaoDichGroup').hide();
+            $('#maGiaoDich').val('');
+$('#thanhToanModal').modal('show');
+        }
+
+function showNotification(type, message) {
+       var alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
+            var icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle';
+
+ var alertHtml = `
+   <div class="alert ${alertClass} alert-dismissible fade show" role="alert" style="position: fixed; top: 80px; right: 20px; z-index: 9999; min-width: 350px;">
+       <i class="fas ${icon}"></i> ${message}
+          <button type="button" class="close" data-dismiss="alert">
+     <span>&times;</span>
+     </button>
+       </div>
+`;
+
+            $('body').append(alertHtml);
+
+  setTimeout(function() {
+             $('.alert').fadeOut('slow', function() {
+ $(this).remove();
+       });
+         }, 5000);
+}
+    </script>
+}
