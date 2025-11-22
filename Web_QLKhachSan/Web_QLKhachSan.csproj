@@ -392,6 +392,7 @@
     <Content Include="Areas\NhanVienLeTan\assets\css\dashboard.css" />
     <Content Include="Areas\NhanVienLeTan\assets\css\datPhong.css" />
     <Content Include="Areas\NhanVienLeTan\assets\css\dichVu.css" />
+    <Content Include="Areas\NhanVienLeTan\assets\css\hoaDonIndex.css" />
     <Content Include="Areas\NhanVienLeTan\assets\css\layout.css" />
     <Content Include="Areas\NhanVienLeTan\assets\css\sodoPhong.css" />
     <Content Include="Areas\NhanVienLeTan\assets\js\dashboard.js" />

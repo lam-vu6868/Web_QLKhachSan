@@ -5,78 +5,8 @@
 }
 
 @section styles {
-    <style>
-        /* ===== STATISTICS CARDS ===== */
-        .stat-card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-         cursor: pointer;
-     }
-
-     .stat-card:hover {
-    transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15) !important;
-      }
-
-        /* ===== FILTER CARD ===== */
-    .filter-card {
-        border-radius: 10px;
-     overflow: hidden;
-        }
-
-        .filter-card .card-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
-      /* ===== TABLE STYLES ===== */
-    .table-hover tbody tr:hover {
-            background-color: rgba(78, 115, 223, 0.05);
-        }
-
-      .badge-status {
-            padding: 6px 12px;
-      border-radius: 20px;
-            font-weight: 600;
-            font-size: 0.85rem;
-        }
-
-     .action-buttons .btn {
-     margin: 2px;
-        }
-
-        /* ===== PRICE DISPLAY ===== */
-        .price-display {
-  font-size: 1.1rem;
-    font-weight: 700;
-            color: #28a745;
-        }
-
-        /* ===== MODAL STYLES ===== */
-        .modal-header.bg-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-       color: white;
-        }
-
-    /* ===== PAGINATION ===== */
-      .pagination .page-link {
-        color: #4e73df;
-     }
-
-      .pagination .page-item.active .page-link {
-        background-color: #4e73df;
-            border-color: #4e73df;
-        }
-
-        /* ===== RESPONSIVE ===== */
-        @@media (max-width: 768px) {
-      .table-responsive {
-  font-size: 0.85rem;
-       }
-
-        .stat-card {
- margin-bottom: 15px;
-            }
-        }
-    </style>
+    <!-- Custom CSS for Hóa Đơn Index -->
+    <link href="@Url.Content("~/Areas/NhanVienLeTan/assets/css/hoaDonIndex.css")" rel="stylesheet" />
 }
 
 <div class="container-fluid">

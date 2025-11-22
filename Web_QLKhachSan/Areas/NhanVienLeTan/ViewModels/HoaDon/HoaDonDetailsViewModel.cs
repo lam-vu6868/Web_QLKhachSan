@@ -82,10 +82,24 @@ public List<ThanhToanItemViewModel> LichSuThanhToan { get; set; }
     public decimal TongTienPhong { get; set; }
    public decimal TongTienDichVu { get; set; }
    
-    // ? FIX: S? d?ng TongTien t? HoaDon (?ã tính ?úng khi checkout)
-  public decimal TongCong => TongTien ?? ((TongTienPhong + TongTienDichVu) - (GiamGia ?? 0) + (Thue ?? 0));
+  // ? FIX: LUÔN ?U TIÊN TongTien t? HoaDon (?ã tính ?úng khi checkout)
+    // KHÔNG tính l?i ?? tránh c?ng x2 ti?n d?ch v?
+    public decimal TongCong 
+    {
+        get 
+        {
+          // N?U ?ã có TongTien ? Dùng tr?c ti?p (?ã bao g?m c? phòng + d?ch v? + thu? - gi?m giá)
+      if (TongTien.HasValue && TongTien.Value > 0)
+            {
+      return TongTien.Value;
+    }
+            
+   // N?U ch?a có TongTien (tr??ng h?p hi?m) ? Tính l?i
+   return (TongTienPhong + TongTienDichVu) - (GiamGia ?? 0) + (Thue ?? 0);
+    }
+    }
     
-  public decimal ConLai => TongCong - (LichSuThanhToan?.Sum(tt => tt.SoTien) ?? 0);
+    public decimal ConLai => TongCong - (LichSuThanhToan?.Sum(tt => tt.SoTien) ?? 0);
 
    // ===== TH?I GIAN =====
   public DateTime NgayTao { get; set; }
