@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.Mvc;
 using System.Data.Entity;
 using System.Configuration;
+using System.Threading.Tasks;
+using System.Text;
 using Web_QLKhachSan.Models;
 using Web_QLKhachSan.Utils;
 
@@ -44,12 +46,21 @@ namespace Web_QLKhachSan.Controllers
             var existingModel = Session["ThongTinDatPhong"] as ThongTinDatPhongViewModel;
             ThongTinDatPhongViewModel model;
 
-            // Nếu có phongId trong URL và khác với session hiện tại, tức là đặt phòng mới -> RESET session
-            bool isNewBooking = phongId.HasValue && (existingModel == null || phongId.Value != existingModel.PhongId);
-
-            if (existingModel != null && !isNewBooking)
+            // Nếu có phongId trong URL, tức là đặt phòng mới từ bên ngoài -> LUÔN RESET session
+            if (phongId.HasValue)
             {
-                // Sử dụng model đã có trong session để giữ nguyên thông tin đã nhập (cùng phòng)
+                // Tạo ViewModel mới hoàn toàn (đặt phòng mới từ trang PhongNghi hoặc ChiTietPhong)
+                model = new ThongTinDatPhongViewModel
+                {
+                    HoVaTen = khachHang.HoVaTen,
+                    Email = khachHang.Email,
+                    SoDienThoai = khachHang.SoDienThoai,
+                    DichVuDaChon = new List<DichVuDaChon>()
+                };
+            }
+            else if (existingModel != null)
+            {
+                // Không có phongId trong URL - đang di chuyển trong flow DatPhong -> giữ session
                 model = existingModel;
 
                 // Chỉ cập nhật thông tin khách hàng nếu cần thiết
@@ -70,17 +81,19 @@ namespace Web_QLKhachSan.Controllers
             }
             else
             {
-                // Tạo ViewModel mới (đặt phòng mới hoặc chưa có session)
+                // Không có phongId và không có session -> tạo mới
                 model = new ThongTinDatPhongViewModel
                 {
                     HoVaTen = khachHang.HoVaTen,
                     Email = khachHang.Email,
                     SoDienThoai = khachHang.SoDienThoai,
-                    NgayNhan = DateTime.Now.AddDays(1), // Mặc định ngày mai
-                    NgayTra = DateTime.Now.AddDays(2),   // Mặc định 1 đêm
-                    DichVuDaChon = new List<DichVuDaChon>() // Reset dịch vụ cho đặt phòng mới
+                    DichVuDaChon = new List<DichVuDaChon>()
                 };
             }
+
+            // Reset ngày nhận và ngày trả về mặc định mỗi lần load trang
+            model.NgayNhan = DateTime.Now;
+            model.NgayTra = DateTime.Now.AddDays(1);
 
             // Lấy thông tin phòng nếu có phongId (cho cả model mới và model đã có khi đặt phòng mới)
             if (phongId.HasValue || model.PhongId.HasValue)
@@ -843,6 +856,12 @@ namespace Web_QLKhachSan.Controllers
                                 datPhong.TrangThaiDatPhong = 1; // Đã xác nhận
                                 datPhong.NgayCapNhat = DateTime.Now;
                                 db.SaveChanges();
+
+                                // 📧 Gửi email xác nhận đặt phòng ở background
+                                System.Web.Hosting.HostingEnvironment.QueueBackgroundWorkItem(async ct =>
+                                {
+                                    await SendBookingConfirmationEmailAsync(datPhongId.Value, vnp_TransactionNo, vnp_BankCode);
+                                });
                             }
                          }
 
@@ -852,12 +871,16 @@ namespace Web_QLKhachSan.Controllers
                          Session["LastAmount"] = vnp_Amount;
                          Session["LastTransactionNo"] = vnp_TransactionNo;
                          Session["LastBankCode"] = vnp_BankCode;
+                         Session["LastTransactionTime"] = DateTime.Now.ToString("HH:mm:ss dd/MM/yyyy");
+                         Session["LastTransactionStatus"] = "Thành công";
                          
                          TempData["PaymentSuccess"] = true;
                          TempData["TransactionNo"] = vnp_TransactionNo;
                          TempData["Amount"] = vnp_Amount;
                          TempData["BankCode"] = vnp_BankCode;
                          TempData["BookingRef"] = paymentRefId;
+                         TempData["TransactionTime"] = DateTime.Now.ToString("HH:mm:ss dd/MM/yyyy");
+                         TempData["TransactionStatus"] = "Thành công";
                      }
                     else
                     {
@@ -876,9 +899,13 @@ namespace Web_QLKhachSan.Controllers
                         // Lưu vào Session
                         Session["LastPaymentSuccess"] = false;
                         Session["LastErrorMessage"] = "Thanh toán thất bại. Mã lỗi: " + vnp_ResponseCode;
+                        Session["LastTransactionTime"] = DateTime.Now.ToString("HH:mm:ss dd/MM/yyyy");
+                        Session["LastTransactionStatus"] = "Thất bại";
                         
                         TempData["PaymentSuccess"] = false;
                         TempData["ErrorMessage"] = "Thanh toán thất bại. Mã lỗi: " + vnp_ResponseCode;
+                        TempData["TransactionTime"] = DateTime.Now.ToString("HH:mm:ss dd/MM/yyyy");
+                        TempData["TransactionStatus"] = "Thất bại";
                     }
 
                     db.SaveChanges();
@@ -924,11 +951,199 @@ namespace Web_QLKhachSan.Controllers
             ViewBag.TransactionNo = TempData["TransactionNo"] ?? Session["LastTransactionNo"];
             ViewBag.BankCode = TempData["BankCode"] ?? Session["LastBankCode"];
             ViewBag.ErrorMessage = TempData["ErrorMessage"] ?? Session["LastErrorMessage"];
+            ViewBag.TransactionTime = TempData["TransactionTime"] ?? Session["LastTransactionTime"];
+            ViewBag.TransactionStatus = TempData["TransactionStatus"] ?? Session["LastTransactionStatus"];
+            
+            // ✅ Khôi phục Session nếu bị mất sau khi redirect từ VNPay
+            if (Session["MaKhachHang"] == null)
+            {
+                // Lấy thông tin từ DatPhong gần nhất dựa trên BookingRef
+                string bookingRef = ViewBag.BookingRef as string;
+                if (!string.IsNullOrEmpty(bookingRef))
+                {
+                    var datPhong = db.DatPhongs
+                        .Include("KhachHang")
+                        .FirstOrDefault(dp => dp.PaymentRefId == bookingRef || dp.MaDatPhong == bookingRef);
+                    
+                    if (datPhong != null && datPhong.KhachHang != null)
+                    {
+                        // Khôi phục Session
+                        Session["MaKhachHang"] = datPhong.MaKhachHang;
+                        Session["HoVaTen"] = datPhong.KhachHang.HoVaTen;
+                        Session["Email"] = datPhong.KhachHang.Email;
+                        Session["SoDienThoai"] = datPhong.KhachHang.SoDienThoai;
+                        Session["NgayTao"] = datPhong.KhachHang.NgayTao;
+                        Session["AnhDaiDienUrl"] = datPhong.KhachHang.AnhDaiDienUrl;
+                        ViewBag.CustomerName = datPhong.KhachHang.HoVaTen;
+                    }
+                }
+            }
+            else
+            {
+                // Lấy tên khách hàng từ session hoặc database
+                int maKhachHang = Convert.ToInt32(Session["MaKhachHang"]);
+                var khachHang = db.KhachHangs.Find(maKhachHang);
+                if (khachHang != null)
+                {
+                    ViewBag.CustomerName = khachHang.HoVaTen;
+                }
+            }
             
             return View();
         }
 
-        protected override void Dispose(bool disposing)
+        /// <summary>
+        /// Sends booking confirmation email with detailed information
+        /// </summary>
+        private async Task SendBookingConfirmationEmailAsync(int datPhongId, string transactionNo, string bankCode)
+        {
+            // Tạo DbContext mới vì background task chạy sau khi request context đã dispose
+            using (var dbContext = new DB_QLKhachSanEntities())
+            {
+                try
+                {
+                    // Lấy thông tin đặt phòng đầy đủ
+                    var datPhong = dbContext.DatPhongs
+                        .Include("ChiTietDatPhongs.Phong")
+                        .Include("ChiTietDatPhongs.LoaiPhong.TienNghis")
+                        .Include("ChiTietDatPhongs.LoaiPhong.TienIches")
+                        .Include("ChiTietDatDichVus.DichVu")
+                        .Include("KhachHang")
+                        .FirstOrDefault(dp => dp.DatPhongId == datPhongId);
+
+                    if (datPhong == null || datPhong.KhachHang == null || string.IsNullOrEmpty(datPhong.KhachHang.Email))
+                    {
+                        return;
+                    }
+
+                    var khachHang = datPhong.KhachHang;
+
+                    // Đọc template từ file
+                    string templatePath = System.Web.Hosting.HostingEnvironment.MapPath("~/Views/DatPhong/EmailChiTietDatPhong.cshtml");
+                    if (!System.IO.File.Exists(templatePath))
+                    {
+                        return;
+                    }
+                    
+                    string htmlTemplate = System.IO.File.ReadAllText(templatePath);
+
+                    // Tạo HTML cho chi tiết phòng
+                    var chiTietPhongsHtml = new StringBuilder();
+                    decimal tongTienPhong = 0;
+
+                    foreach (var chiTiet in datPhong.ChiTietDatPhongs)
+                    {
+                        tongTienPhong += chiTiet.ThanhTien ?? 0;
+
+                        chiTietPhongsHtml.Append($@"
+                    <div class='room-card'>
+                        <h4>🏨 {chiTiet.LoaiPhong?.TenLoai ?? "Phòng"} - {chiTiet.Phong?.TenPhong ?? ""}</h4>
+                        <div class='detail'>
+                            <span class='key'>Số lượng:</span>
+                            <span class='val'>x{chiTiet.SoLuong}</span>
+                        </div>
+                        <div class='detail'>
+                            <span class='key'>Đơn giá/đêm:</span>
+                            <span class='val'>{(chiTiet.DonGia ?? 0).ToString("N0")}đ</span>
+                        </div>
+                        <div class='detail'>
+                            <span class='key'>Thành tiền:</span>
+                            <span class='val' style='color: #d4af37; font-weight: 700;'>{(chiTiet.ThanhTien ?? 0).ToString("N0")}đ</span>
+                        </div>");
+
+                        // Thêm tiện nghi
+                        if (chiTiet.LoaiPhong?.TienNghis != null && chiTiet.LoaiPhong.TienNghis.Any())
+                        {
+                            chiTietPhongsHtml.Append("<div class='amenities'><strong style='display: block; margin-bottom: 8px; color: #6c757d; font-size: 13px;'>Tiện nghi:</strong>");
+                            foreach (var tienNghi in chiTiet.LoaiPhong.TienNghis)
+                            {
+                                chiTietPhongsHtml.Append($"<span class='amenity-tag'>{tienNghi.TenTienNghi}</span>");
+                            }
+                            chiTietPhongsHtml.Append("</div>");
+                        }
+
+                        // Thêm tiện ích
+                        if (chiTiet.LoaiPhong?.TienIches != null && chiTiet.LoaiPhong.TienIches.Any())
+                        {
+                            chiTietPhongsHtml.Append("<div class='amenities' style='margin-top: 8px;'><strong style='display: block; margin-bottom: 8px; color: #6c757d; font-size: 13px;'>Tiện ích:</strong>");
+                            foreach (var tienIch in chiTiet.LoaiPhong.TienIches)
+                            {
+                                chiTietPhongsHtml.Append($"<span class='amenity-tag' style='background: #fff3e0; color: #e65100;'>{tienIch.TenTienIch}</span>");
+                            }
+                            chiTietPhongsHtml.Append("</div>");
+                        }
+
+                        chiTietPhongsHtml.Append("</div>");
+                    }
+
+                    // Tạo HTML cho dịch vụ
+                    var dichVuSectionHtml = new StringBuilder();
+                    decimal tongTienDichVu = 0;
+
+                    if (datPhong.ChiTietDatDichVus != null && datPhong.ChiTietDatDichVus.Any())
+                    {
+                        tongTienDichVu = datPhong.ChiTietDatDichVus.Sum(dv => dv.ThanhTien ?? 0);
+
+                        dichVuSectionHtml.Append("<h3 class='section-title'>🛎️ Dịch Vụ Đã Chọn</h3>");
+                        
+                        foreach (var dichVu in datPhong.ChiTietDatDichVus)
+                        {
+                            dichVuSectionHtml.Append($@"
+                        <div class='service-item'>
+                            <div>
+                                <div class='name'>{dichVu.DichVu?.TenDichVu ?? "Dịch vụ"} x{dichVu.SoLuong}</div>
+                            </div>
+                            <div class='price'>{(dichVu.ThanhTien ?? 0).ToString("N0")}đ</div>
+                        </div>");
+                        }
+                    }
+
+                    // Tạo dòng giảm giá nếu có
+                    string giamGiaRow = "";
+                    if (datPhong.MaKhuyenMai.HasValue)
+                    {
+                        giamGiaRow = $@"
+                    <div class='row'>
+                        <span>Giảm giá:</span>
+                        <span style='color: #4caf50;'>-0đ</span>
+                    </div>";
+                    }
+
+                    // Thay thế các placeholder
+                    string htmlBody = htmlTemplate
+                        .Replace("{{LogoUrl}}", "https://res.cloudinary.com/dq1qfnr1z/image/upload/v1763633720/logo_tkukm5.png")
+                        .Replace("{{TenKhachHang}}", khachHang.HoVaTen ?? "Quý khách")
+                        .Replace("{{MaDatPhong}}", datPhong.MaDatPhong ?? "#DP" + datPhong.DatPhongId)
+                        .Replace("{{Email}}", khachHang.Email ?? "")
+                        .Replace("{{SoDienThoai}}", khachHang.SoDienThoai ?? "")
+                        .Replace("{{NgayNhan}}", datPhong.NgayNhan?.ToString("HH:mm, dd/MM/yyyy") ?? "")
+                        .Replace("{{NgayTra}}", datPhong.NgayTra?.ToString("HH:mm, dd/MM/yyyy") ?? "")
+                        .Replace("{{SoDem}}", (datPhong.SoDem ?? 0).ToString())
+                        .Replace("{{SoLuongKhach}}", (datPhong.SoLuongKhach ?? 0).ToString())
+                        .Replace("{{ChiTietPhongs}}", chiTietPhongsHtml.ToString())
+                        .Replace("{{DichVuSection}}", dichVuSectionHtml.ToString())
+                        .Replace("{{PaymentMethod}}", "VNPay")
+                        .Replace("{{TransactionNo}}", transactionNo ?? "")
+                        .Replace("{{BankCode}}", bankCode ?? "")
+                        .Replace("{{PaymentTime}}", DateTime.Now.ToString("HH:mm:ss, dd/MM/yyyy"))
+                        .Replace("{{TongTienPhong}}", tongTienPhong.ToString("N0"))
+                        .Replace("{{TongTienDichVu}}", tongTienDichVu.ToString("N0"))
+                    .Replace("{{GiamGiaRow}}", giamGiaRow)
+                    .Replace("{{TongTien}}", (datPhong.TongTien ?? 0).ToString("N0"));
+
+                    // Gửi email
+                    var emailService = new MailKitEmailService();
+                    string subject = $"✅ Xác Nhận Đặt Phòng Thành Công - {datPhong.MaDatPhong ?? "#DP" + datPhong.DatPhongId}";
+                    
+                    await emailService.SendEmailAsync(khachHang.Email, subject, htmlBody);
+                }
+                catch (Exception ex)
+                {
+                    // Log lỗi nhưng không throw exception để không ảnh hưởng đến flow chính
+                    System.Diagnostics.Debug.WriteLine($"[Email Error] {ex.Message}");
+                }
+            }
+        }        protected override void Dispose(bool disposing)
         {
             if (disposing)
             {

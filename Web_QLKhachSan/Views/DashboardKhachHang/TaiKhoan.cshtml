@@ -34,7 +34,7 @@
                                 <i class="fas fa-clipboard-list"></i>
                             </div>
                             <div class="stat-content">
-                                <h3>5</h3>
+                                <h3>@ViewBag.TongDonDatPhong</h3>
                                 <p>Tổng Đơn Đặt Phòng</p>
                             </div>
                         </div>
@@ -44,7 +44,7 @@
                                 <i class="fas fa-money-bill-wave"></i>
                             </div>
                             <div class="stat-content">
-                                <h3>2.350.000đ</h3>
+                                <h3>@(((decimal)ViewBag.TongTienDaChi).ToString("N0"))đ</h3>
                                 <p>Tổng Tiền Đã Chi</p>
                             </div>
                         </div>
@@ -54,8 +54,18 @@
                                 <i class="fas fa-clock"></i>
                             </div>
                             <div class="stat-content">
-                                <h3>0</h3>
-                                <p>Phòng Chờ Xác Nhận</p>
+                                <h3>@ViewBag.PhongChoXacNhan</h3>
+                                <p>Chờ Xác Nhận</p>
+                            </div>
+                        </div>
+
+                        <div class="stat-card stat-primary">
+                            <div class="stat-icon">
+                                <i class="fas fa-check-double"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3>@(ViewBag.PhongDaXacNhan ?? 0)</h3>
+                                <p>Đã Xác Nhận</p>
                             </div>
                         </div>
 
@@ -64,8 +74,38 @@
                                 <i class="fas fa-check-circle"></i>
                             </div>
                             <div class="stat-content">
-                                <h3>4</h3>
-                                <p>Phòng Đã Hoàn Thành</p>
+                                <h3>@(ViewBag.PhongDaHoanThanh ?? 0)</h3>
+                                <p>Đã Hoàn Thành</p>
+                            </div>
+                        </div>
+
+                        <div class="stat-card stat-danger">
+                            <div class="stat-icon">
+                                <i class="fas fa-times-circle"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3>@(ViewBag.PhongDaHuy ?? 0)</h3>
+                                <p>Đã Hủy</p>
+                            </div>
+                        </div>
+
+                        <div class="stat-card stat-warning">
+                            <div class="stat-icon">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3>@(ViewBag.SoLanDanhGia ?? 0)</h3>
+                                <p>Đánh Giá</p>
+                            </div>
+                        </div>
+
+                        <div class="stat-card stat-success">
+                            <div class="stat-icon">
+                                <i class="fas fa-concierge-bell"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3>@(ViewBag.SoDichVuDaDat ?? 0)</h3>
+                                <p>Dịch Vụ Đã Đặt</p>
                             </div>
                         </div>
                     </div>

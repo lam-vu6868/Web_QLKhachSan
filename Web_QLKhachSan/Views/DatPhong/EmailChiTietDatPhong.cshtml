@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang='vi'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .email-container {
+            max-width: 650px;
+            margin: 0 auto;
+            background: #ffffff;
+            border: 2px solid #d4af37;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+        .email-header {
+            background: linear-gradient(135deg, #0a1931 0%, #1e3a5f 100%);
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .logo {
+            margin-bottom: 20px;
+        }
+        .logo img {
+            max-width: 180px;
+            height: auto;
+        }
+        .email-header h1 {
+            color: #ffffff;
+            font-size: 24px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .email-header p {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 14px;
+        }
+        .email-body {
+            padding: 40px 30px;
+        }
+        .greeting {
+            font-size: 18px;
+            color: #0a1931;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        .success-badge {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            color: #ffffff;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 30px 0;
+            box-shadow: 0 6px 20px rgba(39, 174, 96, 0.2);
+        }
+        .success-badge .icon {
+            font-size: 56px;
+            margin-bottom: 12px;
+        }
+        .success-badge h2 {
+            font-size: 22px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .success-badge p {
+            font-size: 15px;
+            opacity: 0.95;
+        }
+        .booking-ref {
+            background: #f8f9fa;
+            border: 2px dashed #d4af37;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 25px 0;
+            text-align: center;
+        }
+        .booking-ref .label {
+            color: #6c757d;
+            font-size: 13px;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .booking-ref .code {
+            color: #d4af37;
+            font-size: 24px;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+        }
+        .section-title {
+            color: #0a1931;
+            font-size: 18px;
+            margin: 30px 0 15px 0;
+            font-weight: 600;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #d4af37;
+        }
+        .info-box {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        .info-item {
+            display: flex;
+            padding: 12px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .info-item:last-child {
+            border-bottom: none;
+        }
+        .info-item .label {
+            color: #6c757d;
+            font-size: 14px;
+            width: 150px;
+            flex-shrink: 0;
+        }
+        .info-item .value {
+            color: #0a1931;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .room-card {
+            background: #ffffff;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            padding: 18px;
+            margin: 12px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .room-card h4 {
+            color: #0a1931;
+            font-size: 16px;
+            margin-bottom: 12px;
+        }
+        .room-card .detail {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 14px;
+        }
+        .room-card .detail .key {
+            color: #6c757d;
+        }
+        .room-card .detail .val {
+            color: #0a1931;
+            font-weight: 600;
+        }
+        .amenities {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .amenity-tag {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .service-item {
+            background: #fff;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 14px;
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .service-item .name {
+            color: #0a1931;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .service-item .price {
+            color: #d4af37;
+            font-size: 15px;
+            font-weight: 700;
+        }
+        .total-section {
+            background: linear-gradient(135deg, #0a1931 0%, #1e3a5f 100%);
+            color: #ffffff;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+        }
+        .total-section .row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            font-size: 15px;
+        }
+        .total-section .total-row {
+            border-top: 2px solid rgba(212, 175, 55, 0.3);
+            margin-top: 12px;
+            padding-top: 18px;
+            font-size: 20px;
+            font-weight: 700;
+        }
+        .total-section .total-row .amount {
+            color: #d4af37;
+        }
+        .payment-info {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            border-radius: 8px;
+            padding: 18px;
+            margin: 20px 0;
+        }
+        .payment-info h4 {
+            color: #2e7d32;
+            font-size: 15px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        .payment-info .detail {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 14px;
+            color: #1b5e20;
+        }
+        .note-box {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 18px;
+            margin: 25px 0;
+        }
+        .note-box h3 {
+            color: #856404;
+            font-size: 15px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        .note-box ul {
+            margin-left: 20px;
+            color: #856404;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+        .contact-box {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 25px 0;
+            text-align: center;
+        }
+        .contact-box h3 {
+            color: #0a1931;
+            font-size: 16px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        .contact-box p {
+            color: #6c757d;
+            font-size: 14px;
+            margin: 8px 0;
+        }
+        .contact-box .highlight {
+            color: #d4af37;
+            font-weight: 700;
+        }
+        .email-footer {
+            background: #f8f9fa;
+            padding: 25px 30px;
+            text-align: center;
+            border-top: 1px solid #e9ecef;
+        }
+        .email-footer p {
+            color: #6c757d;
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, #d4af37 50%, transparent 100%);
+            margin: 25px 0;
+        }
+        @media (max-width: 600px) {
+            .email-body {
+                padding: 30px 20px;
+            }
+            .info-item,
+            .room-card .detail,
+            .total-section .row,
+            .payment-info .detail {
+                flex-direction: column;
+                gap: 4px;
+            }
+            .info-item .label {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class='email-container'>
+        <div class='email-header'>
+            <div class='logo'>
+                <img src='{{LogoUrl}}' alt='The Serene Horizon Hotel' />
+            </div>
+            <h1>The Serene Horizon Hotel</h1>
+            <p>Cảm ơn quý khách đã chọn chúng tôi</p>
+        </div>
+        
+        <div class='email-body'>
+            <p class='greeting'>Kính gửi Quý khách {{TenKhachHang}},</p>
+            
+            <div class='success-badge'>
+                <div class='icon'>✓</div>
+                <h2>Đặt Phòng Thành Công!</h2>
+                <p>Thanh toán đã được xác nhận và đơn đặt phòng đã hoàn tất</p>
+            </div>
+            
+            <div class='booking-ref'>
+                <div class='label'>Mã đặt phòng</div>
+                <div class='code'>{{MaDatPhong}}</div>
+            </div>
+
+            <!-- Thông tin khách hàng -->
+            <h3 class='section-title'>👤 Thông Tin Khách Hàng</h3>
+            <div class='info-box'>
+                <div class='info-item'>
+                    <span class='label'>Họ và tên:</span>
+                    <span class='value'>{{TenKhachHang}}</span>
+                </div>
+                <div class='info-item'>
+                    <span class='label'>Email:</span>
+                    <span class='value'>{{Email}}</span>
+                </div>
+                <div class='info-item'>
+                    <span class='label'>Số điện thoại:</span>
+                    <span class='value'>{{SoDienThoai}}</span>
+                </div>
+            </div>
+
+            <!-- Thông tin đặt phòng -->
+            <h3 class='section-title'>📅 Thông Tin Đặt Phòng</h3>
+            <div class='info-box'>
+                <div class='info-item'>
+                    <span class='label'>Ngày nhận phòng:</span>
+                    <span class='value'>{{NgayNhan}}</span>
+                </div>
+                <div class='info-item'>
+                    <span class='label'>Ngày trả phòng:</span>
+                    <span class='value'>{{NgayTra}}</span>
+                </div>
+                <div class='info-item'>
+                    <span class='label'>Số đêm:</span>
+                    <span class='value'>{{SoDem}} đêm</span>
+                </div>
+                <div class='info-item'>
+                    <span class='label'>Số lượng khách:</span>
+                    <span class='value'>{{SoLuongKhach}} người</span>
+                </div>
+            </div>
+
+            <!-- Chi tiết phòng -->
+            <h3 class='section-title'>🏨 Chi Tiết Phòng</h3>
+            {{ChiTietPhongs}}
+
+            <!-- Dịch vụ -->
+            {{DichVuSection}}
+
+            <!-- Thanh toán -->
+            <h3 class='section-title'>💳 Thông Tin Thanh Toán</h3>
+            <div class='payment-info'>
+                <h4>✓ Thanh toán thành công qua {{PaymentMethod}}</h4>
+                <div class='detail'>
+                    <span>Mã giao dịch:</span>
+                    <span><strong>{{TransactionNo}}</strong></span>
+                </div>
+                <div class='detail'>
+                    <span>Ngân hàng:</span>
+                    <span><strong>{{BankCode}}</strong></span>
+                </div>
+                <div class='detail'>
+                    <span>Thời gian:</span>
+                    <span><strong>{{PaymentTime}}</strong></span>
+                </div>
+            </div>
+
+            <!-- Tổng tiền -->
+            <div class='total-section'>
+                <div class='row'>
+                    <span>Tổng tiền phòng:</span>
+                    <span>{{TongTienPhong}}đ</span>
+                </div>
+                <div class='row'>
+                    <span>Tổng tiền dịch vụ:</span>
+                    <span>{{TongTienDichVu}}đ</span>
+                </div>
+                {{GiamGiaRow}}
+                <div class='row total-row'>
+                    <span>TỔNG CỘNG:</span>
+                    <span class='amount'>{{TongTien}}đ</span>
+                </div>
+            </div>
+
+            <!-- Lưu ý -->
+            <div class='note-box'>
+                <h3>📌 Lưu Ý Quan Trọng</h3>
+                <ul>
+                    <li>Giờ nhận phòng: <strong>14:00</strong> | Giờ trả phòng: <strong>12:00</strong></li>
+                    <li>Vui lòng mang theo CMND/CCCD khi nhận phòng</li>
+                    <li>Xuất trình mã đặt phòng <strong>{{MaDatPhong}}</strong> tại quầy lễ tân</li>
+                    <li>Liên hệ trước 24h nếu cần hủy hoặc thay đổi đặt phòng</li>
+                </ul>
+            </div>
+
+            <!-- Liên hệ -->
+            <div class='contact-box'>
+                <h3>📞 Liên Hệ Với Chúng Tôi</h3>
+                <p>Địa chỉ: <span class='highlight'>123 Đường Bờ Biển, TP Paradise</span></p>
+                <p>Hotline: <span class='highlight'>📱 (+84) 123 456 789</span></p>
+                <p>Email: <span class='highlight'>📧 support@serenehorizon.com</span></p>
+            </div>
+            
+            <div class='divider'></div>
+            
+            <p style='font-size: 14px; color: #6c757d; text-align: center; line-height: 1.8;'>
+                Cảm ơn Quý khách đã tin tưởng và lựa chọn <strong>The Serene Horizon Hotel</strong>.<br/>
+                Chúng tôi rất mong được phục vụ và mang đến cho Quý khách những trải nghiệm tuyệt vời nhất!
+            </p>
+        </div>
+        
+        <div class='email-footer'>
+            <p><strong>The Serene Horizon Hotel - Where Luxury Meets Serenity</strong></p>
+            <p>123 Đường Bờ Biển, TP Paradise | Hotline: 1900-xxxx</p>
+            <p style='margin-top: 15px; font-size: 12px; color: #999999;'>
+                © 2025 The Serene Horizon Hotel. All rights reserved.<br/>
+                Email này được gửi tự động, vui lòng không trả lời.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

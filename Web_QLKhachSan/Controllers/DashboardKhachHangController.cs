@@ -25,6 +25,39 @@ namespace Web_QLKhachSan.Controllers
             {
                 return RedirectToAction("DangNhap", "Login");
             }
+
+            int maKhachHang = (int)Session["MaKhachHang"];
+
+            // Lấy tất cả đơn đặt phòng của khách hàng
+            var datPhongs = db.DatPhongs
+                .Where(dp => dp.MaKhachHang == maKhachHang)
+                .ToList();
+
+            // Debug - Kiểm tra dữ liệu
+            System.Diagnostics.Debug.WriteLine($"MaKhachHang: {maKhachHang}");
+            System.Diagnostics.Debug.WriteLine($"Tổng đơn: {datPhongs.Count}");
+            foreach (var dp in datPhongs)
+            {
+                System.Diagnostics.Debug.WriteLine($"DatPhongId: {dp.DatPhongId}, TrangThai: {dp.TrangThaiDatPhong}");
+            }
+
+            // Tính toán thống kê
+            ViewBag.TongDonDatPhong = datPhongs.Count();
+            ViewBag.TongTienDaChi = datPhongs.Sum(dp => dp.TongTien ?? 0);
+            ViewBag.PhongChoXacNhan = datPhongs.Count(dp => dp.TrangThaiDatPhong == 0); // Trạng thái 0: Chờ xác nhận
+            ViewBag.PhongDaXacNhan = datPhongs.Count(dp => dp.TrangThaiDatPhong == 1); // Trạng thái 1: Đã xác nhận
+            ViewBag.PhongDaHoanThanh = datPhongs.Count(dp => dp.TrangThaiDatPhong == 2); // Trạng thái 2: Hoàn thành
+            ViewBag.PhongDaHuy = datPhongs.Count(dp => dp.TrangThaiDatPhong == 3); // Trạng thái 3: Đã hủy
+
+            // Thống kê đánh giá
+            ViewBag.SoLanDanhGia = db.DanhGias.Count(dg => dg.MaKhachHang == maKhachHang);
+
+            // Thống kê dịch vụ đã đặt
+            var datPhongIds = datPhongs.Select(dp => dp.DatPhongId).ToList();
+            ViewBag.SoDichVuDaDat = db.ChiTietDatDichVus
+                .Where(ctdv => datPhongIds.Contains(ctdv.DatPhongId))
+                .Sum(ctdv => (int?)ctdv.SoLuong) ?? 0;
+
             return View();
         }
         public ActionResult HoSo()
@@ -574,6 +607,183 @@ END:VEVENT
 END:VCALENDAR";
 
             return icsContent;
+        }
+
+        /// <summary>
+        /// Gửi lại email xác nhận đặt phòng
+        /// </summary>
+        [HttpPost]
+        public async Task<ActionResult> GuiLaiEmail(int datPhongId)
+        {
+            try
+            {
+                // Kiểm tra session
+                if (Session["MaKhachHang"] == null)
+                {
+                    TempData["ErrorMessage"] = "❌ Vui lòng đăng nhập!";
+                    return RedirectToAction("DangNhap", "NguoiDung");
+                }
+
+                int maKhachHang = (int)Session["MaKhachHang"];
+
+                // Tìm đơn đặt phòng với đầy đủ thông tin
+                var datPhong = db.DatPhongs
+                    .Include("ChiTietDatPhongs.Phong")
+                    .Include("ChiTietDatPhongs.LoaiPhong.TienNghis")
+                    .Include("ChiTietDatPhongs.LoaiPhong.TienIches")
+                    .Include("ChiTietDatDichVus.DichVu")
+                    .Include("KhachHang")
+                    .FirstOrDefault(dp => dp.DatPhongId == datPhongId && dp.MaKhachHang == maKhachHang);
+
+                if (datPhong == null || datPhong.KhachHang == null)
+                {
+                    TempData["ErrorMessage"] = "❌ Không tìm thấy đơn đặt phòng!";
+                    return RedirectToAction("LichSu");
+                }
+
+                var khachHang = datPhong.KhachHang;
+
+                if (string.IsNullOrEmpty(khachHang.Email))
+                {
+                    TempData["ErrorMessage"] = "❌ Email khách hàng không hợp lệ!";
+                    return RedirectToAction("LichSu");
+                }
+
+                // Đọc template email
+                string templatePath = Server.MapPath("~/Views/DatPhong/EmailChiTietDatPhong.cshtml");
+                if (!System.IO.File.Exists(templatePath))
+                {
+                    return Json(new { success = false, message = "Không tìm thấy template email!" });
+                }
+
+                string htmlTemplate = System.IO.File.ReadAllText(templatePath);
+
+                // Tạo HTML cho chi tiết phòng
+                var chiTietPhongsHtml = new System.Text.StringBuilder();
+                decimal tongTienPhong = 0;
+
+                foreach (var chiTiet in datPhong.ChiTietDatPhongs)
+                {
+                    tongTienPhong += chiTiet.ThanhTien ?? 0;
+
+                    chiTietPhongsHtml.Append($@"
+                    <div class='room-card'>
+                        <h4>🏨 {chiTiet.LoaiPhong?.TenLoai ?? "Phòng"} - {chiTiet.Phong?.TenPhong ?? ""}</h4>
+                        <div class='detail'>
+                            <span class='key'>Số lượng:</span>
+                            <span class='val'>x{chiTiet.SoLuong}</span>
+                        </div>
+                        <div class='detail'>
+                            <span class='key'>Đơn giá/đêm:</span>
+                            <span class='val'>{(chiTiet.DonGia ?? 0).ToString("N0")}đ</span>
+                        </div>
+                        <div class='detail'>
+                            <span class='key'>Thành tiền:</span>
+                            <span class='val' style='color: #d4af37; font-weight: 700;'>{(chiTiet.ThanhTien ?? 0).ToString("N0")}đ</span>
+                        </div>");
+
+                    // Thêm tiện nghi
+                    if (chiTiet.LoaiPhong?.TienNghis != null && chiTiet.LoaiPhong.TienNghis.Any())
+                    {
+                        chiTietPhongsHtml.Append("<div class='amenities'><strong style='display: block; margin-bottom: 8px; color: #6c757d; font-size: 13px;'>Tiện nghi:</strong>");
+                        foreach (var tienNghi in chiTiet.LoaiPhong.TienNghis)
+                        {
+                            chiTietPhongsHtml.Append($"<span class='amenity-tag'>{tienNghi.TenTienNghi}</span>");
+                        }
+                        chiTietPhongsHtml.Append("</div>");
+                    }
+
+                    // Thêm tiện ích
+                    if (chiTiet.LoaiPhong?.TienIches != null && chiTiet.LoaiPhong.TienIches.Any())
+                    {
+                        chiTietPhongsHtml.Append("<div class='amenities' style='margin-top: 8px;'><strong style='display: block; margin-bottom: 8px; color: #6c757d; font-size: 13px;'>Tiện ích:</strong>");
+                        foreach (var tienIch in chiTiet.LoaiPhong.TienIches)
+                        {
+                            chiTietPhongsHtml.Append($"<span class='amenity-tag' style='background: #fff3e0; color: #e65100;'>{tienIch.TenTienIch}</span>");
+                        }
+                        chiTietPhongsHtml.Append("</div>");
+                    }
+
+                    chiTietPhongsHtml.Append("</div>");
+                }
+
+                // Tạo HTML cho dịch vụ
+                var dichVuSectionHtml = new System.Text.StringBuilder();
+                decimal tongTienDichVu = 0;
+
+                if (datPhong.ChiTietDatDichVus != null && datPhong.ChiTietDatDichVus.Any())
+                {
+                    tongTienDichVu = datPhong.ChiTietDatDichVus.Sum(dv => dv.ThanhTien ?? 0);
+
+                    dichVuSectionHtml.Append("<h3 class='section-title'>🛎️ Dịch Vụ Đã Chọn</h3>");
+
+                    foreach (var dichVu in datPhong.ChiTietDatDichVus)
+                    {
+                        dichVuSectionHtml.Append($@"
+                        <div class='service-item'>
+                            <div>
+                                <div class='name'>{dichVu.DichVu?.TenDichVu ?? "Dịch vụ"} x{dichVu.SoLuong}</div>
+                            </div>
+                            <div class='price'>{(dichVu.ThanhTien ?? 0).ToString("N0")}đ</div>
+                        </div>");
+                    }
+                }
+
+                // Tạo dòng giảm giá nếu có
+                string giamGiaRow = "";
+                if (datPhong.MaKhuyenMai.HasValue)
+                {
+                    giamGiaRow = $@"
+                    <div class='row'>
+                        <span>Giảm giá:</span>
+                        <span style='color: #4caf50;'>-0đ</span>
+                    </div>";
+                }
+
+                // Thay thế placeholders
+                string htmlBody = htmlTemplate
+                    .Replace("{{LogoUrl}}", "https://res.cloudinary.com/dq1qfnr1z/image/upload/v1763633720/logo_tkukm5.png")
+                    .Replace("{{TenKhachHang}}", khachHang.HoVaTen ?? "Quý khách")
+                    .Replace("{{MaDatPhong}}", datPhong.MaDatPhong ?? "#DP" + datPhong.DatPhongId)
+                    .Replace("{{Email}}", khachHang.Email ?? "")
+                    .Replace("{{SoDienThoai}}", khachHang.SoDienThoai ?? "")
+                    .Replace("{{NgayNhan}}", datPhong.NgayNhan?.ToString("HH:mm, dd/MM/yyyy") ?? "")
+                    .Replace("{{NgayTra}}", datPhong.NgayTra?.ToString("HH:mm, dd/MM/yyyy") ?? "")
+                    .Replace("{{SoDem}}", (datPhong.SoDem ?? 0).ToString())
+                    .Replace("{{SoLuongKhach}}", (datPhong.SoLuongKhach ?? 0).ToString())
+                    .Replace("{{ChiTietPhongs}}", chiTietPhongsHtml.ToString())
+                    .Replace("{{DichVuSection}}", dichVuSectionHtml.ToString())
+                    .Replace("{{PaymentMethod}}", datPhong.PaymentMethod ?? "VNPay")
+                    .Replace("{{TransactionNo}}", datPhong.PaymentRefId ?? "N/A")
+                    .Replace("{{BankCode}}", "N/A")
+                    .Replace("{{PaymentTime}}", datPhong.NgayTao.ToString("HH:mm:ss, dd/MM/yyyy"))
+                    .Replace("{{TongTienPhong}}", tongTienPhong.ToString("N0"))
+                    .Replace("{{TongTienDichVu}}", tongTienDichVu.ToString("N0"))
+                    .Replace("{{GiamGiaRow}}", giamGiaRow)
+                    .Replace("{{TongTien}}", (datPhong.TongTien ?? 0).ToString("N0"));
+
+                // Gửi email
+                var emailService = new MailKitEmailService();
+                string subject = $"✅ Chi Tiết Đặt Phòng - {datPhong.MaDatPhong ?? "#DP" + datPhong.DatPhongId}";
+
+                bool result = await emailService.SendEmailAsync(khachHang.Email, subject, htmlBody);
+
+                if (result)
+                {
+                    TempData["SuccessMessage"] = $"✅ Đã gửi email xác nhận đến {khachHang.Email}";
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "❌ Không thể gửi email. Vui lòng thử lại sau!";
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[GuiLaiEmail] Lỗi: {ex.Message}");
+                TempData["ErrorMessage"] = "❌ Đã xảy ra lỗi: " + ex.Message;
+            }
+
+            return RedirectToAction("LichSu");
         }
 
         protected override void Dispose(bool disposing)
