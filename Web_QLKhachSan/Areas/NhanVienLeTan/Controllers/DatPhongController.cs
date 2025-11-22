@@ -963,13 +963,13 @@ System.Diagnostics.Debug.WriteLine($"[ERROR - Huy] {ex.Message}");
   {
         if (!CheckRole())
    {
-         return Json(new { success = false, message = "Bạn không có quyền!" });
+  return Json(new { success = false, message = "Bạn không có quyền!" });
              }
 
     var datPhong = db.DatPhongs
      .Include(dp => dp.ChiTietDatPhongs)
      .Include(dp => dp.ChiTietDatDichVus)
-    .FirstOrDefault(dp => dp.DatPhongId == id);
+ .FirstOrDefault(dp => dp.DatPhongId == id);
 
   if (datPhong == null)
      {
@@ -979,22 +979,29 @@ System.Diagnostics.Debug.WriteLine($"[ERROR - Huy] {ex.Message}");
  // Kiểm tra trạng thái
     if (datPhong.TrangThaiDatPhong != 2)
        {
-          return Json(new { success = false, message = "Chỉ check-out được đơn đã check-in!" });
+ return Json(new { success = false, message = "Chỉ check-out được đơn đã check-in!" });
          }
 
-       // Tính tổng tiền
-  decimal tongTienPhong = datPhong.TongTien ?? 0;
-  decimal tongTienDichVu = datPhong.ChiTietDatDichVus?.Sum(dv => dv.ThanhTien ?? 0) ?? 0;
-      // ✅ SỬ DỤNG TongTien từ DatPhong (đã bao gồm giảm giá khuyến mãi)
-       decimal tongTien = tongTienPhong + tongTienDichVu;
+     // ===== TÍNH TỔNG TIỀN =====
+       // ✅ FIX: Tính lại CHÍNH XÁC từ ChiTietDatPhong + ChiTietDatDichVu
+       // KHÔNG dùng DatPhong.TongTien để tránh lỗi cộng x2
+       
+       // 1. Tính tổng tiền phòng từ ChiTietDatPhong (đã trừ giảm giá)
+ decimal tongTienPhong = datPhong.ChiTietDatPhongs?.Sum(ct => ct.ThanhTien ?? 0) ?? 0;
+       
+       // 2. Tính tổng tiền dịch vụ từ ChiTietDatDichVu
+     decimal tongTienDichVu = datPhong.ChiTietDatDichVus?.Sum(dv => dv.ThanhTien ?? 0) ?? 0;
+       
+       // 3. Tổng tiền hóa đơn = Tiền phòng + Tiền dịch vụ
+    decimal tongTien = tongTienPhong + tongTienDichVu;
 
           // Kiểm tra đã có hóa đơn chưa
     var hoaDonCu = db.HoaDons.FirstOrDefault(hd => hd.DatPhongId == datPhong.DatPhongId);
     if (hoaDonCu != null)
       {
     return Json(new { 
-          success = false, 
-   message = "Đơn này đã có hóa đơn rồi!",
+     success = false, 
+message = "Đơn này đã có hóa đơn rồi!",
 hoaDonId = hoaDonCu.HoaDonId
      });
         }
@@ -1003,9 +1010,9 @@ hoaDonId = hoaDonCu.HoaDonId
        var hoaDon = new HoaDon
         {
      MaHoaDon = GenerateMaHoaDon(),
-     DatPhongId = datPhong.DatPhongId,
+  DatPhongId = datPhong.DatPhongId,
         MaKhachHang = datPhong.MaKhachHang,
-        NgayLap = DateTime.Now,
+     NgayLap = DateTime.Now,
    TongTien = tongTien,
     TrangThaiHoaDon = 0, // Chưa thanh toán
   NguoiLapHoaDon = Session["HoVaTen"]?.ToString(),
@@ -1015,8 +1022,8 @@ hoaDonId = hoaDonCu.HoaDonId
 
  // ✅ CẬP NHẬT NGÀY CHECK-OUT THỰC TẾ
        datPhong.NgayTra = DateTime.Now;
-              
-              // Cập nhật trạng thái đơn đặt phòng
+    
+  // Cập nhật trạng thái đơn đặt phòng
            datPhong.TrangThaiDatPhong = 3; // Đã check-out
   datPhong.NgayCapNhat = DateTime.Now;
      // ⚠️ KHÔNG cập nhật TrangThaiThanhToan - sẽ cập nhật ở bước thanh toán
@@ -1032,7 +1039,7 @@ hoaDonId = hoaDonCu.HoaDonId
    }
 
      chiTiet.TrangThaiPhong = 3;
-              // ✅ CẬP NHẬT NGÀY ĐI THỰC TẾ CHO CHI TIẾT
+      // ✅ CẬP NHẬT NGÀY ĐI THỰC TẾ CHO CHI TIẾT
               chiTiet.NgayDi = DateTime.Now;
   chiTiet.NgayCapNhat = DateTime.Now;
        }
@@ -1041,7 +1048,7 @@ hoaDonId = hoaDonCu.HoaDonId
 
 return Json(new { 
      success = true, 
-       message = $"Check-out thành công lúc {DateTime.Now:HH:mm dd/MM/yyyy}! Hóa đơn: {hoaDon.MaHoaDon}. Vui lòng xác nhận thanh toán.",
+ message = $"Check-out thành công lúc {DateTime.Now:HH:mm dd/MM/yyyy}! Hóa đơn: {hoaDon.MaHoaDon}. Vui lòng xác nhận thanh toán.",
           hoaDonId = hoaDon.HoaDonId,
    maHoaDon = hoaDon.MaHoaDon,
   tongTien = tongTien
@@ -1050,7 +1057,7 @@ return Json(new {
     catch (Exception ex)
        {
      System.Diagnostics.Debug.WriteLine($"[ERROR - CheckOut] {ex.Message}");
-       return Json(new { success = false, message = "Có lỗi xảy ra: " + ex.Message });
+     return Json(new { success = false, message = "Có lỗi xảy ra: " + ex.Message });
        }
    }
 

@@ -226,6 +226,7 @@
     <Compile Include="Areas\NhanVienLeTan\Controllers\DatPhongController.cs" />
     <Compile Include="Areas\NhanVienLeTan\Controllers\DichVuController.cs" />
     <Compile Include="Areas\NhanVienLeTan\Controllers\HoaDonController.cs" />
+    <Compile Include="Areas\NhanVienLeTan\Controllers\KhuyenMaiController.cs" />
     <Compile Include="Areas\NhanVienLeTan\Controllers\SoDoPhongController.cs" />
     <Compile Include="Areas\NhanVienLeTan\NhanVienAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\BaoCaoTaiChinhController.cs" />
@@ -258,6 +259,11 @@
     <Compile Include="Areas\NhanVienLeTan\ViewModels\HoaDon\HoaDonListViewModel.cs" />
     <Compile Include="Areas\NhanVienLeTan\ViewModels\HoaDon\HoaDonThongKeViewModel.cs" />
     <Compile Include="Areas\NhanVienLeTan\ViewModels\HoaDon\ThanhToanItemViewModel.cs" />
+    <Compile Include="Areas\NhanVienLeTan\ViewModels\KhuyenMai\KhuyenMaiFilterViewModel.cs" />
+    <Compile Include="Areas\NhanVienLeTan\ViewModels\KhuyenMai\KhuyenMaiFormViewModel.cs" />
+    <Compile Include="Areas\NhanVienLeTan\ViewModels\KhuyenMai\KhuyenMaiItemViewModel.cs" />
+    <Compile Include="Areas\NhanVienLeTan\ViewModels\KhuyenMai\KhuyenMaiListViewModel.cs" />
+    <Compile Include="Areas\NhanVienLeTan\ViewModels\KhuyenMai\KhuyenMaiThongKeViewModel.cs" />
     <Compile Include="Areas\NhanVienLeTan\ViewModels\PhongStatusViewModel.cs" />
     <Compile Include="Areas\NhanVienLeTan\ViewModels\SoDoPhongViewModel.cs" />
     <Compile Include="Controllers\ChinhSachVaDieuKhoanController.cs" />
@@ -508,6 +514,7 @@
     <Content Include="Areas\NhanVienLeTan\Views\DichVu\Create.cshtml" />
     <Content Include="Areas\NhanVienLeTan\Views\HoaDon\Index.cshtml" />
     <Content Include="Areas\NhanVienLeTan\Views\HoaDon\Details.cshtml" />
+    <Content Include="Areas\NhanVienLeTan\Views\KhuyenMai\Index.cshtml" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />

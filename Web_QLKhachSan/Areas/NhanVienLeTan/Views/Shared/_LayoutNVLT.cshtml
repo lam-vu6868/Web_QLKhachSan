@@ -111,7 +111,13 @@
       <span>Dịch Vụ</span>
  </a>
             </li>
-       <li class="nav-item @(currentController == "HoaDon" ? "active" : "")">
+<li class="nav-item @(currentController == "KhuyenMai" ? "active" : "")">
+  <a href="@Url.Action("Index", "KhuyenMai")" class="nav-link @(currentController == "KhuyenMai" ? "active-link" : "")">
+           <i class="fas fa-tags"></i>
+    <span>Khuyến Mãi</span>
+   </a>
+       </li>
+   <li class="nav-item @(currentController == "HoaDon" ? "active" : "")">
       <a href="@Url.Action("Index", "HoaDon")" class="nav-link @(currentController == "HoaDon" ? "active-link" : "")">
            <i class="fas fa-file-invoice-dollar"></i>
                     <span>Hóa Đơn</span>
