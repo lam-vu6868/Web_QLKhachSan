@@ -412,43 +412,37 @@ if (!string.IsNullOrEmpty(item.OnlinePaymentStatus))
  </span>
          }
      </td>
-  <td class="action-buttons text-center">
-   <a href="@Url.Action("Details", new { id = item.DatPhongId })" class="btn btn-sm btn-info" title="Xem chi tiết">
-  <i class="fas fa-eye"></i>
-          </a>
-       
-    @* Xác nhận (TT = 0) *@
-    @if (item.TrangThaiDatPhong == 0)
-   {
-       <button type="button" class="btn btn-sm btn-success" onclick="xacNhanDon(@item.DatPhongId)" title="Xác nhận & gán phòng">
-   <i class="fas fa-check"></i>
-  </button>
-    }
- 
-    @* Check-in (TT = 1) *@
-    @if (item.TrangThaiDatPhong == 1)
-   {
-            <button type="button" class="btn btn-sm btn-primary" onclick="checkInDon(@item.DatPhongId)" title="Check-in">
-     <i class="fas fa-sign-in-alt"></i>
-     </button>
-        }
-  
-  @* Check-out (TT = 2) *@
-    @if (item.TrangThaiDatPhong == 2)
-       {
-       <button type="button" class="btn btn-sm btn-warning" onclick="checkOutDon(@item.DatPhongId)" title="Check-out">
-  <i class="fas fa-sign-out-alt"></i>
-            </button>
-    }
+  <td class="action-buttons text-center" style="min-width: 120px; white-space: nowrap;">
+       <div class="btn-group" role="group">
+     <a href="@Url.Action("Details", new { id = item.DatPhongId })" 
+     class="btn btn-sm btn-info" 
+   title="Xem chi tiết">
+        <i class="fas fa-eye"></i>
+           </a>
+
+         @* Xác nhận (TT = 0) *@
+        @if (item.TrangThaiDatPhong == 0)
+ {
+               <button type="button" 
+        class="btn btn-sm btn-success" 
+      onclick="xacNhanDon(@item.DatPhongId)" 
+    title="Xác nhận">
+       <i class="fas fa-check"></i>
+               </button>
+           }
    
-   @* Hủy đơn (TT < 2) *@
-    @if (item.TrangThaiDatPhong < 2)
-          {
-    <button type="button" class="btn btn-sm btn-danger" onclick="huyDon(@item.DatPhongId)" title="Hủy đơn">
- <i class="fas fa-times"></i>
-    </button>
-        }
-         </td>
+      @* Hủy đơn (TT < 2) *@
+      @if (item.TrangThaiDatPhong < 2)
+  {
+     <button type="button" 
+              class="btn btn-sm btn-danger" 
+              onclick="huyDon(@item.DatPhongId)" 
+    title="Hủy">
+          <i class="fas fa-times"></i>
+   </button>
+           }
+       </div>
+   </td>
       </tr>
        }
   </tbody>
@@ -553,146 +547,30 @@ if (!string.IsNullOrEmpty(item.OnlinePaymentStatus))
     <div class="modal-header bg-danger text-white">
  <h5 class="modal-title" id="modalHuyDonLabel">
   <i class="fas fa-ban"></i> Hủy đơn đặt phòng
-              </h5>
+        </h5>
    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
        <span aria-hidden="true">&times;</span>
         </button>
 </div>
    <div class="modal-body">
-          <div class="text-center mb-3">
+      <div class="text-center mb-3">
     <i class="fas fa-exclamation-triangle fa-3x text-warning"></i>
   <h5 class="mt-3">Bạn có chắc chắn muốn hủy đơn này?</h5>
-                </div>
+      </div>
      <div class="form-group">
-        <label for="lyDoHuy">Lý do hủy:</label>
+    <label for="lyDoHuy">Lý do hủy:</label>
         <textarea class="form-control" id="lyDoHuy" rows="3" placeholder="Nhập lý do hủy đơn..."></textarea>
               </div>
-            </div>
+        </div>
     <div class="modal-footer justify-content-center">
      <button type="button" class="btn btn-secondary" data-dismiss="modal">
-             <i class="fas fa-times"></i> Đóng
-             </button>
-                <button type="button" class="btn btn-danger" id="btnHuyDon">
+        <i class="fas fa-times"></i> Đóng
+</button>
+   <button type="button" class="btn btn-danger" id="btnHuyDon">
       <i class="fas fa-ban"></i> Xác nhận hủy
   </button>
         </div>
 </div>
-    </div>
-</div>
-
-@* ==== MODAL CHECK-IN ==== *@
-<div class="modal fade" id="modalCheckIn" tabindex="-1" role="dialog" aria-labelledby="modalCheckInLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-   <div class="modal-header bg-primary text-white">
-            <h5 class="modal-title" id="modalCheckInLabel">
-   <i class="fas fa-sign-in-alt"></i> Check-in khách
-      </h5>
-     <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-  <span aria-hidden="true">&times;</span>
-       </button>
-            </div>
-            <div class="modal-body text-center py-4">
-       <i class="fas fa-door-open fa-3x text-primary mb-3"></i>
-           <h5 class="mb-3">Xác nhận check-in cho khách?</h5>
-       <p class="text-muted">Phòng sẽ chuyển sang trạng thái "Đang ở"</p>
-            </div>
-            <div class="modal-footer justify-content-center">
-       <button type="button" class="btn btn-secondary" data-dismiss="modal">
-       <i class="fas fa-times"></i> Hủy
-   </button>
-   <button type="button" class="btn btn-primary" id="btnCheckIn">
-  <i class="fas fa-check"></i> Xác nhận check-in
-      </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-@* ==== MODAL CHECK-OUT ==== *@
-<div class="modal fade" id="modalCheckOut" tabindex="-1" role="dialog" aria-labelledby="modalCheckOutLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-     <div class="modal-content">
-      <div class="modal-header bg-warning text-white">
-                <h5 class="modal-title" id="modalCheckOutLabel">
-      <i class="fas fa-sign-out-alt"></i> Check-out
-         </h5>
-<button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
- <span aria-hidden="true">&times;</span>
-       </button>
-         </div>
-      <div class="modal-body text-center py-4">
-    <i class="fas fa-door-open fa-3x text-warning mb-3"></i>
-         <h5 class="mb-3">Xác nhận check-out cho khách?</h5>
-  <p class="text-muted">Hệ thống sẽ tạo hóa đơn và chuyển sang bước thanh toán</p>
-            </div>
-       <div class="modal-footer justify-content-center">
-      <button type="button" class="btn btn-secondary" data-dismiss="modal">
-     <i class="fas fa-times"></i> Hủy
-                </button>
-   <button type="button" class="btn btn-warning text-white" id="btnCheckOut">
-            <i class="fas fa-check"></i> Xác nhận check-out
-        </button>
-       </div>
-        </div>
-  </div>
-</div>
-
-@* ==== MODAL THANH TOÁN ==== *@
-<div class="modal fade" id="modalThanhToan" tabindex="-1" role="dialog" aria-labelledby="modalThanhToanLabel" aria-hidden="true">
- <div class="modal-dialog modal-dialog-centered" role="document">
-     <div class="modal-content">
-         <div class="modal-header bg-success text-white">
-  <h5 class="modal-title" id="modalThanhToanLabel">
-   <i class="fas fa-money-bill-wave"></i> Thanh toán hóa đơn
-     </h5>
-    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-    </button>
-            </div>
-            <div class="modal-body">
-                <div class="text-center mb-3">
-         <i class="fas fa-file-invoice-dollar fa-3x text-success mb-3"></i>
-           <h5 id="txtMaHoaDon">Hóa đơn: HD000001</h5>
-        <h4 class="text-danger" id="txtTongTien">0đ</h4>
-    </div>
-
-     <div class="form-group">
-                <label class="font-weight-bold">Hình thức thanh toán:</label>
-         <div class="custom-control custom-radio">
-            <input type="radio" class="custom-control-input" id="htTTMat" name="hinhThucTT2" value="0" checked>
-            <label class="custom-control-label" for="htTTMat">
-     <i class="fas fa-money-bill-wave text-success"></i> Tiền mặt
-   </label>
-           </div>
-      <div class="custom-control custom-radio">
-        <input type="radio" class="custom-control-input" id="htTTCK" name="hinhThucTT2" value="1">
- <label class="custom-control-label" for="htTTCK">
-       <i class="fas fa-university text-primary"></i> Chuyển khoản
-          </label>
-   </div>
- </div>
-
-         <div class="form-group" id="divMaGD" style="display: none;">
-         <label class="font-weight-bold text-danger">
-          Mã giao dịch: <span class="text-danger">*</span>
-          </label>
-      <input type="text" class="form-control" id="txtMaGD" 
-        placeholder="VD: FT24123456789" maxlength="50">
-      <small class="form-text text-muted">
-       <i class="fas fa-info-circle"></i> Nhập mã GD từ app ngân hàng
-         </small>
-          </div>
-            </div>
-         <div class="modal-footer justify-content-center">
-       <button type="button" class="btn btn-secondary" data-dismiss="modal">
-      <i class="fas fa-times"></i> Hủy
-           </button>
-            <button type="button" class="btn btn-success" id="btnThanhToan">
-    <i class="fas fa-check"></i> Xác nhận thanh toán
-   </button>
-     </div>
-    </div>
     </div>
 </div>
 
@@ -701,8 +579,7 @@ if (!string.IsNullOrEmpty(item.OnlinePaymentStatus))
     // ✅ ĐẢM BẢO JQUERY VÀ BOOTSTRAP ĐÃ LOAD
     $(document).ready(function() {
         // Biến toàn cục
-        var currentDatPhongId = 0;
-        var currentHoaDonId = 0;
+    var currentDatPhongId = 0;
 
    // ✅ FORCE CLOSE MODAL KHI CLICK NÚT HỦY HOẶC DẤU X
         $(document).on('click', '[data-dismiss="modal"]', function() {
@@ -714,9 +591,9 @@ if (!string.IsNullOrEmpty(item.OnlinePaymentStatus))
        }, 300);
         });
 
-        // ✅ ĐẢM BẢO MODAL ĐÓNG ĐÚNG CÁCH
+ // ✅ ĐẢM BẢO MODAL ĐÓNG ĐÚNG CÁCH
       $('.modal').on('hidden.bs.modal', function () {
-        $(this).find('form')[0]?.reset();
+  $(this).find('form')[0]?.reset();
             $('.modal-backdrop').remove();
  $('body').removeClass('modal-open').css('padding-right', '');
       });
@@ -725,59 +602,59 @@ if (!string.IsNullOrEmpty(item.OnlinePaymentStatus))
    $('.modal').on('click', function(e) {
             if ($(e.target).hasClass('modal')) {
     $(this).modal('hide');
-            }
+    }
    });
 
         // Xác nhận đơn
     window.xacNhanDon = function(datPhongId) {
         currentDatPhongId = datPhongId;
-            $('#modalXacNhan').modal('show');
+          $('#modalXacNhan').modal('show');
   }
 
-        $('#btnXacNhanDon').on('click', function() {
+      $('#btnXacNhanDon').on('click', function() {
  $.ajax({
-                url: '@Url.Action("XacNhan", "DatPhong")',
+        url: '@Url.Action("XacNhan", "DatPhong")',
        type: 'POST',
         data: { 
         __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val(),
      id: currentDatPhongId 
      },
-           success: function(response) {
+ success: function(response) {
               $('#modalXacNhan').modal('hide');
          if (response.success) {
-         showNotification('success', response.message || 'Xác nhận đơn thành công!');
+  showNotification('success', response.message || 'Xác nhận đơn thành công!');
    setTimeout(function() { location.reload(); }, 1500);
      } else {
      showNotification('error', response.message || 'Có lỗi xảy ra!');
-         }
+}
      },
         error: function() {
  $('#modalXacNhan').modal('hide');
   showNotification('error', 'Không thể xác nhận đơn. Vui lòng thử lại!');
         }
-     });
-        });
+   });
+      });
 
      // Hủy đơn
-        window.huyDon = function(datPhongId) {
+ window.huyDon = function(datPhongId) {
             currentDatPhongId = datPhongId;
             $('#lyDoHuy').val('');
-            $('#modalHuyDon').modal('show');
+   $('#modalHuyDon').modal('show');
     }
 
 $('#btnHuyDon').on('click', function() {
-     var lyDo = $('#lyDoHuy').val().trim();
+   var lyDo = $('#lyDoHuy').val().trim();
           if (!lyDo) {
-            alert('Vui lòng nhập lý do hủy đơn!');
+         alert('Vui lòng nhập lý do hủy đơn!');
     return;
    }
 
     $.ajax({
-        url: '@Url.Action("Huy", "DatPhong")',
+   url: '@Url.Action("Huy", "DatPhong")',
         type: 'POST',
    data: { 
          __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val(),
-            id: currentDatPhongId,
+      id: currentDatPhongId,
     lyDo: lyDo
          },
    success: function(response) {
@@ -787,162 +664,44 @@ $('#btnHuyDon').on('click', function() {
    setTimeout(function() { location.reload(); }, 1500);
      } else {
           showNotification('error', response.message || 'Có lỗi xảy ra!');
-                    }
+        }
             },
    error: function() {
         $('#modalHuyDon').modal('hide');
          showNotification('error', 'Không thể hủy đơn. Vui lòng thử lại!');
-      }
+    }
    });
  });
-
-   // Check-in
-window.checkInDon = function(datPhongId) {
-            currentDatPhongId = datPhongId;
-    $('#modalCheckIn').modal('show');
-      }
-
-        $('#btnCheckIn').on('click', function() {
-       $.ajax({
-    url: '@Url.Action("CheckIn", "DatPhong")',
-   type: 'POST',
-         data: { 
-          __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val(),
-    id: currentDatPhongId 
-                },
-     success: function(response) {
-        $('#modalCheckIn').modal('hide');
-      if (response.success) {
-    showNotification('success', response.message || 'Check-in thành công!');
-       setTimeout(function() { location.reload(); }, 1500);
-  } else {
-            showNotification('error', response.message || 'Có lỗi xảy ra!');
-       }
-   },
-    error: function() {
-     $('#modalCheckIn').modal('hide');
- showNotification('error', 'Không thể check-in. Vui lòng thử lại!');
-     }
-    });
-        });
-
-  // Check-out (chỉ tạo hóa đơn)
-        window.checkOutDon = function(datPhongId) {
-            currentDatPhongId = datPhongId;
-            $('#modalCheckOut').modal('show');
-        }
-
-        $('#btnCheckOut').on('click', function() {
-            $.ajax({
-      url: '@Url.Action("CheckOut", "DatPhong")',
-                type: 'POST',
-  data: { 
-             __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val(),
-         id: currentDatPhongId 
-   },
-         success: function(response) {
-    $('#modalCheckOut').modal('hide');
-       if (response.success) {
-          // Lưu hoaDonId để thanh toán
-              currentHoaDonId = response.hoaDonId;
-         
-     // Hiển thị thông báo
-         showNotification('success', response.message);
-           
-     // Mở modal thanh toán sau 1s
-   setTimeout(function() {
-      $('#txtMaHoaDon').text('Hóa đơn: ' + (response.maHoaDon || 'HD'));
-         $('#txtTongTien').text(response.tongTien.toLocaleString('vi-VN') + 'đ');
-     $('#modalThanhToan').modal('show');
-       }, 1000);
-          } else {
-       showNotification('error', response.message);
-       }
-            },
-    error: function() {
-  $('#modalCheckOut').modal('hide');
-            showNotification('error', 'Không thể check-out!');
-          }
-            });
-        });
-
-        // Toggle field mã GD
-  $('input[name="hinhThucTT2"]').on('change', function() {
-            if ($(this).val() == '1') { // Chuyển khoản
-         $('#divMaGD').slideDown();
-   $('#txtMaGD').prop('required', true);
-   } else {
-        $('#divMaGD').slideUp();
-         $('#txtMaGD').prop('required', false).val('');
-          }
-        });
-
- // Thanh toán
-        $('#btnThanhToan').on('click', function() {
-        var phuongThuc = $('input[name="hinhThucTT2"]:checked').val();
-    var maGD = $('#txtMaGD').val().trim();
-   
- // Validate
-      if (phuongThuc == '1' && !maGD) {
-       alert('Vui lòng nhập mã giao dịch!');
-                $('#txtMaGD').focus();
-        return;
-            }
-     
-  $.ajax({
-  url: '@Url.Action("ThanhToanHoaDon", "DatPhong")',
-                type: 'POST',
-              data: {
-        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val(),
-  hoaDonId: currentHoaDonId,
-          phuongThuc: phuongThuc,
-             maGiaoDich: maGD
-      },
-      success: function(response) {
- $('#modalThanhToan').modal('hide');
-        if (response.success) {
-       showNotification('success', response.message);
-     setTimeout(function() { location.reload(); }, 1500);
-       } else {
-       showNotification('error', response.message);
-   }
-         },
-      error: function() {
-       $('#modalThanhToan').modal('hide');
-         showNotification('error', 'Không thể thanh toán!');
-        }
-          });
-        });
 
       // Hiển thị thông báo
         function showNotification(type, message) {
             var alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
-            var icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle';
+  var icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle';
    
   var alertHtml = `
    <div class="alert ${alertClass} alert-dismissible fade show dynamic-alert" role="alert">
    <i class="fas ${icon}"></i> ${message}
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
        <span aria-hidden="true">&times;</span>
-                    </button>
+              </button>
     </div>
             `;
        
-        $('.container-fluid').prepend(alertHtml);
+ $('.container-fluid').prepend(alertHtml);
  
        // ✅ Auto-hide sau 5s
-            setTimeout(function() {
+     setTimeout(function() {
     $('.dynamic-alert').fadeOut('slow', function() {
-         $(this).remove();
-          });
+     $(this).remove();
+   });
    }, 5000);
-        }
+   }
 
         // Auto-hide alerts after 5 seconds
         // ✅ Chỉ auto-hide alert từ TempData (đã có sẵn khi page load)
         setTimeout(function() {
      $('.alert:not(.dynamic-alert)').fadeOut('slow', function() {
-        $(this).remove();
+ $(this).remove();
      });
         }, 5000);
     });
