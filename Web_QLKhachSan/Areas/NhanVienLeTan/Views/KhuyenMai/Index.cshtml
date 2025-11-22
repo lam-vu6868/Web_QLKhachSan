@@ -1,0 +1,469 @@
+﻿@model Web_QLKhachSan.Areas.NhanVienLeTan.ViewModels.KhuyenMai.KhuyenMaiListViewModel
+@{
+    ViewBag.Title = "Quản Lý Khuyến Mãi";
+    Layout = "~/Areas/NhanVienLeTan/Views/Shared/_LayoutNVLT.cshtml";
+}
+
+@section styles {
+    <link href="@Url.Content("~/Areas/NhanVienLeTan/assets/css/khuyenMai.css")" rel="stylesheet" />
+}
+
+<div class="container-fluid">
+    @* ==== HEADER ==== *@
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">
+            <i class="fas fa-tags"></i> Quản Lý Khuyến Mãi
+        </h1>
+        <a href="@Url.Action("Create", "KhuyenMai")" class="btn btn-primary btn-icon-split">
+        <span class="icon text-white-50">
+            <i class="fas fa-plus"></i>
+        </span>
+<span class="text">Tạo khuyến mãi mới</span>
+ </a>
+    </div>
+
+    @* ==== THÔNG BÁO ==== *@
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]
+   <button type="button" class="close" data-dismiss="alert">
+      <span>&times;</span>
+            </button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+ {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+     <i class="fas fa-exclamation-triangle"></i> @TempData["ErrorMessage"]
+         <button type="button" class="close" data-dismiss="alert">
+                <span>&times;</span>
+    </button>
+        </div>
+    }
+
+    @* ==== THỐNG KÊ ==== *@
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="stats-card stats-card-primary">
+   <div class="card-body">
+    <div class="stats-icon">
+                  <i class="fas fa-tags"></i>
+               </div>
+           <div class="stats-content">
+            <div class="stats-label">Tổng khuyến mãi</div>
+     <div class="stats-value">@Model.ThongKe.TongKhuyenMai</div>
+        </div>
+     </div>
+     </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="stats-card stats-card-success">
+                <div class="card-body">
+        <div class="stats-icon">
+       <i class="fas fa-check-circle"></i>
+   </div>
+  <div class="stats-content">
+    <div class="stats-label">Đang áp dụng</div>
+ <div class="stats-value">@Model.ThongKe.DangApDung</div>
+     </div>
+   </div>
+            </div>
+        </div>
+
+   <div class="col-xl-3 col-md-6 mb-4">
+            <div class="stats-card stats-card-warning">
+   <div class="card-body">
+        <div class="stats-icon">
+ <i class="fas fa-exclamation-triangle"></i>
+    </div>
+    <div class="stats-content">
+   <div class="stats-label">Sắp hết hạn</div>
+       <div class="stats-value">@Model.ThongKe.SapHetHan</div>
+      </div>
+    </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+        <div class="stats-card stats-card-info">
+        <div class="card-body">
+        <div class="stats-icon">
+    <i class="fas fa-shopping-cart"></i>
+        </div>
+        <div class="stats-content">
+                 <div class="stats-label">Đã sử dụng</div>
+           <div class="stats-value">@Model.ThongKe.DaDung <small>lần</small></div>
+            </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* ==== FILTER ==== *@
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+         <h6 class="m-0 font-weight-bold text-primary">
+    <i class="fas fa-filter"></i> Tìm kiếm & Lọc
+      </h6>
+        </div>
+   <div class="card-body">
+          @using (Html.BeginForm("Index", "KhuyenMai", FormMethod.Get, new { id = "filterForm" }))
+            {
+                <div class="row">
+    <div class="col-md-4">
+     <div class="form-group">
+           @Html.LabelFor(m => m.Filter.TimKiem, new { @class = "font-weight-bold" })
+   @Html.TextBoxFor(m => m.Filter.TimKiem, new { @class = "form-control", placeholder = "Tìm theo mã, tên khuyến mãi..." })
+   </div>
+   </div>
+
+        <div class="col-md-2">
+     <div class="form-group">
+    @Html.LabelFor(m => m.Filter.HieuLuc, new { @class = "font-weight-bold" })
+ @Html.DropDownListFor(m => m.Filter.HieuLuc, 
+       new SelectList(new[] {
+     new { Value = "", Text = "-- Tất cả --" },
+     new { Value = "active", Text = "Đang áp dụng" },
+            new { Value = "upcoming", Text = "Chưa bắt đầu" },
+       new { Value = "expired", Text = "Đã hết hạn" }
+  }, "Value", "Text", Model.Filter.HieuLuc),
+     new { @class = "form-control" })
+            </div>
+               </div>
+
+     <div class="col-md-2">
+       <div class="form-group">
+    @Html.LabelFor(m => m.Filter.DaHoatDong, new { @class = "font-weight-bold" })
+          @Html.DropDownListFor(m => m.Filter.DaHoatDong,
+          new SelectList(new[] {
+        new { Value = "", Text = "-- Tất cả --" },
+           new { Value = "true", Text = "Đang hoạt động" },
+     new { Value = "false", Text = "Đã tắt" }
+           }, "Value", "Text", Model.Filter.DaHoatDong?.ToString() ?? ""),
+               new { @class = "form-control" })
+   </div>
+         </div>
+
+ <div class="col-md-2">
+                <div class="form-group">
+     @Html.LabelFor(m => m.Filter.TuNgay, new { @class = "font-weight-bold" })
+          @Html.TextBoxFor(m => m.Filter.TuNgay, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+</div>
+      </div>
+
+           <div class="col-md-2">
+      <div class="form-group">
+   @Html.LabelFor(m => m.Filter.DenNgay, new { @class = "font-weight-bold" })
+        @Html.TextBoxFor(m => m.Filter.DenNgay, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+           </div>
+       </div>
+            </div>
+
+       <div class="row">
+           <div class="col-12">
+ <button type="submit" class="btn btn-primary">
+        <i class="fas fa-search"></i> Tìm kiếm
+        </button>
+   <a href="@Url.Action("Index", "KhuyenMai")" class="btn btn-secondary">
+           <i class="fas fa-redo"></i> Đặt lại
+           </a>
+        </div>
+          </div>
+            }
+   </div>
+    </div>
+
+    @* ==== DANH SÁCH ==== *@
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">
+       <i class="fas fa-list"></i> Danh Sách Khuyến Mãi
+  <span class="badge badge-primary ml-2">@Model.TotalRecords kết quả</span>
+            </h6>
+     </div>
+     <div class="card-body">
+            @if (Model.DanhSachKhuyenMai != null && Model.DanhSachKhuyenMai.Any())
+       {
+    <div class="table-responsive">
+                    <table class="table table-hover table-bordered" id="khuyenMaiTable">
+        <thead class="thead-light">
+          <tr>
+       <th width="8%">Mã KM</th>
+       <th width="20%">Tên khuyến mãi</th>
+        <th width="8%" class="text-center">Giảm giá</th>
+         <th width="10%">Thời gian</th>
+        <th width="12%">Hiệu lực</th>
+       <th width="10%" class="text-center">Sử dụng</th>
+            <th width="10%" class="text-center">Trạng thái</th>
+ <th width="12%" class="text-center">Thao tác</th>
+       </tr>
+      </thead>
+         <tbody>
+       @foreach (var item in Model.DanhSachKhuyenMai)
+      {
+             <tr data-id="@item.KhuyenMaiId">
+           <td>
+         <span class="badge badge-info">@item.MaKhuyenMai</span>
+    </td>
+     <td>
+  <strong>@item.TenKhuyenMai</strong>
+      @if (!string.IsNullOrEmpty(item.DieuKienApDung))
+       {
+       <br />
+          <small class="text-muted">
+         <i class="fas fa-info-circle"></i> @item.DieuKienApDung
+          </small>
+    }
+</td>
+           <td class="text-center">
+              <span class="discount-badge">
+ <i class="fas fa-percentage"></i> @item.GiaTri%
+                </span>
+               </td>
+              <td>
+        <small>
+                    <i class="far fa-calendar-alt"></i>
+       @(item.NgayBatDau.HasValue ? item.NgayBatDau.Value.ToString("dd/MM/yyyy") : "-")
+      <br />
+           đến
+         <br />
+        @(item.NgayKetThuc.HasValue ? item.NgayKetThuc.Value.ToString("dd/MM/yyyy") : "-")
+         </small>
+      @if (item.SoNgayConLai.HasValue && item.SoNgayConLai.Value > 0)
+            {
+    <br />
+        <span class="badge badge-warning badge-sm">
+   Còn @item.SoNgayConLai ngày
+   </span>
+           }
+        </td>
+    <td>
+         <span class="badge @item.TrangThaiBadgeClass badge-pill">
+           @item.TrangThaiHieuLuc
+     </span>
+         </td>
+           <td class="text-center">
+     <div class="usage-info">
+          <div class="usage-count">
+            @item.SoLanDaSuDung
+          @if (item.SoLanSuDungToiDa.HasValue)
+        {
+             <span>/ @item.SoLanSuDungToiDa</span>
+             }
+         else
+     {
+             <span>/ ∞</span>
+       }
+   </div>
+     @if (item.SoLanConLai.HasValue)
+        {
+       <small class="text-muted">Còn @item.SoLanConLai</small>
+     }
+  </div>
+ </td>
+            <td class="text-center">
+          <div class="custom-control custom-switch">
+                 <input type="checkbox" 
+       class="custom-control-input status-toggle" 
+  id="status_@item.KhuyenMaiId"
+ data-id="@item.KhuyenMaiId"
+  @(item.DaHoatDong ? "checked" : "")>
+  <label class="custom-control-label" for="status_@item.KhuyenMaiId"></label>
+ </div>
+ <small class="status-text">
+        @(item.DaHoatDong ? "Bật" : "Tắt")
+                 </small>
+       </td>
+   <td class="text-center">
+          <div class="btn-group" role="group">
+  <a href="@Url.Action("Edit", "KhuyenMai", new { id = item.KhuyenMaiId })" 
+         class="btn btn-sm btn-warning" 
+ title="Sửa">
+      <i class="fas fa-edit"></i>
+    </a>
+         <button type="button" 
+    class="btn btn-sm btn-danger btn-delete" 
+         data-id="@item.KhuyenMaiId"
+  data-name="@item.TenKhuyenMai"
+        title="Xóa">
+           <i class="fas fa-trash"></i>
+       </button>
+            </div>
+ </td>
+       </tr>
+            }
+ </tbody>
+       </table>
+      </div>
+
+   @* ==== PAGINATION ==== *@
+    if (Model.TotalPages > 1)
+    {
+      <nav aria-label="Page navigation" class="mt-4">
+          <ul class="pagination justify-content-center">
+      @* Previous *@
+          <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+           <a class="page-link" href="@Url.Action("Index", new {
+          TimKiem = Model.Filter.TimKiem,
+HieuLuc = Model.Filter.HieuLuc,
+         DaHoatDong = Model.Filter.DaHoatDong,
+     TuNgay = Model.Filter.TuNgay,
+      DenNgay = Model.Filter.DenNgay,
+       CurrentPage = Model.CurrentPage - 1,
+   PageSize = Model.PageSize
+            })">
+       <i class="fas fa-chevron-left"></i>
+            </a>
+           </li>
+
+        @* Pages *@
+@for (int i = 1; i <= Model.TotalPages; i++)
+          {
+     <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+         <a class="page-link" href="@Url.Action("Index", new {
+      TimKiem = Model.Filter.TimKiem,
+        HieuLuc = Model.Filter.HieuLuc,
+  DaHoatDong = Model.Filter.DaHoatDong,
+            TuNgay = Model.Filter.TuNgay,
+      DenNgay = Model.Filter.DenNgay,
+            CurrentPage = i,
+    PageSize = Model.PageSize
+        })">
+      @i
+            </a>
+             </li>
+        }
+
+ @* Next *@
+         <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
+  <a class="page-link" href="@Url.Action("Index", new {
+            TimKiem = Model.Filter.TimKiem,
+         HieuLuc = Model.Filter.HieuLuc,
+          DaHoatDong = Model.Filter.DaHoatDong,
+               TuNgay = Model.Filter.TuNgay,
+  DenNgay = Model.Filter.DenNgay,
+         CurrentPage = Model.CurrentPage + 1,
+          PageSize = Model.PageSize
+     })">
+    <i class="fas fa-chevron-right"></i>
+        </a>
+           </li>
+            </ul>
+        </nav>
+     }
+}
+            else
+       {
+    <div class="text-center py-5">
+       <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+              <p class="text-muted">Không có khuyến mãi nào!</p>
+       <a href="@Url.Action("Create", "KhuyenMai")" class="btn btn-primary">
+         <i class="fas fa-plus"></i> Tạo khuyến mãi đầu tiên
+              </a>
+        </div>
+            }
+        </div>
+    </div>
+</div>
+
+@* Anti-forgery token *@
+@Html.AntiForgeryToken()
+
+@section Scripts {
+    <script>
+ $(document).ready(function() {
+      // Toggle status
+  $('.status-toggle').on('change', function() {
+    var checkbox = $(this);
+         var id = checkbox.data('id');
+             var isChecked = checkbox.is(':checked');
+
+     $.ajax({
+   url: '@Url.Action("ToggleStatus", "KhuyenMai")',
+   type: 'POST',
+      data: {
+    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val(),
+              id: id
+        },
+                success: function(response) {
+  if (response.success) {
+            showNotification('success', response.message);
+   // Update text
+   checkbox.closest('td').find('.status-text').text(response.daHoatDong ? 'Bật' : 'Tắt');
+ } else {
+            showNotification('error', response.message);
+         // Revert checkbox
+           checkbox.prop('checked', !isChecked);
+    }
+          },
+    error: function() {
+showNotification('error', 'Có lỗi xảy ra!');
+          checkbox.prop('checked', !isChecked);
+ }
+                });
+            });
+
+            // Delete
+            $('.btn-delete').on('click', function() {
+      var btn = $(this);
+   var id = btn.data('id');
+                var name = btn.data('name');
+
+if (confirm(`Bạn có chắc chắn muốn xóa khuyến mãi "${name}"?`)) {
+         $.ajax({
+  url: '@Url.Action("Delete", "KhuyenMai")',
+             type: 'POST',
+     data: {
+    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val(),
+         id: id
+   },
+                 success: function(response) {
+       if (response.success) {
+      showNotification('success', response.message);
+      setTimeout(function() {
+ location.reload();
+           }, 1500);
+           } else {
+      showNotification('error', response.message);
+               }
+     },
+               error: function() {
+         showNotification('error', 'Có lỗi xảy ra khi xóa!');
+                  }
+           });
+          }
+   });
+
+            // Auto-hide alerts
+            setTimeout(function() {
+                $('.alert').fadeOut('slow', function() {
+      $(this).remove();
+     });
+ }, 5000);
+    });
+
+        function showNotification(type, message) {
+         var alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
+ var icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle';
+
+          var alertHtml = `
+              <div class="alert ${alertClass} alert-dismissible fade show" role="alert" style="position: fixed; top: 80px; right: 20px; z-index: 9999; min-width: 350px;">
+       <i class="fas ${icon}"></i> ${message}
+         <button type="button" class="close" data-dismiss="alert">
+      <span>&times;</span>
+        </button>
+       </div>
+`;
+
+            $('body').append(alertHtml);
+
+            setTimeout(function() {
+      $('.alert').fadeOut('slow', function() {
+  $(this).remove();
+      });
+   }, 5000);
+  }
+    </script>
+}
