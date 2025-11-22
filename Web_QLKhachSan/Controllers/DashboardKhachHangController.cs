@@ -228,7 +228,8 @@ namespace Web_QLKhachSan.Controllers
                 .Include("ChiTietDatPhongs.Phong")
                 .Include("ChiTietDatPhongs.LoaiPhong")
                 .Include("ChiTietDatDichVus.DichVu")
-                .Where(dp => dp.MaKhachHang == maKhachHang)
+                .Where(dp => dp.MaKhachHang == maKhachHang && 
+                            (dp.OnlinePaymentStatus != "FAILED" || dp.OnlinePaymentStatus == null))
                 .OrderByDescending(dp => dp.NgayDat);
 
             var totalItems = allDatPhong.Count();
@@ -784,6 +785,131 @@ END:VCALENDAR";
             }
 
             return RedirectToAction("LichSu");
+        }
+
+        /// <summary>
+        /// Xóa vĩnh viễn tài khoản khách hàng và tất cả dữ liệu liên quan
+        /// </summary>
+        [HttpPost]
+        public JsonResult XoaTaiKhoan()
+        {
+            try
+            {
+                // Kiểm tra session
+                if (Session["MaKhachHang"] == null)
+                {
+                    return Json(new { success = false, message = "Vui lòng đăng nhập để tiếp tục" });
+                }
+
+                int maKhachHang = (int)Session["MaKhachHang"];
+                var khachHang = db.KhachHangs.Find(maKhachHang);
+
+                if (khachHang == null)
+                {
+                    return Json(new { success = false, message = "Không tìm thấy thông tin khách hàng" });
+                }
+
+                // Bắt đầu transaction để đảm bảo tính toàn vẹn dữ liệu
+                using (var transaction = db.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        // 1. Xóa DanhGiaHinhAnh trước (có FK đến DanhGia)
+                        var danhGiaIds = db.DanhGias.Where(dg => dg.MaKhachHang == maKhachHang).Select(dg => dg.DanhGiaId).ToList();
+                        var danhGiaHinhAnhs = db.DanhGiaHinhAnhs.Where(dha => danhGiaIds.Contains(dha.DanhGiaId)).ToList();
+                        db.DanhGiaHinhAnhs.RemoveRange(danhGiaHinhAnhs);
+
+                        // 2. Xóa DanhGia
+                        var danhGias = db.DanhGias.Where(dg => dg.MaKhachHang == maKhachHang).ToList();
+                        db.DanhGias.RemoveRange(danhGias);
+
+                        // 3. Lấy tất cả đơn đặt phòng
+                        var datPhongs = db.DatPhongs.Where(dp => dp.MaKhachHang == maKhachHang).ToList();
+                        var datPhongIds = datPhongs.Select(dp => dp.DatPhongId).ToList();
+
+                        // 4. Xóa VNPAY_Transaction_Logs
+                        var vnpayLogs = db.VNPAY_Transaction_Logs.Where(log => datPhongIds.Contains(log.DatPhongId.Value)).ToList();
+                        db.VNPAY_Transaction_Logs.RemoveRange(vnpayLogs);
+
+                        // 5. Xóa HoaDon
+                        var hoaDons = db.HoaDons.Where(hd => datPhongIds.Contains(hd.DatPhongId.Value) || hd.MaKhachHang == maKhachHang).ToList();
+                        db.HoaDons.RemoveRange(hoaDons);
+
+                        // 6. Xóa ChiTietDatDichVu
+                        var chiTietDatDichVus = db.ChiTietDatDichVus.Where(ct => datPhongIds.Contains(ct.DatPhongId)).ToList();
+                        db.ChiTietDatDichVus.RemoveRange(chiTietDatDichVus);
+
+                        // 7. Xóa ChiTietDatPhong và cập nhật trạng thái phòng
+                        var chiTietDatPhongs = db.ChiTietDatPhongs.Where(ct => datPhongIds.Contains(ct.DatPhongId)).ToList();
+                        foreach (var chiTiet in chiTietDatPhongs)
+                        {
+                            if (chiTiet.PhongId.HasValue)
+                            {
+                                var phong = db.Phongs.Find(chiTiet.PhongId.Value);
+                                if (phong != null)
+                                {
+                                    phong.TrangThaiPhong = 0; // Đặt lại trạng thái phòng về trống
+                                }
+                            }
+                        }
+                        db.ChiTietDatPhongs.RemoveRange(chiTietDatPhongs);
+
+                        // 8. Xóa DatPhong
+                        db.DatPhongs.RemoveRange(datPhongs);
+
+                        // 9. Lấy danh sách TaiKhoan của khách hàng
+                        var taiKhoans = db.TaiKhoans.Where(tk => tk.MaKhachHang == maKhachHang).ToList();
+                        var taiKhoanIds = taiKhoans.Select(tk => tk.TaiKhoanId).ToList();
+
+                        // 10. Xóa TokenLogin (dựa trên TaiKhoanId qua MaTaiKhoan)
+                        var tokens = db.TokenLogins.Where(t => taiKhoanIds.Contains(t.MaTaiKhoan)).ToList();
+                        db.TokenLogins.RemoveRange(tokens);
+
+                        // 11. Xóa TaiKhoan
+                        db.TaiKhoans.RemoveRange(taiKhoans);
+
+                        // 12. Xóa ảnh đại diện trên Cloudinary (nếu có)
+                        if (!string.IsNullOrEmpty(khachHang.AnhDaiDienUrl))
+                        {
+                            try
+                            {
+                                _cloudinaryService.DeleteImage(khachHang.AnhDaiDienUrl);
+                            }
+                            catch (Exception ex)
+                            {
+                                System.Diagnostics.Debug.WriteLine($"Lỗi khi xóa ảnh trên Cloudinary: {ex.Message}");
+                            }
+                        }
+
+                        // 13. Cuối cùng, xóa KhachHang
+                        db.KhachHangs.Remove(khachHang);
+
+                        // Lưu tất cả thay đổi
+                        db.SaveChanges();
+
+                        // Commit transaction
+                        transaction.Commit();
+
+                        // Xóa session
+                        Session.Clear();
+                        Session.Abandon();
+
+                        return Json(new { success = true, message = "Tài khoản đã được xóa thành công!" });
+                    }
+                    catch (Exception ex)
+                    {
+                        // Rollback nếu có lỗi
+                        transaction.Rollback();
+                        System.Diagnostics.Debug.WriteLine($"Lỗi khi xóa tài khoản: {ex.Message}");
+                        return Json(new { success = false, message = "Đã xảy ra lỗi khi xóa tài khoản: " + ex.Message });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Lỗi: {ex.Message}");
+                return Json(new { success = false, message = "Đã xảy ra lỗi: " + ex.Message });
+            }
         }
 
         protected override void Dispose(bool disposing)

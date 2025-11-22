@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'C:\Users\LENOVO E15\source\repos\lam-vu6868\Web_QLKhachSan\Web_QLKhachSan\Models\Contect.edmx'. 
+﻿// T4 code generation is enabled for model 'C:\Users\haiq4\Downloads\Web_QLKhachSan\Web_QLKhachSan\Models\ContectDB.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.
