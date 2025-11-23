@@ -93,6 +93,13 @@ namespace Web_QLKhachSan.Controllers
                 .Take(5)
                 .ToList();
 
+            // === KHUYẾN MÃI ===
+            ViewBag.KhuyenMais = db.KhuyenMais
+                .Where(km => km.DaHoatDong)
+                .OrderBy(km => km.KhuyenMaiId)
+                .Take(4)
+                .ToList();
+
             return View(viewModel);
         }
 

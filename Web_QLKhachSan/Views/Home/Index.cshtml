@@ -194,6 +194,122 @@
     </div>
 </section>
 
+<section class="promotions-section">
+    <div class="container">
+        <div class="section-header" data-aos="fade-up">
+            <span class="section-label">
+                <i class="fas fa-tags"></i>
+                ƯU ĐÃI ĐẶC BIỆT
+            </span>
+            <h2 class="section-heading text-center">Khuyến Mãi Hấp Dẫn</h2>
+            <p class="section-subtitle">Tiết kiệm hơn với các chương trình ưu đãi độc quyền</p>
+        </div>
+        <div class="promotions-grid">
+            @if (ViewBag.KhuyenMais != null && ((List<Web_QLKhachSan.Models.KhuyenMai>)ViewBag.KhuyenMais).Any())
+            {
+                int promoIndex = 1;
+                foreach (var khuyenMai in (List<Web_QLKhachSan.Models.KhuyenMai>)ViewBag.KhuyenMais)
+                {
+                    var giaTriHienThi = "";
+                    var moTaGiaTri = "";
+                    
+                    if (khuyenMai.GiaTri.HasValue)
+                    {
+                        if (khuyenMai.GiaTri.Value > 1)
+                        {
+                            // Giảm theo số tiền
+                            giaTriHienThi = khuyenMai.GiaTri.Value.ToString("N0") + "đ";
+                            moTaGiaTri = "Giảm ngay";
+                        }
+                        else
+                        {
+                            // Giảm theo phần trăm
+                            giaTriHienThi = (khuyenMai.GiaTri.Value * 100).ToString("0") + "%";
+                            moTaGiaTri = "Giảm giá";
+                        }
+                    }
+                    
+                    var ngayConLai = (khuyenMai.NgayKetThuc.Value - DateTime.Now).Days;
+                    var isExpired = khuyenMai.NgayKetThuc.Value < DateTime.Now;
+                    
+                    <div class="promo-card @(isExpired ? "promo-expired" : "")" data-aos="fade-up" data-aos-delay="@(promoIndex * 100)">
+                        
+                        <div class="promo-content">
+                            <div class="promo-header">
+                                <div class="promo-discount">
+                                    <span class="discount-value">@giaTriHienThi</span>
+                                    <span class="discount-label">@moTaGiaTri</span>
+                                </div>
+                            </div>
+                            <h3 class="promo-title">@khuyenMai.TenKhuyenMai</h3>
+                            <div class="promo-code">
+                                <i class="fas fa-ticket-alt"></i>
+                                <span>Mã: <strong>@khuyenMai.MaKhuyenMai</strong></span>
+                            </div>
+                            @if (!string.IsNullOrEmpty(khuyenMai.DieuKienApDung))
+                            {
+                                <p class="promo-condition">@khuyenMai.DieuKienApDung</p>
+                            }
+                            <div class="promo-footer">
+                                <div class="promo-validity">
+                                    <i class="fas fa-clock"></i>
+                                    @if (isExpired)
+                                    {
+                                        <span>Đã hết hạn</span>
+                                    }
+                                    else
+                                    {
+                                        <span>Còn @ngayConLai ngày</span>
+                                    }
+                                </div>
+                                @if (isExpired)
+                                {
+                                    <span class="promo-btn promo-btn-expired">
+                                        <span>Quá hạn</span>
+                                        <i class="fas fa-ban"></i>
+                                    </span>
+                                }
+                                else
+                                {
+                                    <a href="@Url.Action("Index", "PhongNghi")" class="promo-btn">
+                                        <span>Đặt ngay</span>
+                                        <i class="fas fa-arrow-right"></i>
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    
+                    promoIndex++;
+                }
+            }
+            else
+            {
+                <div class="promo-card" data-aos="fade-up">
+                    <div class="promo-badge-container">
+                        <div class="promo-badge">
+                            <i class="fas fa-tag"></i>
+                        </div>
+                    </div>
+                    <div class="promo-content">
+                        <div class="promo-header">
+                            <div class="promo-discount">
+                                <span class="discount-value">20%</span>
+                                <span class="discount-label">Giảm giá</span>
+                            </div>
+                        </div>
+                        <h3 class="promo-title">Chương trình khuyến mãi đang được cập nhật</h3>
+                        <div class="promo-code">
+                            <i class="fas fa-ticket-alt"></i>
+                            <span>Vui lòng quay lại sau</span>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
 <section class="rooms-section">
     <div class="container">
         <div class="section-header" data-aos="fade-up">

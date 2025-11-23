@@ -46,6 +46,9 @@ namespace Web_QLKhachSan.Models
         [Display(Name = "Mã khuyến mãi")]
         public string MaKhuyenMai { get; set; }
 
+        // Danh sách khuyến mãi đang hoạt động (để hiển thị dropdown)
+        public List<KhuyenMai> DanhSachKhuyenMai { get; set; }
+
         [Display(Name = "Ghi chú")]
         [StringLength(500, ErrorMessage = "Ghi chú không được vượt quá 500 ký tự")]
         public string GhiChu { get; set; }
@@ -123,6 +126,7 @@ namespace Web_QLKhachSan.Models
         public ThongTinDatPhongViewModel()
         {
             DichVuDaChon = new List<DichVuDaChon>();
+            DanhSachKhuyenMai = new List<KhuyenMai>();
         }
     }
 

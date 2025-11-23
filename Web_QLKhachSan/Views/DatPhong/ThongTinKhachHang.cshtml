@@ -38,7 +38,37 @@
                 <div class="form-row two-columns">
                     <div class="form-group">
                         @Html.LabelFor(m => m.MaKhuyenMai, new { @class = "control-label" })
-                        @Html.TextBoxFor(m => m.MaKhuyenMai, new { @class = "form-control", placeholder = "Nhập mã giảm giá" })
+                        <select id="MaKhuyenMai" name="MaKhuyenMai" class="form-control">
+                            <option value="">-- Chọn khuyến mãi --</option>
+                            @if (Model.DanhSachKhuyenMai != null && Model.DanhSachKhuyenMai.Any())
+                            {
+                                foreach (var km in Model.DanhSachKhuyenMai)
+                                {
+                                    var selected = Model.MaKhuyenMai != null && Model.MaKhuyenMai == km.MaKhuyenMai ? "selected" : "";
+                                    <option value="@km.MaKhuyenMai" @selected>
+                                        @{
+                                            string giaTriText = "";
+                                            if (km.GiaTri.HasValue)
+                                            {
+                                                if (km.GiaTri.Value <= 1)
+                                                {
+                                                    var percent = (km.GiaTri.Value * 100M);
+                                                    giaTriText = $"({percent:0.#}%)";
+                                                }
+                                                else
+                                                {
+                                                    giaTriText = $"({km.GiaTri.Value:N0}đ)";
+                                                }
+                                            }
+                                            string dateRange = (km.NgayBatDau.HasValue || km.NgayKetThuc.HasValue)
+                                                ? $"[{(km.NgayBatDau.HasValue ? km.NgayBatDau.Value.ToString("dd/MM/yyyy") : "...")} - {(km.NgayKetThuc.HasValue ? km.NgayKetThuc.Value.ToString("dd/MM/yyyy") : "...")}]"
+                                                : "";
+                                        }
+                                        @km.MaKhuyenMai - @km.TenKhuyenMai @giaTriText @dateRange
+                                    </option>
+                                }
+                            }
+                        </select>
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(m => m.SoNguoi, new { @class = "control-label" })

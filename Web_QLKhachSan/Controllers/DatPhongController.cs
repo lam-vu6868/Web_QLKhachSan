@@ -123,6 +123,22 @@ namespace Web_QLKhachSan.Controllers
                 model.HinhAnh = phong.HinhAnhThumb ?? (phong.PhongAnhs.Any() ? phong.PhongAnhs.FirstOrDefault().Url : "");
             }
 
+            // Load danh sách khuyến mãi đang hoạt động (không lọc theo thời gian để hiển thị đầy đủ)
+            model.DanhSachKhuyenMai = db.KhuyenMais
+                .Where(km => km.DaHoatDong)
+                .OrderBy(km => km.KhuyenMaiId)
+                .ToList();
+
+            // Sanitize MaKhuyenMai nếu không nằm trong danh sách hiện hành
+            if (!string.IsNullOrEmpty(model.MaKhuyenMai))
+            {
+                var validCodes = new HashSet<string>(model.DanhSachKhuyenMai.Select(k => k.MaKhuyenMai), StringComparer.OrdinalIgnoreCase);
+                if (!validCodes.Contains(model.MaKhuyenMai))
+                {
+                    model.MaKhuyenMai = null;
+                }
+            }
+
             return View(model);
         }
 
@@ -178,6 +194,21 @@ namespace Web_QLKhachSan.Controllers
                         model.GiaPhong = phong.Gia ?? phong.LoaiPhong.GiaCoBan ?? 0;
                         model.SoNguoiToiDa = phong.LoaiPhong.SoNguoiToiDa ?? 2;
                         model.HinhAnh = phong.HinhAnhThumb ?? (phong.PhongAnhs.Any() ? phong.PhongAnhs.FirstOrDefault().Url : "");
+                    }
+                }
+                // Load danh sách khuyến mãi đang hoạt động để hiển thị lại khi có lỗi (không lọc theo thời gian)
+                model.DanhSachKhuyenMai = db.KhuyenMais
+                    .Where(km => km.DaHoatDong)
+                    .OrderBy(km => km.KhuyenMaiId)
+                    .ToList();
+
+                // Sanitize MaKhuyenMai nếu không nằm trong danh sách hiện hành
+                if (!string.IsNullOrEmpty(model.MaKhuyenMai))
+                {
+                    var validCodes = new HashSet<string>(model.DanhSachKhuyenMai.Select(k => k.MaKhuyenMai), StringComparer.OrdinalIgnoreCase);
+                    if (!validCodes.Contains(model.MaKhuyenMai))
+                    {
+                        model.MaKhuyenMai = null;
                     }
                 }
                 return View(model);
