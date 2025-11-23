@@ -59,10 +59,10 @@ namespace Web_QLKhachSan.Controllers
             
             if (khachHang != null)
             {
-                // Lấy chính xác phòng có trạng thái = 2 (hoàn thành)
-                var phongIdDaHoanThanh = db.ChiTietDatPhongs
+                // Lấy chính xác phòng có trạng thái = 3 (Check-Out)
+                var phongIdCheckOut = db.ChiTietDatPhongs
                     .Where(ct => ct.DatPhong.MaKhachHang == khachHang.MaKhachHang 
-                              && ct.DatPhong.TrangThaiDatPhong == 2 // Chỉ trạng thái 2
+                              && ct.DatPhong.TrangThaiDatPhong == 3 // Chỉ trạng thái 3 (Check-Out)
                               && ct.PhongId.HasValue)
                     .Select(ct => ct.PhongId.Value)
                     .Distinct()
@@ -75,8 +75,8 @@ namespace Web_QLKhachSan.Controllers
                     .Distinct()
                     .ToList();
 
-                // CHỈ lấy phòng hoàn thành VÀ chưa đánh giá
-                var phongIdChuaDanhGia = phongIdDaHoanThanh
+                // CHỈ lấy phòng Check-Out VÀ chưa đánh giá
+                var phongIdChuaDanhGia = phongIdCheckOut
                     .Where(id => !phongIdDaDanhGia.Contains(id))
                     .ToList();
 
@@ -196,15 +196,15 @@ namespace Web_QLKhachSan.Controllers
                     return RedirectToAction("Index");
                 }
 
-                // Kiểm tra xem khách hàng có đặt phòng này với trạng thái hoàn thành không
+                // Kiểm tra xem khách hàng có đặt phòng này với trạng thái Check-Out không
                 var daDatPhong = db.ChiTietDatPhongs.Any(ct => 
                     ct.DatPhong.MaKhachHang == khachHang.MaKhachHang 
                     && ct.PhongId == model.PhongId
-                    && ct.DatPhong.TrangThaiDatPhong == 2); // Hoàn thành
+                    && ct.DatPhong.TrangThaiDatPhong == 3); // Trạng thái 3: Check-Out
                 
                 if (!daDatPhong)
                 {
-                    TempData["ErrorMessage"] = "Bạn chỉ có thể đánh giá những phòng đã đặt và hoàn thành!";
+                    TempData["ErrorMessage"] = "Bạn chỉ có thể đánh giá những phòng đã Check-Out!";
                     return RedirectToAction("Index");
                 }
 
@@ -260,6 +260,70 @@ namespace Web_QLKhachSan.Controllers
             {
                 TempData["ErrorMessage"] = "Có lỗi xảy ra: " + ex.Message;
                 return RedirectToAction("Index");
+            }
+        }
+
+        // POST: DanhGia/XoaDanhGia
+        [HttpPost]
+        public JsonResult XoaDanhGia(int danhGiaId)
+        {
+            try
+            {
+                var email = Session["Email"]?.ToString();
+                if (string.IsNullOrEmpty(email))
+                {
+                    TempData["ErrorMessage"] = "Bạn cần đăng nhập để xóa đánh giá!";
+                    return Json(new { success = false });
+                }
+
+                // Tìm khách hàng
+                var khachHang = db.KhachHangs.FirstOrDefault(k => k.Email == email);
+                if (khachHang == null)
+                {
+                    TempData["ErrorMessage"] = "Không tìm thấy thông tin khách hàng!";
+                    return Json(new { success = false });
+                }
+
+                // Tìm đánh giá
+                var danhGia = db.DanhGias.FirstOrDefault(dg => dg.DanhGiaId == danhGiaId);
+                if (danhGia == null)
+                {
+                    TempData["ErrorMessage"] = "Không tìm thấy đánh giá!";
+                    return Json(new { success = false });
+                }
+
+                // Kiểm tra quyền xóa: chỉ được xóa đánh giá của chính mình
+                if (danhGia.MaKhachHang != khachHang.MaKhachHang)
+                {
+                    TempData["ErrorMessage"] = "Bạn không có quyền xóa đánh giá này!";
+                    return Json(new { success = false });
+                }
+
+                // Kiểm tra thời gian: chỉ được xóa trong vòng 1 ngày (24 giờ)
+                var daysSinceCreated = (DateTime.Now - danhGia.NgayTao).TotalDays;
+                if (daysSinceCreated >= 1)
+                {
+                    return Json(new { success = false });
+                }
+
+                // Xóa ảnh đánh giá (nếu có)
+                var hinhAnhs = db.DanhGiaHinhAnhs.Where(h => h.DanhGiaId == danhGiaId).ToList();
+                if (hinhAnhs.Any())
+                {
+                    db.DanhGiaHinhAnhs.RemoveRange(hinhAnhs);
+                }
+
+                // Xóa đánh giá
+                db.DanhGias.Remove(danhGia);
+                db.SaveChanges();
+
+                TempData["SuccessMessage"] = "Xóa đánh giá thành công!";
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "Có lỗi xảy ra: " + ex.Message;
+                return Json(new { success = false });
             }
         }
 

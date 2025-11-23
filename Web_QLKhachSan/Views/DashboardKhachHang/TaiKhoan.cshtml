@@ -44,7 +44,7 @@
                                 <i class="fas fa-money-bill-wave"></i>
                             </div>
                             <div class="stat-content">
-                                <h3>@(((decimal)ViewBag.TongTienDaChi).ToString("N0"))đ</h3>
+                                <h3 style="font-size: 1.5rem">@(((decimal)ViewBag.TongTienDaChi).ToString("N0"))đ</h3>
                                 <p>Tổng Tiền Đã Chi</p>
                             </div>
                         </div>
@@ -71,11 +71,11 @@
 
                         <div class="stat-card stat-info">
                             <div class="stat-icon">
-                                <i class="fas fa-check-circle"></i>
+                                <i class="fas fa-sign-in-alt"></i>
                             </div>
                             <div class="stat-content">
-                                <h3>@(ViewBag.PhongDaHoanThanh ?? 0)</h3>
-                                <p>Đã Hoàn Thành</p>
+                                <h3>@(ViewBag.PhongCheckIn ?? 0)</h3>
+                                <p>Check-In</p>
                             </div>
                         </div>
 
@@ -91,11 +91,11 @@
 
                         <div class="stat-card stat-warning">
                             <div class="stat-icon">
-                                <i class="fas fa-star"></i>
+                                <i class="fas fa-sign-out-alt"></i>
                             </div>
                             <div class="stat-content">
-                                <h3>@(ViewBag.SoLanDanhGia ?? 0)</h3>
-                                <p>Đánh Giá</p>
+                                <h3>@(ViewBag.PhongCheckOut ?? 0)</h3>
+                                <p>Check-Out</p>
                             </div>
                         </div>
 
@@ -163,7 +163,7 @@
                 </section>
 
                 <!-- Recent Activity Section -->
-                <section class="content-section">
+                <section class="content-section" style="display: none">
                     <h2 class="section-title">Hoạt Động Gần Đây</h2>
                     
                     <div class="recent-activity-list">
@@ -214,7 +214,7 @@
                 </section>
 
                 <!-- Account Security Section -->
-                <section class="content-section">
+                <section class="content-section" style="display: none">
                     <h2 class="section-title">Bảo Mật Tài Khoản</h2>
                     
                     <div class="security-cards-grid">
@@ -315,7 +315,7 @@
                 </section>
 
                 <!-- Danger Zone Section -->
-                <section class="content-section">
+                <section class="content-section" style="display: block">
                     <h2 class="section-title danger-title">Vùng Nguy Hiểm</h2>
                     
                     <div class="danger-zone-card">

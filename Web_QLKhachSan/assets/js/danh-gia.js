@@ -105,7 +105,12 @@ class ReviewSystem {
             // Hiển thị tất cả review cards
             if (grid) {
                 const allCards = grid.querySelectorAll('.review-card');
-                allCards.forEach(card => card.style.display = '');
+                allCards.forEach(card => {
+                    card.style.display = '';
+                    // Ẩn nút xóa ở tab "Tất cả"
+                    const deleteBtn = card.querySelector('.btn-delete-review');
+                    if (deleteBtn) deleteBtn.style.display = 'none';
+                });
             }
         });
 
@@ -122,6 +127,9 @@ class ReviewSystem {
                     const cardEmail = (card.dataset.email || '').toLowerCase();
                     if (cardEmail === this.currentUserEmail) {
                         card.style.display = '';
+                        // Hiển thị nút xóa
+                        const deleteBtn = card.querySelector('.btn-delete-review');
+                        if (deleteBtn) deleteBtn.style.display = 'flex';
                         hasMyReview = true;
                     } else {
                         card.style.display = 'none';
@@ -717,6 +725,75 @@ class ReviewSystem {
         }
     }
 
+}
+
+// ========== DELETE REVIEW FUNCTIONS ==========
+let reviewIdToDelete = null;
+
+function confirmDeleteReview(danhGiaId) {
+    reviewIdToDelete = danhGiaId;
+    const modal = document.getElementById('deleteReviewModal');
+    if (modal) {
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeDeleteModal() {
+    const modal = document.getElementById('deleteReviewModal');
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+        reviewIdToDelete = null;
+    }
+}
+
+function showCannotDeleteModal() {
+    const modal = document.getElementById('cannotDeleteModal');
+    if (modal) {
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeCannotDeleteModal() {
+    const modal = document.getElementById('cannotDeleteModal');
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+}
+
+function submitDeleteReview() {
+    if (!reviewIdToDelete) return;
+
+    const confirmBtn = document.getElementById('confirmDeleteBtn');
+    if (confirmBtn) {
+        confirmBtn.disabled = true;
+        confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xóa...';
+    }
+
+    fetch('/DanhGia/XoaDanhGia', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ danhGiaId: reviewIdToDelete })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Reload trang để hiển thị thông báo từ TempData
+            window.location.reload();
+        } else {
+            // Reload để hiển thị thông báo lỗi
+            window.location.reload();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        window.location.reload();
+    });
 }
 
 // ========== INITIALIZE ==========

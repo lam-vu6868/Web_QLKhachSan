@@ -46,11 +46,9 @@ namespace Web_QLKhachSan.Controllers
             ViewBag.TongTienDaChi = datPhongs.Sum(dp => dp.TongTien ?? 0);
             ViewBag.PhongChoXacNhan = datPhongs.Count(dp => dp.TrangThaiDatPhong == 0); // Trạng thái 0: Chờ xác nhận
             ViewBag.PhongDaXacNhan = datPhongs.Count(dp => dp.TrangThaiDatPhong == 1); // Trạng thái 1: Đã xác nhận
-            ViewBag.PhongDaHoanThanh = datPhongs.Count(dp => dp.TrangThaiDatPhong == 2); // Trạng thái 2: Hoàn thành
-            ViewBag.PhongDaHuy = datPhongs.Count(dp => dp.TrangThaiDatPhong == 3); // Trạng thái 3: Đã hủy
-
-            // Thống kê đánh giá
-            ViewBag.SoLanDanhGia = db.DanhGias.Count(dg => dg.MaKhachHang == maKhachHang);
+            ViewBag.PhongCheckIn = datPhongs.Count(dp => dp.TrangThaiDatPhong == 2); // Trạng thái 2: Check-In
+            ViewBag.PhongCheckOut = datPhongs.Count(dp => dp.TrangThaiDatPhong == 3); // Trạng thái 3: Check-Out
+            ViewBag.PhongDaHuy = datPhongs.Count(dp => dp.TrangThaiDatPhong == 4); // Trạng thái 4: Đã hủy
 
             // Thống kê dịch vụ đã đặt
             var datPhongIds = datPhongs.Select(dp => dp.DatPhongId).ToList();

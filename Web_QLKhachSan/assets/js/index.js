@@ -127,4 +127,20 @@ document.addEventListener("DOMContentLoaded", function () {
     once: true,
     mirror: false,
   });
+
+  // ======== SHOW ALL PHOTOS MODAL ========
+  window.showAllPhotos = function(reviewId) {
+    var reviewPhotos = document.querySelector('[data-review-id="' + reviewId + '"]');
+    var allPhotos = reviewPhotos.querySelector('.all-photos');
+    var modalPhotos = document.getElementById('modalPhotos');
+    
+    modalPhotos.innerHTML = allPhotos.innerHTML;
+    document.getElementById('photoModal').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  };
+
+  window.closePhotoModal = function() {
+    document.getElementById('photoModal').style.display = 'none';
+    document.body.style.overflow = 'auto';
+  };
 });

@@ -205,119 +205,137 @@
             <p class="section-subtitle">Lựa chọn hoàn hảo cho mọi nhu cầu của bạn</p>
         </div>
         <div class="rooms-grid">
-            <div class="room-card-modern" data-aos="fade-up" data-aos-delay="100">
-                <div class="room-card-image">
-                    <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80"
-                         alt="Deluxe Ocean View" />
-                    <div class="room-overlay"></div>
-                    <div class="room-badge room-badge-popular">
-                        <i class="fas fa-fire"></i>
-                        <span>Phổ Biến</span>
-                    </div>
-                    <div class="room-quick-view">
-                        <i class="fas fa-eye"></i>
-                        <span>Xem nhanh</span>
-                    </div>
-                </div>
-                <div class="room-card-content">
-                    <div class="room-header">
-                        <h3>Deluxe Ocean View</h3>
-                        <div class="room-rating">
-                            <i class="fas fa-star"></i>
-                            <span>4.9</span>
+            @* 1. PHÒNG PHỔ BIẾN - Được đặt nhiều nhất *@
+            @if (ViewBag.PhongPhoBien != null)
+            {
+                var phongPhoBien = (Web_QLKhachSan.Models.Phong)ViewBag.PhongPhoBien;
+                var hinhAnh = !string.IsNullOrEmpty(phongPhoBien.HinhAnhThumb) 
+                    ? phongPhoBien.HinhAnhThumb 
+                    : "https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=1740&q=80";
+                
+                <div class="room-card-modern" data-aos="fade-up" data-aos-delay="100">
+                    <div class="room-card-image">
+                        <img src="@hinhAnh" alt="@phongPhoBien.TenPhong" />
+                        <div class="room-overlay"></div>
+                        <div class="room-badge room-badge-popular">
+                            <i class="fas fa-fire"></i>
+                            <span>Phổ Biến</span>
                         </div>
-                    </div>
-                    <div class="amenities">
-                        <span><i class="fas fa-wifi"></i> Wifi</span>
-                        <span><i class="fas fa-water"></i> View biển</span>
-                        <span><i class="fas fa-bath"></i> Bồn tắm</span>
-                    </div>
-                    <p class="room-description">Phòng sang trọng với tầm nhìn tuyệt đẹp ra biển xanh</p>
-                    <div class="room-footer">
-                        <p class="price">Từ <strong>$150</strong> <span>/đêm</span></p>
-                        <a href="@Url.Action("Index", "ChiTietPhong")" class="room-btn-explore">
-                            <span>Khám Phá</span>
-                            <i class="fas fa-arrow-right"></i>
+                        <a href="@Url.Action("Index", "ChiTietPhong", new { id = phongPhoBien.PhongId })" class="room-quick-view">
+                            <i class="fas fa-eye"></i>
+                            <span>Xem nhanh</span>
                         </a>
                     </div>
+                    <div class="room-card-content">
+                        <div class="room-header">
+                            <h3>@phongPhoBien.TenPhong</h3>
+                        </div>
+                        <div class="amenities">
+                            <span><i class="fas fa-bed"></i> @phongPhoBien.LoaiPhong.TenLoai</span>
+                            @if (phongPhoBien.LoaiPhong.SoNguoiToiDa.HasValue)
+                            {
+                                <span><i class="fas fa-users"></i> @phongPhoBien.LoaiPhong.SoNguoiToiDa người</span>
+                            }
+                            @if (phongPhoBien.LoaiPhong.DienTich.HasValue)
+                            {
+                                <span><i class="fas fa-ruler-combined"></i> @phongPhoBien.LoaiPhong.DienTich m²</span>
+                            }
+                        </div>
+                        <p class="room-description">@(phongPhoBien.LoaiPhong.MoTa ?? "Phòng được đặt nhiều nhất")</p>
+                        <div class="room-footer">
+                            <p class="price">Từ <strong>@((phongPhoBien.Gia ?? phongPhoBien.LoaiPhong.GiaCoBan ?? 0).ToString("N0"))đ</strong> <span>/đêm</span></p>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            }
 
-            <div class="room-card-modern" data-aos="fade-up" data-aos-delay="200">
-                <div class="room-card-image">
-                    <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80"
-                         alt="Premium Suite" />
-                    <div class="room-overlay"></div>
-                    <div class="room-badge room-badge-luxury">
-                        <i class="fas fa-gem"></i>
-                        <span>Cao Cấp</span>
-                    </div>
-                    <div class="room-quick-view">
-                        <i class="fas fa-eye"></i>
-                        <span>Xem nhanh</span>
-                    </div>
-                </div>
-                <div class="room-card-content">
-                    <div class="room-header">
-                        <h3>Premium Suite</h3>
-                        <div class="room-rating">
-                            <i class="fas fa-star"></i>
-                            <span>5.0</span>
+            @* 2. PHÒNG CAO CẤP - Giá cao nhất *@
+            @if (ViewBag.PhongCaoCap != null)
+            {
+                var phongCaoCap = (Web_QLKhachSan.Models.Phong)ViewBag.PhongCaoCap;
+                var hinhAnh = !string.IsNullOrEmpty(phongCaoCap.HinhAnhThumb) 
+                    ? phongCaoCap.HinhAnhThumb 
+                    : "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1740&q=80";
+                
+                <div class="room-card-modern" data-aos="fade-up" data-aos-delay="200">
+                    <div class="room-card-image">
+                        <img src="@hinhAnh" alt="@phongCaoCap.TenPhong" />
+                        <div class="room-overlay"></div>
+                        <div class="room-badge room-badge-luxury">
+                            <i class="fas fa-gem"></i>
+                            <span>Cao Cấp</span>
                         </div>
-                    </div>
-                    <div class="amenities">
-                        <span><i class="fas fa-wifi"></i> Wifi</span>
-                        <span><i class="fas fa-hot-tub"></i> Jacuzzi</span>
-                        <span><i class="fas fa-concierge-bell"></i> Butler</span>
-                    </div>
-                    <p class="room-description">Suite hạng sang với dịch vụ butler riêng biệt</p>
-                    <div class="room-footer">
-                        <p class="price">Từ <strong>$200</strong> <span>/đêm</span></p>
-                        <a href="@Url.Action("Index", "ChiTietPhong")" class="room-btn-explore">
-                            <span>Khám Phá</span>
-                            <i class="fas fa-arrow-right"></i>
+                        <a href="@Url.Action("Index", "ChiTietPhong", new { id = phongCaoCap.PhongId })" class="room-quick-view">
+                            <i class="fas fa-eye"></i>
+                            <span>Xem nhanh</span>
                         </a>
                     </div>
+                    <div class="room-card-content">
+                        <div class="room-header">
+                            <h3>@phongCaoCap.TenPhong</h3>
+                        </div>
+                        <div class="amenities">
+                            <span><i class="fas fa-bed"></i> @phongCaoCap.LoaiPhong.TenLoai</span>
+                            @if (phongCaoCap.LoaiPhong.SoNguoiToiDa.HasValue)
+                            {
+                                <span><i class="fas fa-users"></i> @phongCaoCap.LoaiPhong.SoNguoiToiDa người</span>
+                            }
+                            @if (phongCaoCap.LoaiPhong.DienTich.HasValue)
+                            {
+                                <span><i class="fas fa-ruler-combined"></i> @phongCaoCap.LoaiPhong.DienTich m²</span>
+                            }
+                        </div>
+                        <p class="room-description">@(phongCaoCap.LoaiPhong.MoTa ?? "Phòng cao cấp nhất của khách sạn")</p>
+                        <div class="room-footer">
+                            <p class="price">Từ <strong>@((phongCaoCap.Gia ?? phongCaoCap.LoaiPhong.GiaCoBan ?? 0).ToString("N0"))đ</strong> <span>/đêm</span></p>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            }
 
-            <div class="room-card-modern" data-aos="fade-up" data-aos-delay="300">
-                <div class="room-card-image">
-                    <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80"
-                         alt="Executive Suite" />
-                    <div class="room-overlay"></div>
-                    <div class="room-badge room-badge-new">
-                        <i class="fas fa-certificate"></i>
-                        <span>Mới</span>
-                    </div>
-                    <div class="room-quick-view">
-                        <i class="fas fa-eye"></i>
-                        <span>Xem nhanh</span>
-                    </div>
-                </div>
-                <div class="room-card-content">
-                    <div class="room-header">
-                        <h3>Executive Suite</h3>
-                        <div class="room-rating">
-                            <i class="fas fa-star"></i>
-                            <span>4.8</span>
+            @* 3. PHÒNG GIA ĐÌNH - Chứa nhiều người nhất *@
+            @if (ViewBag.PhongGiaDinh != null)
+            {
+                var phongGiaDinh = (Web_QLKhachSan.Models.Phong)ViewBag.PhongGiaDinh;
+                var hinhAnh = !string.IsNullOrEmpty(phongGiaDinh.HinhAnhThumb) 
+                    ? phongGiaDinh.HinhAnhThumb 
+                    : "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=1740&q=80";
+                
+                <div class="room-card-modern" data-aos="fade-up" data-aos-delay="300">
+                    <div class="room-card-image">
+                        <img src="@hinhAnh" alt="@phongGiaDinh.TenPhong" />
+                        <div class="room-overlay"></div>
+                        <div class="room-badge room-badge-new">
+                            <i class="fas fa-users"></i>
+                            <span>Gia Đình</span>
                         </div>
-                    </div>
-                    <div class="amenities">
-                        <span><i class="fas fa-wifi"></i> Wifi</span>
-                        <span><i class="fas fa-mountain"></i> View núi</span>
-                        <span><i class="fas fa-couch"></i> Phòng khách</span>
-                    </div>
-                    <p class="room-description">Suite rộng rãi với phòng khách và view núi</p>
-                    <div class="room-footer">
-                        <p class="price">Từ <strong>$250</strong> <span>/đêm</span></p>
-                        <a href="@Url.Action("Index", "ChiTietPhong")" class="room-btn-explore">
-                            <span>Khám Phá</span>
-                            <i class="fas fa-arrow-right"></i>
+                        <a href="@Url.Action("Index", "ChiTietPhong", new { id = phongGiaDinh.PhongId })" class="room-quick-view">
+                            <i class="fas fa-eye"></i>
+                            <span>Xem nhanh</span>
                         </a>
                     </div>
+                    <div class="room-card-content">
+                        <div class="room-header">
+                            <h3>@phongGiaDinh.TenPhong</h3>
+                        </div>
+                        <div class="amenities">
+                            <span><i class="fas fa-bed"></i> @phongGiaDinh.LoaiPhong.TenLoai</span>
+                            @if (phongGiaDinh.LoaiPhong.SoNguoiToiDa.HasValue)
+                            {
+                                <span><i class="fas fa-users"></i> @phongGiaDinh.LoaiPhong.SoNguoiToiDa người</span>
+                            }
+                            @if (phongGiaDinh.LoaiPhong.DienTich.HasValue)
+                            {
+                                <span><i class="fas fa-ruler-combined"></i> @phongGiaDinh.LoaiPhong.DienTich m²</span>
+                            }
+                        </div>
+                        <p class="room-description">@(phongGiaDinh.LoaiPhong.MoTa ?? "Phòng rộng rãi cho cả gia đình")</p>
+                        <div class="room-footer">
+                            <p class="price">Từ <strong>@((phongGiaDinh.Gia ?? phongGiaDinh.LoaiPhong.GiaCoBan ?? 0).ToString("N0"))đ</strong> <span>/đêm</span></p>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            }
 
         </div>
         <div class="section-cta" data-aos="fade-up" data-aos-delay="500">
@@ -507,157 +525,118 @@
             </button>
 
             <div class="reviews-slider">
-                <div class="review-card">
-                    <div class="review-badge">Verified Member</div>
-                    <div class="review-header">
-                        <div class="reviewer-info">
-                            <img src="https://randomuser.me/api/portraits/women/44.jpg"
-                                 alt="Reviewer"
-                                 class="reviewer-avatar" />
-                            <div class="reviewer-details">
-                                <h3>Nguyễn Thị Mai</h3>
-                                <div class="rating">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                </div>
-                                <span class="review-date">20/09/2025</span>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="review-text">
-                        "Tôi rất hài lòng với chất lượng dịch vụ tại đây. Nhân viên
-                        nhiệt tình, cơ sở vật chất hiện đại và không gian thoáng mát!"
-                    </p>
-                    <div class="review-photos">
-                        <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48"
-                             alt="Review photo" />
-                        <img src="https://images.unsplash.com/photo-1576678927484-cc907957088c"
-                             alt="Review photo" />
-                    </div>
-                </div>
+                @if (ViewBag.DanhGias != null && ((List<Web_QLKhachSan.Models.DanhGia>)ViewBag.DanhGias).Any())
+                {
+                    foreach (var danhGia in (List<Web_QLKhachSan.Models.DanhGia>)ViewBag.DanhGias)
+                    {
+                        var khachHang = danhGia.KhachHang;
+                        var avatarUrl = string.IsNullOrEmpty(khachHang.AnhDaiDienUrl)
+                            ? "https://www.gravatar.com/avatar/?d=mp&s=150"
+                            : khachHang.AnhDaiDienUrl;
+                        var ngayDanhGia = (DateTime.Now - danhGia.NgayTao).Days;
+                        var timeAgo = ngayDanhGia == 0 ? "Hôm nay" :
+                                      ngayDanhGia == 1 ? "Hôm qua" :
+                                      ngayDanhGia < 7 ? ngayDanhGia + " ngày trước" :
+                                      ngayDanhGia < 30 ? (ngayDanhGia / 7) + " tuần trước" :
+                                      (ngayDanhGia / 30) + " tháng trước";
 
-                <div class="review-card">
-                    <div class="review-badge">Top Reviewer</div>
-                    <div class="review-header">
-                        <div class="reviewer-info">
-                            <img src="https://randomuser.me/api/portraits/men/32.jpg"
-                                 alt="Reviewer"
-                                 class="reviewer-avatar" />
-                            <div class="reviewer-details">
-                                <h3>Trần Văn Hùng</h3>
-                                <div class="rating">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star-half-alt"></i>
-                                </div>
-                                <span class="review-date">15/09/2025</span>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="review-text">
-                        "HLV rất chuyên nghiệp và tận tình. Môi trường tập luyện tuyệt
-                        vời! Đặc biệt ấn tượng với các lớp Yoga và Zumba."
-                    </p>
-                    <div class="review-stats">
-                        <span><i class="fas fa-dumbbell"></i> 50+ buổi tập</span>
-                        <span><i class="fas fa-medal"></i> Thành viên VIP</span>
-                    </div>
-                </div>
+                        var hinhAnhs = danhGia.DanhGiaHinhAnhs.ToList();
+                        var totalImages = hinhAnhs.Count;
+                        var tenPhong = danhGia.Phong != null ? danhGia.Phong.TenPhong : "Phòng nghỉ";
 
-                <div class="review-card">
-                    <div class="review-badge">New Member</div>
-                    <div class="review-header">
-                        <div class="reviewer-info">
-                            <img src="https://randomuser.me/api/portraits/women/28.jpg"
-                                 alt="Reviewer"
-                                 class="reviewer-avatar" />
-                            <div class="reviewer-details">
-                                <h3>Lê Thu Hà</h3>
-                                <div class="rating">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
+                        <div class="review-card">
+                            <div class="review-badge">@tenPhong</div>
+                            <div class="review-header">
+                                <div class="reviewer-info">
+                                    <img src="@avatarUrl"
+                                         alt="@khachHang.HoVaTen"
+                                         class="reviewer-avatar" />
+                                    <div class="reviewer-details">
+                                        <h3>@khachHang.HoVaTen</h3>
+                                        <div class="rating">
+                                            @for (int i = 1; i <= 5; i++)
+                                            {
+                                                if (i <= danhGia.Diem)
+                                                {
+                                                    <i class="fas fa-star"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i class="far fa-star"></i>
+                                                }
+                                            }
+                                        </div>
+                                        <span class="review-date">@danhGia.NgayTao.ToString("dd/MM/yyyy")</span>
+                                    </div>
                                 </div>
-                                <span class="review-date">10/09/2025</span>
                             </div>
-                        </div>
-                    </div>
-                    <p class="review-text">
-                        "Dịch vụ spa tuyệt vời, giúp tôi thư giãn sau những giờ tập
-                        luyện. Không gian yên tĩnh và thư thái!"
-                    </p>
-                    <div class="review-highlight">
-                        <i class="fas fa-spa"></i>
-                        <span>Đã trải nghiệm Gói Premium Spa</span>
-                    </div>
-                </div>
+                            <p class="review-text">
+                                "@danhGia.BinhLuan"
+                            </p>
+                            @if (totalImages > 0)
+                            {
+                                <div class="review-photos" data-review-id="@danhGia.DanhGiaId">
+                                    @* Hiển thị ảnh đầu tiên *@
+                                    <img src="@hinhAnhs[0].DuongDanAnh" alt="Review photo" />
 
-                <div class="review-card">
-                    <div class="review-badge">Fitness Expert</div>
-                    <div class="review-header">
-                        <div class="reviewer-info">
-                            <img src="https://randomuser.me/api/portraits/men/45.jpg"
-                                 alt="Reviewer"
-                                 class="reviewer-avatar" />
-                            <div class="reviewer-details">
-                                <h3>Phạm Minh Đức</h3>
-                                <div class="rating">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                </div>
-                                <span class="review-date">05/09/2025</span>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="review-text">
-                        "Thiết bị hiện đại, đa dạng và được bảo trì thường xuyên.
-                        Không gian tập rộng rãi, thoáng mát."
-                    </p>
-                    <div class="review-achievement">
-                        <i class="fas fa-trophy"></i>
-                        <span>Huấn luyện viên của năm 2024</span>
-                    </div>
-                </div>
+                                    @* Nếu có ảnh thứ 2 *@
+                                    @if (totalImages > 1)
+                                    {
+                                        if (totalImages == 2)
+                                        {
+                                            <img src="@hinhAnhs[1].DuongDanAnh" alt="Review photo" />
+                                        }
+                                        else
+                                        {
+                                            <div class="review-photo-more" onclick="showAllPhotos(@danhGia.DanhGiaId)">
+                                                <img src="@hinhAnhs[1].DuongDanAnh" alt="Review photo" />
+                                                <div class="photo-overlay">
+                                                    <span>+@(totalImages - 2)</span>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
 
-                <div class="review-card">
-                    <div class="review-badge">Premium Member</div>
-                    <div class="review-header">
-                        <div class="reviewer-info">
-                            <img src="https://randomuser.me/api/portraits/women/62.jpg"
-                                 alt="Reviewer"
-                                 class="reviewer-avatar" />
-                            <div class="reviewer-details">
-                                <h3>Trần Thanh Thảo</h3>
-                                <div class="rating">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
+                                    @* Lưu tất cả ảnh vào data attribute *@
+                                    <div class="all-photos" style="display: none;">
+                                        @foreach (var img in hinhAnhs)
+                                        {
+                                            <img src="@img.DuongDanAnh" alt="Review photo" />
+                                        }
+                                    </div>
                                 </div>
-                                <span class="review-date">01/09/2025</span>
+                            }
+                        </div>
+                    }
+                }
+                else
+                {
+                    @* Hiển thị fallback nếu không có đánh giá *@
+                    <div class="review-card">
+                        <div class="review-badge">Verified Member</div>
+                        <div class="review-header">
+                            <div class="reviewer-info">
+                                <img src="https://randomuser.me/api/portraits/women/44.jpg"
+                                     alt="Reviewer"
+                                     class="reviewer-avatar" />
+                                <div class="reviewer-details">
+                                    <h3>Khách hàng mẫu</h3>
+                                    <div class="rating">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <span class="review-date">@DateTime.Now.ToString("dd/MM/yyyy")</span>
+                                </div>
                             </div>
                         </div>
+                        <p class="review-text">
+                            "Chưa có đánh giá nào. Hãy là người đầu tiên đánh giá dịch vụ của chúng tôi!"
+                        </p>
                     </div>
-                    <p class="review-text">
-                        "Chương trình tập theo nhóm rất hiệu quả. HLV nhiệt tình, động
-                        viên và có chuyên môn cao!"
-                    </p>
-                    <div class="review-milestone">
-                        <i class="fas fa-clock"></i>
-                        <span>Thành viên 2+ năm</span>
-                    </div>
-                </div>
+                }
             </div>
 
             <button class="nav-btn next-btn">
@@ -667,6 +646,17 @@
         <div class="slider-dots"></div>
     </div>
 </section>
+
+<!-- Modal hiển thị tất cả ảnh -->
+<div id="photoModal" class="photo-modal" style="display: none;">
+    <div class="photo-modal-overlay" onclick="closePhotoModal()"></div>
+    <div class="photo-modal-content">
+        <button class="photo-modal-close" onclick="closePhotoModal()">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="photo-modal-images" id="modalPhotos"></div>
+    </div>
+</div>
 
 <section class="cta-section">
     <div class="cta-overlay">

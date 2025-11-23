@@ -141,8 +141,9 @@
                                   ngayDanhGia < 7 ? ngayDanhGia + " ngày trước" :
                                   ngayDanhGia < 30 ? (ngayDanhGia / 7) + " tuần trước" :
                                   (ngayDanhGia / 30) + " tháng trước";
+                    var canDelete = ngayDanhGia < 1; // Chỉ xóa được trong vòng 1 ngày
                     
-                    <div class="review-card" data-email="@khachHang.Email">
+                    <div class="review-card" data-email="@khachHang.Email" data-review-id="@danhGia.DanhGiaId" data-can-delete="@canDelete.ToString().ToLower()">
                         <div class="review-header">
                             <div class="reviewer-avatar">
                                 <img src="@avatarUrl" alt="@khachHang.HoVaTen">
@@ -151,6 +152,21 @@
                                 <h4>@khachHang.HoVaTen</h4>
                                 <div class="review-date">@timeAgo</div>
                             </div>
+                            @if (!string.IsNullOrEmpty(Model.EmailKhachHang) && Model.EmailKhachHang == khachHang.Email)
+                            {
+                                if (canDelete)
+                                {
+                                    <button class="btn-delete-review" onclick="confirmDeleteReview(@danhGia.DanhGiaId)" title="Xóa bình luận" style="display: none;">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button class="btn-delete-review" onclick="showCannotDeleteModal()" title="Không thể xóa" style="display: none;">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                }
+                            }
                         </div>
                         <div class="review-rating">
                             <div class="stars">
@@ -307,6 +323,57 @@
     <!-- Toast notifications -->
     <div class="toast-container" id="toastContainer"></div>
 </main>
+
+<!-- Modal Xác Nhận Xóa -->
+<div id="deleteReviewModal" class="modal-overlay" style="display: none;">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h3><i class="fas fa-exclamation-triangle"></i> Xác Nhận Xóa Đánh Giá</h3>
+            <button class="modal-close" onclick="closeDeleteModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p>Bạn có chắc chắn muốn xóa đánh giá này không?</p>
+            <p style="color: #dc3545; margin-top: 10px;">
+                <i class="fas fa-info-circle"></i> 
+                Hành động này không thể hoàn tác!
+            </p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-secondary" onclick="closeDeleteModal()">
+                <i class="fas fa-times"></i> Hủy
+            </button>
+            <button class="btn-danger" onclick="submitDeleteReview()" id="confirmDeleteBtn">
+                <i class="fas fa-trash-alt"></i> Xóa
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Không Thể Xóa -->
+<div id="cannotDeleteModal" class="modal-overlay" style="display: none;">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h3><i class="fas fa-ban"></i> Không Thể Xóa Đánh Giá</h3>
+            <button class="modal-close" onclick="closeCannotDeleteModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p>Bạn chỉ có thể xóa đánh giá trong vòng <strong>24 giờ</strong> kể từ khi đăng.</p>
+            <p style="color: #64748b; margin-top: 10px;">
+                <i class="fas fa-clock"></i> 
+                Đánh giá này đã quá thời gian cho phép xóa.
+            </p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-secondary" onclick="closeCannotDeleteModal()">
+                <i class="fas fa-check"></i> Đã hiểu
+            </button>
+        </div>
+    </div>
+</div>
 
 <script src="~/assets/js/danh-gia.js"></script>
 

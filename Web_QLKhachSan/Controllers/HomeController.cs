@@ -53,6 +53,46 @@ namespace Web_QLKhachSan.Controllers
                 : 0;
             ViewBag.AverageRating = Math.Round(avgRating, 1);
 
+            // === 3 PHÒNG NỔI BẬT ===
+            
+            // 1. PHÒNG PHỔ BIẾN - Phòng được đặt nhiều nhất
+            var phongPhoBien = db.ChiTietDatPhongs
+                .Where(ct => ct.PhongId.HasValue && ct.Phong.DaHoatDong)
+                .GroupBy(ct => ct.PhongId)
+                .Select(g => new {
+                    PhongId = g.Key.Value,
+                    SoLanDat = g.Count()
+                })
+                .OrderByDescending(x => x.SoLanDat)
+                .FirstOrDefault();
+            
+            ViewBag.PhongPhoBien = phongPhoBien != null 
+                ? db.Phongs.Include(p => p.LoaiPhong).FirstOrDefault(p => p.PhongId == phongPhoBien.PhongId)
+                : db.Phongs.Include(p => p.LoaiPhong).Where(p => p.DaHoatDong).FirstOrDefault();
+
+            // 2. PHÒNG CAO CẤP - Phòng có giá cao nhất
+            ViewBag.PhongCaoCap = db.Phongs
+                .Include(p => p.LoaiPhong)
+                .Where(p => p.DaHoatDong && p.Gia.HasValue)
+                .OrderByDescending(p => p.Gia)
+                .FirstOrDefault();
+
+            // 3. PHÒNG GIA ĐÌNH - Phòng chứa nhiều người nhất (theo SoNguoiToiDa của LoaiPhong)
+            ViewBag.PhongGiaDinh = db.Phongs
+                .Include(p => p.LoaiPhong)
+                .Where(p => p.DaHoatDong && p.LoaiPhong.SoNguoiToiDa.HasValue)
+                .OrderByDescending(p => p.LoaiPhong.SoNguoiToiDa)
+                .FirstOrDefault();
+
+            // === ĐÁNH GIÁ & NHẬN XÉT ===
+            ViewBag.DanhGias = db.DanhGias
+                .Include(d => d.KhachHang)
+                .Include(d => d.Phong)
+                .Include(d => d.DanhGiaHinhAnhs)
+                .OrderByDescending(d => d.NgayTao)
+                .Take(5)
+                .ToList();
+
             return View(viewModel);
         }
 
