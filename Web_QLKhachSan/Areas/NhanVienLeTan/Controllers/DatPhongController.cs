@@ -203,20 +203,56 @@ if (filter.TrangThaiDatPhong.HasValue)
     decimal tongTien = tongTienPhong - tongGiamGiaPhong;
     decimal giamGiaKM = 0;
 
-         if (model.MaKhuyenMaiId.HasValue)
-  {
-         var khuyenMai = db.KhuyenMais.Find(model.MaKhuyenMaiId.Value);
-     if (khuyenMai != null && khuyenMai.DaHoatDong)
-         {
- var today = DateTime.Now.Date;
-         // Kiểm tra còn hiệu lực
-      if (khuyenMai.NgayBatDau <= today && khuyenMai.NgayKetThuc >= today)
- {
-   giamGiaKM = tongTien * (khuyenMai.GiaTri.GetValueOrDefault() / 100);
-tongTien = tongTien - giamGiaKM;
-  }
+    if (model.MaKhuyenMaiId.HasValue)
+    {
+        var khuyenMai = db.KhuyenMais.Find(model.MaKhuyenMaiId.Value);
+ if (khuyenMai != null && khuyenMai.DaHoatDong)
+        {
+     var today = DateTime.Now.Date;
+   
+   // ✅ KIỂM TRA HIỆU LỰC
+          if (khuyenMai.NgayBatDau > today)
+            {
+         ModelState.AddModelError("", $"Mã khuyến mãi chưa có hiệu lực! Bắt đầu từ {khuyenMai.NgayBatDau:dd/MM/yyyy}");
+      LoadLoaiPhongForCreate(model);
+  LoadKhuyenMaiForCreate(model);
+            return View(model);
+        }
+            
+            if (khuyenMai.NgayKetThuc < today)
+       {
+       ModelState.AddModelError("", $"Mã khuyến mãi đã hết hạn! Hết hạn ngày {khuyenMai.NgayKetThuc:dd/MM/yyyy}");
+    LoadLoaiPhongForCreate(model);
+            LoadKhuyenMaiForCreate(model);
+                return View(model);
+         }
+            
+         // ✅ KIỂM TRA SỐ LẦN SỬ DỤNG TỐI ĐA
+          if (khuyenMai.SoLanSuDungToiDa.HasValue)
+          {
+        int soLanDaSuDung = db.DatPhongs.Count(dp => dp.MaKhuyenMai == khuyenMai.KhuyenMaiId);
+      
+       if (soLanDaSuDung >= khuyenMai.SoLanSuDungToiDa.Value)
+    {
+ ModelState.AddModelError("", $"Mã khuyến mãi '{khuyenMai.TenKhuyenMai}' đã hết lượt sử dụng ({soLanDaSuDung}/{khuyenMai.SoLanSuDungToiDa.Value})!");
+          LoadLoaiPhongForCreate(model);
+                LoadKhuyenMaiForCreate(model);
+           return View(model);
      }
+            }
+          
+ // ✅ ÁP DỤNG GIẢM GIÁ
+   giamGiaKM = tongTien * (khuyenMai.GiaTri.GetValueOrDefault() / 100);
+            tongTien = tongTien - giamGiaKM;
+        }
+        else
+        {
+        ModelState.AddModelError("", "Mã khuyến mãi không hợp lệ hoặc đã bị vô hiệu hóa!");
+            LoadLoaiPhongForCreate(model);
+       LoadKhuyenMaiForCreate(model);
+       return View(model);
    }
+    }
 
       var datPhong = new DatPhong
       {
@@ -390,9 +426,9 @@ decimal phanTramGiam = phongItem.GiamGia;
         /// <summary>
         /// Lấy thông tin mã khuyến mãi (AJAX)
         /// </summary>
-        [HttpPost]
+  [HttpPost]
         public JsonResult GetKhuyenMai(int? khuyenMaiId)
-        {
+      {
             try
          {
    if (!CheckRole())
@@ -403,58 +439,80 @@ decimal phanTramGiam = phongItem.GiamGia;
      if (!khuyenMaiId.HasValue)
          {
  return Json(new { success = true, data = (object)null });
-             }
+        }
 
-          var khuyenMai = db.KhuyenMais
-      .Where(km => km.KhuyenMaiId == khuyenMaiId.Value && km.DaHoatDong)
-           .Select(km => new
-   {
-   km.KhuyenMaiId,
-        km.MaKhuyenMai,
-              km.TenKhuyenMai,
-       km.GiaTri,
-            km.NgayBatDau,
-    km.NgayKetThuc,
-           km.DieuKienApDung
-       })
-      .FirstOrDefault();
+          var khuyenMai = db.KhuyenMais.Find(khuyenMaiId.Value);
 
-             if (khuyenMai != null)
+   if (khuyenMai != null && khuyenMai.DaHoatDong)
         {
         var today = DateTime.Now.Date;
 
-           // Kiểm tra còn hiệu lực không
+           // ✅ KIỂM TRA HIỆU LỰC
        if (khuyenMai.NgayBatDau > today)
  {
     return Json(new
           {
    success = false,
-        message = $"Mã khuyến mãi chưa có hiệu lực! Bắt đầu từ {khuyenMai.NgayBatDau:dd/MM/yyyy}"
-       });
+message = $"Mã khuyến mãi chưa có hiệu lực! Bắt đầu từ {khuyenMai.NgayBatDau:dd/MM/yyyy}"
+ });
         }
 
          if (khuyenMai.NgayKetThuc < today)
        {
-              return Json(new
+          return Json(new
           {
        success = false,
      message = $"Mã khuyến mãi đã hết hạn! Hết hạn ngày {khuyenMai.NgayKetThuc:dd/MM/yyyy}"
    });
      }
 
-         return Json(new { success = true, data = khuyenMai });
+            // ✅ KIỂM TRA SỐ LẦN SỬ DỤNG
+         if (khuyenMai.SoLanSuDungToiDa.HasValue)
+    {
+              int soLanDaSuDung = db.DatPhongs.Count(dp => dp.MaKhuyenMai == khuyenMai.KhuyenMaiId);
+       int soLanConLai = khuyenMai.SoLanSuDungToiDa.Value - soLanDaSuDung;
+                
+         if (soLanConLai <= 0)
+   {
+    return Json(new
+             {
+ success = false,
+            message = $"Mã khuyến mãi đã hết lượt sử dụng! ({soLanDaSuDung}/{khuyenMai.SoLanSuDungToiDa.Value})"
+          });
+       }
+     }
+
+ // ✅ TRẢ VỀ THÔNG TIN KHUYẾN MÃI
+         return Json(new { 
+  success = true, 
+   data = new
+   {
+                khuyenMai.KhuyenMaiId,
+        khuyenMai.MaKhuyenMai,
+              khuyenMai.TenKhuyenMai,
+       khuyenMai.GiaTri,
+       khuyenMai.NgayBatDau,
+    khuyenMai.NgayKetThuc,
+           khuyenMai.DieuKienApDung,
+           khuyenMai.SoLanSuDungToiDa,
+                SoLanDaSuDung = db.DatPhongs.Count(dp => dp.MaKhuyenMai == khuyenMai.KhuyenMaiId),
+   SoLanConLai = khuyenMai.SoLanSuDungToiDa.HasValue 
+       ? khuyenMai.SoLanSuDungToiDa.Value - db.DatPhongs.Count(dp => dp.MaKhuyenMai == khuyenMai.KhuyenMaiId)
+      : (int?)null
+         }
+  });
      }
    else
-                {
-             return Json(new { success = false, message = "Không tìm thấy mã khuyến mãi!" });
-       }
+    {
+             return Json(new { success = false, message = "Không tìm thấy mã khuyến mãi hoặc mã đã bị vô hiệu hóa!" });
+   }
          }
             catch (Exception ex)
  {
-           System.Diagnostics.Debug.WriteLine($"[ERROR - GetKhuyenMai] {ex.Message}");
+   System.Diagnostics.Debug.WriteLine($"[ERROR - GetKhuyenMai] {ex.Message}");
       return Json(new { success = false, message = "Có lỗi xảy ra!" });
-          }
-        }
+       }
+   }
 
         // Helper Methods
         private void LoadLoaiPhongForCreate(DatPhongCreateViewModel model)
@@ -480,23 +538,46 @@ decimal phanTramGiam = phongItem.GiamGia;
         {
    var today = DateTime.Now.Date;
 
-        // ✅ FIX: Lấy dữ liệu từ DB trước, sau đó format ở memory
+     // ✅ Lấy dữ liệu từ DB trước
       var khuyenMais = db.KhuyenMais
-           .Where(km => km.DaHoatDong && 
+     .Where(km => km.DaHoatDong && 
     km.NgayBatDau <= today && 
       km.NgayKetThuc >= today)
   .OrderBy(km => km.TenKhuyenMai)
-         .ToList(); // ✅ QUAN TRỌNG: Execute query trước
+         .ToList();
 
-         // ✅ Format text ở memory (không phải trong LINQ to Entities)
-            ViewBag.DanhSachKhuyenMai = khuyenMais
-   .Select(km => new SelectListItem
+  // ✅ LỌC CÁC KHUYẾN MÃI CÒN LƯỢT SỬ DỤNG
+     var khuyenMaisConLuot = khuyenMais.Where(km =>
         {
+      if (!km.SoLanSuDungToiDa.HasValue)
+         return true; // Không giới hạn số lần
+     
+            int soLanDaSuDung = db.DatPhongs.Count(dp => dp.MaKhuyenMai == km.KhuyenMaiId);
+    return soLanDaSuDung < km.SoLanSuDungToiDa.Value;
+  }).ToList();
+
+         // ✅ Format text ở memory
+     ViewBag.DanhSachKhuyenMai = khuyenMaisConLuot
+   .Select(km => {
+    int soLanDaSuDung = db.DatPhongs.Count(dp => dp.MaKhuyenMai == km.KhuyenMaiId);
+     int? soLanConLai = km.SoLanSuDungToiDa.HasValue 
+      ? km.SoLanSuDungToiDa.Value - soLanDaSuDung 
+             : (int?)null;
+    
+     string text = $"{km.TenKhuyenMai} - Giảm {km.GiaTri}%";
+   if (soLanConLai.HasValue)
+      {
+     text += $" (Còn {soLanConLai} lượt)";
+    }
+     
+   return new SelectListItem
+    {
       Value = km.KhuyenMaiId.ToString(),
- Text = $"{km.TenKhuyenMai} - Giảm {km.GiaTri}%"
-             })
+ Text = text
+     };
+  })
 .ToList();
-        }
+      }
 
         private KhachHang FindOrCreateKhachHang(DatPhongCreateViewModel model)
         {
@@ -856,11 +937,11 @@ return Json(new { success = false, message = "Không tìm thấy đơn đặt ph
       var phong = db.Phongs.Find(chiTiet.PhongId.Value);
     if (phong != null)
           {
-       phong.TrangThaiPhong = 0; // Trống
+  phong.TrangThaiPhong = 0; // Trống
  phong.NgayCapNhat = DateTime.Now;
    }
  }
-          }
+        }
 
     // Cập nhật trạng thái đơn
       datPhong.TrangThaiDatPhong = 4; // Đã hủy
