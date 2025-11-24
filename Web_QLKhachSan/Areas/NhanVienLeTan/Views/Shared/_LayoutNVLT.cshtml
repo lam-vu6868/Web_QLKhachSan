@@ -164,45 +164,58 @@
         </div>
 
    <!-- Alert Messages -->
- @if (TempData["SuccessMessage"] != null)
-        {
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-      <i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]
-         <button type="button" class="close" data-dismiss="alert">
-          <span>&times;</span>
-      </button>
-    </div>
-        }
+@{
+ var __successMsg = TempData["SuccessMessage"] as string;
+ var __errorMsg = TempData["ErrorMessage"] as string;
+ var __warningMsg = TempData["WarningMessage"] as string;
+ var __infoMsg = TempData["InfoMessage"] as string;
 
-        @if (TempData["ErrorMessage"] != null)
-        {
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-         <i class="fas fa-exclamation-circle"></i> @TempData["ErrorMessage"]
-              <button type="button" class="close" data-dismiss="alert">
-                <span>&times;</span>
-    </button>
-            </div>
-        }
+ // Remove immediately so child views can't read and render them again
+ if (!string.IsNullOrEmpty(__successMsg)) { TempData.Remove("SuccessMessage"); }
+ if (!string.IsNullOrEmpty(__errorMsg)) { TempData.Remove("ErrorMessage"); }
+ if (!string.IsNullOrEmpty(__warningMsg)) { TempData.Remove("WarningMessage"); }
+ if (!string.IsNullOrEmpty(__infoMsg)) { TempData.Remove("InfoMessage"); }
+}
 
-        @if (TempData["WarningMessage"] != null)
-        {
-            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-           <i class="fas fa-exclamation-triangle"></i> @TempData["WarningMessage"]
-     <button type="button" class="close" data-dismiss="alert">
-   <span>&times;</span>
-       </button>
-        </div>
- }
+@if (!string.IsNullOrEmpty(__successMsg))
+{
+ <div class="alert alert-success alert-dismissible fade show" role="alert">
+ <i class="fas fa-check-circle"></i> @__successMsg
+ <button type="button" class="close" data-dismiss="alert">
+ <span>&times;</span>
+ </button>
+ </div>
+}
 
-        @if (TempData["InfoMessage"] != null)
-      {
-            <div class="alert alert-info alert-dismissible fade show" role="alert">
-    <i class="fas fa-info-circle"></i> @TempData["InfoMessage"]
-            <button type="button" class="close" data-dismiss="alert">
-   <span>&times;</span>
-    </button>
-   </div>
-        }
+@if (!string.IsNullOrEmpty(__errorMsg))
+{
+ <div class="alert alert-danger alert-dismissible fade show" role="alert">
+ <i class="fas fa-exclamation-circle"></i> @__errorMsg
+ <button type="button" class="close" data-dismiss="alert">
+ <span>&times;</span>
+ </button>
+ </div>
+}
+
+@if (!string.IsNullOrEmpty(__warningMsg))
+{
+ <div class="alert alert-warning alert-dismissible fade show" role="alert">
+ <i class="fas fa-exclamation-triangle"></i> @__warningMsg
+ <button type="button" class="close" data-dismiss="alert">
+ <span>&times;</span>
+ </button>
+ </div>
+}
+
+@if (!string.IsNullOrEmpty(__infoMsg))
+{
+ <div class="alert alert-info alert-dismissible fade show" role="alert">
+ <i class="fas fa-info-circle"></i> @__infoMsg
+ <button type="button" class="close" data-dismiss="alert">
+ <span>&times;</span>
+ </button>
+ </div>
+}
 
         <!-- Page Content -->
      @RenderBody()

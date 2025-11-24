@@ -254,17 +254,17 @@ ModelState.AddModelError("MaKhuyenMai", "Mã khuyến mãi đã tồn tại!");
         public ActionResult Edit(int id)
         {
   try
-            {
-        if (!CheckRole())
         {
-        TempData["ErrorMessage"] = "Bạn không có quyền truy cập!";
-        return RedirectToAction("DangNhap", "DangNhapNV", new { area = "DangNhapNV" });
+   if (!CheckRole())
+        {
+      TempData["ErrorMessage"] = "Bạn không có quyền truy cập!";
+return RedirectToAction("DangNhap", "DangNhapNV", new { area = "DangNhapNV" });
        }
 
        var khuyenMai = db.KhuyenMais.Find(id);
        if (khuyenMai == null)
-             {
-         TempData["ErrorMessage"] = "Không tìm thấy khuyến mãi!";
+  {
+      TempData["ErrorMessage"] = "Không tìm thấy khuyến mãi!";
    return RedirectToAction("Index");
       }
 
@@ -276,19 +276,62 @@ ModelState.AddModelError("MaKhuyenMai", "Mã khuyến mãi đã tồn tại!");
      GiaTri = khuyenMai.GiaTri ?? 0,
      NgayBatDau = khuyenMai.NgayBatDau ?? DateTime.Now,
      NgayKetThuc = khuyenMai.NgayKetThuc ?? DateTime.Now.AddDays(30),
-              DieuKienApDung = khuyenMai.DieuKienApDung,
+    DieuKienApDung = khuyenMai.DieuKienApDung,
   SoLanSuDungToiDa = khuyenMai.SoLanSuDungToiDa,
-       DaHoatDong = khuyenMai.DaHoatDong
-             };
+    DaHoatDong = khuyenMai.DaHoatDong
+    };
 
    return View(viewModel);
    }
-            catch (Exception ex)
+ catch (Exception ex)
    {
    System.Diagnostics.Debug.WriteLine($"[ERROR - KhuyenMai/Edit GET] {ex.Message}");
-         TempData["ErrorMessage"] = "Có lỗi xảy ra!";
+TempData["ErrorMessage"] = "Có lỗi xảy ra!";
      return RedirectToAction("Index");
             }
+        }
+
+   // GET: Details - Chi tiết khuyến mãi
+        public ActionResult Details(int id)
+        {
+     try
+   {
+       if (!CheckRole())
+       {
+         TempData["ErrorMessage"] = "Bạn không có quyền truy cập!";
+ return RedirectToAction("DangNhap", "DangNhapNV", new { area = "DangNhapNV" });
+        }
+
+     var khuyenMai = db.KhuyenMais.Find(id);
+ if (khuyenMai == null)
+       {
+                 TempData["ErrorMessage"] = "Không tìm thấy khuyến mãi!";
+               return RedirectToAction("Index");
+           }
+
+         // Map sang DetailsViewModel
+   var viewModel = new KhuyenMaiDetailsViewModel
+            {
+      KhuyenMaiId = khuyenMai.KhuyenMaiId,
+     MaKhuyenMai = khuyenMai.MaKhuyenMai,
+     TenKhuyenMai = khuyenMai.TenKhuyenMai,
+           GiaTri = khuyenMai.GiaTri,
+        NgayBatDau = khuyenMai.NgayBatDau,
+       NgayKetThuc = khuyenMai.NgayKetThuc,
+          DieuKienApDung = khuyenMai.DieuKienApDung,
+SoLanSuDungToiDa = khuyenMai.SoLanSuDungToiDa,
+        SoLanDaSuDung = db.DatPhongs.Count(dp => dp.MaKhuyenMai == khuyenMai.KhuyenMaiId),
+   DaHoatDong = khuyenMai.DaHoatDong
+    };
+
+     return View(viewModel);
+            }
+     catch (Exception ex)
+       {
+             System.Diagnostics.Debug.WriteLine($"[ERROR - KhuyenMai/Details] {ex.Message}");
+       TempData["ErrorMessage"] = "Có lỗi xảy ra!";
+                return RedirectToAction("Index");
+  }
         }
 
  // POST: Edit - Xử lý sửa khuyến mãi
