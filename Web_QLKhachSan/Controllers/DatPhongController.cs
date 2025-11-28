@@ -92,8 +92,9 @@ namespace Web_QLKhachSan.Controllers
             }
 
             // Reset ngày nhận và ngày trả về mặc định mỗi lần load trang
+            // Ngày nhận: giờ hiện tại, Ngày trả: 12:00 ngày hôm sau
             model.NgayNhan = DateTime.Now;
-            model.NgayTra = DateTime.Now.AddDays(1);
+            model.NgayTra = DateTime.Now.AddDays(1).Date.AddHours(12);
 
             // Lấy thông tin phòng nếu có phongId (cho cả model mới và model đã có khi đặt phòng mới)
             if (phongId.HasValue || model.PhongId.HasValue)
@@ -139,6 +140,24 @@ namespace Web_QLKhachSan.Controllers
                 }
             }
 
+            // ✅ Kiểm tra xem khách hàng có phòng nào đang ở (TrangThaiDatPhong = 2) không
+            int MaKhachHang = Convert.ToInt32(Session["MaKhachHang"]);
+            bool coPhongDangO = db.DatPhongs
+                .Any(dp => dp.MaKhachHang == maKhachHang &&
+                          dp.TrangThaiDatPhong == 2); // 2 = Đã check-in (đang ở)
+
+            // ✅ Nếu có phòng đang ở và chưa có "(Đặt Hộ)" trong ghi chú, thì thêm vào
+            if (coPhongDangO)
+            {
+                string ghiChuGoc = model.GhiChu?.Trim() ?? "";
+                if (!ghiChuGoc.Contains("(Đặt Hộ)"))
+                {
+                    model.GhiChu = string.IsNullOrEmpty(ghiChuGoc)
+                        ? "(Đặt Hộ)"
+                        : $"{ghiChuGoc} (Đặt Hộ)";
+                }
+            }
+
             return View(model);
         }
 
@@ -155,6 +174,26 @@ namespace Web_QLKhachSan.Controllers
             {
                 TempData["ErrorMessage"] = "Vui lòng đăng nhập để đặt phòng!";
                 return RedirectToAction("DangNhap", "Login");
+            }
+
+            // Lấy thông tin khách hàng từ session
+            int maKhachHang = Convert.ToInt32(Session["MaKhachHang"]);
+
+            // ✅ Kiểm tra xem khách hàng có phòng nào đang ở (TrangThaiDatPhong = 2) không
+            bool coPhongDangO = db.DatPhongs
+                .Any(dp => dp.MaKhachHang == maKhachHang &&
+                          dp.TrangThaiDatPhong == 2); // 2 = Đã check-in (đang ở)
+
+            // ✅ Nếu có phòng đang ở, tự động thêm "(Đặt Hộ)" vào ghi chú
+            if (coPhongDangO)
+            {
+                string ghiChuGoc = model.GhiChu?.Trim() ?? "";
+                if (!ghiChuGoc.Contains("(Đặt Hộ)"))
+                {
+                    model.GhiChu = string.IsNullOrEmpty(ghiChuGoc)
+                        ? "(Đặt Hộ)"
+                        : $"{ghiChuGoc} (Đặt Hộ)";
+                }
             }
 
             // CRITICAL: Preserve services from existing session
@@ -220,6 +259,7 @@ namespace Web_QLKhachSan.Controllers
             {
                 model.DichVuDaChon = new List<DichVuDaChon>();
             }
+
             Session["ThongTinDatPhong"] = model;
 
             // Chuyển sang trang dịch vụ đặt thêm
@@ -749,7 +789,7 @@ namespace Web_QLKhachSan.Controllers
                 Session["LastAmount"] = thongTinDatPhong.TongCong;
                 Session["LastTransactionNo"] = null;
                 Session["LastBankCode"] = null;
-                
+
                 TempData["PaymentSuccess"] = true;
                 TempData["SuccessMessage"] = $"Đặt phòng thành công! Vui lòng thanh toán trước {deadline:HH:mm dd/MM/yyyy}. Thông tin chi tiết đã được gửi qua email {thongTinDatPhong.Email}.";
                 TempData["PaymentDeadline"] = deadline;
@@ -839,7 +879,7 @@ namespace Web_QLKhachSan.Controllers
                 // ✅ Lấy thông tin đơn đặt phòng từ session
                 string paymentRefId = Session["CurrentPaymentRefId"] as string;
                 int? datPhongId = Session["CurrentDatPhongId"] as int?;
-                
+
                 // ✅ Nếu Session mất, tìm đơn đặt phòng theo vnp_TxnRef
                 if (!datPhongId.HasValue)
                 {
@@ -847,7 +887,7 @@ namespace Web_QLKhachSan.Controllers
                         .Where(l => l.vnp_txn_ref == vnp_TxnRef)
                         .OrderByDescending(l => l.log_time)
                         .FirstOrDefault();
-                    
+
                     if (log != null && log.DatPhongId.HasValue)
                     {
                         datPhongId = log.DatPhongId;
@@ -894,25 +934,25 @@ namespace Web_QLKhachSan.Controllers
                                     await SendBookingConfirmationEmailAsync(datPhongId.Value, vnp_TransactionNo, vnp_BankCode);
                                 });
                             }
-                         }
+                        }
 
-                         // Lưu vào Session để tránh mất data khi reload
-                         Session["LastPaymentSuccess"] = true;
-                         Session["LastBookingRef"] = paymentRefId;
-                         Session["LastAmount"] = vnp_Amount;
-                         Session["LastTransactionNo"] = vnp_TransactionNo;
-                         Session["LastBankCode"] = vnp_BankCode;
-                         Session["LastTransactionTime"] = DateTime.Now.ToString("HH:mm:ss dd/MM/yyyy");
-                         Session["LastTransactionStatus"] = "Thành công";
-                         
-                         TempData["PaymentSuccess"] = true;
-                         TempData["TransactionNo"] = vnp_TransactionNo;
-                         TempData["Amount"] = vnp_Amount;
-                         TempData["BankCode"] = vnp_BankCode;
-                         TempData["BookingRef"] = paymentRefId;
-                         TempData["TransactionTime"] = DateTime.Now.ToString("HH:mm:ss dd/MM/yyyy");
-                         TempData["TransactionStatus"] = "Thành công";
-                     }
+                        // Lưu vào Session để tránh mất data khi reload
+                        Session["LastPaymentSuccess"] = true;
+                        Session["LastBookingRef"] = paymentRefId;
+                        Session["LastAmount"] = vnp_Amount;
+                        Session["LastTransactionNo"] = vnp_TransactionNo;
+                        Session["LastBankCode"] = vnp_BankCode;
+                        Session["LastTransactionTime"] = DateTime.Now.ToString("HH:mm:ss dd/MM/yyyy");
+                        Session["LastTransactionStatus"] = "Thành công";
+
+                        TempData["PaymentSuccess"] = true;
+                        TempData["TransactionNo"] = vnp_TransactionNo;
+                        TempData["Amount"] = vnp_Amount;
+                        TempData["BankCode"] = vnp_BankCode;
+                        TempData["BookingRef"] = paymentRefId;
+                        TempData["TransactionTime"] = DateTime.Now.ToString("HH:mm:ss dd/MM/yyyy");
+                        TempData["TransactionStatus"] = "Thành công";
+                    }
                     else
                     {
                         // ✅ Thanh toán thất bại
@@ -932,7 +972,7 @@ namespace Web_QLKhachSan.Controllers
                         Session["LastErrorMessage"] = "Thanh toán thất bại. Mã lỗi: " + vnp_ResponseCode;
                         Session["LastTransactionTime"] = DateTime.Now.ToString("HH:mm:ss dd/MM/yyyy");
                         Session["LastTransactionStatus"] = "Thất bại";
-                        
+
                         TempData["PaymentSuccess"] = false;
                         TempData["ErrorMessage"] = "Thanh toán thất bại. Mã lỗi: " + vnp_ResponseCode;
                         TempData["TransactionTime"] = DateTime.Now.ToString("HH:mm:ss dd/MM/yyyy");
@@ -984,8 +1024,8 @@ namespace Web_QLKhachSan.Controllers
             ViewBag.ErrorMessage = TempData["ErrorMessage"] ?? Session["LastErrorMessage"];
             ViewBag.TransactionTime = TempData["TransactionTime"] ?? Session["LastTransactionTime"];
             ViewBag.TransactionStatus = TempData["TransactionStatus"] ?? Session["LastTransactionStatus"];
-            
-            // ✅ Khôi phục Session nếu bị mất sau khi redirect từ VNPay
+
+            // ✅ Khôi phục Session và Authentication nếu bị mất sau khi redirect từ VNPay
             if (Session["MaKhachHang"] == null)
             {
                 // Lấy thông tin từ DatPhong gần nhất dựa trên BookingRef
@@ -994,8 +1034,9 @@ namespace Web_QLKhachSan.Controllers
                 {
                     var datPhong = db.DatPhongs
                         .Include("KhachHang")
+                        .Include("KhachHang.TaiKhoans")
                         .FirstOrDefault(dp => dp.PaymentRefId == bookingRef || dp.MaDatPhong == bookingRef);
-                    
+
                     if (datPhong != null && datPhong.KhachHang != null)
                     {
                         // Khôi phục Session
@@ -1006,6 +1047,13 @@ namespace Web_QLKhachSan.Controllers
                         Session["NgayTao"] = datPhong.KhachHang.NgayTao;
                         Session["AnhDaiDienUrl"] = datPhong.KhachHang.AnhDaiDienUrl;
                         ViewBag.CustomerName = datPhong.KhachHang.HoVaTen;
+
+                        // ✅ Khôi phục Authentication nếu có TaiKhoan
+                        var taiKhoan = datPhong.KhachHang.TaiKhoans?.FirstOrDefault();
+                        if (taiKhoan != null && !User.Identity.IsAuthenticated)
+                        {
+                            System.Web.Security.FormsAuthentication.SetAuthCookie(taiKhoan.TenDangNhap, false);
+                        }
                     }
                 }
             }
@@ -1019,7 +1067,7 @@ namespace Web_QLKhachSan.Controllers
                     ViewBag.CustomerName = khachHang.HoVaTen;
                 }
             }
-            
+
             return View();
         }
 
@@ -1055,7 +1103,7 @@ namespace Web_QLKhachSan.Controllers
                     {
                         return;
                     }
-                    
+
                     string htmlTemplate = System.IO.File.ReadAllText(templatePath);
 
                     // Tạo HTML cho chi tiết phòng
@@ -1116,7 +1164,7 @@ namespace Web_QLKhachSan.Controllers
                         tongTienDichVu = datPhong.ChiTietDatDichVus.Sum(dv => dv.ThanhTien ?? 0);
 
                         dichVuSectionHtml.Append("<h3 class='section-title'>🛎️ Dịch Vụ Đã Chọn</h3>");
-                        
+
                         foreach (var dichVu in datPhong.ChiTietDatDichVus)
                         {
                             dichVuSectionHtml.Append($@"
@@ -1165,7 +1213,7 @@ namespace Web_QLKhachSan.Controllers
                     // Gửi email
                     var emailService = new MailKitEmailService();
                     string subject = $"✅ Xác Nhận Đặt Phòng Thành Công - {datPhong.MaDatPhong ?? "#DP" + datPhong.DatPhongId}";
-                    
+
                     await emailService.SendEmailAsync(khachHang.Email, subject, htmlBody);
                 }
                 catch (Exception ex)
@@ -1174,7 +1222,8 @@ namespace Web_QLKhachSan.Controllers
                     System.Diagnostics.Debug.WriteLine($"[Email Error] {ex.Message}");
                 }
             }
-        }        protected override void Dispose(bool disposing)
+        }
+        protected override void Dispose(bool disposing)
         {
             if (disposing)
             {

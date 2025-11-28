@@ -31,7 +31,6 @@ namespace Web_QLKhachSan.Models
         public virtual DbSet<DanhGiaHinhAnh> DanhGiaHinhAnhs { get; set; }
         public virtual DbSet<DatPhong> DatPhongs { get; set; }
         public virtual DbSet<DichVu> DichVus { get; set; }
-        public virtual DbSet<GiaTheoNgay> GiaTheoNgays { get; set; }
         public virtual DbSet<HoaDon> HoaDons { get; set; }
         public virtual DbSet<KhachHang> KhachHangs { get; set; }
         public virtual DbSet<KhuyenMai> KhuyenMais { get; set; }

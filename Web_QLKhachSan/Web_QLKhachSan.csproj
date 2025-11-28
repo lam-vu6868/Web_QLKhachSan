@@ -324,9 +324,6 @@
     </Compile>
     <Compile Include="Models\DichVuDatThemViewModel.cs" />
     <Compile Include="Models\DichVuToken.cs" />
-    <Compile Include="Models\GiaTheoNgay.cs">
-      <DependentUpon>Contect.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\HoaDon.cs">
       <DependentUpon>Contect.tt</DependentUpon>
     </Compile>

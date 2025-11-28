@@ -35,7 +35,7 @@
                 </div>
 
                 @* Row 2: Mã khuyến mãi và Số người *@
-                <div class="form-row two-columns">
+                <div class="form-row two-columns" style="display: none">
                     <div class="form-group">
                         @Html.LabelFor(m => m.MaKhuyenMai, new { @class = "control-label" })
                         <select id="MaKhuyenMai" name="MaKhuyenMai" class="form-control">
@@ -89,27 +89,26 @@
                 <div class="form-row two-columns">
                     <div class="form-group">
                         <span class="required">@Html.LabelFor(m => m.NgayNhan, new { @class = "control-label" })*</span>
-                        @Html.TextBoxFor(m => m.NgayNhan, "{0:yyyy-MM-dd}", new
+                        @Html.TextBoxFor(m => m.NgayNhan, "{0:yyyy-MM-ddTHH:mm}", new
                         {
-                            @type = "date",
+                            @type = "datetime-local",
                             @class = "form-control",
                             id = "checkin-date",
-                            min = DateTime.Now.ToString("yyyy-MM-dd")
+                            min = DateTime.Now.ToString("yyyy-MM-ddTHH:mm")
                         })
                         @Html.ValidationMessageFor(m => m.NgayNhan, "", new { @class = "text-danger" })
-                        <small class="date-hint">Ngày nhận phòng tối thiểu sau ngày hiện tại 1 ngày</small>
+                        <small class="date-hint">Ngày giờ nhận phòng (giờ hiện tại trở đi)</small>
                     </div>
                     <div class="form-group">
                         <span class="required">@Html.LabelFor(m => m.NgayTra, new { @class = "control-label" })*</span>
-                        @Html.TextBoxFor(m => m.NgayTra, "{0:yyyy-MM-dd}", new
+                        @Html.TextBoxFor(m => m.NgayTra, "{0:yyyy-MM-ddTHH:mm}", new
                         {
-                            @type = "date",
+                            @type = "datetime-local",
                             @class = "form-control",
-                            id = "checkout-date",
-                            min = Model.NgayNhan.AddDays(1).ToString("yyyy-MM-dd")
+                            id = "checkout-date"
                         })
                         @Html.ValidationMessageFor(m => m.NgayTra, "", new { @class = "text-danger" })
-                        <small class="date-hint">Ngày trả phòng tối thiểu sau ngày nhận 1 ngày</small>
+                        <small class="date-hint">Ngày giờ trả phòng (khuyến khích 12:00 trưa)</small>
                     </div>
                 </div>
 
@@ -117,7 +116,8 @@
                 <div class="form-row two-columns">
                     <div class="form-group">
                         <span class="required">
-                        @Html.LabelFor(m => m.Email, new { @class = "control-label" })*</span>
+                            @Html.LabelFor(m => m.Email, new { @class = "control-label" })*
+                        </span>
                         @Html.TextBoxFor(m => m.Email, new { @class = "form-control readonly-field", @readonly = "readonly", @type = "email" })
                         @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
                     </div>
@@ -161,8 +161,9 @@
                 <div class="form-row">
                     <div class="form-group full-width">
                         @Html.LabelFor(m => m.GhiChu, new { @class = "control-label" })
-                        @Html.TextAreaFor(m => m.GhiChu, new { 
-                            @class = "form-control", 
+                        @Html.TextAreaFor(m => m.GhiChu, new
+                        {
+                            @class = "form-control",
                             placeholder = "Nhập ghi chú của bạn (nếu có)...",
                             rows = 3,
                             maxlength = 500
@@ -203,12 +204,12 @@
             if (savedData) {
                 try {
                     var data = JSON.parse(savedData);
-                    
+
                     // Chỉ khôi phục nếu field đang trống hoặc có giá trị mặc định
                     if (data.soDienThoai && $('#SoDienThoai').val().trim() === '') {
                         $('#SoDienThoai').val(data.soDienThoai);
                     }
-                    
+
                     if (data.maKhuyenMai) {
                         $('#MaKhuyenMai').val(data.maKhuyenMai);
                     }
@@ -224,11 +225,11 @@
                     if (data.soNguoi) {
                         $('#SoNguoi').val(data.soNguoi);
                     }
-                    
+
                     if (data.ghiChu) {
                         $('#GhiChu').val(data.ghiChu);
                     }
-                    
+
                     // Cập nhật summary sau khi khôi phục từ localStorage
                     updateSummaryDates();
                 } catch (e) {
@@ -253,21 +254,42 @@
             function updateSummaryDates() {
                 var checkinDate = $('#checkin-date').val();
                 var checkoutDate = $('#checkout-date').val();
-                
+
                 if (checkinDate && checkoutDate) {
                     var checkin = new Date(checkinDate);
                     var checkout = new Date(checkoutDate);
-                    
-                    // Cập nhật hiển thị ngày trong summary
-                    $('#summary-checkin').text(checkin.toLocaleDateString('vi-VN'));
-                    $('#summary-checkout').text(checkout.toLocaleDateString('vi-VN'));
+
+                    // Cập nhật hiển thị ngày giờ trong summary
+                    $('#summary-checkin').text(checkin.toLocaleDateString('vi-VN') + ' ' + checkin.toLocaleTimeString('vi-VN', {hour: '2-digit', minute: '2-digit'}));
+                    $('#summary-checkout').text(checkout.toLocaleDateString('vi-VN') + ' ' + checkout.toLocaleTimeString('vi-VN', {hour: '2-digit', minute: '2-digit'}));
                 }
             }
 
             // Lắng nghe sự kiện thay đổi
             $('#SoDienThoai, #MaKhuyenMai, #checkin-date, #checkout-date, #SoNguoi, #GhiChu').on('change input', function() {
                 saveToLocalStorage();
-                
+
+                // ✅ Cập nhật min cho checkout khi checkin thay đổi
+                if ($(this).attr('id') === 'checkin-date') {
+                    var checkinValue = $(this).val();
+                    if (checkinValue) {
+                        $('#checkout-date').attr('min', checkinValue);
+                    }
+                }
+
+                // ✅ Khóa giờ checkout luôn là 12:00
+                if ($(this).attr('id') === 'checkout-date') {
+                    var checkoutValue = $(this).val();
+                    if (checkoutValue) {
+                        // Lấy phần ngày và ép giờ về 12:00
+                        var dateOnly = checkoutValue.split('T')[0];
+                        var newCheckoutValue = dateOnly + 'T12:00';
+                        if (checkoutValue !== newCheckoutValue) {
+                            $(this).val(newCheckoutValue);
+                        }
+                    }
+                }
+
                 // Cập nhật summary khi thay đổi ngày
                 if ($(this).attr('id') === 'checkin-date' || $(this).attr('id') === 'checkout-date') {
                     updateSummaryDates();
@@ -279,9 +301,94 @@
                 // Lưu lần cuối trước khi submit
                 saveToLocalStorage();
             });
+
+            // ✅ Bảo vệ chữ "(Đặt Hộ)" trong ghi chú không cho xóa
+            function protectDatHoText() {
+                var $ghiChu = $('#GhiChu');
+                var currentValue = $ghiChu.val();
+
+                if (currentValue && currentValue.includes('(Đặt Hộ)')) {
+                    // Lưu position của cursor
+                    var cursorPos = $ghiChu[0].selectionStart;
+
+                    // Nếu người dùng xóa "(Đặt Hộ)", thì khôi phục lại
+                    $ghiChu.on('input keydown paste', function(e) {
+                        setTimeout(function() {
+                            var newValue = $ghiChu.val();
+
+                            // Nếu "(Đặt Hộ)" bị xóa, thêm lại vào cuối
+                            if (!newValue.includes('(Đặt Hộ)')) {
+                                if (newValue.trim() === '') {
+                                    $ghiChu.val('(Đặt Hộ)');
+                                } else {
+                                    $ghiChu.val(newValue.trim() + ' (Đặt Hộ)');
+                                }
+
+                                // Đặt cursor về vị trí trước "(Đặt Hộ)"
+                                var finalValue = $ghiChu.val();
+                                var datHoIndex = finalValue.indexOf('(Đặt Hộ)');
+                                if (datHoIndex > 0) {
+                                    $ghiChu[0].setSelectionRange(datHoIndex - 1, datHoIndex - 1);
+                                }
+                            }
+                        }, 1);
+                    });
+                }
+            }
+
+            // ✅ Set giá trị mặc định cho ngày giờ nếu chưa có
+            function setDefaultDateTime() {
+                var checkinInput = $('#checkin-date');
+                var checkoutInput = $('#checkout-date');
+
+                // Debug: Kiểm tra giá trị hiện tại
+                console.log('Checkin current value:', checkinInput.val());
+                console.log('Checkout current value:', checkoutInput.val());
+
+                // Luôn set giá trị mặc định (override giá trị hiện tại nếu cần)
+                var now = new Date();
+                var formattedNow = now.getFullYear() + '-' +
+                    String(now.getMonth() + 1).padStart(2, '0') + '-' +
+                    String(now.getDate()).padStart(2, '0') + 'T' +
+                    String(now.getHours()).padStart(2, '0') + ':' +
+                    String(now.getMinutes()).padStart(2, '0');
+                checkinInput.val(formattedNow);
+
+                var tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                tomorrow.setHours(12, 0, 0, 0);
+                var formattedTomorrow = tomorrow.getFullYear() + '-' +
+                    String(tomorrow.getMonth() + 1).padStart(2, '0') + '-' +
+                    String(tomorrow.getDate()).padStart(2, '0') + 'T12:00';
+                checkoutInput.val(formattedTomorrow);
+
+                // ✅ Set min attribute để tránh lỗi validation
+                checkinInput.attr('min', formattedNow);
+                checkoutInput.attr('min', formattedNow); // Min là giờ hiện tại, không phải ngày mai
+
+                console.log('Set checkin to:', formattedNow);
+                console.log('Set checkout to:', formattedTomorrow);
+            }
+
+            // Gọi hàm set giá trị mặc định
+            setDefaultDateTime();
+
+            // ✅ Thêm event listener riêng cho checkout để khóa giờ 12:00
+            $('#checkout-date').on('blur change', function() {
+                var checkoutValue = $(this).val();
+                if (checkoutValue && checkoutValue.includes('T')) {
+                    var dateOnly = checkoutValue.split('T')[0];
+                    $(this).val(dateOnly + 'T12:00');
+                }
+            });
+
+            // Gọi hàm bảo vệ khi trang load
+            protectDatHoText();
+
+            // ✅ Cập nhật summary ngày giờ ngay khi load trang
+            updateSummaryDates();
         });
     </script>
 }
 
 <script src="~/assets/js/dat-phong.js"></script>
-

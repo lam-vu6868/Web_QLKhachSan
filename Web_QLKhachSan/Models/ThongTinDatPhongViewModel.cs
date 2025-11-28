@@ -79,7 +79,7 @@ namespace Web_QLKhachSan.Models
             {
                 if (NgayNhan != null && NgayTra != null && NgayTra > NgayNhan)
                 {
-                    return (NgayTra - NgayNhan).Days;
+                    return (NgayTra.Date - NgayNhan.Date).Days;
                 }
                 return 0;
             }
