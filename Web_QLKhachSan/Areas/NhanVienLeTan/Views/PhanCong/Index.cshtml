@@ -1,0 +1,315 @@
+@model Web_QLKhachSan.Areas.NhanVienLeTan.ViewModels.PhanCong.PhanCongListViewModel
+@{
+    ViewBag.Title = "Phân Công Công Việc";
+    Layout = "~/Areas/NhanVienLeTan/Views/Shared/_LayoutNVLT.cshtml";
+}
+
+@section styles {
+    <link href="@Url.Content("~/Areas/NhanVienLeTan/assets/css/datPhong.css")" rel="stylesheet" />
+    <style>
+        /* Đảm bảo các form-group trong bộ lọc có chiều cao đồng đều */
+        .card-body .form-group {
+            min-height: 70px;
+        }
+        
+        /* Responsive cho bộ lọc */
+        @@media (max-width: 991px) {
+            .card-body .form-group {
+                min-height: auto;
+            }
+        }
+        
+        /* Đảm bảo các nút bấm có kích thước đồng đều */
+        .card-body .btn {
+            min-width: 120px;
+        }
+        
+        @@media (max-width: 767px) {
+            .card-body .btn {
+                min-width: 100%;
+                margin-bottom: 0.5rem;
+            }
+        }
+    </style>
+}
+
+<div class="container-fluid">
+    @* ==== HEADER ==== *@
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">
+            <i class="fas fa-tasks"></i> Phân Công Công Việc
+        </h1>
+        <a href="@Url.Action("Create")" class="btn btn-primary btn-icon-split shadow-sm">
+            <span class="icon text-white-50">
+                <i class="fas fa-plus"></i>
+            </span>
+            <span class="text">Phân Công Mới</span>
+        </a>
+    </div>
+
+    @* ==== THÔNG BÁO ==== *@
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle"></i> @TempData["ErrorMessage"]
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+
+    @* ==== BỘ LỌC ==== *@
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">
+                <i class="fas fa-filter"></i> Bộ Lọc
+            </h6>
+        </div>
+        <div class="card-body">
+            @using (Html.BeginForm("Index", "PhanCong", FormMethod.Get, new { @class = "form-horizontal" }))
+            {
+                <div class="row align-items-end">
+                    <div class="col-lg-3 col-md-6 mb-3 mb-md-0">
+                        <div class="form-group mb-0">
+                            @Html.LabelFor(m => m.Filter.TimKiem, new { @class = "font-weight-bold mb-1" })
+                            @Html.TextBoxFor(m => m.Filter.TimKiem, new { @class = "form-control", placeholder = "Mã phân công, phòng, nhân viên..." })
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-6 mb-3 mb-md-0">
+                        <div class="form-group mb-0">
+                            @Html.LabelFor(m => m.Filter.TrangThaiCongViec, new { @class = "font-weight-bold mb-1" })
+                            @Html.DropDownListFor(m => m.Filter.TrangThaiCongViec,
+                                new SelectList(new[]
+                                {
+                                    new { Value = (byte?)null, Text = "-- Tất cả --" },
+                                    new { Value = (byte?)0, Text = "Chờ xử lý" },
+                                    new { Value = (byte?)1, Text = "Đang làm" },
+                                    new { Value = (byte?)2, Text = "Hoàn thành" },
+                                    new { Value = (byte?)3, Text = "Hủy" }
+                                }, "Value", "Text", Model.Filter.TrangThaiCongViec),
+                                new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-6 mb-3 mb-md-0">
+                        <div class="form-group mb-0">
+                            @Html.LabelFor(m => m.Filter.MucDoUuTien, new { @class = "font-weight-bold mb-1" })
+                            @Html.DropDownListFor(m => m.Filter.MucDoUuTien,
+                                new SelectList(new[]
+                                {
+                                    new { Value = (byte?)null, Text = "-- Tất cả --" },
+                                    new { Value = (byte?)1, Text = "Thường" },
+                                    new { Value = (byte?)2, Text = "Cao" },
+                                    new { Value = (byte?)3, Text = "Khẩn cấp" }
+                                }, "Value", "Text", Model.Filter.MucDoUuTien),
+                                new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-6 mb-3 mb-md-0">
+                        <div class="form-group mb-0">
+                            @Html.LabelFor(m => m.Filter.NhanVienBuongPhongId, new { @class = "font-weight-bold mb-1" })
+                            @Html.DropDownListFor(m => m.Filter.NhanVienBuongPhongId,
+                                new SelectList(ViewBag.DanhSachNhanVienBuongPhong as List<SelectListItem> ?? new List<SelectListItem>(), "Value", "Text", Model.Filter.NhanVienBuongPhongId),
+                                "-- Tất cả --",
+                                new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-12">
+                        <div class="form-group mb-0">
+                            <label class="font-weight-bold mb-1 d-block" style="visibility: hidden;">Actions</label>
+                            <div class="d-flex">
+                                <button type="submit" class="btn btn-primary mr-2 flex-fill flex-md-grow-0">
+                                    <i class="fas fa-search"></i> Tìm Kiếm
+                                </button>
+                                <a href="@Url.Action("Index")" class="btn btn-secondary flex-fill flex-md-grow-0">
+                                    <i class="fas fa-redo"></i> Làm Mới
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    @* ==== DANH SÁCH PHÂN CÔNG ==== *@
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">
+                <i class="fas fa-list"></i> Danh sách phân công
+                <span class="badge badge-primary ml-2">@Model.TotalRecords phân công</span>
+            </h6>
+        </div>
+        <div class="card-body">
+            @if (Model.DanhSachPhanCong != null && Model.DanhSachPhanCong.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover" width="100%" cellspacing="0">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Mã phân công</th>
+                                <th>Phòng</th>
+                                <th>Nhân viên buồng phòng</th>
+                                <th>Trạng thái</th>
+                                <th>Mức độ ưu tiên</th>
+                                <th>Thời gian phân công</th>
+                                <th>Thời gian dự kiến</th>
+                                <th>Thời gian hoàn thành</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.DanhSachPhanCong)
+                            {
+                                <tr class="@(item.QuaHan && item.TrangThaiCongViec != 2 ? "table-warning" : "")">
+                                    <td>
+                                        <strong>@item.MaPhanCong</strong>
+                                    </td>
+                                    <td>
+                                        <strong>@item.MaPhong</strong>
+                                        @if (item.Tang.HasValue)
+                                        {
+                                            <br /><small class="text-muted">Tầng @item.Tang</small>
+                                        }
+                                    </td>
+                                    <td>
+                                        @item.TenNhanVienBuongPhong
+                                        <br /><small class="text-muted">@item.MaNhanVienBuongPhong</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge @item.TrangThaiBadgeClass">@item.TrangThaiText</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge @item.MucDoUuTienBadgeClass">@item.MucDoUuTienText</span>
+                                    </td>
+                                    <td>
+                                        <small>@item.ThoiGianPhanCong.ToString("dd/MM/yyyy HH:mm")</small>
+                                    </td>
+                                    <td>
+                                        @if (item.ThoiGianDuKien.HasValue)
+                                        {
+                                            <small class="@(item.QuaHan && item.TrangThaiCongViec != 2 ? "text-danger font-weight-bold" : "text-info")">
+                                                <i class="fas fa-clock"></i> @item.ThoiGianDuKien.Value.ToString("dd/MM/yyyy HH:mm")
+                                                @if (item.QuaHan && item.TrangThaiCongViec != 2)
+                                                {
+                                                    <br /><span class="badge badge-danger badge-sm">Quá hạn</span>
+                                                }
+                                            </small>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">-</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.ThoiGianHoanThanh.HasValue)
+                                        {
+                                            <small class="text-success">@item.ThoiGianHoanThanh.Value.ToString("dd/MM/yyyy HH:mm")</small>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">-</span>
+                                        }
+                                    </td>
+                                    <td class="text-center" style="min-width: 120px;">
+                                        <a href="@Url.Action("Details", new { id = item.PhanCongId })" 
+                                           class="btn btn-sm btn-info" 
+                                           title="Xem chi tiết">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                @* ==== PAGINATION ==== *@
+                if (Model.TotalPages > 1)
+                {
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
+                                <a class="page-link" href="@Url.Action("Index", new { 
+                                    TimKiem = Model.Filter.TimKiem,
+                                    TrangThaiCongViec = Model.Filter.TrangThaiCongViec,
+                                    MucDoUuTien = Model.Filter.MucDoUuTien,
+                                    NhanVienBuongPhongId = Model.Filter.NhanVienBuongPhongId,
+                                    PhongId = Model.Filter.PhongId,
+                                    TuNgayPhanCong = Model.Filter.TuNgayPhanCong?.ToString("yyyy-MM-dd"),
+                                    DenNgayPhanCong = Model.Filter.DenNgayPhanCong?.ToString("yyyy-MM-dd"),
+                                    CurrentPage = Model.CurrentPage - 1 
+                                })">
+                                    <i class="fas fa-chevron-left"></i> Trước
+                                </a>
+                            </li>
+
+                            @for (int i = 1; i <= Model.TotalPages; i++)
+                            {
+                                <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                                    <a class="page-link" href="@Url.Action("Index", new { 
+                                        TimKiem = Model.Filter.TimKiem,
+                                        TrangThaiCongViec = Model.Filter.TrangThaiCongViec,
+                                        MucDoUuTien = Model.Filter.MucDoUuTien,
+                                        NhanVienBuongPhongId = Model.Filter.NhanVienBuongPhongId,
+                                        PhongId = Model.Filter.PhongId,
+                                        TuNgayPhanCong = Model.Filter.TuNgayPhanCong?.ToString("yyyy-MM-dd"),
+                                        DenNgayPhanCong = Model.Filter.DenNgayPhanCong?.ToString("yyyy-MM-dd"),
+                                        CurrentPage = i 
+                                    })">@i</a>
+                                </li>
+                            }
+
+                            <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
+                                <a class="page-link" href="@Url.Action("Index", new { 
+                                    TimKiem = Model.Filter.TimKiem,
+                                    TrangThaiCongViec = Model.Filter.TrangThaiCongViec,
+                                    MucDoUuTien = Model.Filter.MucDoUuTien,
+                                    NhanVienBuongPhongId = Model.Filter.NhanVienBuongPhongId,
+                                    PhongId = Model.Filter.PhongId,
+                                    TuNgayPhanCong = Model.Filter.TuNgayPhanCong?.ToString("yyyy-MM-dd"),
+                                    DenNgayPhanCong = Model.Filter.DenNgayPhanCong?.ToString("yyyy-MM-dd"),
+                                    CurrentPage = Model.CurrentPage + 1 
+                                })">
+                                    Sau <i class="fas fa-chevron-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+
+                    <p class="text-center text-muted">
+                        Trang @Model.CurrentPage / @Model.TotalPages - Tổng @Model.TotalRecords phân công
+                    </p>
+                }
+            }
+            else
+            {
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> Không có phân công nào phù hợp với điều kiện lọc.
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Auto-hide alerts after 5 seconds
+            setTimeout(function() {
+                $('.alert').fadeOut('slow', function() {
+                    $(this).remove();
+                });
+            }, 5000);
+        });
+    </script>
+}
+

@@ -228,6 +228,7 @@
     <Compile Include="Areas\NhanVienLeTan\Controllers\HoaDonController.cs" />
     <Compile Include="Areas\NhanVienLeTan\Controllers\KhachHangController.cs" />
     <Compile Include="Areas\NhanVienLeTan\Controllers\KhuyenMaiController.cs" />
+    <Compile Include="Areas\NhanVienLeTan\Controllers\PhanCongController.cs" />
     <Compile Include="Areas\NhanVienLeTan\Controllers\SoDoPhongController.cs" />
     <Compile Include="Areas\NhanVienLeTan\NhanVienAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\BaoCaoTaiChinhController.cs" />
@@ -271,6 +272,11 @@
     <Compile Include="Areas\NhanVienLeTan\ViewModels\KhachHang\KhachHangItemViewModel.cs" />
     <Compile Include="Areas\NhanVienLeTan\ViewModels\KhachHang\KhachHangListViewModel.cs" />
     <Compile Include="Areas\NhanVienLeTan\ViewModels\KhachHang\KhachHangStatViewModel.cs" />
+    <Compile Include="Areas\NhanVienLeTan\ViewModels\PhanCong\PhanCongFilterViewModel.cs" />
+    <Compile Include="Areas\NhanVienLeTan\ViewModels\PhanCong\PhanCongFormViewModel.cs" />
+    <Compile Include="Areas\NhanVienLeTan\ViewModels\PhanCong\PhanCongItemViewModel.cs" />
+    <Compile Include="Areas\NhanVienLeTan\ViewModels\PhanCong\PhanCongListViewModel.cs" />
+    <Compile Include="Areas\NhanVienLeTan\ViewModels\PhanCong\FutureDateAttribute.cs" />
     <Compile Include="Areas\NhanVienLeTan\ViewModels\PhongStatusViewModel.cs" />
     <Compile Include="Areas\NhanVienLeTan\ViewModels\SoDoPhongViewModel.cs" />
     <Compile Include="Controllers\ChinhSachVaDieuKhoanController.cs" />
@@ -361,6 +367,9 @@
       <DependentUpon>Contect.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\PhongAnh.cs">
+      <DependentUpon>Contect.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PhanCongCongViec.cs">
       <DependentUpon>Contect.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\RangBuocHoSoViewModel.cs" />
@@ -519,6 +528,8 @@
     <Content Include="Areas\NhanVienLeTan\Views\KhachHang\Create.cshtml" />
     <Content Include="Areas\NhanVienLeTan\Views\KhachHang\Edit.cshtml" />
     <Content Include="Areas\NhanVienLeTan\Views\KhachHang\Details.cshtml" />
+    <Content Include="Areas\NhanVienLeTan\Views\PhanCong\Index.cshtml" />
+    <Content Include="Areas\NhanVienLeTan\Views\PhanCong\Create.cshtml" />
     <Content Include="Areas\NhanVienLeTan\Views\KhuyenMai\Index.cshtml" />
     <EntityDeploy Include="Models\Contect.edmx">
       <Generator>EntityModelCodeGenerator</Generator>

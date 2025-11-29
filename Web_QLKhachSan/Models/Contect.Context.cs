@@ -40,6 +40,7 @@ namespace Web_QLKhachSan.Models
         public virtual DbSet<LoaiTienIch> LoaiTienIches { get; set; }
         public virtual DbSet<LoaiTienNghi> LoaiTienNghis { get; set; }
         public virtual DbSet<NhanVien> NhanViens { get; set; }
+        public virtual DbSet<PhanCongCongViec> PhanCongCongViecs { get; set; }
         public virtual DbSet<Phong> Phongs { get; set; }
         public virtual DbSet<PhongAnh> PhongAnhs { get; set; }
         public virtual DbSet<TaiKhoan> TaiKhoans { get; set; }

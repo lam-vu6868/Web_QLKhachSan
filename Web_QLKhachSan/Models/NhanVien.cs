@@ -18,6 +18,8 @@ namespace Web_QLKhachSan.Models
         public NhanVien()
         {
             this.DatPhongs = new HashSet<DatPhong>();
+            this.PhanCongCongViecs = new HashSet<PhanCongCongViec>();
+            this.PhanCongCongViecs1 = new HashSet<PhanCongCongViec>();
             this.TaiKhoans = new HashSet<TaiKhoan>();
         }
     
@@ -37,6 +39,10 @@ namespace Web_QLKhachSan.Models
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DatPhong> DatPhongs { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PhanCongCongViec> PhanCongCongViecs { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PhanCongCongViec> PhanCongCongViecs1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TaiKhoan> TaiKhoans { get; set; }
     }

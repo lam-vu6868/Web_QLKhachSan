@@ -469,7 +469,7 @@ decimal phanTramGiam = phongItem.GiamGia;
     }
 
     // ✅ SAVE TẤT CẢ MỘT LẦN: DatPhong + ChiTietDatPhong + Phòng đã gán
-    db.SaveChanges();
+         db.SaveChanges();
 
     // Thông báo thành công
     string successMsg = $"Tạo đơn đặt phòng {datPhong.MaDatPhong} thành công!";
@@ -483,7 +483,7 @@ decimal phanTramGiam = phongItem.GiamGia;
     }
 
     TempData["SuccessMessage"] = successMsg;
-    return RedirectToAction("Index");
+        return RedirectToAction("Index");
       }
      catch (Exception ex)
     {

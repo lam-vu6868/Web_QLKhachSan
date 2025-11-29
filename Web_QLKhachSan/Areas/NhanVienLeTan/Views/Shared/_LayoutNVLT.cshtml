@@ -129,6 +129,12 @@
           <span>Khách Hàng</span>
        </a>
  </li>
+     <li class="nav-item @(currentController == "PhanCong" ? "active" : "")">
+    <a href="@Url.Action("Index", "PhanCong")" class="nav-link @(currentController == "PhanCong" ? "active-link" : "")">
+     <i class="fas fa-tasks"></i>
+          <span>Phân Công Công Việc</span>
+       </a>
+ </li>
             </ul>
         </nav>
 
