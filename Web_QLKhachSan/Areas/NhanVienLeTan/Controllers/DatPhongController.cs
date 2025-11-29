@@ -23,6 +23,50 @@ namespace Web_QLKhachSan.Areas.NhanVienLeTan.Controllers
             return vaiTro == "LeTan" || vaiTro == "Lễ Tân" || vaiTro == "Admin" || vaiTro == "Quản lý";
         }
 
+        // GET: Details
+        public ActionResult Details(int? id)
+        {
+            try
+            {
+                if (!CheckRole())
+                {
+                    TempData["ErrorMessage"] = "Bạn không có quyền truy cập!";
+                    return RedirectToAction("DangNhap", "DangNhapNV", new { area = "DangNhapNV" });
+                }
+
+                if (id == null)
+                {
+                    TempData["ErrorMessage"] = "Không tìm thấy đơn đặt phòng!";
+                    return RedirectToAction("Index");
+                }
+
+                var datPhong = db.DatPhongs
+                    .Include(dp => dp.KhachHang)
+                    .Include(dp => dp.NhanVien)
+                    .Include(dp => dp.KhuyenMai)
+                    .Include(dp => dp.ChiTietDatPhongs.Select(ct => ct.LoaiPhong))
+                    .Include(dp => dp.ChiTietDatPhongs.Select(ct => ct.Phong))
+                    .Include(dp => dp.ChiTietDatDichVus.Select(dv => dv.DichVu))
+                    .Include(dp => dp.HoaDons)
+                    .FirstOrDefault(dp => dp.DatPhongId == id.Value);
+
+                if (datPhong == null)
+                {
+                    TempData["ErrorMessage"] = "Không tìm thấy đơn đặt phòng!";
+                    return RedirectToAction("Index");
+                }
+
+                var viewModel = MapToDatPhongItemViewModel(datPhong);
+                return View(viewModel);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[ERROR - DatPhong/Details] {ex.Message}");
+                TempData["ErrorMessage"] = "Có lỗi xảy ra khi tải chi tiết đơn đặt phòng!";
+                return RedirectToAction("Index");
+            }
+        }
+
         // GET: Index
      public ActionResult Index(DatPhongFilterViewModel filter)
         {
@@ -264,7 +308,7 @@ if (filter.TrangThaiDatPhong.HasValue)
     NgayTra = model.NgayTra,
        SoDem = model.SoDem,
   SoLuongKhach = model.SoLuongKhach,
-    TrangThaiDatPhong = 0,
+    TrangThaiDatPhong = 1, // ✅ Tự động chuyển sang "Đã xác nhận" khi tạo đơn
       TrangThaiThanhToan = 0,
            TongTien = tongTien, // ✅ Tổng tiền đã tính đúng
       HinhThucThanhToan = model.HinhThucThanhToan,
@@ -281,6 +325,8 @@ if (filter.TrangThaiDatPhong.HasValue)
  };
 
   db.DatPhongs.Add(datPhong);
+  // ✅ SaveChanges một lần để lấy DatPhongId (identity column)
+  // TrangThaiDatPhong = 1 đã được set ở trên
   db.SaveChanges();
 
    foreach (var phongItem in model.DanhSachPhongDat.Where(p => p.SoLuong > 0))
@@ -312,10 +358,132 @@ decimal phanTramGiam = phongItem.GiamGia;
      db.ChiTietDatPhongs.Add(chiTiet);
     }
 
-         db.SaveChanges();
+         // ✅ KHÔNG SaveChanges ở đây - sẽ save một lần cuối cùng sau khi gán phòng
 
-          TempData["SuccessMessage"] = $"Tạo đơn đặt phòng {datPhong.MaDatPhong} thành công!";
-        return RedirectToAction("Index");
+    // ✅ TỰ ĐỘNG GÁN PHÒNG VÀ XÁC NHẬN ĐƠN
+    var danhSachPhongGan = new List<string>();
+    var coLoiGanPhong = false;
+    var loiMessage = "";
+
+    // ✅ Đảm bảo TrangThaiDatPhong = 1 (Đã xác nhận) trước khi gán phòng
+    datPhong.TrangThaiDatPhong = 1;
+    
+    // Load ChiTietDatPhongs từ context (chưa save nên chưa có trong database)
+    // ChiTietDatPhongs đã được add vào context ở trên, chỉ cần load navigation properties
+    foreach (var chiTiet in datPhong.ChiTietDatPhongs)
+    {
+        if (chiTiet.LoaiPhong == null)
+        {
+            db.Entry(chiTiet).Reference(ct => ct.LoaiPhong).Load();
+        }
+    }
+
+    // Gán phòng cho từng chi tiết đặt phòng
+    foreach (var chiTiet in datPhong.ChiTietDatPhongs.ToList())
+    {
+        if (chiTiet.PhongId != null) continue; // Đã gán rồi thì bỏ qua
+
+        // Tìm phòng trống theo loại phòng
+        var phongTrong = db.Phongs
+            .Where(p =>
+                p.LoaiPhongId == chiTiet.LoaiPhongId &&
+                p.TrangThaiPhong == 0 && // Trống
+                p.DaHoatDong &&
+                // Kiểm tra không bị đặt trùng trong khoảng thời gian
+                !p.ChiTietDatPhongs.Any(ct =>
+                    ct.DatPhong.TrangThaiDatPhong != 4 && // Không bị hủy
+                    ct.DatPhong.DatPhongId != datPhong.DatPhongId && // Không phải đơn hiện tại
+                    (
+                        (ct.NgayDen <= datPhong.NgayNhan && ct.NgayDi > datPhong.NgayNhan) ||
+                        (ct.NgayDen < datPhong.NgayTra && ct.NgayDi >= datPhong.NgayTra) ||
+                        (ct.NgayDen >= datPhong.NgayNhan && ct.NgayDi <= datPhong.NgayTra)
+                    )
+                )
+            )
+            .Take(chiTiet.SoLuong)
+            .ToList();
+
+        if (phongTrong.Count < chiTiet.SoLuong)
+        {
+            coLoiGanPhong = true;
+            loiMessage = $"Không đủ phòng {chiTiet.LoaiPhong?.TenLoai ?? ""}! Cần {chiTiet.SoLuong} phòng nhưng chỉ còn {phongTrong.Count} phòng trống.";
+            break;
+        }
+
+        // Nếu SoLuong > 1, cần tạo nhiều ChiTietDatPhong
+        if (chiTiet.SoLuong > 1)
+        {
+            // Xóa chi tiết gộp cũ
+            db.ChiTietDatPhongs.Remove(chiTiet);
+
+            // Tạo chi tiết riêng cho từng phòng
+            foreach (var phong in phongTrong)
+            {
+                var chiTietMoi = new ChiTietDatPhong
+                {
+                    DatPhongId = datPhong.DatPhongId,
+                    LoaiPhongId = chiTiet.LoaiPhongId,
+                    PhongId = phong.PhongId,
+                    DonGia = chiTiet.DonGia,
+                    SoLuong = 1, // Mỗi chi tiết 1 phòng
+                    NgayDen = chiTiet.NgayDen,
+                    NgayDi = chiTiet.NgayDi,
+                    GiamGia = chiTiet.GiamGia / chiTiet.SoLuong, // Chia đều giảm giá
+                    ThanhTien = chiTiet.ThanhTien / chiTiet.SoLuong, // Chia đều thành tiền
+                    TrangThaiPhong = 1,
+                    NgayCapNhat = DateTime.Now
+                };
+                db.ChiTietDatPhongs.Add(chiTietMoi);
+
+                // Cập nhật trạng thái phòng
+                phong.TrangThaiPhong = 1; // Đã đặt
+                phong.NgayCapNhat = DateTime.Now;
+
+                danhSachPhongGan.Add(phong.MaPhong);
+            }
+        }
+        else
+        {
+            // SoLuong = 1, gán phòng trực tiếp
+            var phong = phongTrong.First();
+            chiTiet.PhongId = phong.PhongId;
+            chiTiet.TrangThaiPhong = 1;
+            chiTiet.NgayCapNhat = DateTime.Now;
+
+            // Cập nhật trạng thái phòng
+            phong.TrangThaiPhong = 1;
+            phong.NgayCapNhat = DateTime.Now;
+
+            danhSachPhongGan.Add(phong.MaPhong);
+        }
+    }
+
+    // ✅ ĐẢM BẢO TRẠNG THÁI LUÔN LÀ "ĐÃ XÁC NHẬN" (1)
+    datPhong.TrangThaiDatPhong = 1; // Đã xác nhận
+    datPhong.NgayCapNhat = DateTime.Now;
+    
+    if (coLoiGanPhong)
+    {
+        // Nếu không đủ phòng, ghi chú lỗi vào GhiChu
+        datPhong.GhiChu = (datPhong.GhiChu ?? "") + $"\n[LƯU Ý] {DateTime.Now:dd/MM/yyyy HH:mm} - {loiMessage}";
+    }
+
+    // ✅ SAVE TẤT CẢ MỘT LẦN: DatPhong + ChiTietDatPhong + Phòng đã gán
+    db.SaveChanges();
+
+    // Thông báo thành công
+    string successMsg = $"Tạo đơn đặt phòng {datPhong.MaDatPhong} thành công!";
+    if (danhSachPhongGan.Any())
+    {
+        successMsg += $" Đã gán phòng: {string.Join(", ", danhSachPhongGan)}";
+    }
+    if (coLoiGanPhong)
+    {
+        successMsg += $" (Lưu ý: {loiMessage})";
+    }
+
+    TempData["SuccessMessage"] = successMsg;
+    return RedirectToAction("Index");
       }
      catch (Exception ex)
     {

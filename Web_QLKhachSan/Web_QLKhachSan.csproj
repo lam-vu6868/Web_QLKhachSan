@@ -226,6 +226,7 @@
     <Compile Include="Areas\NhanVienLeTan\Controllers\DatPhongController.cs" />
     <Compile Include="Areas\NhanVienLeTan\Controllers\DichVuController.cs" />
     <Compile Include="Areas\NhanVienLeTan\Controllers\HoaDonController.cs" />
+    <Compile Include="Areas\NhanVienLeTan\Controllers\KhachHangController.cs" />
     <Compile Include="Areas\NhanVienLeTan\Controllers\KhuyenMaiController.cs" />
     <Compile Include="Areas\NhanVienLeTan\Controllers\SoDoPhongController.cs" />
     <Compile Include="Areas\NhanVienLeTan\NhanVienAreaRegistration.cs" />
@@ -265,6 +266,11 @@
     <Compile Include="Areas\NhanVienLeTan\ViewModels\KhuyenMai\KhuyenMaiItemViewModel.cs" />
     <Compile Include="Areas\NhanVienLeTan\ViewModels\KhuyenMai\KhuyenMaiListViewModel.cs" />
     <Compile Include="Areas\NhanVienLeTan\ViewModels\KhuyenMai\KhuyenMaiThongKeViewModel.cs" />
+    <Compile Include="Areas\NhanVienLeTan\ViewModels\KhachHang\KhachHangFilterViewModel.cs" />
+    <Compile Include="Areas\NhanVienLeTan\ViewModels\KhachHang\KhachHangFormViewModel.cs" />
+    <Compile Include="Areas\NhanVienLeTan\ViewModels\KhachHang\KhachHangItemViewModel.cs" />
+    <Compile Include="Areas\NhanVienLeTan\ViewModels\KhachHang\KhachHangListViewModel.cs" />
+    <Compile Include="Areas\NhanVienLeTan\ViewModels\KhachHang\KhachHangStatViewModel.cs" />
     <Compile Include="Areas\NhanVienLeTan\ViewModels\PhongStatusViewModel.cs" />
     <Compile Include="Areas\NhanVienLeTan\ViewModels\SoDoPhongViewModel.cs" />
     <Compile Include="Controllers\ChinhSachVaDieuKhoanController.cs" />
@@ -324,6 +330,9 @@
     </Compile>
     <Compile Include="Models\DichVuDatThemViewModel.cs" />
     <Compile Include="Models\DichVuToken.cs" />
+    <Compile Include="Models\GiaTheoNgay.cs">
+      <DependentUpon>Contect.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\HoaDon.cs">
       <DependentUpon>Contect.tt</DependentUpon>
     </Compile>
@@ -497,6 +506,7 @@
     <Content Include="Areas\NhanVienLeTan\Views\DashboardNVLT\Index.cshtml" />
     <Content Include="Areas\NhanVienLeTan\Views\DatPhong\Index.cshtml" />
     <Content Include="Areas\NhanVienLeTan\Views\DatPhong\Create.cshtml" />
+    <Content Include="Areas\NhanVienLeTan\Views\DatPhong\Details.cshtml" />
     <Content Include="Areas\NhanVienLeTan\Views\CheckIn\Index.cshtml" />
     <Content Include="Areas\NhanVienLeTan\Views\CheckOut\Index.cshtml" />
     <Content Include="Areas\NhanVienLeTan\Views\DichVu\Index.cshtml" />
@@ -505,6 +515,10 @@
     <Content Include="Areas\NhanVienLeTan\Views\DichVu\Create.cshtml" />
     <Content Include="Areas\NhanVienLeTan\Views\HoaDon\Index.cshtml" />
     <Content Include="Areas\NhanVienLeTan\Views\HoaDon\Details.cshtml" />
+    <Content Include="Areas\NhanVienLeTan\Views\KhachHang\Index.cshtml" />
+    <Content Include="Areas\NhanVienLeTan\Views\KhachHang\Create.cshtml" />
+    <Content Include="Areas\NhanVienLeTan\Views\KhachHang\Edit.cshtml" />
+    <Content Include="Areas\NhanVienLeTan\Views\KhachHang\Details.cshtml" />
     <Content Include="Areas\NhanVienLeTan\Views\KhuyenMai\Index.cshtml" />
     <EntityDeploy Include="Models\Contect.edmx">
       <Generator>EntityModelCodeGenerator</Generator>

@@ -1,0 +1,555 @@
+@model Web_QLKhachSan.Areas.NhanVienLeTan.ViewModels.KhachHang.KhachHangListViewModel
+@{
+    ViewBag.Title = "Quản Lý Khách Hàng";
+    Layout = "~/Areas/NhanVienLeTan/Views/Shared/_LayoutNVLT.cshtml";
+}
+
+@section styles {
+    <link href="@Url.Content("~/Areas/NhanVienLeTan/assets/css/datPhong.css")" rel="stylesheet" />
+    <style>
+        .customer-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .customer-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: none;
+            border-radius: 12px;
+            overflow: hidden;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .customer-card-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 1.25rem;
+        }
+        .customer-info-section {
+            flex: 1;
+        }
+        .customer-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15) !important;
+        }
+        .customer-card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem;
+            position: relative;
+        }
+        .vip-badge {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        .customer-info-item {
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        .customer-info-item i {
+            width: 20px;
+            text-align: center;
+        }
+        .customer-stats {
+            display: flex;
+            justify-content: space-around;
+            padding: 0.75rem 0;
+            border-top: 1px solid #e3e6f0;
+            border-bottom: 1px solid #e3e6f0;
+            margin: 0.75rem 0;
+        }
+        .customer-stat-item {
+            text-align: center;
+        }
+        .customer-stat-item .stat-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #5a5c69;
+        }
+        .customer-stat-item .stat-label {
+            font-size: 0.75rem;
+            color: #858796;
+        }
+        .customer-action-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: auto;
+        }
+        .customer-action-buttons .btn {
+            flex: 1;
+            min-width: 0;
+        }
+    </style>
+}
+
+<div class="container-fluid">
+    @* ==== HEADER ==== *@
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">
+            <i class="fas fa-users"></i> Quản Lý Khách Hàng
+        </h1>
+        <a href="@Url.Action("Create", "KhachHang")" class="btn btn-primary btn-icon-split shadow-sm">
+            <span class="icon text-white-50">
+                <i class="fas fa-plus"></i>
+            </span>
+            <span class="text">Thêm Khách Hàng Mới</span>
+        </a>
+    </div>
+
+    @* ==== THÔNG BÁO ==== *@
+    @if (TempData["SuccessMessage"] != null)
+    {
+        var successMsg = TempData["SuccessMessage"].ToString();
+        TempData.Remove("SuccessMessage");
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i> @successMsg
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        var errorMsg = TempData["ErrorMessage"].ToString();
+        TempData.Remove("ErrorMessage");
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle"></i> @errorMsg
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+
+    @* ==== THỐNG KÊ NHANH ==== *@
+    <div class="row mb-4">
+        <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
+            <div class="card border-left-primary shadow h-100 py-2 stat-card">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Tổng khách hàng</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.ThongKe.TongSoKhachHang</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-users fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
+            <div class="card border-left-info shadow h-100 py-2 stat-card">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Có tài khoản</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.ThongKe.SoKhachHangCoTaiKhoan</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-user-check fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
+            <div class="card border-left-warning shadow h-100 py-2 stat-card">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Khách hàng VIP</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.ThongKe.SoKhachHangVIP</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-crown fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
+            <div class="card border-left-success shadow h-100 py-2 stat-card">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Khách mới tháng này</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.ThongKe.SoKhachHangMoiThangNay</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-user-plus fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
+            <div class="card border-left-danger shadow h-100 py-2 stat-card">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Tổng doanh thu</div>
+                            <div class="h6 mb-0 font-weight-bold text-gray-800">@Model.ThongKe.TongDoanhThu.ToString("N0")đ</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
+            <div class="card border-left-secondary shadow h-100 py-2 stat-card">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">Nam / Nữ</div>
+                            <div class="h6 mb-0 font-weight-bold text-gray-800">@Model.ThongKe.SoKhachHangNam / @Model.ThongKe.SoKhachHangNu</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-venus-mars fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* ==== BỘ LỌC ==== *@
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-gradient-primary">
+            <h6 class="m-0 font-weight-bold text-white">
+                <i class="fas fa-filter"></i> Bộ Lọc & Tìm Kiếm
+            </h6>
+        </div>
+        <div class="card-body">
+            @using (Html.BeginForm("Index", "KhachHang", FormMethod.Get, new { id = "filterForm" }))
+            {
+                <div class="filter-container">
+                    @* Row 1: Search - Full Width *@
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <label class="filter-label">
+                                <i class="fas fa-search text-primary"></i> Tìm kiếm
+                            </label>
+                            @Html.TextBox("TimKiem", Model.Filter.TimKiem, new { 
+                                @class = "form-control form-control-lg filter-search-input", 
+                                placeholder = "Nhập tên, số điện thoại, email, tên đăng nhập..." 
+                            })
+                        </div>
+                    </div>
+
+                    @* Row 2: Filter Fields *@
+                    <div class="row mb-3">
+                        <div class="col-lg-3 col-md-6 col-sm-6 mb-3 mb-lg-0">
+                            <label class="filter-label">
+                                <i class="fas fa-venus-mars text-primary"></i> Giới tính
+                            </label>
+                            @Html.DropDownList("GioiTinh",
+                                new SelectList(new[]
+                                {
+                                    new { Value = (byte)0, Text = "Nam" },
+                                    new { Value = (byte)1, Text = "Nữ" },
+                                    new { Value = (byte)2, Text = "Khác" }
+                                }, "Value", "Text", Model.Filter.GioiTinh),
+                                "-- Tất cả --",
+                                new { @class = "form-control filter-select" })
+                        </div>
+
+                        <div class="col-lg-3 col-md-6 col-sm-6 mb-3 mb-lg-0">
+                            <label class="filter-label">
+                                <i class="fas fa-calendar-alt text-primary"></i> Từ ngày tạo
+                            </label>
+                            @Html.TextBox("TuNgayTao", Model.Filter.TuNgayTao?.ToString("yyyy-MM-dd"), new { 
+                                @class = "form-control filter-date", 
+                                type = "date" 
+                            })
+                        </div>
+
+                        <div class="col-lg-3 col-md-6 col-sm-6 mb-3 mb-md-0">
+                            <label class="filter-label">
+                                <i class="fas fa-calendar-alt text-primary"></i> Đến ngày tạo
+                            </label>
+                            @Html.TextBox("DenNgayTao", Model.Filter.DenNgayTao?.ToString("yyyy-MM-dd"), new { 
+                                @class = "form-control filter-date", 
+                                type = "date" 
+                            })
+                        </div>
+
+                        <div class="col-lg-3 col-md-6 col-sm-6 mb-3 mb-md-0">
+                            <label class="filter-label">
+                                <i class="fas fa-user-check text-primary"></i> Loại khách hàng
+                            </label>
+                            <select name="CoTaiKhoan" class="form-control filter-select">
+                                <option value="">-- Tất cả --</option>
+                                <option value="true" @(Model.Filter.CoTaiKhoan == true ? "selected" : "")>Có tài khoản</option>
+                                <option value="false" @(Model.Filter.CoTaiKhoan == false ? "selected" : "")>Không có tài khoản</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    @* Row 3: VIP Filter *@
+                    <div class="row mb-3">
+                        <div class="col-lg-3 col-md-6 col-sm-6">
+                            <label class="filter-label">
+                                <i class="fas fa-crown text-primary"></i> Khách hàng VIP
+                            </label>
+                            <select name="LaKhachHangVIP" class="form-control filter-select">
+                                <option value="">-- Tất cả --</option>
+                                <option value="true" @(Model.Filter.LaKhachHangVIP == true ? "selected" : "")>Chỉ khách VIP</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    @* Row 4: Action Buttons *@
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="filter-actions">
+                                <button type="submit" class="btn btn-primary btn-filter">
+                                    <i class="fas fa-search"></i> <span class="d-none d-sm-inline">Tìm kiếm</span>
+                                </button>
+                                <a href="@Url.Action("Index", "KhachHang")" class="btn btn-secondary btn-filter">
+                                    <i class="fas fa-redo"></i> <span class="d-none d-sm-inline">Làm mới</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    @* ==== DANH SÁCH KHÁCH HÀNG ==== *@
+    <div class="mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0 text-gray-800">
+                <i class="fas fa-users text-primary"></i> Danh sách khách hàng
+                <span class="badge badge-primary ml-2">@Model.TotalRecords khách hàng</span>
+            </h5>
+        </div>
+        
+        @if (Model.DanhSachKhachHang != null && Model.DanhSachKhachHang.Any())
+        {
+            <div class="row">
+                @foreach (var item in Model.DanhSachKhachHang)
+                {
+                    <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                        <div class="card customer-card shadow-sm">
+                            @* Header với avatar *@
+                            <div class="customer-card-header text-center">
+                                <div class="mb-2">
+                                    @if (item.CoAnhDaiDien)
+                                    {
+                                        <img src="@item.AnhDaiDienUrl" alt="@item.HoVaTen" class="customer-avatar" />
+                                    }
+                                    else
+                                    {
+                                        <div class="customer-avatar mx-auto bg-white text-primary d-flex align-items-center justify-content-center" style="font-size: 2rem;">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                    }
+                                </div>
+                                <h5 class="mb-1 text-white">@item.HoVaTen</h5>
+                                <div class="mb-2">
+                                    @if (item.LaKhachHangVIP)
+                                    {
+                                        <span class="vip-badge"><i class="fas fa-crown"></i> VIP</span>
+                                    }
+                                    @if (item.CoTaiKhoan)
+                                    {
+                                        <span class="badge badge-info"><i class="fas fa-user-check"></i> Có tài khoản</span>
+                                    }
+                                </div>
+                            </div>
+                            
+                            @* Body với thông tin *@
+                            <div class="customer-card-body">
+                                <div class="customer-info-section">
+                                    @* Thông tin liên hệ *@
+                                    <div class="customer-info-item">
+                                        <i class="fas fa-phone text-primary"></i>
+                                        <strong>@item.SoDienThoai</strong>
+                                    </div>
+                                    
+                                    @if (!string.IsNullOrWhiteSpace(item.Email))
+                                    {
+                                        <div class="customer-info-item">
+                                            <i class="fas fa-envelope text-secondary"></i>
+                                            <small>@item.Email</small>
+                                        </div>
+                                    }
+                                    
+                                    @if (!string.IsNullOrWhiteSpace(item.DiaChi))
+                                    {
+                                        <div class="customer-info-item">
+                                            <i class="fas fa-map-marker-alt text-danger"></i>
+                                            <small>@item.DiaChi</small>
+                                        </div>
+                                    }
+                                    
+                                    <div class="customer-info-item">
+                                        <i class="fas fa-venus-mars text-info"></i>
+                                        <span class="badge badge-secondary">@item.GioiTinhText</span>
+                                        @if (item.Tuoi.HasValue)
+                                        {
+                                            <span class="text-muted ml-2">(@item.Tuoi tuổi)</span>
+                                        }
+                                    </div>
+                                    
+                                    @if (item.NgaySinh.HasValue)
+                                    {
+                                        <div class="customer-info-item">
+                                            <i class="fas fa-birthday-cake text-warning"></i>
+                                            <small>@item.NgaySinh.Value.ToString("dd/MM/yyyy")</small>
+                                        </div>
+                                    }
+                                    
+                                    @* Thống kê *@
+                                    <div class="customer-stats">
+                                        <div class="customer-stat-item">
+                                            <div class="stat-value text-primary">@item.TongSoDonDatPhong</div>
+                                            <div class="stat-label">Đơn đặt</div>
+                                        </div>
+                                        <div class="customer-stat-item">
+                                            <div class="stat-value text-success">@item.TongSoHoaDon</div>
+                                            <div class="stat-label">Hóa đơn</div>
+                                        </div>
+                                        <div class="customer-stat-item">
+                                            <div class="stat-value text-warning">@item.SoLanDanhGia</div>
+                                            <div class="stat-label">Đánh giá</div>
+                                        </div>
+                                    </div>
+                                    
+                                    @* Tổng tiền *@
+                                    <div class="text-center mb-3">
+                                        @if (item.TongTienDaThanhToan.HasValue && item.TongTienDaThanhToan.Value > 0)
+                                        {
+                                            <div>
+                                                <small class="text-muted">Tổng đã thanh toán:</small><br />
+                                                <strong class="text-success" style="font-size: 1.1rem;">@item.TongTienDaThanhToan.Value.ToString("N0")đ</strong>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <small class="text-muted">Chưa có giao dịch</small>
+                                        }
+                                    </div>
+                                    
+                                    @* Ngày tạo *@
+                                    <div class="text-center mb-3">
+                                        <small class="text-muted">
+                                            <i class="fas fa-calendar"></i> @item.NgayTao.ToString("dd/MM/yyyy HH:mm")
+                                        </small>
+                                    </div>
+                                </div>
+                                
+                                @* Nút thao tác *@
+                                <div class="customer-action-buttons">
+                                    <a href="@Url.Action("Details", new { id = item.MaKhachHang })" 
+                                       class="btn btn-sm btn-info" 
+                                       title="Xem chi tiết">
+                                        <i class="fas fa-eye"></i> Chi tiết
+                                    </a>
+                                    <a href="@Url.Action("Edit", new { id = item.MaKhachHang })" 
+                                       class="btn btn-sm btn-warning" 
+                                       title="Sửa thông tin">
+                                        <i class="fas fa-edit"></i> Sửa
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            @* ==== PAGINATION ==== *@
+            if (Model.TotalPages > 1)
+            {
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
+                                <a class="page-link" href="@Url.Action("Index", new { 
+                                    TimKiem = Model.Filter.TimKiem,
+                                    GioiTinh = Model.Filter.GioiTinh,
+                                    TuNgayTao = Model.Filter.TuNgayTao?.ToString("yyyy-MM-dd"),
+                                    DenNgayTao = Model.Filter.DenNgayTao?.ToString("yyyy-MM-dd"),
+                                    CoTaiKhoan = Model.Filter.CoTaiKhoan,
+                                    LaKhachHangVIP = Model.Filter.LaKhachHangVIP,
+                                    CurrentPage = Model.CurrentPage - 1 
+                                })">
+                                    <i class="fas fa-chevron-left"></i> Trước
+                                </a>
+                            </li>
+
+                            @for (int i = 1; i <= Model.TotalPages; i++)
+                            {
+                                <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                                    <a class="page-link" href="@Url.Action("Index", new { 
+                                        TimKiem = Model.Filter.TimKiem,
+                                        GioiTinh = Model.Filter.GioiTinh,
+                                        TuNgayTao = Model.Filter.TuNgayTao?.ToString("yyyy-MM-dd"),
+                                        DenNgayTao = Model.Filter.DenNgayTao?.ToString("yyyy-MM-dd"),
+                                        CoTaiKhoan = Model.Filter.CoTaiKhoan,
+                                        LaKhachHangVIP = Model.Filter.LaKhachHangVIP,
+                                        CurrentPage = i 
+                                    })">@i</a>
+                                </li>
+                            }
+
+                            <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
+                                <a class="page-link" href="@Url.Action("Index", new { 
+                                    TimKiem = Model.Filter.TimKiem,
+                                    GioiTinh = Model.Filter.GioiTinh,
+                                    TuNgayTao = Model.Filter.TuNgayTao?.ToString("yyyy-MM-dd"),
+                                    DenNgayTao = Model.Filter.DenNgayTao?.ToString("yyyy-MM-dd"),
+                                    CoTaiKhoan = Model.Filter.CoTaiKhoan,
+                                    LaKhachHangVIP = Model.Filter.LaKhachHangVIP,
+                                    CurrentPage = Model.CurrentPage + 1 
+                                })">
+                                    Sau <i class="fas fa-chevron-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+
+                    <p class="text-center text-muted">
+                        Trang @Model.CurrentPage / @Model.TotalPages - Tổng @Model.TotalRecords khách hàng
+                    </p>
+            }
+        }
+        else
+        {
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> Không có khách hàng nào phù hợp với điều kiện lọc.
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Auto-hide alerts after 5 seconds
+            setTimeout(function() {
+                $('.alert').fadeOut('slow', function() {
+                    $(this).remove();
+                });
+            }, 5000);
+        });
+    </script>
+}
+

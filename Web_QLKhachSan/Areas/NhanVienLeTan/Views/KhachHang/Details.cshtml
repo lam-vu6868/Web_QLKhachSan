@@ -1,0 +1,333 @@
+@model Web_QLKhachSan.Areas.NhanVienLeTan.ViewModels.KhachHang.KhachHangItemViewModel
+@{
+    ViewBag.Title = "Chi Tiết Khách Hàng";
+    Layout = "~/Areas/NhanVienLeTan/Views/Shared/_LayoutNVLT.cshtml";
+}
+
+@section styles {
+    <link href="@Url.Content("~/Areas/NhanVienLeTan/assets/css/datPhong.css")" rel="stylesheet" />
+    <style>
+        .detail-card {
+            border: none;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            margin-bottom: 1.5rem;
+        }
+        .detail-card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 0.35rem 0.35rem 0 0;
+        }
+        .detail-section {
+            border-left: 4px solid #667eea;
+            padding-left: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .detail-label {
+            font-weight: 600;
+            color: #5a5c69;
+            margin-bottom: 0.25rem;
+        }
+        .detail-value {
+            color: #858796;
+            font-size: 0.95rem;
+        }
+        .customer-avatar-large {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .vip-badge {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.35rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        .stat-card {
+            background: #f8f9fc;
+            border-radius: 0.35rem;
+            padding: 1rem;
+            text-align: center;
+            height: 100%;
+        }
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .stat-label {
+            color: #858796;
+            font-size: 0.875rem;
+        }
+    </style>
+}
+
+<div class="container-fluid">
+    @* ==== HEADER ==== *@
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">
+            <i class="fas fa-user text-primary"></i> Chi Tiết Khách Hàng
+        </h1>
+        <a href="@Url.Action("Index")" class="btn btn-secondary btn-icon-split shadow-sm">
+            <span class="icon text-white-50">
+                <i class="fas fa-arrow-left"></i>
+            </span>
+            <span class="text">Quay lại</span>
+        </a>
+    </div>
+
+    @* ==== THÔNG BÁO ==== *@
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle"></i> @TempData["ErrorMessage"]
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+
+    @* ==== THÔNG TIN KHÁCH HÀNG ==== *@
+    <div class="row">
+        @* Cột trái: Thông tin cơ bản *@
+        <div class="col-lg-8">
+            @* Thông tin cá nhân *@
+            <div class="card detail-card">
+                <div class="detail-card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-user-circle"></i> Thông Tin Cá Nhân
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-4 text-center">
+                            @if (Model.CoAnhDaiDien)
+                            {
+                                <img src="@Model.AnhDaiDienUrl" alt="@Model.HoVaTen" class="customer-avatar-large" />
+                            }
+                            else
+                            {
+                                <div class="customer-avatar-large mx-auto bg-primary text-white d-flex align-items-center justify-content-center" style="font-size: 3rem;">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                            }
+                        </div>
+                        <div class="col-md-8">
+                            <h3 class="mb-2">@Model.HoVaTen</h3>
+                            <div class="mb-2">
+                                @if (Model.LaKhachHangVIP)
+                                {
+                                    <span class="vip-badge"><i class="fas fa-crown"></i> Khách Hàng VIP</span>
+                                }
+                                @if (Model.CoTaiKhoan)
+                                {
+                                    <span class="badge badge-info ml-2"><i class="fas fa-user-check"></i> Có tài khoản</span>
+                                }
+                            </div>
+                            <div class="detail-section">
+                                <div class="detail-label">Mã khách hàng</div>
+                                <div class="detail-value">#@Model.MaKhachHang</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="detail-section">
+                                <div class="detail-label">
+                                    <i class="fas fa-phone text-primary"></i> Số điện thoại
+                                </div>
+                                <div class="detail-value">@Model.SoDienThoai</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-section">
+                                <div class="detail-label">
+                                    <i class="fas fa-envelope text-secondary"></i> Email
+                                </div>
+                                <div class="detail-value">
+                                    @if (!string.IsNullOrWhiteSpace(Model.Email))
+                                    {
+                                        @Model.Email
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">-</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="detail-section">
+                                <div class="detail-label">
+                                    <i class="fas fa-venus-mars text-info"></i> Giới tính
+                                </div>
+                                <div class="detail-value">
+                                    <span class="badge badge-secondary">@Model.GioiTinhText</span>
+                                    @if (Model.Tuoi.HasValue)
+                                    {
+                                        <span class="text-muted ml-2">(@Model.Tuoi tuổi)</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-section">
+                                <div class="detail-label">
+                                    <i class="fas fa-birthday-cake text-warning"></i> Ngày sinh
+                                </div>
+                                <div class="detail-value">
+                                    @if (Model.NgaySinh.HasValue)
+                                    {
+                                        @Model.NgaySinh.Value.ToString("dd/MM/yyyy")
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">-</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (!string.IsNullOrWhiteSpace(Model.DiaChi))
+                    {
+                        <div class="detail-section">
+                            <div class="detail-label">
+                                <i class="fas fa-map-marker-alt text-danger"></i> Địa chỉ
+                            </div>
+                            <div class="detail-value">@Model.DiaChi</div>
+                        </div>
+                    }
+
+                    @if (Model.CoTaiKhoan)
+                    {
+                        <div class="detail-section">
+                            <div class="detail-label">
+                                <i class="fas fa-key text-primary"></i> Tên đăng nhập
+                            </div>
+                            <div class="detail-value">@Model.TenDangNhap</div>
+                        </div>
+                    }
+
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <div class="detail-section">
+                                <div class="detail-label">
+                                    <i class="fas fa-calendar-plus text-success"></i> Ngày tạo
+                                </div>
+                                <div class="detail-value">@Model.NgayTao.ToString("dd/MM/yyyy HH:mm")</div>
+                            </div>
+                        </div>
+                        @if (Model.NgayCapNhat.HasValue)
+                        {
+                            <div class="col-md-6">
+                                <div class="detail-section">
+                                    <div class="detail-label">
+                                        <i class="fas fa-calendar-edit text-info"></i> Ngày cập nhật
+                                    </div>
+                                    <div class="detail-value">@Model.NgayCapNhat.Value.ToString("dd/MM/yyyy HH:mm")</div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @* Cột phải: Thống kê *@
+        <div class="col-lg-4">
+            @* Thống kê tổng quan *@
+            <div class="card detail-card">
+                <div class="detail-card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-bar"></i> Thống Kê
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <div class="stat-card">
+                                <div class="stat-value text-primary">@Model.TongSoDonDatPhong</div>
+                                <div class="stat-label">Đơn đặt phòng</div>
+                            </div>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <div class="stat-card">
+                                <div class="stat-value text-success">@Model.TongSoHoaDon</div>
+                                <div class="stat-label">Hóa đơn</div>
+                            </div>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <div class="stat-card">
+                                <div class="stat-value text-warning">@Model.SoLanDanhGia</div>
+                                <div class="stat-label">Đánh giá</div>
+                            </div>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <div class="stat-card">
+                                @if (Model.TongTienDaThanhToan.HasValue && Model.TongTienDaThanhToan.Value > 0)
+                                {
+                                    <div class="stat-value text-success" style="font-size: 1.5rem;">
+                                        @Model.TongTienDaThanhToan.Value.ToString("N0")đ
+                                    </div>
+                                    <div class="stat-label">Tổng đã thanh toán</div>
+                                }
+                                else
+                                {
+                                    <div class="stat-value text-muted" style="font-size: 1.2rem;">-</div>
+                                    <div class="stat-label">Chưa có giao dịch</div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @* Nút thao tác *@
+            <div class="card detail-card">
+                <div class="card-body">
+                    <a href="@Url.Action("Edit", new { id = Model.MaKhachHang })" 
+                       class="btn btn-warning btn-block mb-2">
+                        <i class="fas fa-edit"></i> Sửa Thông Tin
+                    </a>
+                    <a href="@Url.Action("Index")" 
+                       class="btn btn-secondary btn-block">
+                        <i class="fas fa-arrow-left"></i> Quay Lại Danh Sách
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Auto-hide alerts after 5 seconds
+            setTimeout(function() {
+                $('.alert').fadeOut('slow', function() {
+                    $(this).remove();
+                });
+            }, 5000);
+        });
+    </script>
+}
+

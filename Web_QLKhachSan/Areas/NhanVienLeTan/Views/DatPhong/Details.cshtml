@@ -1,0 +1,484 @@
+@model Web_QLKhachSan.Areas.NhanVienLeTan.ViewModels.DatPhong.DatPhongItemViewModel
+@{
+    ViewBag.Title = "Chi Tiết Đơn Đặt Phòng";
+    Layout = "~/Areas/NhanVienLeTan/Views/Shared/_LayoutNVLT.cshtml";
+}
+
+@section styles {
+    <link href="@Url.Content("~/Areas/NhanVienLeTan/assets/css/datPhong.css")" rel="stylesheet" />
+    <style>
+        .detail-card {
+            border: none;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            margin-bottom: 1.5rem;
+        }
+        .detail-card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 0.35rem 0.35rem 0 0;
+        }
+        .detail-section {
+            border-left: 4px solid #667eea;
+            padding-left: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .detail-label {
+            font-weight: 600;
+            color: #5a5c69;
+            margin-bottom: 0.25rem;
+        }
+        .detail-value {
+            color: #858796;
+            font-size: 0.95rem;
+        }
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 0.35rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+    </style>
+}
+
+<div class="container-fluid">
+    @* ==== HEADER ==== *@
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">
+            <i class="fas fa-info-circle text-primary"></i> Chi Tiết Đơn Đặt Phòng
+        </h1>
+        <a href="@Url.Action("Index")" class="btn btn-secondary btn-icon-split shadow-sm">
+            <span class="icon text-white-50">
+                <i class="fas fa-arrow-left"></i>
+            </span>
+            <span class="text">Quay lại</span>
+        </a>
+    </div>
+
+    @* ==== THÔNG BÁO ==== *@
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle"></i> @TempData["ErrorMessage"]
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+
+    <div class="row">
+        @* ==== THÔNG TIN CƠ BẢN ==== *@
+        <div class="col-lg-8">
+            @* Thông tin đơn đặt phòng *@
+            <div class="card detail-card">
+                <div class="detail-card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-file-invoice"></i> Thông Tin Đơn Đặt Phòng
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="detail-section">
+                                <div class="detail-label">Mã đơn đặt phòng</div>
+                                <div class="detail-value">
+                                    <strong class="text-primary">@Model.MaDatPhong</strong>
+                                    @if (Model.LaDonOnline)
+                                    {
+                                        <span class="badge badge-info ml-2"><i class="fas fa-globe"></i> Online</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-secondary ml-2"><i class="fas fa-store"></i> Tại quầy</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-section">
+                                <div class="detail-label">Ngày đặt</div>
+                                <div class="detail-value">@Model.NgayDat.ToString("dd/MM/yyyy HH:mm")</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="detail-section">
+                                <div class="detail-label">Ngày nhận phòng</div>
+                                <div class="detail-value">
+                                    @(Model.NgayNhan.HasValue ? Model.NgayNhan.Value.ToString("dd/MM/yyyy") : "-")
+                                    @if (Model.CheckInHomNay)
+                                    {
+                                        <span class="badge badge-success ml-2">Hôm nay</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-section">
+                                <div class="detail-label">Ngày trả phòng</div>
+                                <div class="detail-value">
+                                    @(Model.NgayTra.HasValue ? Model.NgayTra.Value.ToString("dd/MM/yyyy") : "-")
+                                    @if (Model.CheckOutHomNay)
+                                    {
+                                        <span class="badge badge-warning ml-2">Hôm nay</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="detail-section">
+                                <div class="detail-label">Số đêm</div>
+                                <div class="detail-value">@(Model.SoDem?.ToString() ?? "-") đêm</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-section">
+                                <div class="detail-label">Số lượng khách</div>
+                                <div class="detail-value">@(Model.SoLuongKhach?.ToString() ?? "-") người</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="detail-section">
+                                <div class="detail-label">Trạng thái đặt phòng</div>
+                                <div class="detail-value">
+                                    <span class="status-badge" style="background-color: @Model.TrangThaiDatPhongColor; color: white;">
+                                        @Model.TrangThaiDatPhongText
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-section">
+                                <div class="detail-label">Trạng thái thanh toán</div>
+                                <div class="detail-value">
+                                    <span class="status-badge" style="background-color: @Model.TrangThaiThanhToanColor; color: white;">
+                                        @Model.TrangThaiThanhToanText
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (!string.IsNullOrWhiteSpace(Model.GhiChu))
+                    {
+                        <div class="detail-section">
+                            <div class="detail-label">Ghi chú</div>
+                            <div class="detail-value">@Html.Raw(Model.GhiChu.Replace("\n", "<br/>"))</div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            @* Thông tin khách hàng *@
+            <div class="card detail-card">
+                <div class="detail-card-header" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                    <h5 class="mb-0">
+                        <i class="fas fa-user"></i> Thông Tin Khách Hàng
+                    </h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.KhachHang != null)
+                    {
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="detail-section">
+                                    <div class="detail-label">Họ và tên</div>
+                                    <div class="detail-value"><strong>@Model.KhachHang.HoVaTen</strong></div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="detail-section">
+                                    <div class="detail-label">Số điện thoại</div>
+                                    <div class="detail-value">@Model.KhachHang.SoDienThoai</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="detail-section">
+                                    <div class="detail-label">Email</div>
+                                    <div class="detail-value">@(Model.KhachHang.Email ?? "-")</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="detail-section">
+                                    <div class="detail-label">Giới tính</div>
+                                    <div class="detail-value">@Model.KhachHang.GioiTinhText</div>
+                                </div>
+                            </div>
+                        </div>
+                        if (!string.IsNullOrWhiteSpace(Model.KhachHang.DiaChi))
+                        {
+                            <div class="detail-section">
+                                <div class="detail-label">Địa chỉ</div>
+                                <div class="detail-value">@Model.KhachHang.DiaChi</div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p class="text-muted">Không có thông tin khách hàng</p>
+                    }
+                </div>
+            </div>
+
+            @* Thông tin phòng *@
+            <div class="card detail-card">
+                <div class="detail-card-header" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                    <h5 class="mb-0">
+                        <i class="fas fa-bed"></i> Thông Tin Phòng
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="detail-section">
+                        <div class="detail-label">Số lượng phòng</div>
+                        <div class="detail-value"><strong>@Model.SoLuongPhong phòng</strong></div>
+                    </div>
+                    <div class="detail-section">
+                        <div class="detail-label">Loại phòng</div>
+                        <div class="detail-value">@Model.DanhSachLoaiPhong</div>
+                    </div>
+                    <div class="detail-section">
+                        <div class="detail-label">Phòng đã gán</div>
+                        <div class="detail-value">
+                            @if (!string.IsNullOrEmpty(Model.DanhSachPhong) && Model.DanhSachPhong != "Chưa gán")
+                            {
+                                <span class="badge badge-success">@Model.DanhSachPhong</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-warning">Chưa gán phòng</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @* ==== SIDEBAR ==== *@
+        <div class="col-lg-4">
+            @* Tổng tiền *@
+            <div class="card detail-card">
+                <div class="detail-card-header" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                    <h5 class="mb-0">
+                        <i class="fas fa-money-bill-wave"></i> Tổng Tiền
+                    </h5>
+                </div>
+                <div class="card-body text-center">
+                    <h2 class="text-danger mb-3">
+                        <strong>@((Model.TongTien ?? 0).ToString("N0"))đ</strong>
+                    </h2>
+                    @if (Model.KhuyenMai != null)
+                    {
+                        <div class="mb-2">
+                            <small class="text-muted">Đã áp dụng khuyến mãi:</small><br />
+                            <span class="badge badge-success">
+                                <i class="fas fa-tag"></i> @Model.KhuyenMai.TenKhuyenMai
+                                @if (Model.KhuyenMai.GiaTri.HasValue)
+                                {
+                                    <text> - @Model.KhuyenMai.GiaTri%</text>
+                                }
+                            </span>
+                        </div>
+                    }
+                    <div class="mt-3">
+                        <small class="text-muted">Hình thức thanh toán:</small><br />
+                        @if (Model.HinhThucThanhToan == 0)
+                        {
+                            <span class="badge badge-success"><i class="fas fa-money-bill-wave"></i> Tiền mặt</span>
+                        }
+                        else if (Model.HinhThucThanhToan == 1)
+                        {
+                            <span class="badge badge-primary"><i class="fas fa-university"></i> Chuyển khoản</span>
+                        }
+                        else if (Model.HinhThucThanhToan == 2)
+                        {
+                            <span class="badge badge-info"><i class="fas fa-qrcode"></i> VNPay</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-secondary">Chưa chọn</span>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            @* Thông tin nhân viên *@
+            @if (Model.NhanVien != null)
+            {
+                <div class="card detail-card">
+                    <div class="detail-card-header" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);">
+                        <h5 class="mb-0">
+                            <i class="fas fa-user-tie"></i> Nhân Viên
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="detail-section">
+                            <div class="detail-label">Họ và tên</div>
+                            <div class="detail-value"><strong>@Model.NhanVien.HoVaTen</strong></div>
+                        </div>
+                        @if (!string.IsNullOrWhiteSpace(Model.NhanVien.SoDienThoai))
+                        {
+                            <div class="detail-section">
+                                <div class="detail-label">Số điện thoại</div>
+                                <div class="detail-value">@Model.NhanVien.SoDienThoai</div>
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(Model.NhanVien.Email))
+                        {
+                            <div class="detail-section">
+                                <div class="detail-label">Email</div>
+                                <div class="detail-value">@Model.NhanVien.Email</div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+            @* Thông tin khuyến mãi *@
+            @if (Model.KhuyenMai != null)
+            {
+                <div class="card detail-card">
+                    <div class="detail-card-header" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+                        <h5 class="mb-0">
+                            <i class="fas fa-tag"></i> Khuyến Mãi
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="detail-section">
+                            <div class="detail-label">Mã khuyến mãi</div>
+                            <div class="detail-value"><strong>@Model.KhuyenMai.MaKhuyenMai</strong></div>
+                        </div>
+                        <div class="detail-section">
+                            <div class="detail-label">Tên khuyến mãi</div>
+                            <div class="detail-value">@Model.KhuyenMai.TenKhuyenMai</div>
+                        </div>
+                        @if (Model.KhuyenMai.GiaTri.HasValue)
+                        {
+                            <div class="detail-section">
+                                <div class="detail-label">Giá trị</div>
+                                <div class="detail-value">Giảm @Model.KhuyenMai.GiaTri%</div>
+                            </div>
+                        }
+                        @if (Model.KhuyenMai.NgayBatDau.HasValue)
+                        {
+                            <div class="detail-section">
+                                <div class="detail-label">Ngày bắt đầu</div>
+                                <div class="detail-value">@Model.KhuyenMai.NgayBatDau.Value.ToString("dd/MM/yyyy")</div>
+                            </div>
+                        }
+                        @if (Model.KhuyenMai.NgayKetThuc.HasValue)
+                        {
+                            <div class="detail-section">
+                                <div class="detail-label">Ngày kết thúc</div>
+                                <div class="detail-value">@Model.KhuyenMai.NgayKetThuc.Value.ToString("dd/MM/yyyy")</div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+            @* Thông tin thanh toán online *@
+            @if (Model.LaDonOnline)
+            {
+                <div class="card detail-card">
+                    <div class="detail-card-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <h5 class="mb-0">
+                            <i class="fas fa-globe"></i> Thanh Toán Online
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        @if (!string.IsNullOrWhiteSpace(Model.PaymentRefId))
+                        {
+                            <div class="detail-section">
+                                <div class="detail-label">Mã giao dịch</div>
+                                <div class="detail-value"><code>@Model.PaymentRefId</code></div>
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(Model.PaymentMethod))
+                        {
+                            <div class="detail-section">
+                                <div class="detail-label">Phương thức</div>
+                                <div class="detail-value">@Model.PaymentMethod</div>
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(Model.OnlinePaymentStatus))
+                        {
+                            <div class="detail-section">
+                                <div class="detail-label">Trạng thái</div>
+                                <div class="detail-value">
+                                    @if (Model.OnlinePaymentStatus == "PAID")
+                                    {
+                                        <span class="badge badge-success">PAID</span>
+                                    }
+                                    else if (Model.OnlinePaymentStatus == "PENDING")
+                                    {
+                                        <span class="badge badge-warning">PENDING</span>
+                                    }
+                                    else if (Model.OnlinePaymentStatus == "FAILED")
+                                    {
+                                        <span class="badge badge-danger">FAILED</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-secondary">@Model.OnlinePaymentStatus</span>
+                                    }
+                                </div>
+                            </div>
+                        }
+                        @if (Model.TotalAmount.HasValue)
+                        {
+                            <div class="detail-section">
+                                <div class="detail-label">Số tiền</div>
+                                <div class="detail-value"><strong>@Model.TotalAmount.Value.ToString("N0")đ</strong></div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+            @* Thông tin khác *@
+            <div class="card detail-card">
+                <div class="card-header bg-light">
+                    <h6 class="mb-0">
+                        <i class="fas fa-info-circle"></i> Thông Tin Khác
+                    </h6>
+                </div>
+                <div class="card-body">
+                    @if (Model.NgayTao.HasValue)
+                    {
+                        <div class="detail-section">
+                            <div class="detail-label">Ngày tạo</div>
+                            <div class="detail-value">@Model.NgayTao.Value.ToString("dd/MM/yyyy HH:mm")</div>
+                        </div>
+                    }
+                    @if (Model.NgayCapNhat.HasValue)
+                    {
+                        <div class="detail-section">
+                            <div class="detail-label">Ngày cập nhật</div>
+                            <div class="detail-value">@Model.NgayCapNhat.Value.ToString("dd/MM/yyyy HH:mm")</div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

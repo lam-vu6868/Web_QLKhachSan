@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
 using Web_QLKhachSan.Models;
@@ -64,22 +65,20 @@ namespace Web_QLKhachSan.Areas.NhanVienLeTan.Controllers
                         && dp.NgayDat.Day == today.Day);
 
                 // ===== 3. THỐNG KÊ DOANH THU =====
-                // Doanh thu hôm nay (từ hóa đơn đã thanh toán)
+                // Doanh thu hôm nay (từ hóa đơn đã thanh toán - TrangThaiHoaDon == 1)
                 viewModel.DoanhThuHomNay = db.HoaDons
-                    .Where(hd => hd.TrangThaiHoaDon == 2
+                    .Where(hd => hd.TrangThaiHoaDon == 1 // Đã thanh toán
                                  && hd.NgayThanhToan.HasValue
-                                 && hd.NgayThanhToan.Value.Year == today.Year
-                                 && hd.NgayThanhToan.Value.Month == today.Month
-                                 && hd.NgayThanhToan.Value.Day == today.Day)
-                    .Sum(hd => (decimal?)hd.ThanhToanCuoi) ?? 0;
+                                 && DbFunctions.TruncateTime(hd.NgayThanhToan.Value) == today)
+                    .Sum(hd => (decimal?)hd.TongTien) ?? 0;
 
                 // Doanh thu tháng này
+                var firstDayOfMonth = new DateTime(today.Year, today.Month, 1);
                 viewModel.DoanhThuThangNay = db.HoaDons
-                    .Where(hd => hd.TrangThaiHoaDon == 2
+                    .Where(hd => hd.TrangThaiHoaDon == 1 // Đã thanh toán
                                   && hd.NgayThanhToan.HasValue
-                                  && hd.NgayThanhToan.Value.Year == today.Year
-                                  && hd.NgayThanhToan.Value.Month == today.Month)
-                    .Sum(hd => (decimal?)hd.ThanhToanCuoi) ?? 0;
+                                  && hd.NgayThanhToan.Value >= firstDayOfMonth)
+                    .Sum(hd => (decimal?)hd.TongTien) ?? 0;
 
                 // Số hóa đơn chưa thanh toán
                 viewModel.SoHoaDonChuaThanhToan = db.HoaDons
@@ -279,19 +278,15 @@ namespace Web_QLKhachSan.Areas.NhanVienLeTan.Controllers
                     DateTime ngay = today.AddDays(-i);
 
                     var doanhThu = db.HoaDons
-                        .Where(hd => hd.TrangThaiHoaDon == 2
+                        .Where(hd => hd.TrangThaiHoaDon == 1 // Đã thanh toán
                                       && hd.NgayThanhToan.HasValue
-                                      && hd.NgayThanhToan.Value.Year == ngay.Year
-                                      && hd.NgayThanhToan.Value.Month == ngay.Month
-                                      && hd.NgayThanhToan.Value.Day == ngay.Day)
-                        .Sum(hd => (decimal?)hd.ThanhToanCuoi) ?? 0;
+                                      && DbFunctions.TruncateTime(hd.NgayThanhToan.Value) == ngay)
+                        .Sum(hd => (decimal?)hd.TongTien) ?? 0;
 
                     var soDon = db.HoaDons
-                        .Count(hd => hd.TrangThaiHoaDon == 2
+                        .Count(hd => hd.TrangThaiHoaDon == 1 // Đã thanh toán
                                       && hd.NgayThanhToan.HasValue
-                                      && hd.NgayThanhToan.Value.Year == ngay.Year
-                                      && hd.NgayThanhToan.Value.Month == ngay.Month
-                                      && hd.NgayThanhToan.Value.Day == ngay.Day);
+                                      && DbFunctions.TruncateTime(hd.NgayThanhToan.Value) == ngay);
 
                     result.Add(new DoanhThuNgayViewModel
                     {
