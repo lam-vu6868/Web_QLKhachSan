@@ -511,9 +511,11 @@ ViewBag.Email = Session["Email_QuenMatKhau"];
         case "lễ tân":
    return RedirectToAction("Index", "SoDoPhong", new { area = "NhanVienLeTan" });
 
-  case "nhanvienbuong":
-      case "nhân viên buồng":
-     return RedirectToAction("Index", "DashboardNVB", new { area = "NhanVienBuong" });
+            case "nhanvienbuongphong":
+            case "nhân viên buồng phòng":
+            case "buồng phòng":
+            case "housekeeping":
+                return RedirectToAction("Index", "CongViec", new { area = "NhanVienBuongPhong" });
 
     default:
         return RedirectToAction("Index", "SoDoPhong", new { area = "NhanVienLeTan" });

@@ -1,0 +1,361 @@
+@model Web_QLKhachSan.Areas.NhanVienBuongPhong.ViewModels.CongViec.CongViecItemViewModel
+@{
+    ViewBag.Title = "Chi Tiết Công Việc";
+    Layout = "~/Areas/NhanVienBuongPhong/Views/Shared/_LayoutNVBP.cshtml";
+}
+
+@section styles {
+    <style>
+        .detail-card {
+            border: none;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            margin-bottom: 1.5rem;
+        }
+        .detail-card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 0.35rem 0.35rem 0 0;
+        }
+        .detail-section {
+            border-left: 4px solid #667eea;
+            padding-left: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .detail-label {
+            font-weight: 600;
+            color: #5a5c69;
+            margin-bottom: 0.25rem;
+        }
+        .detail-value {
+            color: #858796;
+            font-size: 0.95rem;
+        }
+        .info-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 0.35rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+    </style>
+}
+
+<div class="container-fluid">
+    @* ==== HEADER ==== *@
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">
+            <i class="fas fa-tasks text-primary"></i> Chi Tiết Công Việc
+        </h1>
+        <a href="@Url.Action("Index")" class="btn btn-secondary btn-icon-split shadow-sm">
+            <span class="icon text-white-50">
+                <i class="fas fa-arrow-left"></i>
+            </span>
+            <span class="text">Quay lại</span>
+        </a>
+    </div>
+
+    @* ==== THÔNG BÁO ==== *@
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle"></i> @TempData["ErrorMessage"]
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+
+    <div class="row">
+        @* ==== THÔNG TIN CHÍNH ==== *@
+        <div class="col-lg-8">
+            <div class="card detail-card">
+                <div class="detail-card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-info-circle"></i> Thông Tin Công Việc
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="detail-section">
+                                <div class="detail-label">
+                                    <i class="fas fa-hashtag text-primary"></i> Mã phân công
+                                </div>
+                                <div class="detail-value">
+                                    <strong>@Model.MaPhanCong</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-section">
+                                <div class="detail-label">
+                                    <i class="fas fa-door-open text-info"></i> Phòng
+                                </div>
+                                <div class="detail-value">
+                                    <strong>@Model.MaPhong</strong> - @Model.TenPhong
+                                    @if (Model.Tang.HasValue)
+                                    {
+                                        <br /><small class="text-muted">Tầng @Model.Tang</small>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="detail-section">
+                                <div class="detail-label">
+                                    <i class="fas fa-info-circle text-warning"></i> Trạng thái
+                                </div>
+                                <div class="detail-value">
+                                    <span class="badge @Model.TrangThaiBadgeClass">@Model.TrangThaiText</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-section">
+                                <div class="detail-label">
+                                    <i class="fas fa-exclamation-triangle text-danger"></i> Mức độ ưu tiên
+                                </div>
+                                <div class="detail-value">
+                                    <span class="badge @Model.MucDoUuTienBadgeClass">@Model.MucDoUuTienText</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (!string.IsNullOrWhiteSpace(Model.GhiChu))
+                    {
+                        <div class="detail-section">
+                            <div class="detail-label">
+                                <i class="fas fa-sticky-note text-success"></i> Ghi chú từ lễ tân
+                            </div>
+                            <div class="detail-value">
+                                @Model.GhiChu
+                            </div>
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrWhiteSpace(Model.GhiChuNhanVien))
+                    {
+                        <div class="detail-section">
+                            <div class="detail-label">
+                                <i class="fas fa-comment text-primary"></i> Ghi chú của tôi
+                            </div>
+                            <div class="detail-value">
+                                @Model.GhiChuNhanVien
+                            </div>
+                        </div>
+                    }
+
+                    @if (Model.NhanVienLeTanId.HasValue)
+                    {
+                        <div class="detail-section">
+                            <div class="detail-label">
+                                <i class="fas fa-user-tie text-info"></i> Người phân công
+                            </div>
+                            <div class="detail-value">
+                                @(Model.TenNhanVienLeTan ?? "N/A")
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        @* ==== THÔNG TIN THỜI GIAN ==== *@
+        <div class="col-lg-4">
+            <div class="card detail-card">
+                <div class="card-header bg-info text-white">
+                    <h6 class="mb-0">
+                        <i class="fas fa-clock"></i> Thời Gian
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="detail-label">
+                            <i class="fas fa-calendar-plus text-primary"></i> Thời gian phân công
+                        </div>
+                        <div class="detail-value">
+                            @Model.ThoiGianPhanCong.ToString("dd/MM/yyyy HH:mm")
+                        </div>
+                    </div>
+
+                    @if (Model.ThoiGianBatDau.HasValue)
+                    {
+                        <div class="mb-3">
+                            <div class="detail-label">
+                                <i class="fas fa-play-circle text-success"></i> Thời gian bắt đầu
+                            </div>
+                            <div class="detail-value">
+                                @Model.ThoiGianBatDau.Value.ToString("dd/MM/yyyy HH:mm")
+                            </div>
+                        </div>
+                    }
+
+                    @if (Model.ThoiGianDuKien.HasValue)
+                    {
+                        <div class="mb-3">
+                            <div class="detail-label">
+                                <i class="fas fa-clock text-warning"></i> Thời gian dự kiến
+                            </div>
+                            <div class="detail-value @(Model.QuaHan && Model.TrangThaiCongViec != 2 ? "text-danger font-weight-bold" : "")">
+                                @Model.ThoiGianDuKien.Value.ToString("dd/MM/yyyy HH:mm")
+                                @if (Model.QuaHan && Model.TrangThaiCongViec != 2)
+                                {
+                                    <br /><span class="badge badge-danger">Quá hạn</span>
+                                }
+                            </div>
+                        </div>
+                    }
+
+                    @if (Model.ThoiGianHoanThanh.HasValue)
+                    {
+                        <div class="mb-3">
+                            <div class="detail-label">
+                                <i class="fas fa-check-circle text-success"></i> Thời gian hoàn thành
+                            </div>
+                            <div class="detail-value text-success">
+                                <strong>@Model.ThoiGianHoanThanh.Value.ToString("dd/MM/yyyy HH:mm")</strong>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            @* ==== THAO TÁC ==== *@
+            <div class="card detail-card">
+                <div class="card-header bg-primary text-white">
+                    <h6 class="mb-0">
+                        <i class="fas fa-cog"></i> Thao Tác
+                    </h6>
+                </div>
+                <div class="card-body">
+                    @if (Model.CoTheBatDau)
+                    {
+                        <button type="button" class="btn btn-success btn-block mb-2" 
+                                data-toggle="modal" 
+                                data-target="#confirmBatDauModal">
+                            <i class="fas fa-play"></i> Bắt Đầu Công Việc
+                        </button>
+                    }
+
+                    @if (Model.CoTheHoanThanh)
+                    {
+                        <button type="button" class="btn btn-primary btn-block mb-2" 
+                                data-toggle="modal" 
+                                data-target="#confirmHoanThanhModal">
+                            <i class="fas fa-check"></i> Hoàn Thành Công Việc
+                        </button>
+                    }
+
+                    @if (!Model.CoTheBatDau && !Model.CoTheHoanThanh)
+                    {
+                        <div class="alert alert-info mb-0">
+                            <i class="fas fa-info-circle"></i> Công việc đã @Model.TrangThaiText.ToLower()
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    @* ==== MODAL XÁC NHẬN BẮT ĐẦU ==== *@
+    <div class="modal fade" id="confirmBatDauModal" tabindex="-1" role="dialog" aria-labelledby="confirmBatDauModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title" id="confirmBatDauModalLabel">
+                        <i class="fas fa-play-circle"></i> Xác Nhận Bắt Đầu Công Việc
+                    </h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Bạn có chắc muốn <strong>bắt đầu</strong> công việc này?</p>
+                    <div class="alert alert-info mb-0">
+                        <strong>Mã phân công:</strong> @Model.MaPhanCong<br />
+                        <strong>Phòng:</strong> @Model.MaPhong
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <i class="fas fa-times"></i> Hủy
+                    </button>
+                    @using (Html.BeginForm("BatDau", "CongViec", FormMethod.Post, new { id = "formBatDau" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.Hidden("id", Model.PhanCongId)
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-check"></i> Xác Nhận
+                        </button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* ==== MODAL XÁC NHẬN HOÀN THÀNH ==== *@
+    <div class="modal fade" id="confirmHoanThanhModal" tabindex="-1" role="dialog" aria-labelledby="confirmHoanThanhModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="confirmHoanThanhModalLabel">
+                        <i class="fas fa-check-circle"></i> Xác Nhận Hoàn Thành Công Việc
+                    </h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Bạn có chắc muốn <strong>hoàn thành</strong> công việc này?</p>
+                    <div class="alert alert-warning mb-0">
+                        <i class="fas fa-info-circle"></i> Sau khi hoàn thành, phòng sẽ được cập nhật trạng thái thành <strong>"Trống"</strong>.
+                    </div>
+                    <div class="alert alert-info mt-2 mb-0">
+                        <strong>Mã phân công:</strong> @Model.MaPhanCong<br />
+                        <strong>Phòng:</strong> @Model.MaPhong
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <i class="fas fa-times"></i> Hủy
+                    </button>
+                    @using (Html.BeginForm("HoanThanh", "CongViec", FormMethod.Post, new { id = "formHoanThanh" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.Hidden("id", Model.PhanCongId)
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-check"></i> Xác Nhận
+                        </button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Auto-hide alerts after 5 seconds
+            setTimeout(function() {
+                $('.alert').fadeOut('slow', function() {
+                    $(this).remove();
+                });
+            }, 5000);
+        });
+    </script>
+}
+

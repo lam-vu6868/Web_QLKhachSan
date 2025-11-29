@@ -220,6 +220,10 @@
     <Compile Include="Areas\DangNhapNV\ViewModels\DangNhapNVViewModel.cs" />
     <Compile Include="Areas\DangNhapNV\ViewModels\DatLaiMatKhauNVViewModel.cs" />
     <Compile Include="Areas\NhanVienBuongPhong\NhanVienBuongPhongAreaRegistration.cs" />
+    <Compile Include="Areas\NhanVienBuongPhong\Controllers\CongViecController.cs" />
+    <Compile Include="Areas\NhanVienBuongPhong\ViewModels\CongViec\CongViecFilterViewModel.cs" />
+    <Compile Include="Areas\NhanVienBuongPhong\ViewModels\CongViec\CongViecItemViewModel.cs" />
+    <Compile Include="Areas\NhanVienBuongPhong\ViewModels\CongViec\CongViecListViewModel.cs" />
     <Compile Include="Areas\NhanVienLeTan\Controllers\CheckInController.cs" />
     <Compile Include="Areas\NhanVienLeTan\Controllers\CheckOutController.cs" />
     <Compile Include="Areas\NhanVienLeTan\Controllers\DashboardNVLTController.cs" />
@@ -505,6 +509,9 @@
     <Content Include="Areas\Admin\Views\DashboardAdmin\Index.cshtml" />
     <Content Include="Areas\Admin\Views\QuanLyNhanVien\Index.cshtml" />
     <Content Include="Areas\NhanVienBuongPhong\Views\web.config" />
+    <Content Include="Areas\NhanVienBuongPhong\Views\Shared\_LayoutNVBP.cshtml" />
+    <Content Include="Areas\NhanVienBuongPhong\Views\CongViec\Index.cshtml" />
+    <Content Include="Areas\NhanVienBuongPhong\Views\CongViec\Details.cshtml" />
     <Content Include="Areas\NhanVienLeTan\Views\Shared\_LayoutNVLT.cshtml" />
     <Content Include="Areas\NhanVienLeTan\Views\SoDoPhong\Index.cshtml" />
     <Content Include="Areas\DangNhapNV\Views\DangNhapNV\DangNhap.cshtml" />

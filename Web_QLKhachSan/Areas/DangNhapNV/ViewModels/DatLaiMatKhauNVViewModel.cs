@@ -1,22 +1,22 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Web_QLKhachSan.Areas.DangNhapNV.ViewModels
 {
     /// <summary>
-    /// ViewModel cho ??t l?i m?t kh?u nh�n vi�n
+    /// ViewModel cho ??t l?i m?t kh?u nhân viên
     /// </summary>
     public class DatLaiMatKhauNVViewModel
   {
-        [Required(ErrorMessage = "Vui l�ng nh?p m?t kh?u m?i")]
-        [StringLength(100, MinimumLength = 6, ErrorMessage = "M?t kh?u ph?i t? 6-100 k� t?")]
+        [Required(ErrorMessage = "Vui lòng nhập mật khẩu mới")]
+        [StringLength(100, MinimumLength = 6, ErrorMessage = "Mật khẩu phải từ 6-100 ký tự")]
     [DataType(DataType.Password)]
- [Display(Name = "M?t kh?u m?i")]
+ [Display(Name = "Mật khẩu mới")]
         public string MatKhauMoi { get; set; }
 
-        [Required(ErrorMessage = "Vui l�ng x�c nh?n m?t kh?u")]
+        [Required(ErrorMessage = "Vui lòng xác nhận mật khẩu")]
   [DataType(DataType.Password)]
-        [Display(Name = "X�c nh?n m?t kh?u")]
-        [Compare("MatKhauMoi", ErrorMessage = "M?t kh?u x�c nh?n kh�ng kh?p")]
+        [Display(Name = "Xác nhận mật khẩu")]
+        [Compare("MatKhauMoi", ErrorMessage = "Mật khẩu xác nhận không khớp")]
         public string XacNhanMatKhau { get; set; }
 
         public string Email { get; set; }
