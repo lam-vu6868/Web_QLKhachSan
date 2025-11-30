@@ -113,7 +113,7 @@
                                             <td><span class="status-badge @statusClass">@statusText</span></td>
                                             <td class="price">@((item.TongTien ?? 0).ToString("N0"))đ</td>
                                             <td>
-                                                @if (item.TrangThaiDatPhong == 0 || item.TrangThaiDatPhong == 1)
+                                                @if (item.TrangThaiDatPhong == 0)
                                                 {
                                                     <div class="btn-dual-action">
                                                         <button class="btn-dual-left" onclick="openDetailModal_@(item.DatPhongId)()">
@@ -304,8 +304,8 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>@(item.NgayNhan?.ToString("dd/MM/yyyy") ?? "N/A")</td>
-                                        <td>@(item.NgayTra?.ToString("dd/MM/yyyy") ?? "N/A")</td>
+                                        <td>@(item.NgayNhan?.ToString("dd/MM/yyyy HH:mm") ?? "N/A")</td>
+                                        <td>@(item.NgayTra?.ToString("dd/MM/yyyy HH:mm") ?? "N/A")</td>
                                         <td>@(item.SoDem ?? 0) đêm</td>
                                     </tr>
                                 </tbody>
@@ -343,8 +343,8 @@
                                 <i class="fas fa-calendar-check detail-calendar-icon"></i>
                                 <div class="detail-calendar-content">
                                     <p class="detail-calendar-text">
-                                        Nhận phòng: <strong>@(item.NgayNhan?.ToString("dd/MM/yyyy") ?? "N/A")</strong><br/>
-                                        Trả phòng: <strong>@(item.NgayTra?.ToString("dd/MM/yyyy") ?? "N/A")</strong>
+                                        Nhận phòng: <strong>@(item.NgayNhan?.ToString("dd/MM/yyyy HH:mm") ?? "N/A")</strong><br/>
+                                        Trả phòng: <strong>@(item.NgayTra?.ToString("dd/MM/yyyy HH:mm") ?? "N/A")</strong>
                                     </p>
                                     <a href="@Url.Action("TaiFileICS", "DashboardKhachHang", new { datPhongId = item.DatPhongId })" class="btn-add-calendar">
                                         <i class="fas fa-calendar-plus"></i>

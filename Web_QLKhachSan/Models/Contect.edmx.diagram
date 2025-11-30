@@ -7,36 +7,36 @@
       <Diagram DiagramId="e286185c181945b084cacb292b026956" Name="Diagram1" ZoomLevel="55">
         <EntityTypeShape EntityType="DB_QLKhachSanModel.ChiTietDatDichVu" Width="1.5" PointX="11.25" PointY="13.75" />
         <EntityTypeShape EntityType="DB_QLKhachSanModel.ChiTietDatPhong" Width="1.5" PointX="14.25" PointY="13.25" />
-        <EntityTypeShape EntityType="DB_QLKhachSanModel.DanhGia" Width="1.5" PointX="16.25" PointY="9.375" />
-        <EntityTypeShape EntityType="DB_QLKhachSanModel.DanhGiaHinhAnh" Width="1.5" PointX="18.5" PointY="9.875" />
+        <EntityTypeShape EntityType="DB_QLKhachSanModel.DanhGia" Width="1.5" PointX="14.25" PointY="24.875" />
+        <EntityTypeShape EntityType="DB_QLKhachSanModel.DanhGiaHinhAnh" Width="1.5" PointX="16.5" PointY="25.375" />
         <EntityTypeShape EntityType="DB_QLKhachSanModel.DatPhong" Width="1.5" PointX="9" PointY="12" />
-        <EntityTypeShape EntityType="DB_QLKhachSanModel.DichVu" Width="1.5" PointX="9" PointY="3.5" />
-        <EntityTypeShape EntityType="DB_QLKhachSanModel.GiaTheoNgay" Width="1.5" PointX="14.25" PointY="4.375" />
+        <EntityTypeShape EntityType="DB_QLKhachSanModel.DichVu" Width="1.5" PointX="9" PointY="4.5" />
+        <EntityTypeShape EntityType="DB_QLKhachSanModel.GiaTheoNgay" Width="1.5" PointX="14.25" PointY="28.625" />
         <EntityTypeShape EntityType="DB_QLKhachSanModel.HoaDon" Width="1.5" PointX="11.25" PointY="8" />
-        <EntityTypeShape EntityType="DB_QLKhachSanModel.KhachHang" Width="1.5" PointX="6.75" PointY="8.25" />
-        <EntityTypeShape EntityType="DB_QLKhachSanModel.KhuyenMai" Width="1.5" PointX="6.75" PointY="23.25" />
-        <EntityTypeShape EntityType="DB_QLKhachSanModel.LoaiDichVu" Width="1.5" PointX="6.75" PointY="3.75" />
-        <EntityTypeShape EntityType="DB_QLKhachSanModel.LoaiPhong" Width="1.5" PointX="12" PointY="22" />
-        <EntityTypeShape EntityType="DB_QLKhachSanModel.LoaiTienIch" Width="1.5" PointX="15" PointY="26.625" />
-        <EntityTypeShape EntityType="DB_QLKhachSanModel.LoaiTienNghi" Width="1.5" PointX="12" PointY="26.625" />
+        <EntityTypeShape EntityType="DB_QLKhachSanModel.KhachHang" Width="1.5" PointX="6.75" PointY="24" />
+        <EntityTypeShape EntityType="DB_QLKhachSanModel.KhuyenMai" Width="1.5" PointX="6.75" PointY="9.25" />
+        <EntityTypeShape EntityType="DB_QLKhachSanModel.LoaiDichVu" Width="1.5" PointX="6.75" PointY="4.75" />
+        <EntityTypeShape EntityType="DB_QLKhachSanModel.LoaiPhong" Width="1.5" PointX="12" PointY="18" />
+        <EntityTypeShape EntityType="DB_QLKhachSanModel.LoaiTienIch" Width="1.5" PointX="12" PointY="31.5" />
+        <EntityTypeShape EntityType="DB_QLKhachSanModel.LoaiTienNghi" Width="1.5" PointX="15" PointY="5.5" />
         <EntityTypeShape EntityType="DB_QLKhachSanModel.NhanVien" Width="1.5" PointX="0.75" PointY="13.125" />
         <EntityTypeShape EntityType="DB_QLKhachSanModel.PhanCongCongViec" Width="1.5" PointX="3" PointY="13" />
-        <EntityTypeShape EntityType="DB_QLKhachSanModel.Phong" Width="1.5" PointX="12" PointY="3" />
-        <EntityTypeShape EntityType="DB_QLKhachSanModel.PhongAnh" Width="1.5" PointX="14.25" PointY="18.5" />
+        <EntityTypeShape EntityType="DB_QLKhachSanModel.Phong" Width="1.5" PointX="12" PointY="26.25" />
+        <EntityTypeShape EntityType="DB_QLKhachSanModel.PhongAnh" Width="1.5" PointX="14.25" PointY="32.75" />
         <EntityTypeShape EntityType="DB_QLKhachSanModel.TaiKhoan" Width="1.5" PointX="6" PointY="13.375" />
         <EntityTypeShape EntityType="DB_QLKhachSanModel.ThanhToan" Width="1.5" PointX="13.5" PointY="8.625" />
-        <EntityTypeShape EntityType="DB_QLKhachSanModel.TienIch" Width="1.5" PointX="17.25" PointY="22.375" />
-        <EntityTypeShape EntityType="DB_QLKhachSanModel.TienNghi" Width="1.5" PointX="14.25" PointY="22.375" />
+        <EntityTypeShape EntityType="DB_QLKhachSanModel.TienIch" Width="1.5" PointX="14.25" PointY="18.375" />
+        <EntityTypeShape EntityType="DB_QLKhachSanModel.TienNghi" Width="1.5" PointX="17.25" PointY="18.375" />
         <EntityTypeShape EntityType="DB_QLKhachSanModel.TokenLogin" Width="1.5" PointX="8.25" PointY="20.125" />
-        <EntityTypeShape EntityType="DB_QLKhachSanModel.VNPAY_Transaction_Logs" Width="1.5" PointX="11.25" PointY="17.5" />
+        <EntityTypeShape EntityType="DB_QLKhachSanModel.VNPAY_Transaction_Logs" Width="1.5" PointX="11.25" PointY="22.375" />
         <AssociationConnector Association="DB_QLKhachSanModel.FK_ChiTietDatDichVu_DatPhong" />
         <AssociationConnector Association="DB_QLKhachSanModel.FK_ChiTietDatDichVu_DichVu" />
         <AssociationConnector Association="DB_QLKhachSanModel.FK_ChiTietDatPhong_DatPhong" />
         <AssociationConnector Association="DB_QLKhachSanModel.FK_ChiTietDatPhong_LoaiPhong" />
         <AssociationConnector Association="DB_QLKhachSanModel.FK_ChiTietDatPhong_Phong" />
-        <AssociationConnector Association="DB_QLKhachSanModel.FK__DanhGia__MaKhach__22751F6C" />
-        <AssociationConnector Association="DB_QLKhachSanModel.FK__DanhGia__PhongId__236943A5" />
-        <AssociationConnector Association="DB_QLKhachSanModel.FK__DanhGiaHi__DanhG__245D67DE" />
+        <AssociationConnector Association="DB_QLKhachSanModel.FK__DanhGia__MaKhach__2A164134" />
+        <AssociationConnector Association="DB_QLKhachSanModel.FK__DanhGia__PhongId__2B0A656D" />
+        <AssociationConnector Association="DB_QLKhachSanModel.FK__DanhGiaHi__DanhG__2BFE89A6" />
         <AssociationConnector Association="DB_QLKhachSanModel.FK_DatPhong_KhachHang" />
         <AssociationConnector Association="DB_QLKhachSanModel.FK_DatPhong_KhuyenMai" />
         <AssociationConnector Association="DB_QLKhachSanModel.FK_DatPhong_NhanVien" />
@@ -48,8 +48,8 @@
         <AssociationConnector Association="DB_QLKhachSanModel.FK_ThanhToan_HoaDon" />
         <AssociationConnector Association="DB_QLKhachSanModel.FK_TaiKhoan_KhachHang" />
         <AssociationConnector Association="DB_QLKhachSanModel.FK_Phong_LoaiPhong" />
-        <AssociationConnector Association="DB_QLKhachSanModel.FK__TienIch__LoaiTie__3493CFA7" />
-        <AssociationConnector Association="DB_QLKhachSanModel.FK__TienNghi__LoaiTi__3587F3E0" />
+        <AssociationConnector Association="DB_QLKhachSanModel.FK__TienIch__LoaiTie__3F115E1A" />
+        <AssociationConnector Association="DB_QLKhachSanModel.FK__TienNghi__LoaiTi__40058253" />
         <AssociationConnector Association="DB_QLKhachSanModel.FK_PhanCong_NhanVienBuongPhong" />
         <AssociationConnector Association="DB_QLKhachSanModel.FK_PhanCong_NhanVienLeTan" />
         <AssociationConnector Association="DB_QLKhachSanModel.FK_TaiKhoan_NhanVien" />

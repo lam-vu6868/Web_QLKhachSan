@@ -140,14 +140,15 @@ namespace Web_QLKhachSan.Controllers
                 }
             }
 
-            // ✅ Kiểm tra xem khách hàng có phòng nào đang ở (TrangThaiDatPhong = 2) không
+            // ✅ Kiểm tra xem khách hàng có phòng nào đang hoạt động (trạng thái 0,1,2) không
             int MaKhachHang = Convert.ToInt32(Session["MaKhachHang"]);
-            bool coPhongDangO = db.DatPhongs
+            bool coPhongDangHoatDong = db.DatPhongs
                 .Any(dp => dp.MaKhachHang == maKhachHang &&
-                          dp.TrangThaiDatPhong == 2); // 2 = Đã check-in (đang ở)
+                          (dp.TrangThaiDatPhong == 0 || dp.TrangThaiDatPhong == 1 || dp.TrangThaiDatPhong == 2));
+                          // 0=Chờ xác nhận, 1=Đã xác nhận, 2=Check-in
 
-            // ✅ Nếu có phòng đang ở và chưa có "(Đặt Hộ)" trong ghi chú, thì thêm vào
-            if (coPhongDangO)
+            // ✅ Nếu có phòng đang hoạt động và chưa có "(Đặt Hộ)" trong ghi chú, thì thêm vào
+            if (coPhongDangHoatDong)
             {
                 string ghiChuGoc = model.GhiChu?.Trim() ?? "";
                 if (!ghiChuGoc.Contains("(Đặt Hộ)"))
@@ -179,13 +180,14 @@ namespace Web_QLKhachSan.Controllers
             // Lấy thông tin khách hàng từ session
             int maKhachHang = Convert.ToInt32(Session["MaKhachHang"]);
 
-            // ✅ Kiểm tra xem khách hàng có phòng nào đang ở (TrangThaiDatPhong = 2) không
-            bool coPhongDangO = db.DatPhongs
+            // ✅ Kiểm tra xem khách hàng có phòng nào đang hoạt động (trạng thái 0,1,2) không
+            bool coPhongDangHoatDong = db.DatPhongs
                 .Any(dp => dp.MaKhachHang == maKhachHang &&
-                          dp.TrangThaiDatPhong == 2); // 2 = Đã check-in (đang ở)
+                          (dp.TrangThaiDatPhong == 0 || dp.TrangThaiDatPhong == 1 || dp.TrangThaiDatPhong == 2));
+                          // 0=Chờ xác nhận, 1=Đã xác nhận, 2=Check-in
 
-            // ✅ Nếu có phòng đang ở, tự động thêm "(Đặt Hộ)" vào ghi chú
-            if (coPhongDangO)
+            // ✅ Nếu có phòng đang hoạt động, tự động thêm "(Đặt Hộ)" vào ghi chú
+            if (coPhongDangHoatDong)
             {
                 string ghiChuGoc = model.GhiChu?.Trim() ?? "";
                 if (!ghiChuGoc.Contains("(Đặt Hộ)"))
@@ -321,6 +323,12 @@ namespace Web_QLKhachSan.Controllers
                         return RedirectToAction("Index", "PhongNghi");
                     }
 
+                    // ✅ Kiểm tra xem khách hàng có phòng nào đang hoạt động (trạng thái 0,1,2) không
+                    bool coPhongDangHoatDong = db.DatPhongs
+                        .Any(dp => dp.MaKhachHang == maKhachHang &&
+                                  (dp.TrangThaiDatPhong == 0 || dp.TrangThaiDatPhong == 1 || dp.TrangThaiDatPhong == 2));
+                                  // 0=Chờ xác nhận, 1=Đã xác nhận, 2=Check-in
+
                     var autoModel = new ThongTinDatPhongViewModel
                     {
                         HoVaTen = khachHang.HoVaTen,
@@ -335,7 +343,8 @@ namespace Web_QLKhachSan.Controllers
                         SoNguoiToiDa = phong.LoaiPhong?.SoNguoiToiDa ?? 2,
                         SoNguoi = phong.LoaiPhong?.SoNguoiToiDa ?? 2,
                         HinhAnh = phong.HinhAnhThumb ?? (phong.PhongAnhs.Any() ? phong.PhongAnhs.FirstOrDefault().Url : ""),
-                        DichVuDaChon = new List<DichVuDaChon>() // Khởi tạo danh sách trống cho đặt phòng mới
+                        DichVuDaChon = new List<DichVuDaChon>(), // Khởi tạo danh sách trống cho đặt phòng mới
+                        GhiChu = coPhongDangHoatDong ? "(Đặt Hộ)" : "" // Tự động thêm (Đặt Hộ) nếu có phòng đang hoạt động
                     };
 
                     // Lưu vào Session để các bước sau dùng (hoặc thay thế session cũ)
